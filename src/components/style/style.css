@@ -50,7 +50,8 @@
 .ballotDiv {
   background-color: white;
   padding: 24;
-  min-height: 300;
+  min-height: 400;
+  height: 420px;
   margin-bottom: 2%;
   border-width: 1px;
   border-color: #f9f0f0;

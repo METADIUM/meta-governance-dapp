@@ -62,10 +62,16 @@ class Voting extends React.Component {
                             </span>
                         </div>
                         <div className = 'ballotExplainDiv'>
-                            <p style={{float: 'left'}}>{item.memo}</p>
                             <div style={{float: 'right'}}>
                                 <p >Started: {item.startTime}</p>
                                 <p >Ended: {item.endTime}</p>
+                            </div>
+                            <p>description</p>
+                            <p>description</p>
+                            <p>description</p>
+                            <div>
+                                <p>{item.memo}</p>
+                                <Button style={{float: 'right'}} type='primary'>Revoke</Button>
                             </div>
                         </div>
                     </div>

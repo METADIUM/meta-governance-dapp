@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, List, Progress } from 'antd';
 import './style/style.css'
-import logo from '../META_Logo_black.svg';
 import { testData } from './test/testData'
 
 class Authority extends React.Component {
@@ -33,7 +32,7 @@ class Authority extends React.Component {
             list.push(
                 <div className = 'authorityComp'>
                     <div style={{float: 'left', width: '19%', backgroundColor: '#FFEAF6'}}>
-                        <img src={logo} alt='' />
+                        <img src='https://raw.githubusercontent.com/METADIUM/metadium-token-contract/master/misc/Metadium_Logo_Vertical_PNG.png' alt='' width='100%' height='auto'/>
                     </div>
                     <div style={{padding: 30, float: 'left',width: '81%'}}>
                         <div style={{height: '70px'}}>
