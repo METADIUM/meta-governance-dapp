@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, List, Progress, Input, Collapse } from 'antd';
+import React from 'react'
+import { Button, List, Progress, Input, Collapse } from 'antd'
 import './style/style.css'
 
 class ProposalForm extends React.Component {
@@ -10,22 +10,21 @@ class ProposalForm extends React.Component {
 
     }
 
-    constructor(props) {
-        super(props)
-
+    constructor (props) {
+      super(props)
     }
 
-    componentWillMount() {
+    componentWillMount () {
     }
 
-    render() {
-        return (
-            <div>
-                <div className='contentDiv'>
+    render () {
+      return (
+        <div>
+          <div className='contentDiv'>
                     example
-                </div>
-            </div>
-        )
+          </div>
+        </div>
+      )
     }
 }
 export { ProposalForm }
