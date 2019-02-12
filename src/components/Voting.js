@@ -5,6 +5,7 @@ import './style/style.css'
 
 import { columns } from './columns'
 import { testData } from './test/testData'
+import { ProposalForm } from './ProposalForm'
 
 const ballotColumns = columns.ballotColumns;
 
@@ -14,6 +15,7 @@ class Voting extends React.Component {
         activeItems: [],
         proposalItems: [],
         finalizedItems: [],
+        newProposal: false,
     }
     state = {
         isBallotLoading: false,
@@ -62,16 +64,23 @@ class Voting extends React.Component {
                             </span>
                         </div>
                         <div className = 'ballotExplainDiv'>
+                            { item.state == 'InProgress' ?
                             <div style={{float: 'right'}}>
                                 <p >Started: {item.startTime}</p>
                                 <p >Ended: {item.endTime}</p>
-                            </div>
+                            </div> : ''}
+                            { item.state == 'Ready' ?
+                            <div style={{float: 'right'}}>
+                                <p >Duration: {item.duration}days</p>
+                                <Button type='primary'>Change</Button>
+                            </div> : ''}
                             <p>description</p>
                             <p>description</p>
                             <p>description</p>
                             <div>
                                 <p>{item.memo}</p>
-                                <Button style={{float: 'right'}} type='primary'>Revoke</Button>
+                                { item.state == 'Ready'
+                                ?<Button style={{float: 'right'}} type='primary'>Revoke</Button> : ''}
                             </div>
                         </div>
                     </div>

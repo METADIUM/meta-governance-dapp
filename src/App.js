@@ -3,7 +3,6 @@ import { Layout, Button, Row, Col, Modal, Tabs } from 'antd'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
 import './App.css';
-import logo from './META_Logo_black.svg';
 
 
 //web3
@@ -61,7 +60,7 @@ class App extends React.Component {
       <Layout className="layout">
         <Header style={{ padding: '0 15%', backgroundColor: 'white', borderBottom: 'inset' }}>
           <Row>
-            <Col span={4}><img src={logo} alt='' width='35%' height='35%' style={{float: 'left'}}/><h3>Governance</h3></Col>
+            <Col span={4}><img src='https://raw.githubusercontent.com/METADIUM/metadium-token-contract/master/misc/Metadium_Logo_Vertical_PNG.png' alt='' width='35%' height='35%' style={{float: 'left'}}/><h3>Governance</h3></Col>
             <Col offset={15} span={5}>
             <Tabs defaultActiveKey="1" onChange={this.onMenuClick}>
               <TabPane tab="Authority" key="1"></TabPane>

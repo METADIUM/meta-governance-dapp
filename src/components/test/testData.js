@@ -47,7 +47,8 @@ testData.govTestData = [
         'state': 'Ready',
         'startTime': '01/20/2019 04:20',
         'endTime': '01/20/2019 04:20',
-        'memo': 'memo'
+        'memo': 'memo',
+        'duration': 1,
     },
     {
         'creator': 'Metadium2',
@@ -56,7 +57,8 @@ testData.govTestData = [
         'state': 'InProgress',
         'startTime': '01/20/2019 04:20',
         'endTime': '01/20/2019 04:20',
-        'memo': 'memo'
+        'memo': 'memo',
+        'duration': 2,
     },
     {
         'creator': 'Metadium3',
@@ -65,7 +67,8 @@ testData.govTestData = [
         'state': 'Accepted',
         'startTime': '01/20/2019 04:20',
         'endTime': '01/20/2019 04:20',
-        'memo': 'memo'
+        'memo': 'memo',
+        'duration': 3,
     },
     {
         'creator': 'Metadium4',
@@ -74,7 +77,8 @@ testData.govTestData = [
         'state': 'Rejected',
         'startTime': '01/20/2019 04:20',
         'endTime': '01/20/2019 04:20',
-        'memo': 'memo'
+        'memo': 'memo',
+        'duration': 4,
     },
     
   ]
