@@ -14,11 +14,12 @@ class Voting extends React.Component {
       activeItems: [],
       proposalItems: [],
       finalizedItems: [],
-      newProposal: false
     }
     state = {
       isBallotLoading: false,
-      isBallotDetailLoading: false
+      isBallotDetailLoading: false,
+      // for test
+      newProposal: true,
     }
 
     constructor (props) {
@@ -120,6 +121,8 @@ class Voting extends React.Component {
     render () {
       return (
         <div>
+          {!this.state.newProposal
+          ? 
           <div className='contentDiv'>
             <div>
               <Input.Search
@@ -128,7 +131,7 @@ class Voting extends React.Component {
                 enterButton
                 style={{ width: '70%', margin: '1% 0 1% 1.5%' }}
               />
-              <Button className='apply_proposal_Btn'>New Proposal</Button>
+              <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>>New Proposal</Button>
             </div>
 
             <h1>Active</h1>
@@ -149,7 +152,12 @@ class Voting extends React.Component {
               : <div>empty</div>
             }<br /><br />
           </div>
-        </div>
+          :
+          <div>
+            <ProposalForm />
+          </div>
+          }
+        </div> 
       )
     }
 }
