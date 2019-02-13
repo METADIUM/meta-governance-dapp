@@ -13,7 +13,7 @@ const TabPane = Tabs.TabPane
 class App extends React.Component {
   state = {
     loadWeb3: false,
-    nav: '2'
+    nav: '1'
   };
 
   constructor (props) {
