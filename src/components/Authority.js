@@ -29,14 +29,14 @@ class Authority extends React.Component {
     async getAuthorityList () {
       let list = []
       testData.govTestData = await getGithubContents('METADIUM', 'meta-authorities', 'master', 'authorities.json');
-
       console.log('getAuthorityList length: ', testData.govTestData.length)
 
-      testData.govTestData.map((item) => {
+      //'https://raw.githubusercontent.com/METADIUM/metadium-token-contract/master/misc/Metadium_Logo_Vertical_PNG.png'
+      testData.govTestData.map(item => {
         list.push(
           <div className='authorityComp'>
             <div style={{ float: 'left', width: '19%', backgroundColor: '#FFEAF6' }}>
-              <img src='https://raw.githubusercontent.com/METADIUM/metadium-token-contract/master/misc/Metadium_Logo_Vertical_PNG.png' alt='' width='100%' height='auto' />
+              <img src={item.logo} alt='' width='100%' height='auto' />
             </div>
             <div style={{ padding: 30, float: 'left', width: '81%' }}>
               <div style={{ height: '70px' }}>
@@ -45,7 +45,7 @@ class Authority extends React.Component {
               </div>
               <div style={{ height: '80px' }}><p>{item.description}</p></div>
               <div style={{ height: '80px' }}>
-                <div><h3><a href='http://www.metadium.com' target='_blank'>{item.title} Web site</a></h3></div>
+                <div><h3><a href={item.homepage} target='_blank'>{item.title} Web site</a></h3></div>
                 <div>
                   {this.getSNSList(item.sns)}
                 </div>
