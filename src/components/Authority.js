@@ -2,7 +2,6 @@ import React from 'react'
 import { Button, List, Progress } from 'antd'
 import './style/style.css'
 import { testData } from './test/testData'
-
 import { getGithubContents } from '../util'
 
 class Authority extends React.Component {
@@ -31,7 +30,6 @@ class Authority extends React.Component {
       testData.govTestData = await getGithubContents('METADIUM', 'meta-authorities', 'master', 'authorities.json');
       console.log('getAuthorityList length: ', testData.govTestData.length)
 
-      //'https://raw.githubusercontent.com/METADIUM/metadium-token-contract/master/misc/Metadium_Logo_Vertical_PNG.png'
       testData.govTestData.map(item => {
         list.push(
           <div className='authorityComp'>
