@@ -30,7 +30,7 @@
 
 .ballotExplainDiv{
   padding: 2% 5%;
-  
+
   height: 100px;
   margin: 3% 0 3% 0;
 }
@@ -45,6 +45,7 @@
   border-radius: 100px;
   margin: 0 1%;
   float: right;
+  border: 0px;
 }
 
 .ballotDiv {
@@ -82,6 +83,16 @@
   width: 18%;
   border-color: #363333;
   margin: 1% 1.5% 0% 0%
+}
+
+.submit_Btn{
+  float: right;
+  border-radius: 20px;
+  background-color: #363333;
+  color: white;
+  width: 18%;
+  border-color: #363333;
+  margin: 1% 42% 2% 0%
 }
 
 #noVotingBtn{
