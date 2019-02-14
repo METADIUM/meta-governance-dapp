@@ -4,6 +4,7 @@ import './style/style.css'
 import { testData } from './test/testData'
 import { getGithubContents } from '../util'
 
+
 class Authority extends React.Component {
     data = {
       authorityItems: []
@@ -27,11 +28,14 @@ class Authority extends React.Component {
 
     async getAuthorityList () {
       let list = []
-      testData.govTestData = await getGithubContents('METADIUM', 'meta-authorities', 'master', 'authorities.json');
+      //config 로 따로 빼서
+      //testData.govTestData = await getGithubContents('METADIUM', 'meta-authorities', 'master', 'authorities.json');
+      testData.govTestData = await getGithubContents('blueisle', 'meta-authorities', 'master', 'authorities.json');
       console.log('getAuthorityList length: ', testData.govTestData.length)
 
       testData.govTestData.map(item => {
         list.push(
+          //background color 흰색
           <div className='authorityComp'>
             <div style={{ float: 'left', width: '19%', backgroundColor: '#FFEAF6' }}>
               <img src= {item.logo} alt='' width='100%' height='auto' />
@@ -42,7 +46,7 @@ class Authority extends React.Component {
                 <h4 style={{ float: 'right' }}>Address: {item.addr}</h4>
               </div>
               <div style={{ height: '80px' }}><p>{item.description}</p></div>
-              <div style={{ height: '80px' }}>
+              <div style={{ height: '70px' }}>
                 <div><h3><a href={item.homepage} target='_blank'>{item.title} Web site</a></h3></div>
                 <div>
                   {this.getSNSList(item.sns)}
@@ -60,8 +64,28 @@ class Authority extends React.Component {
     getSNSList (snsList) {
       let sns = []
       for (var key in snsList) {
-        sns.push(<Button className='snsGroup'>{snsList[key]}</Button>)
+        let icon = null;
+
+        switch (key) {
+          case 'twitter': icon = 'fab fa-twitter fa-2x'; break;
+          case 'medium': icon = 'fab fa-medium fa-2x'; break;
+          case 'facebook': icon = 'fab fa-facebook fa-2x'; break;
+          case 'instagram': icon = 'fab fa-instagram fa-2x'; break;
+          case 'telegram': icon = 'fab fa-telegram fa-2x'; break;
+        }
+
+        sns.push(
+          <Button
+            className='snsGroup'
+            href={snsList[key]}
+            shape='circle'
+            ghost='true'
+            type='primary'>
+            <i class={icon}></i>
+          </Button>
+        )
       }
+
       return sns
     }
 
