@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, List, Progress } from 'antd'
 import './style/style.css'
 import { testData } from './test/testData'
+import { getGithubContents } from '../util'
 
 class Authority extends React.Component {
     data = {
@@ -24,24 +25,25 @@ class Authority extends React.Component {
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
     }
 
-    getAuthorityList () {
+    async getAuthorityList () {
       let list = []
+      testData.govTestData = await getGithubContents('METADIUM', 'meta-authorities', 'master', 'authorities.json');
       console.log('getAuthorityList length: ', testData.govTestData.length)
       // authority.json에서 가져온 data들을 변수에 저장해서 foreach로 돌면 됨
       testData.govTestData.map(item => {
         list.push(
           <div className='authorityComp'>
             <div style={{ float: 'left', width: '19%', backgroundColor: '#FFEAF6' }}>
-              <img src='https://raw.githubusercontent.com/METADIUM/metadium-token-contract/master/misc/Metadium_Logo_Vertical_PNG.png' alt='' width='100%' height='auto' />
+              <img src={item.logo} alt='' width='100%' height='auto' />
             </div>
             <div style={{ padding: 30, float: 'left', width: '81%' }}>
               <div style={{ height: '70px' }}>
-                <h2 style={{ float: 'left' }}>{item.company}</h2>
-                <h4 style={{ float: 'right' }}>Address: {item.propasalAddr}</h4>
+                <h2 style={{ float: 'left' }}>{item.title}</h2>
+                <h4 style={{ float: 'right' }}>Address: {item.addr}</h4>
               </div>
               <div style={{ height: '80px' }}><p>{item.description}</p></div>
               <div style={{ height: '80px' }}>
-                <div><h3><a href='http://www.metadium.com' target='_blank'>{item.company} Web site</a></h3></div>
+                <div><h3><a href={item.homepage} target='_blank'>{item.title} Web site</a></h3></div>
                 <div>
                   {this.getSNSList(item.sns)}
                 </div>
