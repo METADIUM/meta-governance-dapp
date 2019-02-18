@@ -45,11 +45,10 @@ class Authority extends React.Component {
               <div style={{ height: '80px' }}><p>{item.description}</p></div>
 
               <div style={{ height: '80px' }}>
-                <div><h3><a href={item.homepage} target='_blank'>{item.title} Web site</a></h3></div>
                 <div>
                   {this.getSNSList(item.sns)}
                   <Button
-                  
+
                     className='snsGroup'
                     href={item.homepage}
                     shape='circle'
