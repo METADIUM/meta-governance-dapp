@@ -5,7 +5,6 @@ import { testData } from './test/testData'
 import { getGithubContents } from '../util'
 import { githubConfig } from './config/githubConfig'
 
-
 class Authority extends React.Component {
     data = {
       authorityItems: []
@@ -31,7 +30,7 @@ class Authority extends React.Component {
       let list = []
       testData.govTestData = await getGithubContents(githubConfig.org, githubConfig.repo, githubConfig.branch, githubConfig.source);
       console.log('getAuthorityList length: ', testData.govTestData.length)
-
+      // authority.json에서 가져온 data들을 변수에 저장해서 foreach로 돌면 됨
       testData.govTestData.map(item => {
         list.push(
           <div className='authorityComp'>
@@ -44,7 +43,9 @@ class Authority extends React.Component {
                 <h4 style={{ float: 'right' }}>Address: {item.addr}</h4>
               </div>
               <div style={{ height: '80px' }}><p>{item.description}</p></div>
-              <div style={{ height: '70px' }}>
+
+              <div style={{ height: '80px' }}>
+                <div><h3><a href={item.homepage} target='_blank'>{item.title} Web site</a></h3></div>
                 <div>
                   {this.getSNSList(item.sns)}
                   <Button

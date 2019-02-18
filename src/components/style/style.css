@@ -28,9 +28,14 @@
   border-radius: 10px;
 }
 
-.ballotExplainDiv {
-  padding: 2% 5%;
 
+.contentVotingDiv{
+  padding: 0 20%;
+  border-radius: 10px;
+}
+
+.ballotExplainDiv{
+  padding: 2% 5%;
   height: 100px;
   margin: 3% 0 3% 0;
 }
