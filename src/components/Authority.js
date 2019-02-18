@@ -27,7 +27,7 @@ class Authority extends React.Component {
     getAuthorityList () {
       let list = []
       console.log('getAuthorityList length: ', testData.govTestData.length)
-
+      // authority.json에서 가져온 data들을 변수에 저장해서 foreach로 돌면 됨
       testData.govTestData.map(item => {
         list.push(
           <div className='authorityComp'>
