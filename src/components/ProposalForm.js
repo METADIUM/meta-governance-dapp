@@ -31,8 +31,9 @@ class ProposalForm extends React.Component {
 
       if (!this.state.selectedChange) return
 
-      var inputMarginStyle = {marginBottom: '2%'};
-      var scale = 'META';
+      let inputMarginStyle = {marginBottom: '2%'};
+      let scale = 'META';
+      let star = <span style={{color: 'red'}}>*</span>
 
       let list = [];
 
@@ -40,31 +41,31 @@ class ProposalForm extends React.Component {
         <div>
           {this.data.selectedVoteTopic == 'add'
             ? <div>
-                <h3> META Amount to be locked <span style={{color: 'red'}}>*</span></h3>
+                <h3> META Amount to be locked {star}</h3>
                 <Input style= {inputMarginStyle} addonAfter={scale} />
               </div>
             : null
           }
           {this.data.selectedVoteTopic == 'replace'
             ? <div>
-                <h3> META Amount to be locked (New) <span style={{color: 'red'}}>*</span></h3>
+                <h3> META Amount to be locked (New) {star}</h3>
                 <Input style= {inputMarginStyle} addonAfter={scale}/>
               </div>
             : null
           }
 
-          <h3> New Authority Address <span style={{color: 'red'}}>*</span></h3>
+          <h3> New Authority Address {star}</h3>
           <Input style= {inputMarginStyle}/>
-          <h3> New Authority Node Description <span style={{color: 'red'}}>*</span></h3>
+          <h3> New Authority Node Description {star}</h3>
           <Input style= {inputMarginStyle}/>
 
           {this.data.selectedVoteTopic == 'replace'
             ? <div>
-                <h3> META Amount to be unlocked (Old) <span style={{color: 'red'}}>*</span></h3>
+                <h3> META Amount to be unlocked (Old) {star}</h3>
                 <Input style= {inputMarginStyle} addonAfter={scale} />
-                <h3> Old Authority Address <span style={{color: 'red'}}>*</span></h3>
+                <h3> Old Authority Address {star}</h3>
                 <Input style= {inputMarginStyle}/>
-                <h3> Old Authority Node Description <span style={{color: 'red'}}>*</span></h3>
+                <h3> Old Authority Node Description {star}</h3>
                 <Input style= {inputMarginStyle}/>
               </div>
             : null
@@ -74,9 +75,10 @@ class ProposalForm extends React.Component {
           <TextArea
             rows={4}
             placeholder='Max. 256 bytes'
+            autosize={{ minRows: 2, maxRows: 4 }}
           />
 
-          <h4 style={{color: 'red', marginTop: '2%'}}>&nbsp;&nbsp;&nbsp;&nbsp;*Mandatory</h4>
+          <h4 style={{color: 'red', marginTop: '2%'}}>*Mandatory</h4>
           <div>
             <Button
               className='submit_Btn'
