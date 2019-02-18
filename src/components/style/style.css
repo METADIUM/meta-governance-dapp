@@ -28,7 +28,7 @@
   border-radius: 10px;
 }
 
-.ballotExplainDiv{
+.ballotExplainDiv {
   padding: 2% 5%;
 
   height: 100px;
@@ -39,6 +39,7 @@
   background-color: #f9f0f0;
   margin: 3% 0%;
   height: 250px;
+  min-width: 770px;
 }
 
 .snsGroup{
@@ -86,13 +87,13 @@
 }
 
 .submit_Btn{
-  float: right;
+
   border-radius: 20px;
   background-color: #363333;
   color: white;
-  width: 18%;
   border-color: #363333;
-  margin: 1% 42% 2% 0%
+  width: 8%;
+  margin: 2% 46%
 }
 
 #noVotingBtn{

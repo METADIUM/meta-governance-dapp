@@ -3,6 +3,7 @@ import { Button, List, Progress } from 'antd'
 import './style/style.css'
 import { testData } from './test/testData'
 import { getGithubContents } from '../util'
+import { githubConfig } from './config/githubConfig'
 
 
 class Authority extends React.Component {
@@ -28,28 +29,33 @@ class Authority extends React.Component {
 
     async getAuthorityList () {
       let list = []
-      //config 로 따로 빼서
-      //testData.govTestData = await getGithubContents('METADIUM', 'meta-authorities', 'master', 'authorities.json');
-      testData.govTestData = await getGithubContents('blueisle', 'meta-authorities', 'master', 'authorities.json');
+      testData.govTestData = await getGithubContents(githubConfig.org, githubConfig.repo, githubConfig.branch, githubConfig.source);
       console.log('getAuthorityList length: ', testData.govTestData.length)
 
       testData.govTestData.map(item => {
         list.push(
-          //background color 흰색
           <div className='authorityComp'>
             <div style={{ float: 'left', width: '19%', backgroundColor: '#FFEAF6' }}>
               <img src= {item.logo} alt='' width='100%' height='auto' />
             </div>
-            <div style={{ padding: 30, float: 'left', width: '81%' }}>
+            <div style={{ padding: 30, paddingBottom: 0, float: 'left', width: '81%' }}>
               <div style={{ height: '70px' }}>
                 <h2 style={{ float: 'left' }}>{item.title}</h2>
                 <h4 style={{ float: 'right' }}>Address: {item.addr}</h4>
               </div>
               <div style={{ height: '80px' }}><p>{item.description}</p></div>
               <div style={{ height: '70px' }}>
-                <div><h3><a href={item.homepage} target='_blank'>{item.title} Web site</a></h3></div>
                 <div>
                   {this.getSNSList(item.sns)}
+                  <Button
+                    className='snsGroup'
+                    href={item.homepage}
+                    shape='circle'
+                    ghost='true'
+                    type='primary'
+                  >
+                    <i class="fas fa-home fa-2x"></i>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -72,6 +78,7 @@ class Authority extends React.Component {
           case 'facebook': icon = 'fab fa-facebook fa-2x'; break;
           case 'instagram': icon = 'fab fa-instagram fa-2x'; break;
           case 'telegram': icon = 'fab fa-telegram fa-2x'; break;
+          case 'linkedin': icon = 'fab fa-linkedin fa-2x'; break;
         }
 
         sns.push(
@@ -85,6 +92,9 @@ class Authority extends React.Component {
           </Button>
         )
       }
+
+      /* Reversed. */
+      sns.reverse();
 
       return sns
     }

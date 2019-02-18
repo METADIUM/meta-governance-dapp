@@ -34,6 +34,8 @@ class ProposalForm extends React.Component {
       var inputMarginStyle = {marginBottom: '2%'};
       var scale = 'META';
 
+      let list = [];
+
       return (
         <div>
           {this.data.selectedVoteTopic == 'add'
