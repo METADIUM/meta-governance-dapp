@@ -48,7 +48,6 @@ class Authority extends React.Component {
                 <div>
                   {this.getSNSList(item.sns)}
                   <Button
-
                     className='snsGroup'
                     href={item.homepage}
                     shape='circle'
