@@ -5,7 +5,12 @@ import { Authority } from './components/Authority'
 import './App.css'
 
 // web3
-import getWeb3Instance from '../src/ethereum/web3'
+import getWeb3Instance from './ethereum/web3'
+import Web3 from 'web3'
+import web3Config from './ethereum/web3-config.json'
+
+// Contracts
+import { contracts, initContracts } from './ethereum/web3Components/contracts'
 
 const { Header, Content, Footer } = Layout
 const TabPane = Tabs.TabPane
@@ -13,8 +18,16 @@ const TabPane = Tabs.TabPane
 class App extends React.Component {
   state = {
     loadWeb3: false,
-    nav: '1'
+    nav: '1',
+    contractReady: false,
   };
+
+  async initContracts (web3) {
+    initContracts({
+      web3: new Web3(new Web3.providers.HttpProvider(web3Config.url)), 
+      netid: web3Config.netid
+    }).then(async () => this.setState({ contractReady: true }))
+  }
 
   constructor (props) {
     super(props)
@@ -22,9 +35,12 @@ class App extends React.Component {
     // Get web3 instance
     getWeb3Instance().then(async web3Config => {
       console.log('web3 information: ', web3Config)
+
+      this.initContracts(web3Config.web3)
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
+
       this.setState({ loadWeb3: false })
     })
   }
@@ -48,8 +64,8 @@ class App extends React.Component {
   getContent () {
     if (!this.state.loadWeb3) return
     switch (this.state.nav) {
-      case '1': return <Authority title='Authority' />
-      case '2': return <Voting title='Voting' />
+      case '1': return <Authority title='Authority' contracts = {contracts}/>
+      case '2': return <Voting title='Voting' contracts = {contracts}/>
       default:
     }
   }

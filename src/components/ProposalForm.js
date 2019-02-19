@@ -6,15 +6,11 @@ const { TextArea } = Input
 
 class ProposalForm extends React.Component {
     data = {
-      selectedVoteTopic: '',
+      selectedVoteTopic: ''
     }
     state = {
       isBack: false,
-      selectedChange: false,
-    }
-
-    constructor (props) {
-      super(props)
+      selectedChange: false
     }
 
     componentWillMount () {
@@ -28,45 +24,42 @@ class ProposalForm extends React.Component {
     }
 
     getContent () {
-
       if (!this.state.selectedChange) return
 
-      var inputMarginStyle = {marginBottom: '2%'};
-      var scale = 'META';
-
-      let list = [];
+      var inputMarginStyle = { marginBottom: '2%' }
+      var scale = 'META'
 
       return (
         <div>
-          {this.data.selectedVoteTopic == 'add'
+          {this.data.selectedVoteTopic === 'add'
             ? <div>
-                <h3> META Amount to be locked *</h3>
-                <Input style= {inputMarginStyle} addonAfter={scale} />
-              </div>
+              <h3> META Amount to be locked *</h3>
+              <Input style={inputMarginStyle} addonAfter={scale} />
+            </div>
             : null
           }
-          {this.data.selectedVoteTopic == 'replace'
+          {this.data.selectedVoteTopic === 'replace'
             ? <div>
-                <h3> META Amount to be locked (New) *</h3>
-                <Input style= {inputMarginStyle} addonAfter={scale}/>
-              </div>
+              <h3> META Amount to be locked (New) *</h3>
+              <Input style={inputMarginStyle} addonAfter={scale} />
+            </div>
             : null
           }
 
           <h3> New Authority Address *</h3>
-          <Input style= {inputMarginStyle}/>
+          <Input style={inputMarginStyle} />
           <h3> New Authority Node Description *</h3>
-          <Input style= {inputMarginStyle}/>
+          <Input style={inputMarginStyle} />
 
-          {this.data.selectedVoteTopic == 'replace'
+          {this.data.selectedVoteTopic === 'replace'
             ? <div>
-                <h3> META Amount to be unlocked (Old) *</h3>
-                <Input style= {inputMarginStyle} addonAfter={scale} />
-                <h3> Old Authority Address *</h3>
-                <Input style= {inputMarginStyle}/>
-                <h3> Old Authority Node Description *</h3>
-                <Input style= {inputMarginStyle}/>
-              </div>
+              <h3> META Amount to be unlocked (Old) *</h3>
+              <Input style={inputMarginStyle} addonAfter={scale} />
+              <h3> Old Authority Address *</h3>
+              <Input style={inputMarginStyle} />
+              <h3> Old Authority Node Description *</h3>
+              <Input style={inputMarginStyle} />
+            </div>
             : null
           }
 
@@ -91,8 +84,8 @@ class ProposalForm extends React.Component {
     render () {
       return (
         <div>
-          <div style={{margin: '1% 2% 3% 16%'}}>
-            <Button style={{float: 'left', marginRight: '2%'}}>←</Button>
+          <div style={{ margin: '1% 2% 3% 16%' }}>
+            <Button style={{ float: 'left', marginRight: '2%' }}>←</Button>
             <h2>Back to Voting</h2>
           </div>
           <div className='contentVotingDiv'>
@@ -107,32 +100,9 @@ class ProposalForm extends React.Component {
                 <Select.Option value='add'>Add Authority</Select.Option>
                 <Select.Option value='replace'>Replace Authority</Select.Option>
               </Select><hr />
-            </div><br></br><br></br>
+            </div><br /><br />
 
-            <div>
-                <div>
-                  <h2>META Amount to be locked *</h2>
-                  <Input addonAfter='META'/>
-                </div>
-                <div>
-                  <h2>META Authority to be locked *</h2>
-                  <Input />
-                </div>
-                <div>
-                  <h2>New Authority Address *</h2>
-                  <Input />
-                </div>
-                <div>
-                  <h2>New Authority Node Description *</h2>
-                  <Input />
-                </div>
-                <div>
-                  <h2>Description</h2>
-                  <TextArea placeholder='Max. 256 bytes' autosize={{ minRows: 2, maxRows: 4 }}/>
-                  <p style={{color: 'red', marginTop: '2%'}}> * Mandatory</p>
-                </div>
-            </div>
-            <div style={{marginTop: '2%'}}>
+            <div style={{ marginTop: '2%' }}>
               {this.getContent()}
             </div>
           </div>

@@ -1,34 +1,39 @@
 import React from 'react'
-import { Button, List, Progress, Input, Collapse } from 'antd'
+import { Button, Progress, Input } from 'antd'
 import './style/style.css'
-
-import { columns } from './columns'
 import { testData } from './test/testData'
 import { ProposalForm } from './ProposalForm'
 
-const ballotColumns = columns.ballotColumns
-
 class Voting extends React.Component {
     data = {
+      ballotOriginData: [],
       ballotOriginItems: [],
       activeItems: [],
       proposalItems: [],
       finalizedItems: [],
+      ballotCnt: 0,
     }
     state = {
       isBallotLoading: false,
       isBallotDetailLoading: false,
       // for test
-      newProposal: true,
+      newProposal: false
     }
 
     constructor (props) {
       super(props)
-      this.onClickDetailBtn = this.onClickDetailBtn.bind(this)
+      this.onClickDetail = this.onClickDetail.bind(this)
+      this.onClickVote = this.onClickVote.bind(this)
     }
 
-    componentWillMount () {
+    async componentWillMount () {
+      this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
+      console.log('Voting: ', this.data.ballotCnt)
       this.getBallotOriginInfo()
+    }
+
+    votingTest() {
+      
     }
 
     getBallotOriginInfo () {
@@ -51,12 +56,12 @@ class Voting extends React.Component {
               <div className='ballotDetailDiv' style={{ width: '10%' }}>
                 <h4>State</h4><p>{item.state}</p>
               </div>
-              {item.state == 'Ready' || item.state == 'Accepted' || item.state == 'Rejected'
-                ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetailBtn}>+</Button> : ''}
+              {item.state === 'Ready' || item.state === 'Accepted' || item.state === 'Rejected'
+                ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetail}>+</Button> : ''}
             </div>
             <div className='voteDiv'>
-              <Button id='noVotingBtn'>No</Button>
-              <Button id='yesVotingBtn'>Yes</Button>
+              <Button id='noVotingBtn' onClick={() => this.onClickVote('N')} >No</Button>
+              <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y')} >Yes</Button>
               <span>
                 <h4 style={{ float: 'left' }}>30%</h4>
                 <h4 style={{ float: 'right' }}>70%</h4>
@@ -64,12 +69,12 @@ class Voting extends React.Component {
               </span>
             </div>
             <div className='ballotExplainDiv'>
-              { item.state == 'InProgress'
+              { item.state === 'InProgress'
                 ? <div style={{ float: 'right' }}>
                   <p >Started: {item.startTime}</p>
                   <p >Ended: {item.endTime}</p>
                 </div> : ''}
-              { item.state == 'Ready'
+              { item.state === 'Ready'
                 ? <div style={{ float: 'right' }}>
                   <p >Duration: {item.duration}days</p>
                   <Button type='primary'>Change</Button>
@@ -79,7 +84,7 @@ class Voting extends React.Component {
               <p>description</p>
               <div>
                 <p>{item.memo}</p>
-                { item.state == 'Ready'
+                { item.state === 'Ready'
                   ? <Button style={{ float: 'right' }} type='primary'>Revoke</Button> : ''}
               </div>
             </div>
@@ -114,50 +119,57 @@ class Voting extends React.Component {
       this.data.finalizedItems = finalizedList
     }
 
-    onClickDetailBtn = (e) => {
+    onClickDetail = (e) => {
       console.log('onClickDetailBtn: ', e.target.props, this)
+    }
+
+    onClickVote = (e) => {
+      switch (e) {
+        case 'N':
+          break
+        case 'Y':
+          break
+      }
     }
 
     render () {
       return (
         <div>
           {!this.state.newProposal
-          ? 
-          <div className='contentDiv'>
-            <div>
-              <Input.Search
-                placeholder='Search by Type, Proposal, Keywords'
-                onSearch={value => console.log(value)}
-                enterButton
-                style={{ width: '70%', margin: '1% 0 1% 1.5%' }}
-              />
-              <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>>New Proposal</Button>
+            ? <div className='contentDiv'>
+              <div>
+                <Input.Search
+                  placeholder='Search by Type, Proposal, Keywords'
+                  onSearch={value => console.log(value)}
+                  enterButton
+                  style={{ width: '70%', margin: '1% 0 1% 1.5%' }}
+                />
+                <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>>New Proposal</Button>
+              </div>
+
+              <h1>Active</h1>
+              {this.state.isBallotLoading
+                ? this.data.activeItems
+                : <div>empty</div>
+              }<br /><br />
+
+              <h1>Proposals</h1>
+              {this.state.isBallotLoading
+                ? this.data.proposalItems
+                : <div>empty</div>
+              }<br /><br />
+
+              <h1>Finalized</h1>
+              {this.state.isBallotLoading
+                ? this.data.finalizedItems
+                : <div>empty</div>
+              }<br /><br />
             </div>
-
-            <h1>Active</h1>
-            {this.state.isBallotLoading
-              ? this.data.activeItems
-              : <div>empty</div>
-            }<br /><br />
-
-            <h1>Proposals</h1>
-            {this.state.isBallotLoading
-              ? this.data.proposalItems
-              : <div>empty</div>
-            }<br /><br />
-
-            <h1>Finalized</h1>
-            {this.state.isBallotLoading
-              ? this.data.finalizedItems
-              : <div>empty</div>
-            }<br /><br />
-          </div>
-          :
-          <div>
-            <ProposalForm />
-          </div>
+            : <div>
+              <ProposalForm />
+            </div>
           }
-        </div> 
+        </div>
       )
     }
 }
