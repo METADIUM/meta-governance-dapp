@@ -1,17 +1,15 @@
 let constants = {}
-constants.organization = 'METADIUM'
-constants.repoName = 'poa-chain-spec'
+constants.organization = 'blueisle'
+constants.repoName = 'governanace-spec'
 constants.addressesSourceFile = 'contracts.json'
 constants.ABIsSources = {
-  Identity: 'Identity.json',
-  IdentityManager: 'IdentityManager.json',
-  AttestationAgencyRegistry: 'AttestationAgencyRegistry.json',
-  TopicRegistry: 'TopicRegistry.json',
-  Achievement: 'Achievement.json',
-  AchievementManager: 'AchievementManager.json'
+  BallotStorage: 'BallotStorage.json' ,
+  EnvStorage: 'EnvStorage.json',
+  Gov: 'Gov.json',
+  Registry: 'Registry.json',
+  Staking: 'Staking.json'
 }
 constants.NETID_TESTNET = '101'
-
 constants.NETWORKS = {
   '101': {
     NAME: 'TESTNET',
@@ -21,5 +19,5 @@ constants.NETWORKS = {
     TESTNET: true
   }
 }
-
+constants.branchName = 'testnet';
 export { constants }

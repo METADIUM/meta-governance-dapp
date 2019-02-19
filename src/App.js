@@ -3,9 +3,11 @@ import { Layout, Button, Row, Col, Modal, Tabs } from 'antd'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
 import './App.css'
+import { getAddresses, getABI } from './ethereum/contract'
 
 // web3
 import getWeb3Instance from '../src/ethereum/web3'
+import { constants } from '../src/ethereum/constants'
 
 const { Header, Content, Footer } = Layout
 const TabPane = Tabs.TabPane
@@ -19,13 +21,38 @@ class App extends React.Component {
   constructor (props) {
     super(props)
 
-    // Get web3 instance
+    /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       console.log('web3 information: ', web3Config)
       this.setState({ loadWeb3: true })
+      let web3 = web3Config.web3Instance;
+      return web3
+
     }, async error => {
-      console.log('getWeb3 error: ', error)
-      this.setState({ loadWeb3: false })
+      console.log('getWeb3 error: ', error);
+      this.setState({ loadWeb3: false });
+    })
+    /* Get contract instances. */
+    .then(async web3 => {
+      let addresses = await getAddresses(constants.branchName)
+
+      let ballotStorageABI = await getABI(constants.branchName,'BallotStorage')
+      let envStorageABI = await getABI(constants.branchName, 'EnvStorage')
+      let govABI = await getABI(constants.branchName, 'Gov')
+      let registryABI = await getABI(constants.branchName, 'Registry')
+      let stakingABI = await getABI(constants.branchName, 'Staking')
+
+      let ballotStorageInstance = new web3.eth.Contract(ballotStorageABI.abi, addresses.BALLOT_STORAGE_ADDRESS)
+      let envStorageInstance = new web3.eth.Contract(envStorageABI.abi, addresses.ENV_STORAGE_ADDRESS)
+      let govInstance = new web3.eth.Contract(govABI.abi, addresses.GOV_ADDRESS)
+      let registryInstance = new web3.eth.Contract(registryABI.abi, addresses.REGISTRY_ADDRESS)
+      let stakingInstance = new web3.eth.Contract(stakingABI.abi, addresses.STAKING_ADDRESS)
+      
+      console.log(ballotStorageInstance)
+      console.log(envStorageInstance)
+      console.log(govInstance)
+      console.log(registryInstance)
+      console.log(stakingInstance)
     })
   }
 

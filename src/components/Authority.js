@@ -54,7 +54,7 @@ class Authority extends React.Component {
                     ghost='true'
                     type='primary'
                   >
-                    <i class="fas fa-home fa-2x"></i>
+                    <i className="fas fa-home fa-2x"></i>
                   </Button>
                 </div>
               </div>
@@ -88,7 +88,7 @@ class Authority extends React.Component {
             shape='circle'
             ghost='true'
             type='primary'>
-            <i class={icon}></i>
+            <i className={icon}></i>
           </Button>
         )
       }
