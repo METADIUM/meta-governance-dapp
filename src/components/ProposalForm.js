@@ -9,7 +9,7 @@ const { TextArea } = Input
 class ProposalForm extends React.Component {
 
     data = {
-      selectedVoteTopic: '',
+      selectedVoteTopic: ''
     }
     state = {
       isBack: false,

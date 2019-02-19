@@ -3,11 +3,13 @@ constants.organization = 'blueisle'
 constants.repoName = 'governanace-spec'
 constants.addressesSourceFile = 'contracts.json'
 constants.ABIsSources = {
-  BallotStorage: 'BallotStorage.json' ,
-  EnvStorage: 'EnvStorage.json',
-  Gov: 'Gov.json',
+  // contracts.json: contract address
   Registry: 'Registry.json',
-  Staking: 'Staking.json'
+  Staking: 'Staking.json',
+  EnvStorage: 'EnvStorage.json',
+  BallotStorage: 'BallotStorage.json',
+  Gov: 'Gov.json',
+  GovImp: 'GovImp.json'
 }
 constants.NETID_TESTNET = '101'
 constants.NETWORKS = {
