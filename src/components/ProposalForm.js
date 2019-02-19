@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Select, Input, Form } from 'antd'
 import './style/style.css'
 import { Voting } from './Voting'
+import { contracts, initContracts } from '../ethereum/web3Components/contracts'
 const { TextArea } = Input
 
 
@@ -188,7 +189,7 @@ class ProposalForm extends React.Component {
           </div>
           :
           <div>
-            <Voting />
+            <Voting contracts={contracts}/>
           </div>
         }
         </div>
