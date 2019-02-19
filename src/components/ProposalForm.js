@@ -1,8 +1,10 @@
 import React from 'react'
-import { Button, Select, Input } from 'antd'
+import { Button, Select, Input, Form } from 'antd'
 import './style/style.css'
-
+import { Voting } from './Voting'
 const { TextArea } = Input
+
+
 
 class ProposalForm extends React.Component {
 
@@ -66,41 +68,70 @@ class ProposalForm extends React.Component {
 
       if (!this.state.selectedChange) return
 
-      let inputMarginStyle = {marginBottom: '2%'};
+      let inputMarginStyle = {marginBottom: '0%'};
       let scale = 'META';
       let star = <span style={{color: 'red'}}>*</span>
 
+      function basicRule(msg){
+        return ({
+          rules: [{
+            required: true,
+            message: msg
+          }]
+        })
+      }
+      function formItemInput(ruleObject, options) {
+        return (
+          <Form.Item>
+            {getFieldDecorator(options.name, ruleObject)(
+              <Input style= {options.style} name={options.name} onChange={options.onChange} addonAfter={options.addonAfter} />
+            )}
+          </Form.Item>
+        );
+      }
+
+      const {
+        getFieldDecorator, getFieldsError, getFieldError, isFieldTouched,
+      } = this.props.form;
+
       return (
         <div>
-        <form onSubmit={this.handleSubmit} id='authorityForm'>
+        <Form onSubmit={this.handleSubmit} id='authorityForm'>
           {this.data.selectedVoteTopic === 'add'
             ? <div>
                 <h3> META Amount to be locked {star}</h3>
-                <Input style= {inputMarginStyle} addonAfter={scale} name = 'metaAmountToBeLocked' onChange={this.handleChange} />
+                {formItemInput( basicRule('Please input ... '),
+                  {name: 'metaAmountToBeLocked', style: inputMarginStyle, onChange: this.handleChange, addonAfter: scale})}
               </div>
             : null
           }
           {this.data.selectedVoteTopic === 'replace'
             ? <div>
                 <h3> META Amount to be locked (New) {star}</h3>
-                <Input style= {inputMarginStyle} addonAfter={scale} name = 'metaAmountToBeLockedNew' onChange={this.handleChange}/>
+                {formItemInput( basicRule('Please input ... '),
+                  {name: 'metaAmountToBeLockedNew', style: inputMarginStyle, onChange: this.handleChange, addonAfter: scale})}
               </div>
             : null
           }
 
           <h3> New Authority Address {star} </h3>
-          <Input style= {inputMarginStyle} name = 'newAuthorityAddress' onChange={this.handleChange}/>
+          {formItemInput (basicRule('Please input ...'),
+            {name: 'newAuthorityAddress', style: inputMarginStyle, onChange: this.handleChange})}
           <h3> New Authority Node Description {star}</h3>
-          <Input style= {inputMarginStyle} name = 'newAuthorityNodeDescription' onChange={this.handleChange}/>
+          {formItemInput (basicRule('Please input ...'),
+            {name: 'newAuthorityNodeDescription', style: inputMarginStyle, onChange: this.handleChange})}
 
           {this.data.selectedVoteTopic === 'replace'
             ? <div>
                 <h3> META Amount to be unlocked (Old) {star}</h3>
-                <Input style= {inputMarginStyle} addonAfter={scale} name = 'metaAmountToBeUnlockedOld' onChange={this.handleChange}/>
+                {formItemInput (basicRule('Please input ...'),
+                  {name: 'metaAmountToBeUnlockedOld', style: inputMarginStyle, onChange: this.handleChange})}
                 <h3> Old Authority Address {star}</h3>
-                <Input style= {inputMarginStyle} name = 'oldAuthorityAddress' onChange={this.handleChange} />
+                {formItemInput (basicRule('Please input ...'),
+                  {name: 'oldAuthorityAddress', style: inputMarginStyle, onChange: this.handleChange})}
                 <h3> Old Authority Node Description {star}</h3>
-                <Input style= {inputMarginStyle} name = 'oldAuthorityNodeDescription' onChange={this.handleChange}/>
+                {formItemInput (basicRule('Please input ...'),
+                  {name: 'oldAuthorityNodeDescription', style: inputMarginStyle, onChange: this.handleChange})}
               </div>
             : null
           }
@@ -116,14 +147,11 @@ class ProposalForm extends React.Component {
 
           <h4 style={{color: 'red', marginTop: '2%'}}>*Mandatory</h4>
           <div>
-            <Button
-              className='submit_Btn'
-              shape='round'
-              htmlType='submit'>
+            <Button className='submit_Btn' shape='round' htmlType='submit'>
               submit
             </Button>
           </div>
-        </form>
+        </Form>
         </div>
       )
     }
@@ -132,8 +160,12 @@ class ProposalForm extends React.Component {
 
       return (
         <div>
+
+        {!this.state.isBack
+          ?
+          <div>
           <div style={{margin: '1% 2% 3% 16%'}}>
-            <Button style={{float: 'left', marginRight: '2%'}}>←</Button>
+            <Button style={{float: 'left', marginRight: '2%'}} onClick={() => {this.setState({isBack: !this.state.isBack})}}>←</Button>
             <h2>Back to Voting</h2>
           </div>
           <div className='contentVotingDiv'>
@@ -153,9 +185,16 @@ class ProposalForm extends React.Component {
               {this.getAuthorityForm()}
             </div>
           </div>
+          </div>
+          :
+          <div>
+            <Voting />
+          </div>
+        }
         </div>
       )
     }
 }
 
+ProposalForm  = Form.create()(ProposalForm)
 export { ProposalForm }

@@ -19,7 +19,7 @@ class Voting extends React.Component {
       isBallotLoading: false,
       isBallotDetailLoading: false,
       // for test
-      newProposal: true,
+      newProposal: false,
     }
 
     constructor (props) {
@@ -122,7 +122,7 @@ class Voting extends React.Component {
       return (
         <div>
           {!this.state.newProposal
-          ? 
+          ?
           <div className='contentDiv'>
             <div>
               <Input.Search
@@ -157,7 +157,7 @@ class Voting extends React.Component {
             <ProposalForm />
           </div>
           }
-        </div> 
+        </div>
       )
     }
 }
