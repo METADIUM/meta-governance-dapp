@@ -5,8 +5,6 @@ import { Voting } from './Voting'
 import { contracts, initContracts } from '../ethereum/web3Components/contracts'
 const { TextArea } = Input
 
-
-
 class ProposalForm extends React.Component {
 
     initialFormData = {
@@ -60,8 +58,7 @@ class ProposalForm extends React.Component {
       const {name, value} = e.target;
       const type = typeof this.data.formData[this.data.selectedVoteTopic][name]
       this.data.formData[this.data.selectedVoteTopic][name]
-        = (type === 'number') ? Number(value)
-        : value;
+        = (type === 'number') ? Number(value) : value;
     }
 
     /* Submit form data. */
@@ -114,7 +111,7 @@ class ProposalForm extends React.Component {
         <div>
         <Form onSubmit={this.handleSubmit}>
           <h3> META Amount to be locked {star}</h3>
-          {formItemInput( defaultConfig('Please input ... '),
+          {formItemInput (defaultConfig('Please input ...'),
             {name: 'metaAmountToBeLocked', style: inputMarginStyle, onChange: this.handleChange, addonAfter: scale})}
           <h3> New Authority Address {star} </h3>
           {formItemInput (defaultConfig('Please input ...'),
@@ -184,14 +181,9 @@ class ProposalForm extends React.Component {
       );
 
       switch(this.data.selectedVoteTopic) {
-        case 'add':
-          return contentAdd;
-          break;
-        case 'replace':
-          return contentReplace;
-          break;
-        default:
-          return;
+        case 'add': return contentAdd; break;
+        case 'replace': return contentReplace; break;
+        default: return;
       }
     }
 
