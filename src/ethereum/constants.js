@@ -12,7 +12,6 @@ constants.ABIsSources = {
   GovImp: 'GovImp.json'
 }
 constants.NETID_TESTNET = '101'
-
 constants.NETWORKS = {
   '101': {
     NAME: 'TESTNET',
@@ -22,5 +21,5 @@ constants.NETWORKS = {
     TESTNET: true
   }
 }
-
+constants.branchName = 'testnet';
 export { constants }

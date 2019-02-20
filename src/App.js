@@ -24,7 +24,7 @@ class App extends React.Component {
 
   async initContracts (web3) {
     initContracts({
-      web3: new Web3(new Web3.providers.HttpProvider(web3Config.url)), 
+      web3: new Web3(new Web3.providers.HttpProvider(web3Config.url)),
       netid: web3Config.netid
     }).then(async () => this.setState({ contractReady: true }))
   }
@@ -32,12 +32,15 @@ class App extends React.Component {
   constructor (props) {
     super(props)
 
-    // Get web3 instance
+    /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       console.log('web3 information: ', web3Config)
 
       this.initContracts(web3Config.web3)
       this.setState({ loadWeb3: true })
+      let web3 = web3Config.web3Instance;
+      return web3
+
     }, async error => {
       console.log('getWeb3 error: ', error)
 
