@@ -3,11 +3,14 @@ import { Button, Progress, Input } from 'antd'
 import './style/style.css'
 import { testData } from './test/testData'
 import { ProposalForm } from './ProposalForm'
+import * as util from '../util'
+
 
 class Voting extends React.Component {
     data = {
-      ballotOriginData: [],
-      ballotOriginItems: [],
+      ballotBasicOriginData: [],
+      ballotMemberOriginData: [],
+      ballotBasicOriginItems: [],
       activeItems: [],
       proposalItems: [],
       finalizedItems: [],
@@ -28,35 +31,41 @@ class Voting extends React.Component {
 
     async componentWillMount () {
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
-      console.log('Voting: ', this.data.ballotCnt)
       this.getBallotOriginInfo()
     }
 
-    votingTest() {
 
-    }
-
-    getBallotOriginInfo () {
+    async getBallotOriginItem () {
       let list = []
+      // Use origin data in contract
+      if (!this.data.ballotCnt) return;
+      for (var i=1; i<=this.data.ballotCnt; i++) {
+        await this.props.contracts.ballotStorage.getBallotBasic(i).then(
+          ret => this.data.ballotBasicOriginData=[...this.data.ballotBasicOriginData, ret]
+        )
+      }
 
-      testData.votingTestData.map(item => {
+      if(!this.data.ballotBasicOriginData) return
+
+      this.data.ballotBasicOriginData.map(item => {
         list.push(
           <div className='ballotDiv' state={item.state} key={list.length}>
             <div className='ballotInfoDiv'>
               <div className='ballotDetailDiv' style={{ width: '15%' }}>
-                <h4>Creator</h4><p>{item.creator}
+                <h4>Creator</h4><p>METADIUM_EXAM
                 </p>
               </div>
               <div className='ballotDetailDiv' style={{ width: '15%' }}>
                 <h4>Ballot Type</h4><p>{item.ballotType}</p>
               </div>
               <div className='ballotDetailDiv'>
-                <h4>Proposal Address</h4><p>{item.proposalAddr}</p>
+                <h4>Proposal Address</h4><p>{item.creator}</p>
               </div>
               <div className='ballotDetailDiv' style={{ width: '10%' }}>
                 <h4>State</h4><p>{item.state}</p>
               </div>
-              {item.state === 'Ready' || item.state === 'Accepted' || item.state === 'Rejected'
+              {item.state === 1 || item.state === 3 || item.state === 4
+                // Ready, Accepted, Rejected
                 ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetail}>+</Button> : ''}
             </div>
             <div className='voteDiv'>
@@ -69,12 +78,13 @@ class Voting extends React.Component {
               </span>
             </div>
             <div className='ballotExplainDiv'>
-              { item.state === 'InProgress'
+              { item.state === 2
+                //InProgress
                 ? <div style={{ float: 'right' }}>
                   <p >Started: {item.startTime}</p>
                   <p >Ended: {item.endTime}</p>
                 </div> : ''}
-              { item.state === 'Ready'
+              { item.state === 1
                 ? <div style={{ float: 'right' }}>
                   <p >Duration: {item.duration}days</p>
                   <Button type='primary'>Change</Button>
@@ -83,8 +93,8 @@ class Voting extends React.Component {
               <p>description</p>
               <p>description</p>
               <div>
-                <p>{item.memo}</p>
-                { item.state === 'Ready'
+                <p>{util.convertHexToString(item.memo)}</p>
+                { item.state === 1
                   ? <Button style={{ float: 'right' }} type='primary'>Revoke</Button> : ''}
               </div>
             </div>
@@ -92,23 +102,28 @@ class Voting extends React.Component {
         )
       })
 
-      this.data.ballotOriginItems = list
+      this.data.ballotBasicOriginItems = list
       this.getBallotDetailInfo()
       this.setState({ isBallotLoading: true })
     }
 
     getBallotDetailInfo () {
       let activeList = []; let proposalList = []; let finalizedList = []
-      this.data.ballotOriginItems.map(item => {
+
+      this.data.ballotBasicOriginItems.map(item => {
+        console.log(item)
         switch (item.props.state) {
-          case 'InProgress':
+          case '2':
+          // InProgress
             activeList.push(item)
             break
-          case 'Ready':
+          case '1':
+          // Ready
             proposalList.push(item)
             break
-          case 'Accepted':
-          case 'Rejected':
+          case '4':
+          case '5':
+          // Aceepted, Rejected
             finalizedList.push(item)
             break
           default: break
@@ -117,6 +132,8 @@ class Voting extends React.Component {
       this.data.activeItems = activeList
       this.data.proposalItems = proposalList
       this.data.finalizedItems = finalizedList
+
+      console.log(this.data.activeItems, this.data.proposalItems, this.data.finalizedItems)
     }
 
     onClickDetail = (e) => {

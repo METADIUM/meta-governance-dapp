@@ -52,6 +52,20 @@ function refine (m) {
   return m
 }
 
+// function refineBallotBasic (m) {
+//   if (!m) return null
+//   Object.keys(m).forEach(key => {
+//     if (!isNaN(key)) return delete m[key]
+//     switch (key) {
+//       case 'startTime': m[key] = timeConverter(m[key]); break
+//       case 'endTime': m[key] = timeConverter(m[key]); break
+//       case 'memo': m[key] = convertHexToString(m[key]); break
+//       default: if (!m[key]) m[key] = ''; break
+//     }
+//   })
+//   return m
+// }
+
 function cmpIgnoreCase (a, b) {
   return a.toLowerCase().includes(b.toLowerCase())
 }
