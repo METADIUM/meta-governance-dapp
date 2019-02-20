@@ -1,10 +1,11 @@
 import React from 'react'
 import { Button, Progress, Input } from 'antd'
 import './style/style.css'
-import { testData } from './test/testData'
 import { ProposalForm } from './ProposalForm'
 import * as util from '../util'
+import {web3} from '../ethereum/web3'
 
+const Tx = require('ethereumjs-tx')
 
 class Voting extends React.Component {
     data = {
@@ -19,6 +20,7 @@ class Voting extends React.Component {
     state = {
       isBallotLoading: false,
       isBallotDetailLoading: false,
+      isVoted: false,
       // for test
       newProposal: false
     }
@@ -40,10 +42,9 @@ class Voting extends React.Component {
       if (!this.data.ballotCnt) return;
       for (var i=1; i<=this.data.ballotCnt; i++) {
         await this.props.contracts.ballotStorage.getBallotBasic(i).then(
-          ret => this.data.ballotBasicOriginData=[...this.data.ballotBasicOriginData, ret]
+          ret => this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
         )
       }
-
       if(!this.data.ballotBasicOriginData) return
 
       this.data.ballotBasicOriginData.map(item => {
@@ -63,37 +64,37 @@ class Voting extends React.Component {
               <div className='ballotDetailDiv' style={{ width: '10%' }}>
                 <h4>State</h4><p>{item.state}</p>
               </div>
-              {item.state === 1 || item.state === 3 || item.state === 4
+              {item.state === '1' || item.state === '3' || item.state === '4'
                 // Ready, Accepted, Rejected
                 ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetail}>+</Button> : ''}
             </div>
             <div className='voteDiv'>
+            <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y')} >Yes</Button>
               <Button id='noVotingBtn' onClick={() => this.onClickVote('N')} >No</Button>
-              <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y')} >Yes</Button>
               <span>
-                <h4 style={{ float: 'left' }}>30%</h4>
-                <h4 style={{ float: 'right' }}>70%</h4>
-                <Progress percent={30} showInfo={false} />
+                <h4 style={{ float: 'left' }}>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}</h4>
+                <h4 style={{ float: 'right' }}>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}</h4>
+                <Progress percent={item.powerOfAccept} showInfo={false} />
               </span>
             </div>
             <div className='ballotExplainDiv'>
-              { item.state === 2
+              { item.state === '2' || item.state === '3' || item.state === '4'
                 //InProgress
                 ? <div style={{ float: 'right' }}>
                   <p >Started: {item.startTime}</p>
                   <p >Ended: {item.endTime}</p>
-                </div> : ''}
-              { item.state === 1
+                </div> : null}
+              { item.state === '1'
                 ? <div style={{ float: 'right' }}>
                   <p >Duration: {item.duration}days</p>
                   <Button type='primary'>Change</Button>
-                </div> : ''}
+                </div> : null}
               <p>description</p>
               <p>description</p>
               <p>description</p>
               <div>
-                <p>{util.convertHexToString(item.memo)}</p>
-                { item.state === 1
+                <p>{item.memo}</p>
+                { item.state === '1'
                   ? <Button style={{ float: 'right' }} type='primary'>Revoke</Button> : ''}
               </div>
             </div>
@@ -110,20 +111,13 @@ class Voting extends React.Component {
       let activeList = []; let proposalList = []; let finalizedList = []
 
       this.data.ballotBasicOriginItems.map(item => {
-        console.log(item)
         switch (item.props.state) {
-          case '2':
-          // InProgress
-            activeList.push(item)
+          case '2': activeList.push(item) // InProgress 
             break
-          case '1':
-          // Ready
-            proposalList.push(item)
+          case '1': proposalList.push(item) // Ready
             break
-          case '4':
-          case '5':
-          // Aceepted, Rejected
-            finalizedList.push(item)
+          case '3': // Aceepted, Rejected
+          case '4': finalizedList.push(item)
             break
           default: break
         }
@@ -140,12 +134,32 @@ class Voting extends React.Component {
     }
 
     onClickVote = (e) => {
+      if (!web3) return
+      console.log(web3)
+      let tx_builder = this.props.contracts.govImp.govImpInstance.methods.vote(1,true)
+      let encoded_tx = tx_builder.encodeABI()
+      let rawTrx;
+      var trxObj = {
+        //gas: web3.utils.toHex(3000000),
+        gasPrice: web3.utils.toWei('18', 'gwei'),
+        nonce: 0,
+        data: encoded_tx,
+        from: '0x961c20596e7EC441723FBb168461f4B51371D8aA',
+        to: '0xeab80609b96cee89c48d384672f11616ffa50ffb'
+      }
+
+      web3.eth.sendTransaction(trxObj, (err, hash) => {
+        if(err) console.log('err: ', err)
+        else console.log('hash: ', hash)
+      });
+
       switch (e) {
         case 'N':
           break
         case 'Y':
           break
       }
+      this.setState({isVoted: true})
     }
 
     render () {
@@ -156,7 +170,6 @@ class Voting extends React.Component {
               <div>
                 <Input.Search
                   placeholder='Search by Type, Proposal, Keywords'
-                  onSearch={value => console.log(value)}
                   enterButton
                   style={{ width: '70%', margin: '1% 0 1% 1.5%' }}
                 />
