@@ -101,19 +101,19 @@
   margin: 2% 45%
 }
 
-#noVotingBtn{
+#yesVotingBtn{
   float: left;
   margin: 0 2% 0 4%;
   height: 50px;
-  background-color: firebrick;
+  background-color: teal;
   color: white;
 }
 
-#yesVotingBtn{
+#noVotingBtn{
   float: right;
   margin: 0 4% 0 2%;
   height: 50px;
-  background-color: teal;
+  background-color: firebrick;
   color: white;
 }
 
