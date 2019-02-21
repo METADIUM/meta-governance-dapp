@@ -127,6 +127,47 @@ var setUsersToLocal = (obj) => save('users', obj)
 var setTopicsToLocal = (obj) => save('topics', obj)
 var setAchievementsToLocal = (obj) => save('achievements', obj)
 
+/**
+ * Validators for ant design form
+ */
+const validNumber = (rule, value, callback) => {
+  const v = Number(value)
+  if (value == undefined || value == ''){
+    callback('Please input ...')
+    return;
+  }
+  else if (isNaN(v)){
+    callback('Invalid number')
+    return;
+  }
+  else if (v % 1 !== 0){
+    callback('Only Integer')
+  }
+  callback();
+}
+const validAddress = (rule, value, callback) => {
+  if (value == undefined || value == ''){
+    callback('Please input ...')
+    return;
+  }
+  else if (value.substring(0, 2) != '0x' || isNaN(Number(value)) ){
+    callback('Invalid address')
+    return;
+  }
+  callback();
+}
+const validLength = (rule, value, callback) => {
+  if (value == undefined){
+    callback()
+    return;
+  }
+  else if (value.length > 256){
+    callback('Longer than 256')
+    return;
+  }
+  callback();
+}
+
 export {
   borderColor,
   timeConverter,
@@ -146,5 +187,8 @@ export {
   getAchievementsFromLocal,
   setUsersToLocal,
   setTopicsToLocal,
-  setAchievementsToLocal
+  setAchievementsToLocal,
+  validNumber,
+  validAddress,
+  validLength
 }

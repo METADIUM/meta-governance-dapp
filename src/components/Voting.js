@@ -112,7 +112,7 @@ class Voting extends React.Component {
 
       this.data.ballotBasicOriginItems.map(item => {
         switch (item.props.state) {
-          case '2': activeList.push(item) // InProgress 
+          case '2': activeList.push(item) // InProgress
             break
           case '1': proposalList.push(item) // Ready
             break

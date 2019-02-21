@@ -3,6 +3,7 @@ import { Button, Select, Input, Form } from 'antd'
 import './style/style.css'
 import { Voting } from './Voting'
 import { contracts, initContracts } from '../ethereum/web3Components/contracts'
+import { validNumber, validAddress, validLength } from '../util'
 const { TextArea } = Input
 
 class ProposalForm extends React.Component {
@@ -43,22 +44,27 @@ class ProposalForm extends React.Component {
 
     }
 
-    onSelectChange = (value) => {
+    onSelectChange = async (value) => {
       console.log('onSelectChange: ', value)
       this.data.selectedVoteTopic = value
       this.setState({ selectedChange: true })
 
       /* Reset form field. */
-      this.props.form.resetFields();
+      let fields = Object.keys(this.data.formData[this.data.selectedVoteTopic])
       this.data.formData = JSON.parse(JSON.stringify(this.initialFormData))
+      await this.props.form.resetFields();
+      await this.props.form.validateFields(fields, async (err, values) => {})
     }
 
     /* Type casting and save form data. */
     handleChange = (e) => {
-      const {name, value} = e.target;
-      const type = typeof this.data.formData[this.data.selectedVoteTopic][name]
-      this.data.formData[this.data.selectedVoteTopic][name]
-        = (type === 'number') ? Number(value) : value;
+      const type = typeof this.data.formData[this.data.selectedVoteTopic][e.target.name]
+      if(type == 'number') {
+        e.target.value = e.target.value.replace(' ', '')
+        this.data.formData[this.data.selectedVoteTopic][e.target.name] = Number(e.target.value)
+      } else{
+        this.data.formData[this.data.selectedVoteTopic][e.target.name] = e.target.value
+      }
     }
 
     /* Submit form data. */
@@ -101,7 +107,7 @@ class ProposalForm extends React.Component {
         return (
           <Form.Item>
             {getFieldDecorator(options.name, config)(
-              <Input style= {options.style} name={options.name} onChange={options.onChange} addonAfter={options.addonAfter} />
+              <Input addonAfter={options.addonAfter} style= {options.style} name={options.name} onChange={options.onChange} type = {options.type}/>
             )}
           </Form.Item>
         );
@@ -111,23 +117,40 @@ class ProposalForm extends React.Component {
         <div>
         <Form onSubmit={this.handleSubmit}>
           <h3> META Amount to be locked {star}</h3>
-          {formItemInput (defaultConfig('Please input ...'),
-            {name: 'metaAmountToBeLocked', style: inputMarginStyle, onChange: this.handleChange, addonAfter: scale})}
+          {formItemInput ({
+            rules: [
+              {validator: validNumber}
+            ]
+          },
+            {name: 'metaAmountToBeLocked', style: inputMarginStyle, onChange: this.handleChange, addonAfter: scale })}
           <h3> New Authority Address {star} </h3>
-          {formItemInput (defaultConfig('Please input ...'),
+          {formItemInput ({
+            rules: [
+              {validator: validAddress}
+            ]
+          },
             {name: 'newAuthorityAddress', style: inputMarginStyle, onChange: this.handleChange})}
           <h3> New Authority Node Description {star}</h3>
           {formItemInput (defaultConfig('Please input ...'),
             {name: 'newAuthorityNodeDescription', style: inputMarginStyle, onChange: this.handleChange})}
 
           <h3> Description </h3>
-          <TextArea
-            rows={4}
-            placeholder='Max. 256 bytes'
-            autosize={{ minRows: 2, maxRows: 4 }}
-            name = 'description'
-            onChange={this.handleChange}
-          />
+          <Form.Item>
+          {getFieldDecorator('description', {
+            getValueFromEvent: (e) => e.target.value.substring(0, 256),
+            rules: [
+              {validator: validLength}
+            ]
+          })(
+            <TextArea
+              rows={4}
+              placeholder='Max. 256 bytes'
+              autosize={{ minRows: 2, maxRows: 4 }}
+              name = 'description'
+              onChange={this.handleChange}
+            />
+          )}
+          </Form.Item>
 
           <h4 style={{color: 'red', marginTop: '2%'}}>*Mandatory</h4>
           <Form.Item>
@@ -143,32 +166,57 @@ class ProposalForm extends React.Component {
         <div>
         <Form onSubmit={this.handleSubmit}>
           <h3> META Amount to be locked (New) {star}</h3>
-          {formItemInput( defaultConfig('Please input ... '),
+          {formItemInput( {
+            rules: [
+              {validator: validNumber}
+            ]
+          },
             {name: 'metaAmountToBeLockedNew', style: inputMarginStyle, onChange: this.handleChange, addonAfter: scale})}
           <h3> New Authority Address {star} </h3>
-          {formItemInput (defaultConfig('Please input ...'),
+          {formItemInput ({
+            rules: [
+              {validator: validAddress}
+            ]
+          },
             {name: 'newAuthorityAddress', style: inputMarginStyle, onChange: this.handleChange})}
           <h3> New Authority Node Description {star}</h3>
           {formItemInput (defaultConfig('Please input ...'),
             {name: 'newAuthorityNodeDescription', style: inputMarginStyle, onChange: this.handleChange})}
           <h3> META Amount to be unlocked (Old) {star}</h3>
-          {formItemInput (defaultConfig('Please input ...'),
+          {formItemInput ({
+            rules: [
+              {validator: validNumber}
+            ]
+          },
             {name: 'metaAmountToBeUnlockedOld', style: inputMarginStyle, onChange: this.handleChange, addonAfter: scale})}
           <h3> Old Authority Address {star}</h3>
-          {formItemInput (defaultConfig('Please input ...'),
+          {formItemInput ({
+            rules: [
+              {validator: validAddress}
+            ]
+          },
             {name: 'oldAuthorityAddress', style: inputMarginStyle, onChange: this.handleChange})}
           <h3> Old Authority Node Description {star}</h3>
           {formItemInput (defaultConfig('Please input ...'),
             {name: 'oldAuthorityNodeDescription', style: inputMarginStyle, onChange: this.handleChange})}
 
           <h3> Description </h3>
-          <TextArea
-            rows={4}
-            placeholder='Max. 256 bytes'
-            autosize={{ minRows: 2, maxRows: 4 }}
-            name = 'description'
-            onChange={this.handleChange}
-          />
+          <Form.Item>
+          {getFieldDecorator('description', {
+            getValueFromEvent: (e) => e.target.value.substring(0, 256),
+            rules: [
+              {validator: validLength}
+            ]
+          })(
+            <TextArea
+              rows={4}
+              placeholder='Max. 256 bytes'
+              autosize={{ minRows: 2, maxRows: 4 }}
+              name = 'description'
+              onChange={this.handleChange}
+            />
+          )}
+          </Form.Item>
 
           <h4 style={{color: 'red', marginTop: '2%'}}>*Mandatory</h4>
           <Form.Item>
