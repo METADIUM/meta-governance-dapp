@@ -7,59 +7,37 @@ import { validNumber, validAddress, validLength } from '../util'
 const { TextArea } = Input
 
 class ProposalForm extends React.Component {
-    initialFormData = {
-      add: {
-        metaAmountToBeLocked: 0,
-        newAuthorityAddress: 0,
-        newAuthorityNodeDescription: '',
-        description: ''
-      },
-      replace: {
-        metaAmountToBeLockedNew: 0,
-        newAuthorityAddress: 0,
-        newAuthorityNodeDescription: '',
-        metaAmountToBeUnlockedOld: 0,
-        oldAuthorityAddress: 0,
-        oldAuthorityNodeDescription: '',
-        description: ''
-      }
-    }
     data = {
       selectedVoteTopic: '',
-      formData: null
+      formData: {}
     }
     state = {
       isBack: false,
       selectedChange: false,
-      formData: null
+      submitForm: false
     }
 
     constructor (props) {
       super(props)
-      this.data.formData = JSON.parse(JSON.stringify(this.initialFormData))
     }
 
     onSelectChange = async (value) => {
       console.log('onSelectChange: ', value)
       this.data.selectedVoteTopic = value
-      this.setState({ selectedChange: true })
 
-      /* Reset form field. */
-      let fields = Object.keys(this.data.formData[this.data.selectedVoteTopic])
-      this.data.formData = JSON.parse(JSON.stringify(this.initialFormData))
-      await this.props.form.resetFields()
-      await this.props.form.validateFields(fields, async (err, values) => {})
+      this.setState({ selectedChange: true })
     }
 
     /* Type casting and save form data. */
     handleChange = (e) => {
-      const type = typeof this.data.formData[this.data.selectedVoteTopic][e.target.name]
-      if (type == 'number') {
-        e.target.value = e.target.value.replace(' ', '')
-        this.data.formData[this.data.selectedVoteTopic][e.target.name] = Number(e.target.value)
-      } else {
-        this.data.formData[this.data.selectedVoteTopic][e.target.name] = e.target.value
-      }
+      //const type = typeof this.data.formData[this.data.selectedVoteTopic][e.target.name]
+      console.log(e.target.name)
+      // if (type == 'number') {
+      //   e.target.value = e.target.value.replace(' ', '')
+      //   this.data.formData[this.data.selectedVoteTopic][e.target.name] = Number(e.target.value)
+      // } else {
+      //   this.data.formData[this.data.selectedVoteTopic][e.target.name] = e.target.value
+      // }
     }
 
     /* Submit form data. */
@@ -77,152 +55,88 @@ class ProposalForm extends React.Component {
       })
     }
 
-    getProposalForm () {
-      if (!this.state.selectedChange) return
-
-      const {
-        getFieldDecorator, getFieldsError, getFieldError, isFieldTouched
-      } = this.props.form
-
-      function defaultConfig (msg) {
-        return ({
-          rules: [{
-            required: true,
-            message: msg
-          }]
-        })
-      }
-
-      function formItemInput (config, options) {
-        return (
+    getAddProposalForm () {
+      return (<div>
+        <Form onSubmit={this.handleSubmit}>
+          <h3> META Amount to be locked {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            {getFieldDecorator(options.name, config)(
-              <Input addonAfter={options.addonAfter} style={options.style} name={options.name} onChange={options.onChange} type={options.type} />
-            )}
+            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='lock' onChange={this.handleChange }/>
           </Form.Item>
-        )
-      }
+          <h3> New Authority Address {<span style={{ color: 'red' }}>*</span>} </h3>
+          <Form.Item>
+            <Input style={ {marginBottom: '0%'} } name='addr' onChange={this.handleChange }/>
+          </Form.Item>
+          <h3> New Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
+          <Form.Item>
+            <Input style={ {marginBottom: '0%'} } name='node' onChange={this.handleChange }/>
+          </Form.Item>
+          <h3> Description </h3>
+          <Form.Item>
+              <TextArea
+                rows={4}
+                placeholder='Max. 256 bytes'
+                autosize={{ minRows: 2, maxRows: 4 }}
+                name='memo'
+                onChange={this.handleChange}
+              />
+          </Form.Item>
 
-      const contentAdd = (
-        <div>
-          <Form onSubmit={this.handleSubmit}>
-            <h3> META Amount to be locked {<span style={{ color: 'red' }}>*</span>}</h3>
-            {formItemInput({
-              rules: [
-                { validator: validNumber }
-              ]
-            },
-            { name: 'metaAmountToBeLocked', style: { marginBottom: '0%' }, onChange: this.handleChange, addonAfter: 'META' })}
-            <h3> New Authority Address {<span style={{ color: 'red' }}>*</span>} </h3>
-            {formItemInput({
-              rules: [
-                { validator: validAddress }
-              ]
-            },
-            { name: 'newAuthorityAddress', style: { marginBottom: '0%' }, onChange: this.handleChange })}
-            <h3> New Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
-            {formItemInput(defaultConfig('Please input ...'),
-              { name: 'newAuthorityNodeDescription', style: { marginBottom: '0%' }, onChange: this.handleChange })}
+          <h4 style={{ color: 'red', marginTop: '2%' }}>*Mandatory</h4>
+          <Form.Item>
+            <Button className='submit_Btn' shape='round' htmlType='submit'>
+            submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>)
+    }
 
-            <h3> Description </h3>
-            <Form.Item>
-              {getFieldDecorator('description', {
-                getValueFromEvent: (e) => e.target.value.substring(0, 256),
-                rules: [
-                  { validator: validLength }
-                ]
-              })(
-                <TextArea
-                  rows={4}
-                  placeholder='Max. 256 bytes'
-                  autosize={{ minRows: 2, maxRows: 4 }}
-                  name='description'
-                  onChange={this.handleChange}
-                />
-              )}
-            </Form.Item>
+    getReplaceProposalForm() {
+      return (<div>
+        <Form onSubmit={this.handleSubmit}>
+          <h3> META Amount to be locked (New) {<span style={{ color: 'red' }}>*</span>}</h3>
+          <Form.Item>
+            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='newAmount' onChange={this.handleChange }/>
+          </Form.Item>
+          <h3> New Authority Address {<span style={{ color: 'red' }}>*</span>} </h3>
+          <Form.Item>
+            <Input style={ {marginBottom: '0%'} } name='newAddr' onChange={this.handleChange }/>
+          </Form.Item>
+          <h3> New Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
+          <Form.Item>
+            <Input style={ {marginBottom: '0%'} } name='newNode' onChange={this.handleChange }/>
+          </Form.Item>
+          <h3> META Amount to be unlocked (Old) {<span style={{ color: 'red' }}>*</span>}</h3>
+          <Form.Item>
+            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='oldAmount' onChange={this.handleChange }/>
+          </Form.Item>
+          <h3> Old Authority Address {<span style={{ color: 'red' }}>*</span>}</h3>
+          <Form.Item>
+            <Input style={ {marginBottom: '0%'} } name='oldAddr' onChange={this.handleChange }/>
+          </Form.Item>
+          <h3> Old Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
+          <Form.Item>
+            <Input style={ {marginBottom: '0%'} } name='oldNode' onChange={this.handleChange }/>
+          </Form.Item>
+          <h3> Description </h3>
+          <Form.Item>
+              <TextArea
+                rows={4}
+                placeholder='Max. 256 bytes'
+                autosize={{ minRows: 2, maxRows: 4 }}
+                name='memo'
+                onChange={this.handleChange}
+              />
+          </Form.Item>
 
-            <h4 style={{ color: 'red', marginTop: '2%' }}>*Mandatory</h4>
-            <Form.Item>
-              <Button className='submit_Btn' shape='round' htmlType='submit'>
+          <h4 style={{ color: 'red', marginTop: '2%' }}>*Mandatory</h4>
+          <Form.Item>
+            <Button className='submit_Btn' shape='round' htmlType='submit'>
               submit
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
-      )
-
-      const contentReplace = (
-        <div>
-          <Form onSubmit={this.handleSubmit}>
-            <h3> META Amount to be locked (New) {<span style={{ color: 'red' }}>*</span>}</h3>
-            {formItemInput({
-              rules: [
-                { validator: validNumber }
-              ]
-            },
-            { name: 'metaAmountToBeLockedNew', style: { marginBottom: '0%' }, onChange: this.handleChange, addonAfter: 'META' })}
-            <h3> New Authority Address {<span style={{ color: 'red' }}>*</span>} </h3>
-            {formItemInput({
-              rules: [
-                { validator: validAddress }
-              ]
-            },
-            { name: 'newAuthorityAddress', style: { marginBottom: '0%' }, onChange: this.handleChange })}
-            <h3> New Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
-            {formItemInput(defaultConfig('Please input ...'),
-              { name: 'newAuthorityNodeDescription', style: { marginBottom: '0%' }, onChange: this.handleChange })}
-            <h3> META Amount to be unlocked (Old) {<span style={{ color: 'red' }}>*</span>}</h3>
-            {formItemInput({
-              rules: [
-                { validator: validNumber }
-              ]
-            },
-            { name: 'metaAmountToBeUnlockedOld', style: { marginBottom: '0%' }, onChange: this.handleChange, addonAfter: 'META' })}
-            <h3> Old Authority Address {<span style={{ color: 'red' }}>*</span>}</h3>
-            {formItemInput({
-              rules: [
-                { validator: validAddress }
-              ]
-            },
-            { name: 'oldAuthorityAddress', style: { marginBottom: '0%' }, onChange: this.handleChange })}
-            <h3> Old Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
-            {formItemInput(defaultConfig('Please input ...'),
-              { name: 'oldAuthorityNodeDescription', style: { marginBottom: '0%' }, onChange: this.handleChange })}
-
-            <h3> Description </h3>
-            <Form.Item>
-              {getFieldDecorator('description', {
-                getValueFromEvent: (e) => e.target.value.substring(0, 256),
-                rules: [
-                  { validator: validLength }
-                ]
-              })(
-                <TextArea
-                  rows={4}
-                  placeholder='Max. 256 bytes'
-                  autosize={{ minRows: 2, maxRows: 4 }}
-                  name='description'
-                  onChange={this.handleChange}
-                />
-              )}
-            </Form.Item>
-
-            <h4 style={{ color: 'red', marginTop: '2%' }}>*Mandatory</h4>
-            <Form.Item>
-              <Button className='submit_Btn' shape='round' htmlType='submit'>
-                submit
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
-      )
-
-      switch (this.data.selectedVoteTopic) {
-        case 'add': return contentAdd
-        case 'replace': return contentReplace
-        default:
-      }
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>)
     }
 
     render () {
@@ -247,9 +161,11 @@ class ProposalForm extends React.Component {
                     <Select.Option value='replace'>Replace Authority</Select.Option>
                   </Select><hr />
                 </div><br /><br />
-                <div style={{ marginTop: '2%' }}>
-                  {this.getProposalForm()}
-                </div>
+                { this.data.selectedVoteTopic !== '' ?
+                  <div style={{ marginTop: '2%' }}>
+                    { this.data.selectedVoteTopic === 'add' ? this.getAddProposalForm() : this.getReplaceProposalForm() }
+                  </div> : ''
+                }
               </div>
             </div>
             : <div>
