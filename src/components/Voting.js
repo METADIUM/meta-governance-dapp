@@ -4,24 +4,22 @@ import './style/style.css'
 import { ProposalForm } from './ProposalForm'
 import * as util from '../util'
 import { web3Instance } from '../ethereum/web3'
-
-const Tx = require('ethereumjs-tx')
+import { constants } from '../ethereum/constants'
 
 class Voting extends React.Component {
     data = {
       ballotBasicOriginData: [],
-      ballotMemberOriginData: [],
       ballotBasicOriginItems: [],
+      ballotUpdateData: { duration: 3, memo: 'new memo' },
       activeItems: [],
       proposalItems: [],
       finalizedItems: [],
-      ballotCnt: 0,
+      ballotCnt: 0
     }
     state = {
       isBallotLoading: false,
       isBallotDetailLoading: false,
       didVoted: false,
-      // for test
       newProposal: false
     }
 
@@ -29,7 +27,7 @@ class Voting extends React.Component {
       super(props)
       this.onClickDetail = this.onClickDetail.bind(this)
       this.onClickVote = this.onClickVote.bind(this)
-      this.onClickAlterProposal = this.onClickAlterProposal.bind(this)
+      this.onClickUpdateProposal = this.onClickUpdateProposal.bind(this)
     }
 
     async componentWillMount () {
@@ -40,39 +38,38 @@ class Voting extends React.Component {
     async getBallotOriginItem () {
       let list = []
       // Use origin data in contract
-      if (!this.data.ballotCnt) return;
-      for (var i=1; i<=this.data.ballotCnt; i++) {
+      if (!this.data.ballotCnt) return
+      for (var i = 1; i <= this.data.ballotCnt; i++) {
         await this.props.contracts.ballotStorage.getBallotBasic(i).then(
           ret => {
-            ret.id = i  // Add ballot id
+            ret.id = i // Add ballot id
             this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
           })
       }
-      if(!this.data.ballotBasicOriginData) return
+      if (!this.data.ballotBasicOriginData) return
       this.data.ballotBasicOriginData.map(item => {
         list.push(
-          <div className='ballotDiv' state={item.state} key={list.length} id = {item.id}>
+          <div className='ballotDiv' state={item.state} key={list.length} id={item.id}>
             <div className='ballotInfoDiv'>
               <div className='ballotDetailDiv' style={{ width: '15%' }}>
                 <h4>Creator</h4><p>METADIUM_EXAM
                 </p>
               </div>
               <div className='ballotDetailDiv' style={{ width: '15%' }}>
-                <h4>Ballot Type</h4><p>{item.ballotType}</p>
+                <h4>Ballot Type</h4><p>{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
               </div>
               <div className='ballotDetailDiv'>
                 <h4>Proposal Address</h4><p>{item.creator}</p>
               </div>
               <div className='ballotDetailDiv' style={{ width: '10%' }}>
-                <h4>State</h4><p>{item.state}</p>
+                <h4>State</h4><p>{constants.ballotStateArr[parseInt(item.state)]}</p>
               </div>
-              {item.state === '1' || item.state === '3' || item.state === '4'
-                // Ready, Accepted, Rejected
+              {item.state === constants.ballotState.Ready || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
                 ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetail}>+</Button> : ''}
             </div>
             <div className='voteDiv'>
-            <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y')} >Yes</Button>
-              <Button id='noVotingBtn' onClick={() => this.onClickVote('N')} >No</Button>
+              <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
+              <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
               <span>
                 <h4 style={{ float: 'left' }}>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}</h4>
                 <h4 style={{ float: 'right' }}>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}</h4>
@@ -80,16 +77,16 @@ class Voting extends React.Component {
               </span>
             </div>
             <div className='ballotExplainDiv'>
-              { item.state === '2' || item.state === '3' || item.state === '4'
-                //InProgress
+              { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                // InProgress
                 ? <div style={{ float: 'right' }}>
                   <p >Started: {item.startTime}</p>
                   <p >Ended: {item.endTime}</p>
                 </div> : null}
-              { item.state === '1'
+              { item.state === constants.ballotState.Ready
                 ? <div style={{ float: 'right' }}>
                   <p >Duration: {item.duration}days</p>
-                  <Button type='primary' onClick={() => this.onClickAlterProposal('change', item.id)}>Change</Button>
+                  <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
                 </div> : null}
               <p>description</p>
               <p>description</p>
@@ -97,13 +94,12 @@ class Voting extends React.Component {
               <div>
                 <p>{item.memo}</p>
                 { item.state === '1'
-                  ? <Button onClick={() => this.onClickAlterProposal('revoke',item.id)} style={{ float: 'right' }} type='primary'>Revoke</Button> : ''}
+                  ? <Button onClick={() => this.onClickUpdateProposal('revoke', item.id)} style={{ float: 'right' }} type='primary'>Revoke</Button> : ''}
               </div>
             </div>
           </div>
         )
       })
-      console.log('data: ', this.data.ballotBasicOriginData)
       this.data.ballotBasicOriginItems = list
       this.getBallotDetailInfo()
       this.setState({ isBallotLoading: true })
@@ -133,51 +129,50 @@ class Voting extends React.Component {
       console.log('onClickDetailBtn: ', e.target.props, this)
     }
 
-    onClickVote = (e) => {
-      // if (!web3) return
+    onClickVote = (e, id) => {
+      if (!web3Instance.web3) return
 
-      // let tx_builder = this.props.contracts.govImp.govImpInstance.methods.vote(1,true)
-      // let encoded_tx = tx_builder.encodeABI()
-      // let rawTrx;
-      // var trxObj = {
-      //   //gas: web3.utils.toHex(3000000),
-      //   gasPrice: web3.utils.toWei('18', 'gwei'),
-      //   nonce: 0,
-      //   data: encoded_tx,
-      //   from: '0x961c20596e7EC441723FBb168461f4B51371D8aA',
-      //   to: '0xeab80609b96cee89c48d384672f11616ffa50ffb'
-      // }
+      let approval
+      if (e === 'N') approval = false
+      else approval = true
 
-      // web3.eth.sendTransaction(trxObj, (err, hash) => {
-      //   if(err) console.log('err: ', err)
-      //   else console.log('hash: ', hash)
-      // });
-
-      // switch (e) {
-      //   case 'N':
-      //     break
-      //   case 'Y':
-      //     break
-      // }
-      // this.setState({ didVoted: true })
+      let { to, data } = this.props.contracts.govImp.vote(id, approval)
+      web3Instance.web3.eth.sendTransaction({
+        from: web3Instance.defaultAccount,
+        to: to,
+        data: data
+      }, (err, hash) => {
+        if (err) console.log('err: ', err)
+        else {
+          this.setState({ didVoted: true })
+        }
+      })
     }
 
-    onClickAlterProposal = (e, id) => {
-      console.log(e, id)
+    onClickUpdateProposal = (e, id) => {
       switch (e) {
         case 'change':
-          let { to, data } = this.props.contracts.ballotStorage.updateBallotDuration(id, 86400)
+          let { c_to, c_data } = this.props.contracts.ballotStorage.updateBallotDuration(id, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
           web3Instance.web3.eth.sendTransaction({
             from: web3Instance.defaultAccount,
-            to: to,
-            data: data
-          },(err, hash) => {
-              if(err) console.log('err: ', err)
-              else console.log('hash: ', hash)
-            });
+            to: c_to,
+            data: c_data
+          }, (err, hash) => {
+            if (err) console.log('err: ', err)
+            else console.log('hash: ', hash)
+          })
           break
         case 'revoke':
-        break
+          let { r_to, r_data } = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
+          web3Instance.web3.eth.sendTransaction({
+            from: web3Instance.defaultAccount,
+            to: r_to,
+            data: r_data
+          }, (err, hash) => {
+            if (err) console.log('err: ', err)
+            else console.log('hash: ', hash)
+          })
+          break
       }
     }
 
@@ -196,22 +191,13 @@ class Voting extends React.Component {
               </div>
 
               <h1>Active</h1>
-              {this.state.isBallotLoading
-                ? this.data.activeItems
-                : <div>empty</div>
-              }<br /><br />
+              {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }<br /><br />
 
               <h1>Proposals</h1>
-              {this.state.isBallotLoading
-                ? this.data.proposalItems
-                : <div>empty</div>
-              }<br /><br />
+              {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }<br /><br />
 
               <h1>Finalized</h1>
-              {this.state.isBallotLoading
-                ? this.data.finalizedItems
-                : <div>empty</div>
-              }<br /><br />
+              {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}<br /><br />
             </div>
             : <div>
               <ProposalForm />

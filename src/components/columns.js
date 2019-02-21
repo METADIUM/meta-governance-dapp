@@ -90,7 +90,7 @@ columns.ballotBasicColumns = [
     dataIndex: 'duration',
     key: 'duration'
     // width: '20%',
-  },
+  }
 ]
 
 export { columns }

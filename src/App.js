@@ -19,7 +19,7 @@ class App extends React.Component {
   state = {
     loadWeb3: false,
     nav: '1',
-    contractReady: false,
+    contractReady: false
   };
 
   constructor (props) {
@@ -30,7 +30,6 @@ class App extends React.Component {
       console.log(web3Config)
       this.initContracts(web3Config.web3)
       this.setState({ loadWeb3: true })
-
     }, async error => {
       console.log('getWeb3 error: ', error)
       this.setState({ loadWeb3: false })
@@ -63,8 +62,8 @@ class App extends React.Component {
   getContent () {
     if (!this.state.loadWeb3) return
     switch (this.state.nav) {
-      case '1': return <Authority title='Authority' contracts = {contracts}/>
-      case '2': return <Voting title='Voting' contracts = {contracts}/>
+      case '1': return <Authority title='Authority' contracts={contracts} />
+      case '2': return <Voting title='Voting' contracts={contracts} />
       default:
     }
   }

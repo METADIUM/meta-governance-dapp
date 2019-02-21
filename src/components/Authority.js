@@ -1,12 +1,12 @@
 import React from 'react'
 import { Button } from 'antd'
 import './style/style.css'
-import { testData } from './test/testData'
-import { getGithubContents } from '../util'
-import { githubConfig } from './config/githubConfig'
+import { getAuthorityLists } from '../util'
+import { constants } from '../ethereum/constants'
 
 class Authority extends React.Component {
     data = {
+      authorityOriginData: [],
       authorityItems: []
     }
 
@@ -14,7 +14,8 @@ class Authority extends React.Component {
       getAuthorityInfo: false
     }
 
-    componentWillMount () {
+    async componentDidMount () {
+      this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
       this.getAuthorityList()
     }
 
@@ -24,12 +25,11 @@ class Authority extends React.Component {
 
     async getAuthorityList () {
       let list = []
-      testData.govTestData = await getGithubContents(githubConfig.org, githubConfig.repo, githubConfig.branch, githubConfig.source)
-      console.log('getAuthorityList length: ', testData.govTestData.length)
-      // authority.json에서 가져온 data들을 변수에 저장해서 foreach로 돌면 됨
-      testData.govTestData.map(item => {
+      this.data.authorityOriginData = await getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
+
+      this.data.authorityOriginData.map(item => {
         list.push(
-          <div key={item.website} className='authorityComp'>
+          <div key={item.addr} className='authorityComp'>
             <div style={{ float: 'left', width: '19%', backgroundColor: '#FFEAF6' }}>
               <img src={item.logo} alt='' width='100%' height='auto' />
             </div>
@@ -50,7 +50,7 @@ class Authority extends React.Component {
                     ghost='true'
                     type='primary'
                   >
-                    <i className="fas fa-home fa-2x"></i>
+                    <i className='fas fa-home fa-2x' />
                   </Button>
                 </div>
               </div>
@@ -85,7 +85,7 @@ class Authority extends React.Component {
             shape='circle'
             ghost='true'
             type='primary'>
-            <i className={icon}></i>
+            <i className={icon} />
           </Button>
         )
       }

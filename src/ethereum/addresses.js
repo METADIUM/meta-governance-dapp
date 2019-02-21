@@ -5,7 +5,7 @@ let TESTNET_ADDRESSES = {}
 
 async function getContractsAddresses (netId) {
   let branch = getBranch(netId)
-  let addr = addressesURL(branch)   //ex: https://raw.githubusercontent.com/hexoul/poa-chain-spec/testnet/contracts.json
+  let addr = addressesURL(branch) // ex: https://raw.githubusercontent.com/hexoul/poa-chain-spec/testnet/contracts.json
   let response
   try {
     response = await fetch(addr)

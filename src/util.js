@@ -8,6 +8,7 @@ var borderColor = {
 }
 
 var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+var dayTimestamp = 86400
 
 /**
  * Convert UNIX timestamp to readable
@@ -17,6 +18,10 @@ function timeConverter (timestamp) {
   var a = new Date(timestamp * 1000)
   var month = months[a.getMonth()]
   return a.getFullYear() + ' / ' + month + ' / ' + a.getDate()
+}
+
+function convertDayToTimestamp (day) {
+  return day * dayTimestamp
 }
 
 function convertHexToString (input) {
@@ -60,6 +65,9 @@ function refineBallotBasic (m) {
       case 'startTime': m[key] = timeConverter(m[key]); break
       case 'endTime': m[key] = timeConverter(m[key]); break
       case 'memo': m[key] = convertHexToString(m[key]); break
+      case 'duration': m[key] /= dayTimestamp; break
+      case 'powerOfRejects':
+      case 'powerOfAccepts': m[key] = parseInt(m[key]) / 100; break
       default: if (!m[key]) m[key] = ''; break
     }
   })
@@ -109,7 +117,17 @@ function isValidLength (str) {
   return encoder.encode(str).length
 }
 
-async function getGithubContents (org, repo, branch, source) {
+function convertStringToBytes (str) {
+  var bytes = []
+  for (var i = 0; i < str.length; i++) {
+    var char = str.charCodeAt(i)
+    bytes.push(char >>> 8)
+    bytes.push(char & 0xFF)
+  }
+  return bytes
+}
+
+async function getAuthorityLists (org, repo, branch, source) {
   const URL = `https://raw.githubusercontent.com/${org}/${repo}/${branch}/${source}`
   return fetch(URL).then(response => response.json())
 }
@@ -132,40 +150,36 @@ var setAchievementsToLocal = (obj) => save('achievements', obj)
  */
 const validNumber = (rule, value, callback) => {
   const v = Number(value)
-  if (value == undefined || value == ''){
+  if (value == undefined || value == '') {
     callback('Please input ...')
-    return;
-  }
-  else if (isNaN(v)){
+    return
+  } else if (isNaN(v)) {
     callback('Invalid number')
-    return;
-  }
-  else if (v % 1 !== 0){
+    return
+  } else if (v % 1 !== 0) {
     callback('Only Integer')
   }
-  callback();
+  callback()
 }
 const validAddress = (rule, value, callback) => {
-  if (value == undefined || value == ''){
+  if (value == undefined || value == '') {
     callback('Please input ...')
-    return;
-  }
-  else if (value.substring(0, 2) != '0x' || isNaN(Number(value)) ){
+    return
+  } else if (value.substring(0, 2) != '0x' || isNaN(Number(value))) {
     callback('Invalid address')
-    return;
+    return
   }
-  callback();
+  callback()
 }
 const validLength = (rule, value, callback) => {
-  if (value == undefined){
+  if (value == undefined) {
     callback()
-    return;
-  }
-  else if (value.length > 256){
+    return
+  } else if (value.length > 256) {
     callback('Longer than 256')
-    return;
+    return
   }
-  callback();
+  callback()
 }
 
 export {
@@ -173,12 +187,14 @@ export {
   timeConverter,
   sleep,
   convertHexToString,
+  convertDayToTimestamp,
+  convertStringToBytes,
   asyncForEach,
   refine,
   refineBallotBasic,
   cmpIgnoreCase,
   isValidLength,
-  getGithubContents,
+  getAuthorityLists,
   validate,
   save,
   load,

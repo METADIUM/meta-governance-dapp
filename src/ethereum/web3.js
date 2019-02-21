@@ -8,7 +8,7 @@ let getWeb3Instance = () => {
     window.addEventListener('load', async () => {
       // Checking if Web3 has been injected by the browser (Mist/MetaMask)
       let web3
-      
+
       if (window.ethereum) {
         web3 = new Web3(window.ethereum)
         console.log('Injected web3 detected.')

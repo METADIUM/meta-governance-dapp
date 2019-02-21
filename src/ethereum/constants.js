@@ -15,11 +15,43 @@ constants.NETID_TESTNET = '101'
 constants.NETWORKS = {
   '101': {
     NAME: 'TESTNET',
-    RPC: 'http://13.124.111.52:8545',
+    RPC: 'https://api-dev.metadium.com/test',
     BRANCH: 'master',
     NETWORK: 'private',
     TESTNET: true
   }
 }
-constants.branchName = 'testnet';
+constants.branchName = 'testnet'
+
+constants.authorityRepo = {
+  org: 'blueisle',
+  repo: 'meta-authorities',
+  branch: 'master',
+  source: 'authorities.json'
+}
+
+/**
+ * BallotEnums
+ */
+constants.ballotState = {
+  Invalid: '0',
+  Ready: '1',
+  InProgress: '2',
+  Accepted: '3',
+  Rejected: '4',
+  Canceled: '5'
+}
+
+constants.ballotTypes = {
+  Invalid: '0',
+  MemverAdd: '1',
+  MemberRemoval: '2',
+  MemberChange: '3',
+  GovernanceChange: '4',
+  EnvValChange: '5'
+}
+
+constants.ballotStateArr = ['Invalid', 'Ready', 'InProgress', 'Accepted', 'Rejected', 'Canceled']
+constants.ballotTypesArr = ['Invalid', 'MemberAdd', 'MemberRemoval', 'MemberChange', 'GovernanceChange', 'EnvValChange']
+
 export { constants }
