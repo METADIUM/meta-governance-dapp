@@ -1,14 +1,14 @@
 import Web3 from 'web3'
-import web3config from './web3-config.json'
 import { constants } from './constants'
-
-var web3
+var web3Instance
 
 let getWeb3Instance = () => {
   return new Promise((resolve, reject) => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener('load', async () => {
       // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+      let web3
+      
       if (window.ethereum) {
         web3 = new Web3(window.ethereum)
         console.log('Injected web3 detected.')
@@ -60,16 +60,15 @@ let getWeb3Instance = () => {
         reject({ message: errorMsg })
         return
       }
-
-      resolve({
+      web3Instance = {
         web3: web3,
         netIdName,
         netId,
         defaultAccount
-      })
+      }
+      resolve(web3Instance)
     })
   })
 }
-
 export default getWeb3Instance
-export {web3}
+export { web3Instance }

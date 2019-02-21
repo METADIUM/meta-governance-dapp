@@ -3,7 +3,7 @@ import { Button, Progress, Input } from 'antd'
 import './style/style.css'
 import { ProposalForm } from './ProposalForm'
 import * as util from '../util'
-import {web3} from '../ethereum/web3'
+import { web3Instance } from '../ethereum/web3'
 
 const Tx = require('ethereumjs-tx')
 
@@ -20,7 +20,7 @@ class Voting extends React.Component {
     state = {
       isBallotLoading: false,
       isBallotDetailLoading: false,
-      isVoted: false,
+      didVoted: false,
       // for test
       newProposal: false
     }
@@ -29,6 +29,7 @@ class Voting extends React.Component {
       super(props)
       this.onClickDetail = this.onClickDetail.bind(this)
       this.onClickVote = this.onClickVote.bind(this)
+      this.onClickAlterProposal = this.onClickAlterProposal.bind(this)
     }
 
     async componentWillMount () {
@@ -42,14 +43,15 @@ class Voting extends React.Component {
       if (!this.data.ballotCnt) return;
       for (var i=1; i<=this.data.ballotCnt; i++) {
         await this.props.contracts.ballotStorage.getBallotBasic(i).then(
-          ret => this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
-        )
+          ret => {
+            ret.id = i  // Add ballot id
+            this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
+          })
       }
       if(!this.data.ballotBasicOriginData) return
-
       this.data.ballotBasicOriginData.map(item => {
         list.push(
-          <div className='ballotDiv' state={item.state} key={list.length}>
+          <div className='ballotDiv' state={item.state} key={list.length} id = {item.id}>
             <div className='ballotInfoDiv'>
               <div className='ballotDetailDiv' style={{ width: '15%' }}>
                 <h4>Creator</h4><p>METADIUM_EXAM
@@ -87,7 +89,7 @@ class Voting extends React.Component {
               { item.state === '1'
                 ? <div style={{ float: 'right' }}>
                   <p >Duration: {item.duration}days</p>
-                  <Button type='primary'>Change</Button>
+                  <Button type='primary' onClick={() => this.onClickAlterProposal('change', item.id)}>Change</Button>
                 </div> : null}
               <p>description</p>
               <p>description</p>
@@ -95,13 +97,13 @@ class Voting extends React.Component {
               <div>
                 <p>{item.memo}</p>
                 { item.state === '1'
-                  ? <Button style={{ float: 'right' }} type='primary'>Revoke</Button> : ''}
+                  ? <Button onClick={() => this.onClickAlterProposal('revoke',item.id)} style={{ float: 'right' }} type='primary'>Revoke</Button> : ''}
               </div>
             </div>
           </div>
         )
       })
-
+      console.log('data: ', this.data.ballotBasicOriginData)
       this.data.ballotBasicOriginItems = list
       this.getBallotDetailInfo()
       this.setState({ isBallotLoading: true })
@@ -125,8 +127,6 @@ class Voting extends React.Component {
       this.data.activeItems = activeList
       this.data.proposalItems = proposalList
       this.data.finalizedItems = finalizedList
-
-      console.log(this.data.activeItems, this.data.proposalItems, this.data.finalizedItems)
     }
 
     onClickDetail = (e) => {
@@ -134,32 +134,51 @@ class Voting extends React.Component {
     }
 
     onClickVote = (e) => {
-      if (!web3) return
-      console.log(web3)
-      let tx_builder = this.props.contracts.govImp.govImpInstance.methods.vote(1,true)
-      let encoded_tx = tx_builder.encodeABI()
-      let rawTrx;
-      var trxObj = {
-        //gas: web3.utils.toHex(3000000),
-        gasPrice: web3.utils.toWei('18', 'gwei'),
-        nonce: 0,
-        data: encoded_tx,
-        from: '0x961c20596e7EC441723FBb168461f4B51371D8aA',
-        to: '0xeab80609b96cee89c48d384672f11616ffa50ffb'
-      }
+      // if (!web3) return
 
-      web3.eth.sendTransaction(trxObj, (err, hash) => {
-        if(err) console.log('err: ', err)
-        else console.log('hash: ', hash)
-      });
+      // let tx_builder = this.props.contracts.govImp.govImpInstance.methods.vote(1,true)
+      // let encoded_tx = tx_builder.encodeABI()
+      // let rawTrx;
+      // var trxObj = {
+      //   //gas: web3.utils.toHex(3000000),
+      //   gasPrice: web3.utils.toWei('18', 'gwei'),
+      //   nonce: 0,
+      //   data: encoded_tx,
+      //   from: '0x961c20596e7EC441723FBb168461f4B51371D8aA',
+      //   to: '0xeab80609b96cee89c48d384672f11616ffa50ffb'
+      // }
 
+      // web3.eth.sendTransaction(trxObj, (err, hash) => {
+      //   if(err) console.log('err: ', err)
+      //   else console.log('hash: ', hash)
+      // });
+
+      // switch (e) {
+      //   case 'N':
+      //     break
+      //   case 'Y':
+      //     break
+      // }
+      // this.setState({ didVoted: true })
+    }
+
+    onClickAlterProposal = (e, id) => {
+      console.log(e, id)
       switch (e) {
-        case 'N':
+        case 'change':
+          let { to, data } = this.props.contracts.ballotStorage.updateBallotDuration(id, 86400)
+          web3Instance.web3.eth.sendTransaction({
+            from: web3Instance.defaultAccount,
+            to: to,
+            data: data
+          },(err, hash) => {
+              if(err) console.log('err: ', err)
+              else console.log('hash: ', hash)
+            });
           break
-        case 'Y':
-          break
+        case 'revoke':
+        break
       }
-      this.setState({isVoted: true})
     }
 
     render () {
@@ -173,7 +192,7 @@ class Voting extends React.Component {
                   enterButton
                   style={{ width: '70%', margin: '1% 0 1% 1.5%' }}
                 />
-                <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>>New Proposal</Button>
+                <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>New Proposal</Button>
               </div>
 
               <h1>Active</h1>
