@@ -23,12 +23,6 @@
     outline: none;
 }
 
-.contentDiv{
-  padding: 0 15%;
-  border-radius: 10px;
-}
-
-
 .contentVotingDiv{
   padding: 0 20%;
   border-radius: 10px;
@@ -38,13 +32,6 @@
   padding: 2% 5%;
   height: 100px;
   margin: 3% 0 3% 0;
-}
-
-.authorityComp{
-  background-color: #f9f0f0;
-  margin: 3% 0%;
-  height: 250px;
-  min-width: 770px;
 }
 
 .snsGroup{
@@ -79,16 +66,6 @@
 .ballotDetailDiv {
   float: left;
   margin-right: 2%;
-}
-
-.apply_proposal_Btn{
-  float: right;
-  border-radius: 20px;
-  background-color: #363333;
-  color: white;
-  width: 18%;
-  border-color: #363333;
-  margin: 1% 1.5% 0% 0%
 }
 
 .submit_Btn{
@@ -148,4 +125,128 @@
   padding-top: 0;
   padding-bottom: 0;
   /* margin-bottom: 16px; */
+}
+
+/* Authority */
+
+.background {
+  background-color: #EEEEF0;
+}
+
+.contentDiv {
+  margin: 0 auto;
+  max-width: 1152px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.apply_proposal_Btn_container {
+  padding: 24px 16px 16px 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.apply_proposal_Btn_container .apply_proposal_Btn {
+  height: 40px;
+  border-radius: 20px;
+  color: #000000;
+  padding: 0 20px;
+} .apply_proposal_Btn_container .apply_proposal_Btn:hover {
+  color: #ffffff;
+  background-color: #261BC9;
+}
+
+.authorityComp{
+  margin-bottom: 24px;
+  padding: 0 16px;
+} .authorityComp:last-child {
+  margin-bottom: 64px;
+}
+
+.authorityComp .authorityComp_contnet {
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+} .authorityComp .authorityComp_contnet:hover {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.authorityComp .authorityComp_contnet .img_container {
+  width: 192px;
+  height: 192px;
+  margin-right: 16px;
+  display: flex;
+  align-content: center;
+  overflow: hidden;
+}
+
+.authorityComp .authorityComp_contnet .img_container img {
+  width: 100%;
+}
+
+.authorityComp .authorityComp_contnet .text_container {
+  flex: 100;
+  padding-left: 24px;
+  border-left: #EEEEF0 solid 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+.authorityComp .authorityComp_contnet .long {
+  min-height: 192px;
+}
+
+.authorityComp .authorityComp_contnet .short {
+  height: 192px;
+}
+
+.authorityComp .authorityComp_contnet .text_container .title {
+  margin: 8px 0 0 0;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.authorityComp .authorityComp_contnet .text_container .address {
+  margin: 0;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.authorityComp .authorityComp_contnet .text_container .description {
+  flex: 100;
+  margin: 12px 0 0 0;
+  overflow: hidden;
+}
+
+.authorityComp .authorityComp_contnet .text_container .link_container {
+  margin: 12px 0 0 0;
+  display: flex;
+  align-items: flex-end;
+}
+
+.authorityComp .authorityComp_contnet .text_container .more {
+  line-height: 24px;
+  color: #261BC9;
+}
+
+.authorityComp .authorityComp_contnet .text_container .SNSList {
+  flex: 100;
+  width: 24px;
+  height: 24px;
+}
+
+.authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup {
+  margin: 0 0 0 8px;
+}
+
+.authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x {
+  font-size: 24px;
+  color: rgba(0, 0, 0, 0.8);
 }

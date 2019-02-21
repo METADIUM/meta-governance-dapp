@@ -23,35 +23,42 @@ class Authority extends React.Component {
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
     }
 
-    async getAuthorityList () {
+    breakLine(description) {
+      var br = React.createElement('br');
+      var regex = /(<br>)/g;
+      return description.split(regex).map((line, index) => line.match(regex) ? <br key={"key_" + index} /> : line)
+    }
+
+    onReadMoreClick (index) {
+      console.log(index)
+      this.getAuthorityList(index)
+    }
+
+    async getAuthorityList (index) {
       let list = []
       this.data.authorityOriginData = await getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
 
-      this.data.authorityOriginData.map(item => {
+      this.data.authorityOriginData.map((item, i) => {
         list.push(
           <div key={item.addr} className='authorityComp'>
-            <div style={{ float: 'left', width: '19%', backgroundColor: '#FFEAF6' }}>
-              <img src={item.logo} alt='' width='100%' height='auto' />
-            </div>
-            <div style={{ padding: 30, paddingBottom: 0, float: 'left', width: '81%' }}>
-              <div style={{ height: '70px' }}>
-                <h2 style={{ float: 'left' }}>{item.title}</h2>
-                <h4 style={{ float: 'right' }}>Address: {item.addr}</h4>
+            <div className="authorityComp_contnet">
+              <div className="img_container">
+                <img src={item.logo} alt=''/>
               </div>
-              <div style={{ height: '80px' }}><p>{item.description}</p></div>
-
-              <div style={{ height: '80px' }}>
-                <div>
-                  {this.getSNSList(item.sns)}
-                  <Button
-                    className='snsGroup'
-                    href={item.homepage}
-                    shape='circle'
-                    ghost='true'
-                    type='primary'
-                  >
-                    <i className='fas fa-home fa-2x' />
-                  </Button>
+              <div className={i === index ? "text_container long" : "text_container short"}>
+                <p className="title">{item.title}</p>
+                <p className="address">Address: {item.addr}</p>
+                <p className={"description"}>{this.breakLine(item.description)}</p>
+                <div className="link_container">
+                  <a className="more" onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
+                  <div className="SNSList">
+                    {this.getSNSList(item.sns)}
+                    <a
+                      className='snsGroup'
+                      href={item.homepage}>
+                      <i className="fas fa-home fa-2x"></i>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -78,15 +85,12 @@ class Authority extends React.Component {
         }
 
         sns.push(
-          <Button
+          <a
             key={key}
             className='snsGroup'
-            href={snsList[key]}
-            shape='circle'
-            ghost='true'
-            type='primary'>
-            <i className={icon} />
-          </Button>
+            href={snsList[key]}>
+            <i className={icon}></i>
+          </a>
         )
       }
 
@@ -97,10 +101,10 @@ class Authority extends React.Component {
 
     render () {
       return (
-        <div>
+        <div className="background">
           <div className='contentDiv'>
-            <div><Button className='apply_proposal_Btn' onClick={this.onApplyBtnClick}>Apply for Authority</Button></div>
-            <div style={{ padding: 20, minHeight: 500 }}>
+            <div className='apply_proposal_Btn_container'><Button className='apply_proposal_Btn' onClick={this.onApplyBtnClick}>Apply for Authority</Button></div>
+            <div className='card_container'>
               {this.state.getAuthorityInfo
                 ? this.data.authorityItems
                 : <div>empty</div>
