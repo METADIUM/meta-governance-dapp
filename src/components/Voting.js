@@ -200,7 +200,7 @@ class Voting extends React.Component {
               {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}<br /><br />
             </div>
             : <div>
-              <ProposalForm />
+              <ProposalForm contracts = {this.props.contracts}/>
             </div>
           }
         </div>

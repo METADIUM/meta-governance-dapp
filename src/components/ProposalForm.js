@@ -2,7 +2,9 @@ import React from 'react'
 import { Button, Select, Input, Form } from 'antd'
 import './style/style.css'
 import { Voting } from './Voting'
-import { contracts, initContracts } from '../ethereum/web3Components/contracts'
+import { web3Instance } from '../ethereum/web3'
+import * as util from '../util'
+
 import { validNumber, validAddress, validLength } from '../util'
 const { TextArea } = Input
 
@@ -22,36 +24,64 @@ class ProposalForm extends React.Component {
     }
 
     onSelectChange = async (value) => {
-      console.log('onSelectChange: ', value)
       this.data.selectedVoteTopic = value
-
+      // Reset form data
+      this.data.formData = {}
       this.setState({ selectedChange: true })
     }
 
     /* Type casting and save form data. */
     handleChange = (e) => {
-      //const type = typeof this.data.formData[this.data.selectedVoteTopic][e.target.name]
-      console.log(e.target.name)
+      
       // if (type == 'number') {
       //   e.target.value = e.target.value.replace(' ', '')
       //   this.data.formData[this.data.selectedVoteTopic][e.target.name] = Number(e.target.value)
       // } else {
       //   this.data.formData[this.data.selectedVoteTopic][e.target.name] = e.target.value
       // }
+      this.data.formData[e.target.name] = e.target.value
     }
 
     /* Submit form data. */
     handleSubmit = async (e) => {
       e.preventDefault()
-      let submitedFields = Object.keys(this.data.formData[this.data.selectedVoteTopic])
-      this.props.form.validateFields(submitedFields, async (err, values) => {
-        if (!err) {
-          console.log('Received values of form: ', values)
-          await this.setState({
-            formData: this.data.formData
-          })
-          console.log(this.state.formData)
-        }
+      let trx = {}
+      let isMember = await this.props.contracts.gov.isMember(web3Instance.defaultAccount)
+      if (!isMember) {
+        console.log('Not Member')
+        return
+      }
+      util.refineSubmitData(this.data.formData)
+
+      if(this.data.selectedVoteTopic === 'add') {
+        trx = this.props.contracts.govImp.addProposalToAddMember(
+          this.data.formData.addr,
+          this.data.formData.node.node,
+          this.data.formData.node.ip,
+          this.data.formData.node.port,
+          this.data.formData.lockAmount,
+          this.data.formData.memo
+        )
+      } else {
+        trx = this.props.contracts.govImp.addProposalToChangeMember(
+          this.data.formData.oldAddr,
+          this.data.formData.newAddr,
+          this.data.formData.newNode.node,
+          this.data.formData.newNode.ip,
+          this.data.formData.newNode.port,
+          this.data.formData.newLockAmount,
+          this.data.formData.memo
+        )
+      }
+      console.log(this.data.formData)
+
+      web3Instance.web3.eth.sendTransaction({
+        from: web3Instance.defaultAccount,
+        to: trx.to,
+        data: trx.data
+      }, (err, hash) => {
+        if (err) console.log('err: ', err)
+        else console.log('hash: ', hash)
       })
     }
 
@@ -60,7 +90,7 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <h3> META Amount to be locked {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='lock' onChange={this.handleChange }/>
+            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='lockAmount' onChange={this.handleChange }/>
           </Form.Item>
           <h3> New Authority Address {<span style={{ color: 'red' }}>*</span>} </h3>
           <Form.Item>
@@ -83,9 +113,7 @@ class ProposalForm extends React.Component {
 
           <h4 style={{ color: 'red', marginTop: '2%' }}>*Mandatory</h4>
           <Form.Item>
-            <Button className='submit_Btn' shape='round' htmlType='submit'>
-            submit
-            </Button>
+            <Button className='submit_Btn' shape='round' htmlType='submit'>submit </Button>
           </Form.Item>
         </Form>
       </div>)
@@ -96,7 +124,7 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <h3> META Amount to be locked (New) {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='newAmount' onChange={this.handleChange }/>
+            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='newLockAmount' onChange={this.handleChange }/>
           </Form.Item>
           <h3> New Authority Address {<span style={{ color: 'red' }}>*</span>} </h3>
           <Form.Item>
@@ -108,7 +136,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <h3> META Amount to be unlocked (Old) {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='oldAmount' onChange={this.handleChange }/>
+            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='oldLockAmount' onChange={this.handleChange }/>
           </Form.Item>
           <h3> Old Authority Address {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
@@ -131,9 +159,7 @@ class ProposalForm extends React.Component {
 
           <h4 style={{ color: 'red', marginTop: '2%' }}>*Mandatory</h4>
           <Form.Item>
-            <Button className='submit_Btn' shape='round' htmlType='submit'>
-              submit
-            </Button>
+            <Button className='submit_Btn' shape='round' htmlType='submit'>submit</Button>
           </Form.Item>
         </Form>
       </div>)
@@ -169,7 +195,7 @@ class ProposalForm extends React.Component {
               </div>
             </div>
             : <div>
-              <Voting contracts={contracts} />
+              <Voting contracts={this.props.contracts} />
             </div>
           }
         </div>

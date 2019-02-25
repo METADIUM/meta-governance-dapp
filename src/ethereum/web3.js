@@ -3,6 +3,8 @@ import { constants } from './constants'
 var web3Instance
 
 let getWeb3Instance = () => {
+  if (web3Instance) return web3Instance
+  
   return new Promise((resolve, reject) => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener('load', async () => {

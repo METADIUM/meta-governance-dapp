@@ -6,7 +6,6 @@ import './App.css'
 
 // web3
 import getWeb3Instance from './ethereum/web3'
-import Web3 from 'web3'
 import web3Config from './ethereum/web3-config.json'
 
 // Contracts
@@ -21,12 +20,12 @@ class App extends React.Component {
     loadWeb3: false,
     nav: '1',
     contractReady: false,
-    stakingModal: false
+    stakingModal: false,
+    selectedMenu: false,
   };
 
   constructor (props) {
     super(props)
-
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       console.log(web3Config)
@@ -45,8 +44,8 @@ class App extends React.Component {
     }).then(async () => this.setState({ contractReady: true }))
   }
 
-  onMenuClick = (key) => {
-    this.setState({ nav: key })
+  onMenuClick = ({key}) => {
+    this.setState({ nav: key+"" })
     console.log(key)
   }
 
@@ -68,6 +67,7 @@ class App extends React.Component {
       case '2': return <Voting title='Voting' contracts={contracts} />
       default:
     }
+    this.setState({ selectedMenu: true})
   }
 
   showStakingModal = (e) => {
