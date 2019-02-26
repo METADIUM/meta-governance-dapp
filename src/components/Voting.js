@@ -91,9 +91,11 @@ class Voting extends React.Component {
                   <p >Duration: {item.duration}days</p>
                   <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
                 </div> : null}
-              <p>description</p>
-              <p>description</p>
-              <p>description</p>
+              { item.ballotType === constants.ballotTypes.MemberChange
+                ?<p>Old Authority Address : </p> 
+                : null }
+              <p>New Authority Address : </p>
+              <p>META To be Replaced : </p>
               <div>
                 <p>{item.memo}</p>
                 { item.state === '1'
