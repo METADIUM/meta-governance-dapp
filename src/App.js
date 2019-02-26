@@ -134,7 +134,7 @@ class App extends React.Component {
             handleInputChange={this.handleInputChange}
             handleSelectChange={this.handleSelectChange}/>
 
-          <Content style={{ backgroundColor: 'white' }}>
+          <Content style={{ backgroundColor: '##EEEEF0' }}>
             {this.state.loadWeb3
               ? <div> {this.getContent()} </div>
               : <div> { this.getErrModal()} </div>
