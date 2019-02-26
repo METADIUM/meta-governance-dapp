@@ -24,7 +24,6 @@ class Voting extends React.Component {
       didVoted: false,
       newProposal: false,
       position: 'active'
-
     }
 
     constructor (props) {
@@ -32,6 +31,11 @@ class Voting extends React.Component {
       this.onClickDetail = this.onClickDetail.bind(this)
       this.onClickVote = this.onClickVote.bind(this)
       this.onClickUpdateProposal = this.onClickUpdateProposal.bind(this)
+
+      this.activeTitle = null;
+      this.proposalTitle = null;
+      this.finalizedTitle = null;
+      this.ballotDestals = new Map();
     }
 
     async componentDidMount () {
@@ -54,61 +58,58 @@ class Voting extends React.Component {
           })
       }
       if (!this.data.ballotBasicOriginData) return
-      this.data.ballotBasicOriginData.map(item => {
+      this.data.ballotBasicOriginData.map((item, index) => {
         list.push(
-          <div className='ballotDiv' state={item.state} key={list.length} id={item.id}>
-            <div className='ballotInfoDiv'>
-              <div className='ballotDetailDiv' style={{ width: '15%' }}>
-                <h4>Creator</h4><p>METADIUM_EXAM
-                </p>
+          <div className={"ballotDiv state" + item.state} state={item.state} key={list.length} id={item.id} ref={ ref => this.ballotDestals.set(index, ref)}>
+            <div className="ballotInfoDiv">
+              <div className="infoLeft">
+                <p className="topic">{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
+                <p className="company">METADIUM_EXAM</p>
+                <p className="addr">{item.creator}</p>
               </div>
-              <div className='ballotDetailDiv' style={{ width: '15%' }}>
-                <h4>Ballot Type</h4><p>{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
+              <div className="infoRight">
+                {item.state === constants.ballotState.Ready || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                  ? <Button type='primary' id='ballotDetailBtn' onClick={e => this.onClickDetail(index, e)} icon="down"/> : <div>&nbsp;</div>}
+                <p className="status">Status : {constants.ballotStateArr[parseInt(item.state)]}</p>
               </div>
-              <div className='ballotDetailDiv'>
-                <h4>Proposal Address</h4><p>{item.creator}</p>
-              </div>
-              <div className='ballotDetailDiv' style={{ width: '10%' }}>
-                <h4>State</h4><p>{constants.ballotStateArr[parseInt(item.state)]}</p>
-              </div>
-              {item.state === constants.ballotState.Ready || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetail}>+</Button> : ''}
             </div>
-            <div className='voteDiv'>
-              { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                ? <div>
-                  <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
-                  <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button></div>
-                : <div><Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
-                  <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button></div>}
-              <span>
-                <h4 style={{ float: 'left' }}>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}</h4>
-                <h4 style={{ float: 'right' }}>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}</h4>
-                <Progress percent={item.powerOfAccept} showInfo={false} />
-              </span>
-            </div>
-            <div className='ballotExplainDiv'>
-              { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                // InProgress
-                ? <div style={{ float: 'right' }}>
-                  <p >Started: {item.startTime}</p>
-                  <p >Ended: {item.endTime}</p>
-                </div> : null}
-              { item.state === constants.ballotState.Ready
-                ? <div style={{ float: 'right' }}>
-                  <p >Duration: {item.duration}days</p>
-                  <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
-                </div> : null}
-              { item.ballotType === constants.ballotTypes.MemberChange
-                ? <p>Old Authority Address : </p>
-                : null }
-              <p>New Authority Address : </p>
-              <p>META To be Replaced : </p>
-              <div>
+	          <div className="ballotContentDiv">
+              <div className="voteDiv">
+                <div className="imageContent">
+                  <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
+                  <div className="chart">
+                    <div className="number">
+                      <span>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}%</span>
+                      <span>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}%</span>
+                    </div>
+                    <Progress percent={item.powerOfAccepts} status="active" showInfo={false} />
+                  </div>
+                  <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
+                </div>
+                <div className="textContent">
+                  <p className="description">description<br/>description<br/>description</p>
+                  <div className="duration">
+                    { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected || item.state === constants.ballotState.InProgress
+                    ? <div>
+                      <div><span>Start : </span><span>{item.startTime}</span></div>
+                      <div><span>End : </span><span>{item.endTime}</span></div>
+                    </div> : null }
+                    { item.state === constants.ballotState.Ready
+                    ? <div>
+                      <div><span>duration</span><span>{item.duration}days</span></div>
+                      <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
+                    </div> : null }
+                  </div>
+                </div>
+              </div>
+              <div className="memoDiv">
+                <p>MEMO</p>
                 <p>{item.memo}</p>
-                { item.state === '1'
-                  ? <Button onClick={() => this.onClickUpdateProposal('revoke', item.id)} style={{ float: 'right' }} type='primary'>Revoke</Button> : ''}
               </div>
+              { item.state === '1'
+              ? <div className="revokeDiv">
+                <Button onClick={() => this.onClickUpdateProposal('revoke', item.id)}>Revoke</Button>
+              </div> : null }
             </div>
           </div>
         )
@@ -139,8 +140,8 @@ class Voting extends React.Component {
       this.data.finalizedItems = finalizedList
     }
 
-    onClickDetail = (e) => {
-      console.log('onClickDetailBtn: ', e.target.props, this)
+    onClickDetail = (index, e) => {
+      this.ballotDestals.get(index).style.height = this.ballotDestals.get(index).style.height === "auto" ? "124px" : "auto";
     }
 
     async onClickVote (e, id) {
@@ -187,10 +188,16 @@ class Voting extends React.Component {
     }
 
     onClickSubMenu = (e) => {
-      console.log('position ', e)
-      this.setState({
-        position: e.key
-      })
+      switch(e.key) {
+        case 'active': window.scrollTo(0, this.activeTitle.offsetTop - 70)
+          break
+        case 'proposal': window.scrollTo(0, this.proposalTitle.offsetTop - 70)
+          break
+        case 'finalized': window.scrollTo(0, this.finalizedTitle.offsetTop - 70)
+         break
+        default: break
+      }
+      this.setState({ position: e.key })
     }
 
     render () {
@@ -230,13 +237,28 @@ class Voting extends React.Component {
                 </Affix>
               </div>
               <div className='contentDiv'>
-                <h1>Active</h1>
-                {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }<br /><br />
-                <h1>Proposals</h1>
-                {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }<br /><br />
-
-                <h1>Finalized</h1>
-                {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}<br /><br />
+                <p className="stateTitle" ref={ ref => {this.activeTitle = ref;} }>Active</p>
+                {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }
+                <p className="stateTitle" ref={ ref => {this.proposalTitle = ref;} }>Proposals</p>
+                {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }
+                {this.data.proposalItems.length > 0
+                ? <div className="moreDiv">
+                  <Button value="large">
+                    <span>+</span>
+                    <span className="text_btn">Read More</span>
+                  </Button>
+                </div>
+                : null}
+                <p className="stateTitle"ref={ ref => {this.finalizedTitle = ref;} }>Finalized</p>
+                {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}
+                {this.data.finalizedItems.length > 0
+                ? <div className="moreDiv">
+                  <Button value="large">
+                    <span>+</span>
+                    <span className="text_btn">Read More</span>
+                  </Button>
+                </div>
+                : null}
               </div>
             </div>
             : <div>
