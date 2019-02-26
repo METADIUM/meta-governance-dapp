@@ -64,8 +64,8 @@ class Voting extends React.Component {
             <div className="ballotInfoDiv">
               <div className="infoLeft">
                 <p className="topic">{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
-                <p className="company">METADIUM_EXAM</p>
-                <p className="addr">{item.creator}</p>
+                <p className="company">Proposal: METADIUM_EXAM</p>
+                <p className="addr">Proposal Address: {item.creator}</p>
               </div>
               <div className="infoRight">
                 {item.state === constants.ballotState.Ready || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
@@ -76,7 +76,9 @@ class Voting extends React.Component {
 	          <div className="ballotContentDiv">
               <div className="voteDiv">
                 <div className="imageContent">
-                  <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
+                { !this.data.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                ? <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
+                : <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button> }
                   <div className="chart">
                     <div className="number">
                       <span>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}%</span>
@@ -84,10 +86,14 @@ class Voting extends React.Component {
                     </div>
                     <Progress percent={item.powerOfAccepts} status="active" showInfo={false} />
                   </div>
-                  <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
+                { !this.data.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                ? <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
+                : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button> }
                 </div>
                 <div className="textContent">
-                  <p className="description">description<br/>description<br/>description</p>
+                  { item.ballotType === constants.ballotTypes.MemberChange
+                  ? <p className="description">Old Authority Address: <br/>New Authority Address: <br/>META To be Locked: </p>
+                  : <p className="description">New Authority Address: <br/>META To be Locked: </p> }
                   <div className="duration">
                     { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected || item.state === constants.ballotState.InProgress
                     ? <div>
