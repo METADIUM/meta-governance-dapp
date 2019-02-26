@@ -54,53 +54,56 @@ class Voting extends React.Component {
       if (!this.data.ballotBasicOriginData) return
       this.data.ballotBasicOriginData.map(item => {
         list.push(
-          <div className='ballotDiv' state={item.state} key={list.length} id={item.id}>
-            <div className='ballotInfoDiv'>
-              <div className='ballotDetailDiv' style={{ width: '15%' }}>
-                <h4>Creator</h4><p>METADIUM_EXAM
-                </p>
+          <div className="ballotDiv" state={item.state} key={list.length} id={item.id}>
+            <div className="ballotInfoDiv">
+              <div className="infoLeft">
+                <p className="topic">{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
+                <p className="company">METADIUM_EXAM</p>
+                <p className="addr">{item.creator}</p>
               </div>
-              <div className='ballotDetailDiv' style={{ width: '15%' }}>
-                <h4>Ballot Type</h4><p>{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
+              <div className="infoRight">
+                {item.state === constants.ballotState.Ready || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                  ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetail} icon="down"/> : <div>&nbsp;</div>}
+                <p className="status">Status : {constants.ballotStateArr[parseInt(item.state)]}</p>
               </div>
-              <div className='ballotDetailDiv'>
-                <h4>Proposal Address</h4><p>{item.creator}</p>
-              </div>
-              <div className='ballotDetailDiv' style={{ width: '10%' }}>
-                <h4>State</h4><p>{constants.ballotStateArr[parseInt(item.state)]}</p>
-              </div>
-              {item.state === constants.ballotState.Ready || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetail}>+</Button> : ''}
             </div>
-            <div className='voteDiv'>
-              <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
-              <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
-              <span>
-                <h4 style={{ float: 'left' }}>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}</h4>
-                <h4 style={{ float: 'right' }}>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}</h4>
-                <Progress percent={item.powerOfAccept} showInfo={false} />
-              </span>
-            </div>
-            <div className='ballotExplainDiv'>
-              { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                // InProgress
-                ? <div style={{ float: 'right' }}>
-                  <p >Started: {item.startTime}</p>
-                  <p >Ended: {item.endTime}</p>
-                </div> : null}
-              { item.state === constants.ballotState.Ready
-                ? <div style={{ float: 'right' }}>
-                  <p >Duration: {item.duration}days</p>
-                  <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
-                </div> : null}
-              <p>description</p>
-              <p>description</p>
-              <p>description</p>
-              <div>
+	          <div className="ballotContentDiv">
+              <div className="voteDiv">
+                <div className="imageContent">
+                  <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
+                  <div className="chart">
+                    <div className="number">
+                      <span>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}%</span>
+                      <span>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}%</span>
+                    </div>
+                    <Progress percent={item.powerOfAccepts} status="active" showInfo={false} />
+                  </div>
+                  <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
+                </div>
+                <div className="textContent">
+                  <p className="description">description<br/>description<br/>description</p>
+                  <div className="duration">
+                    { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected || item.state === constants.ballotState.InProgress
+                    ? <div>
+                      <div><span>Start : </span><span>{item.startTime}</span></div>
+                      <div><span>End : </span><span>{item.endTime}</span></div>
+                    </div> : null }
+                    { item.state === constants.ballotState.Ready
+                    ? <div>
+                      <div><span>duration</span><span>{item.duration}days</span></div>
+                      <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
+                    </div> : null }
+                  </div>
+                </div>
+              </div>
+              <div className="memoDiv">
+                <p>MEMO</p>
                 <p>{item.memo}</p>
-                { item.state === '1'
-                  ? <Button onClick={() => this.onClickUpdateProposal('revoke', item.id)} style={{ float: 'right' }} type='primary'>Revoke</Button> : ''}
               </div>
+              { item.state === '1'
+              ? <div className="revokeDiv">
+                <Button onClick={() => this.onClickUpdateProposal('revoke', item.id)}>Revoke</Button>
+              </div> : null }
             </div>
           </div>
         )
@@ -221,13 +224,28 @@ class Voting extends React.Component {
                 </Affix>
               </div>
               <div className='contentDiv'>
-                <h1>Active</h1>
-                {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }<br /><br />
-                <h1>Proposals</h1>
-                {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }<br /><br />
-
-                <h1>Finalized</h1>
-                {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}<br /><br />
+                <p className="stateTitle">Active</p>
+                {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }
+                <p className="stateTitle">Proposals</p>
+                {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }
+                {this.data.proposalItems.length > 0
+                ? <div className="moreDiv">
+                  <Button value="large">
+                    <span>+</span>
+                    <span className="text_btn">Read More</span>
+                  </Button>
+                </div>
+                : null}
+                <p className="stateTitle">Finalized</p>
+                {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}
+                {this.data.finalizedItems.length > 0
+                ? <div className="moreDiv">
+                  <Button value="large">
+                    <span>+</span>
+                    <span className="text_btn">Read More</span>
+                  </Button>
+                </div>
+                : null}
               </div>
             </div>
             : <div>

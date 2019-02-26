@@ -41,28 +41,6 @@
   border: 0px;
 }
 
-.ballotDiv {
-  background-color: white;
-  padding: 24;
-  min-height: 400;
-  height: 420px;
-  margin-bottom: 2%;
-  border-width: 1px;
-  border-color: #f9f0f0;
-  border-style: solid;
-}
-
-.ballotInfoDiv{
-  background-color: #f9f0f0;
-  padding: 0.5% 1% 0.5% 3%;
-  margin-bottom: 2%;
-  height: 80px;
-}
-
-.ballotInfoDiv h4{
-  margin-bottom: 0.05em;
-}
-
 .ballotDetailDiv {
   float: left;
   margin-right: 2%;
@@ -76,22 +54,6 @@
   border-color: #363333;
   width: 10%;
   margin: 2% 45%
-}
-
-#yesVotingBtn{
-  float: left;
-  margin: 0 2% 0 4%;
-  height: 50px;
-  background-color: teal;
-  color: white;
-}
-
-#noVotingBtn{
-  float: right;
-  margin: 0 4% 0 2%;
-  height: 50px;
-  background-color: firebrick;
-  color: white;
 }
 
 #finalizeBtn{
@@ -135,6 +97,7 @@
 
 .contentDiv {
   margin: 0 auto;
+  padding-bottom: 56px;
   max-width: 1152px;
   height: 100%;
   display: flex;
@@ -161,8 +124,6 @@
 .authorityComp{
   margin-bottom: 24px;
   padding: 0 16px;
-} .authorityComp:last-child {
-  margin-bottom: 64px;
 }
 
 .authorityComp .authorityComp_contnet {
@@ -460,4 +421,205 @@
 } .sub-header .sub-menu .ant-menu-item-active {
   color: #261BC9;
   border-color: #261BC9;
+}
+
+.stateTitle {
+  color: #000000;
+  font-size: 30px;
+  font-weight: 600;
+  margin: 32px 0 24px 0;
+}
+
+.ballotDiv {
+  background-color: white;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+} .ballotDiv:hover {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.ballotDiv .ballotInfoDiv {
+  padding: 24px 16px 24px 16px;
+  display: flex;
+}
+
+.ballotDiv .ballotInfoDiv .infoLeft {
+  flex: 100;
+}
+
+.ballotDiv .ballotInfoDiv .infoLeft .topic {
+  font-size: 20px;
+  font-weight: 500;
+  color: #261BC9;
+  margin-bottom: 8px;
+}
+
+.ballotDiv .ballotInfoDiv .infoLeft .company {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(0,0,0,0.87);
+}
+
+.ballotDiv .ballotInfoDiv .infoLeft .addr {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(0,0,0,0.6);
+}
+
+.ballotDiv .ballotInfoDiv .infoRight {
+  width: 208px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.ballotDiv .ballotInfoDiv .infoRight button {
+  height: 28px;
+  width: 28px;
+  padding: 0 !important;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.ballotDiv .ballotInfoDiv .infoRight button i {
+  height: 20px;
+  color: rgba(0,0,0,0.87);
+  font-size: 20px;
+}
+
+.ballotDiv .ballotInfoDiv .infoRight .status {
+  margin: 0;
+  color: #261BC9;
+  font-size: 12px;
+}
+
+.ballotContentDiv .voteDiv {
+  padding: 24px 16px 24px 16px;
+  border-top: #EEEEF0 solid 2px;
+  border-bottom: #EEEEF0 solid 2px;
+}
+
+.ballotContentDiv .voteDiv .imageContent {
+  display: flex;
+  height: 40px;
+}
+
+.ballotContentDiv .voteDiv .imageContent button {
+  height: 40px;
+  width: 64px;
+  font-size: 16px;
+  border: none;
+} .ballotContentDiv .voteDiv .imageContent #yesVotingBtn {
+  background-color: #261BC9;
+  color: white;
+  margin-right: 16px;
+} .ballotContentDiv .voteDiv .imageContent #noVotingBtn {
+  background-color: #FEC3C2;
+  margin-left: 16px;
+}
+
+.ballotContentDiv .voteDiv .imageContent .chart {
+  flex: 100;
+  padding: 4px 0 2px 0px;
+}
+
+.ballotContentDiv .voteDiv .imageContent .chart .number {
+  line-height: 22px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ballotContentDiv .voteDiv .imageContent .chart .number {
+  color: rgba(0,0,0,0.87);
+  font-weight: 500;
+}
+
+.ant-progress {
+  display: block !important;
+  line-height: 1 !important;
+  font-size: 8px !important;
+}
+
+.ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer {
+  margin: 0;
+}
+
+.ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer .ant-progress-inner {
+  background-color: #FEC3C2;
+}
+
+.ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer .ant-progress-inner .ant-progress-bg {
+  background-color: #261BC9;
+}
+
+.ballotContentDiv .voteDiv .textContent {
+  margin-top: 24px;
+  display: flex;
+  line-height: 22px;
+}
+
+.ballotContentDiv .voteDiv .description {
+  color: rgba(0,0,0,0.6);
+  min-height: 66px;
+  flex: 100;
+  margin: 0;
+}
+
+.ballotContentDiv .voteDiv .duration {
+  width: 208px;
+  margin-left: 96px;
+}
+
+.ballotContentDiv .voteDiv .duration > div > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ballotContentDiv .voteDiv .duration > div > div span:first-child {
+  color: rgba(0,0,0,0.87);
+}
+
+.ballotContentDiv .voteDiv .duration > div > div button {
+  height: 30px;
+  width: 208px;
+  border: none;
+  background-color: #EEEEF0;
+  color: rgba(0,0,0,0.87);
+}
+
+.ballotContentDiv .memoDiv {
+  padding: 24px 16px 24px 16px;
+}
+
+.ballotContentDiv .memoDiv p:first-child {
+  color: rgba(0,0,0,0.87);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.ballotContentDiv .memoDiv p:last-child {
+  color: rgba(0,0,0,0.6);
+}
+
+.moreDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.moreDiv button {
+  height: 40px;
+  width: 208px;
+  border-radius: 4px;
+  border:none;
+  color: #000000;
+  padding: 0 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  display: flex;
+} .moreDiv button:hover {
+  color: #ffffff;
+  background-color: #261BC9;
 }

@@ -24,7 +24,7 @@ class App extends React.Component {
     loadWeb3: false,
     nav: '1',
     contractReady: false,
-    availableBalance: 0,
+    balance: 0,
     lockedBalance: 0,
     stakingModalVisible: false
   };
@@ -45,12 +45,10 @@ class App extends React.Component {
   async initContracts (web3) {
     initContracts({
       web3: web3,
-      netid: web3Config.netid
+      netid: web3.netid
     }).then(async () => {
-      let {availableBalance, lockedBalance} = contracts.staking.getBalance(web3Instance.defaultAccount)
-      console.log(availableBalance)
-      console.log(lockedBalance)
-      this.setState({ contractReady: true })
+      let {balance, lockedBalance} = await contracts.staking.getBalance(web3Instance.defaultAccount)
+      this.setState({ contractReady: true, balance, lockedBalance })
   })
   }
 
@@ -106,7 +104,7 @@ class App extends React.Component {
             nav={ this.state.nav}
             onMenuClick={ this.onMenuClick }
             showStakingModal={ this.showStakingModal }
-            availableBalance={this.state.availableBalance}
+            balance={this.state.balance}
             lockedBalance={this.state.lockedBalance}/>
         </Header>
 

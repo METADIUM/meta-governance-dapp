@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Row, Menu } from 'antd'
 import './style/style.css'
 
-const TopNav = ({ nav, onMenuClick, showStakingModal=f=>f, availableBalance, lockedBalance}) =>
+const TopNav = ({ nav, onMenuClick, showStakingModal=f=>f, balance, lockedBalance}) =>
     <Row>
         <div className="header-logo"><img src={require('../img/logo_header_white.png')} alt='' /><span>governance</span></div>
         <div className="header-menu">
@@ -16,7 +16,7 @@ const TopNav = ({ nav, onMenuClick, showStakingModal=f=>f, availableBalance, loc
         </div>
         <div className="header-staking">
         <div>
-            <p className="staked">Staked {availableBalance} Meta</p>
+            <p className="staked">Staked {balance} Meta</p>
             <p className="meta">(Locked {lockedBalance} META)</p>
         </div>
         <Button type="primary" onClick={ showStakingModal }>META Staking</Button>

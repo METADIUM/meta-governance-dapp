@@ -9,21 +9,11 @@ class Staking {
     this.stakingInstance = new web3.eth.Contract(this.stakingAbi.abi, STAKING_ADDRESS)
   }
 
-  async lockedBalanceOf(address) {
+  async getBalance(address) {
     if (!this.stakingInstance || !this.stakingInstance.methods) return
-    return await this.stakingInstance.methods.lockedBalanceOf(address).call()
-  }
-
-  async availableBalanceOf(address) {
-    if (!this.stakingInstance || !this.stakingInstance.methods) return
-    return await this.stakingInstance.methods.availableBalanceOf(address).call()
-  }
-
-  getBalance = (address) => {
-    return {
-      availableBalance: this.availableBalanceOf(address),
-      lockedBalance: this.lockedBalanceOf(address)
-    }
+    let lockedBalance = await this.stakingInstance.methods.lockedBalanceOf(address).call()
+    let balance = await this.stakingInstance.methods.balanceOf(address).call()
+    return {balance, lockedBalance}
   }
 }
 export { Staking }
