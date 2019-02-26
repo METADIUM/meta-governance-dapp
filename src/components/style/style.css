@@ -323,7 +323,7 @@
 }
 
 .ant-layout-footer .ant-row {
-  padding: 0 16px;
+  padding: 24px 16px;
   margin: 0 auto;
   max-width: 1152px;
   display: flex;
@@ -331,22 +331,26 @@
 }
 
 .ant-layout-footer .ant-row p {
-  margin: 8px 0 8px 0;
+  margin: 0;
 }
 
 .ant-layout-footer .ant-row div {
-  margin: 8px 0 8px 0;
   flex: 100;
   display: flex;
   justify-content: flex-end;
 }
 
 .ant-layout-footer .ant-row div .ant-btn {
-  width: 32px;
-  height: 32px;
-  margin-left: 8px;
-  border-radius: 16px;
-  background-color: #000000;
+  height: 22px;
+  margin-left: 16px;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.ant-layout-footer .ant-row div .ant-btn img {
+  height: 22px;
+  opacity: 0.87;
 }
 
 /* vote */
@@ -433,10 +437,14 @@
 .ballotDiv {
   background-color: white;
   margin-bottom: 24px;
+  height: 124px;
+  overflow-y: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  transition: 0.3s;
 } .ballotDiv:hover {
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}.state2 {
+  height: auto !important;
 }
 
 .ballotDiv .ballotInfoDiv {
@@ -482,6 +490,8 @@
   background-color: transparent;
   border: none;
   box-shadow: none;
+} .ballotDiv .ballotInfoDiv .infoRight button:visited {
+  transform: rotate( 180deg );
 }
 
 .ballotDiv .ballotInfoDiv .infoRight button i {
@@ -583,9 +593,10 @@
   color: rgba(0,0,0,0.87);
 }
 
-.ballotContentDiv .voteDiv .duration > div > div button {
+.ballotContentDiv .voteDiv .duration > div button {
   height: 30px;
   width: 208px;
+  margin-top: 4px;
   border: none;
   background-color: #EEEEF0;
   color: rgba(0,0,0,0.87);
@@ -603,6 +614,21 @@
 
 .ballotContentDiv .memoDiv p:last-child {
   color: rgba(0,0,0,0.6);
+}
+
+.ballotContentDiv .revokeDiv {
+  padding: 24px 16px 24px 16px;
+  border-top: #EEEEF0 solid 2px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ballotContentDiv .revokeDiv button {
+  height: 30px;
+  width: 208px;
+  border: none;
+  background-color: #EEEEF0;
+  color: rgba(0,0,0,0.87);
 }
 
 .moreDiv {

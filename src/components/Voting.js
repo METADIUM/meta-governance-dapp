@@ -24,7 +24,6 @@ class Voting extends React.Component {
       didVoted: false,
       newProposal: false,
       position: 'active'
-
     }
 
     constructor (props) {
@@ -32,6 +31,11 @@ class Voting extends React.Component {
       this.onClickDetail = this.onClickDetail.bind(this)
       this.onClickVote = this.onClickVote.bind(this)
       this.onClickUpdateProposal = this.onClickUpdateProposal.bind(this)
+
+      this.activeTitle = null;
+      this.proposalTitle = null;
+      this.finalizedTitle = null;
+      this.ballotDestals = new Map();
     }
 
     async componentDidMount () {
@@ -52,9 +56,9 @@ class Voting extends React.Component {
           })
       }
       if (!this.data.ballotBasicOriginData) return
-      this.data.ballotBasicOriginData.map(item => {
+      this.data.ballotBasicOriginData.map((item, index) => {
         list.push(
-          <div className="ballotDiv" state={item.state} key={list.length} id={item.id}>
+          <div className={"ballotDiv state" + item.state} state={item.state} key={list.length} id={item.id} ref={ ref => this.ballotDestals.set(index, ref)}>
             <div className="ballotInfoDiv">
               <div className="infoLeft">
                 <p className="topic">{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
@@ -63,7 +67,7 @@ class Voting extends React.Component {
               </div>
               <div className="infoRight">
                 {item.state === constants.ballotState.Ready || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                  ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetail} icon="down"/> : <div>&nbsp;</div>}
+                  ? <Button type='primary' id='ballotDetailBtn' onClick={e => this.onClickDetail(index, e)} icon="down"/> : <div>&nbsp;</div>}
                 <p className="status">Status : {constants.ballotStateArr[parseInt(item.state)]}</p>
               </div>
             </div>
@@ -134,8 +138,8 @@ class Voting extends React.Component {
       this.data.finalizedItems = finalizedList
     }
 
-    onClickDetail = (e) => {
-      console.log('onClickDetailBtn: ', e.target.props, this)
+    onClickDetail = (index, e) => {
+      this.ballotDestals.get(index).style.height = this.ballotDestals.get(index).style.height === "auto" ? "124px" : "auto";
     }
 
     onClickVote = (e, id) => {
@@ -181,10 +185,16 @@ class Voting extends React.Component {
     }
 
     onClickSubMenu = (e) => {
-      console.log('position ' , e);
-      this.setState({
-        position: e.key,
-      })
+      switch(e.key) {
+        case 'active': window.scrollTo(0, this.activeTitle.offsetTop - 70)
+          break
+        case 'proposal': window.scrollTo(0, this.proposalTitle.offsetTop - 70)
+          break
+        case 'finalized': window.scrollTo(0, this.finalizedTitle.offsetTop - 70)
+         break
+        default: break
+      }
+      this.setState({ position: e.key })
     }
 
     render () {
@@ -224,9 +234,9 @@ class Voting extends React.Component {
                 </Affix>
               </div>
               <div className='contentDiv'>
-                <p className="stateTitle">Active</p>
+                <p className="stateTitle" ref={ ref => {this.activeTitle = ref;} }>Active</p>
                 {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }
-                <p className="stateTitle">Proposals</p>
+                <p className="stateTitle" ref={ ref => {this.proposalTitle = ref;} }>Proposals</p>
                 {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }
                 {this.data.proposalItems.length > 0
                 ? <div className="moreDiv">
@@ -236,7 +246,7 @@ class Voting extends React.Component {
                   </Button>
                 </div>
                 : null}
-                <p className="stateTitle">Finalized</p>
+                <p className="stateTitle"ref={ ref => {this.finalizedTitle = ref;} }>Finalized</p>
                 {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}
                 {this.data.finalizedItems.length > 0
                 ? <div className="moreDiv">

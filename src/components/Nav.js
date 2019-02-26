@@ -27,9 +27,9 @@ const FootNav = () =>
     <Row>
         <p>Copyright © Since 2018 Metadium Technology, Inc. All rights reserved</p>
         <div>
-            <Button></Button>
-            <Button></Button>
-            <Button></Button>
+            <Button><img src={require('../img/logo_footer_black.png')} alt=''/></Button>
+            <Button><img src={require('../img/block_footer_black.png')} alt=''/></Button>
+            <Button><img src={require('../img/GitHub-Mark-32px.png')} alt=''/></Button>
         </div>
     </Row>
 
