@@ -1,18 +1,22 @@
 import React from 'react'
-import { Layout, Button, Row, Menu, Modal, Tabs, Input, Select } from 'antd'
+import { Layout, Modal, Tabs } from 'antd'
+import { TopNav, FootNav } from './components/Nav'
+import { StakingModal } from './components/StakingModal'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
 import './App.css'
 
 // web3
 import getWeb3Instance from './ethereum/web3'
-import web3Config from './ethereum/web3-config.json'
+import { web3Instance } from './ethereum/web3'
+import Web3 from 'web3'
+
+
 
 // Contracts
 import { contracts, initContracts } from './ethereum/web3Components/contracts'
 
 const { Header, Content, Footer } = Layout
-const Option = Select.Option
 const TabPane = Tabs.TabPane
 
 class App extends React.Component {
@@ -20,8 +24,9 @@ class App extends React.Component {
     loadWeb3: false,
     nav: '1',
     contractReady: false,
-    stakingModal: false,
-    selectedMenu: false,
+    availableBalance: 0,
+    lockedBalance: 0,
+    stakingModalVisible: false
   };
 
   constructor (props) {
@@ -41,11 +46,16 @@ class App extends React.Component {
     initContracts({
       web3: web3,
       netid: web3Config.netid
-    }).then(async () => this.setState({ contractReady: true }))
+    }).then(async () => {
+      let {availableBalance, lockedBalance} = contracts.staking.getBalance(web3Instance.defaultAccount)
+      console.log(availableBalance)
+      console.log(lockedBalance)
+      this.setState({ contractReady: true })
+  })
   }
 
   onMenuClick = ({key}) => {
-    this.setState({ nav: key+"" })
+    this.setState({ nav: key })
     console.log(key)
   }
 
@@ -72,19 +82,19 @@ class App extends React.Component {
 
   showStakingModal = (e) => {
     this.setState({
-      stakingModal: true,
+      stakingModalVisible: true,
     });
   }
 
   hideStakingModal = (e) => {
     this.setState({
-      stakingModal: false,
+      stakingModalVisible: false,
     });
   }
 
   submitMetaStaing = (e) => {
     this.setState({
-      stakingModal: false,
+      stakingModalVisible: false,
     });
   }
 
@@ -92,46 +102,18 @@ class App extends React.Component {
     return (
       <Layout className='layout'>
         <Header>
-          <Row>
-            <div className="header-logo"><img src={require('./img/logo_header_blue.png')} alt='' /><span>governance</span></div>
-            <div className="header-menu">
-              <Menu
-                onClick={this.onMenuClick}
-                selectedKeys={[this.state.nav ]}
-                mode={"horizontal"}>
-                <Menu.Item key='1'>Authority</Menu.Item>
-                <Menu.Item key='2'>Voting</Menu.Item>
-              </Menu>
-            </div>
-            <div className="header-staking">
-              <div>
-                <p className="staked">Staked 000,000,000 Meta</p>
-                <p className="meta">(Locked 000,000,000 META)</p>
-              </div>
-              <Button type="primary" onClick={ this.showStakingModal }>META Staking</Button>
-            </div>
-          </Row>
+          <TopNav
+            nav={ this.state.nav}
+            onMenuClick={ this.onMenuClick }
+            showStakingModal={ this.showStakingModal }
+            availableBalance={this.state.availableBalance}
+            lockedBalance={this.state.lockedBalance}/>
         </Header>
 
-        <Modal
-          className="stakingModal"
-          title="META Staking"
-          visible={ this.state.stakingModal }
-          onOk={ this.submitMetaStaing }
-          onCancel={ this.hideStakingModal }
-          footer={[
-            <Button key="cancle" onClick={this.hideStakingModal}>cancle</Button>,
-            <Button key="submit" type="primary" onClick={this.submitMetaStaing}>
-              Submit
-            </Button>,
-          ]}>
-          <p>staked 000,000,000 META (Locked 000,000,000 META)</p>
-          <Select defaultValue="Deposit">
-            <Option value="Deposit">Deposit Staking</Option>
-            <Option value="Withdraw">Withdraw Staking</Option>
-          </Select>
-          <Input type="number" placeholder="META Amount" addonAfter="META"></Input>
-        </Modal>
+        <StakingModal
+          stakingModalVisible={ this.state.stakingModalVisible}
+          hideStakingModal={ this.hideStakingModal }
+          submitMetaStaing = { this.submitMetaStaing } />
 
         <Content style={{ backgroundColor: 'white' }}>
           {this.state.loadWeb3
@@ -141,14 +123,7 @@ class App extends React.Component {
         </Content>
 
         <Footer>
-          <Row>
-            <p>Copyright © Since 2018 Metadium Technology, Inc. All rights reserved</p>
-            <div>
-              <Button></Button>
-              <Button></Button>
-              <Button></Button>
-            </div>
-          </Row>
+          <FootNav/>
         </Footer>
       </Layout>
     )
