@@ -10,9 +10,9 @@ class GovImp {
   }
 
   /**
-   * 
-   * @param {uint256} idx 
-   * @param {boolean} approval 
+   *
+   * @param {uint256} idx
+   * @param {boolean} approval
    */
   vote (idx, approval) {
     if (!this.govImpInstance || !this.govImpInstance.methods) return
@@ -23,17 +23,16 @@ class GovImp {
   }
 
   /**
-   * 
-   * @param {address} member 
-   * @param {bytes} enode 
-   * @param {bytes} ip 
-   * @param {uint} port 
-   * @param {uint256} lockAmount 
-   * @param {bytes} memo 
+   *
+   * @param {address} member
+   * @param {bytes} enode
+   * @param {bytes} ip
+   * @param {uint} port
+   * @param {uint256} lockAmount
+   * @param {bytes} memo
    */
-  addProposalToAddMember(member, enode, ip, port, lockAmount, memo) {
+  addProposalToAddMember (member, enode, ip, port, lockAmount, memo) {
     if (!this.govImpInstance || !this.govImpInstance.methods) return
-    console.log(this.govImpInstance.methods.addProposalToAddMember(member, enode, ip, port, lockAmount, memo))
     return {
       to: this.addresses.GOV_ADDRESS,
       data: this.govImpInstance.methods.addProposalToAddMember(member, enode, ip, port, lockAmount, memo).encodeABI()
@@ -41,16 +40,16 @@ class GovImp {
   }
 
   /**
-   * 
-   * @param {address} target 
-   * @param {address} nMember 
-   * @param {bytes} nEnode 
-   * @param {bytes} nIp 
-   * @param {uint} nPort 
-   * @param {uint256} lockAmount 
-   * @param {bytes} memo 
+   *
+   * @param {address} target
+   * @param {address} nMember
+   * @param {bytes} nEnode
+   * @param {bytes} nIp
+   * @param {uint} nPort
+   * @param {uint256} lockAmount
+   * @param {bytes} memo
    */
-  addProposalToChangeMember(target, nMember, nEnode, nIp, nPort, lockAmount, memo) {
+  addProposalToChangeMember (target, nMember, nEnode, nIp, nPort, lockAmount, memo) {
     if (!this.govImpInstance || !this.govImpInstance.methods) return
     return {
       to: this.addresses.GOV_ADDRESS,

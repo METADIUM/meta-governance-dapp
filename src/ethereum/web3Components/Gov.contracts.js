@@ -15,10 +15,10 @@ class Gov {
   }
 
   /**
-   * 
-   * @param {address} addr 
+   *
+   * @param {address} addr
    */
-  async isMember(addr) {
+  async isMember (addr) {
     if (!this.govInstance || !this.govInstance.methods) return
     return await this.govInstance.methods.isMember(addr).call()
   }

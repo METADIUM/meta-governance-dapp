@@ -7,7 +7,6 @@ class BallotStorage {
     const { BALLOT_STORAGE_ADDRESS } = this.addresses
     this.ballotStorageAbi = await getABI(getBranch(netid), 'BallotStorage')
     this.ballotStorageInstance = new web3.eth.Contract(this.ballotStorageAbi.abi, BALLOT_STORAGE_ADDRESS)
-    console.log(this.ballotStorageInstance)
   }
 
   async getBallotBasic (id) {
@@ -20,12 +19,12 @@ class BallotStorage {
     return await this.ballotStorageInstance.methods.getBallotMember(id).call()
   }
 
-  async getMinVotingDuration() {
+  async getMinVotingDuration () {
     if (!this.ballotStorageInstance || !this.ballotStorageInstance.methods) return
     return await this.ballotStorageInstance.methods.getMinVotingDuration().call()
   }
 
-  async getMaxVotingDuration() {
+  async getMaxVotingDuration () {
     if (!this.ballotStorageInstance || !this.ballotStorageInstance.methods) return
     return await this.ballotStorageInstance.methods.getMaxVotingDuration().call()
   }
@@ -37,7 +36,7 @@ class BallotStorage {
   async updateBallotDuration (id, duration) {
     if (!this.ballotStorageInstance || !this.ballotStorageInstance.methods) return
     if (duration === 0) duration = await this.getMinVotingDuration()
-    
+
     return {
       to: this.addresses.BALLOT_STORAGE_ADDRESS,
       data: this.ballotStorageInstance.methods.updateBallotDuration(id, duration).encodeABI()
@@ -56,7 +55,7 @@ class BallotStorage {
     }
   }
 
-  finalizeBallot(id, ballotState) {
+  finalizeBallot (id, ballotState) {
     if (!this.ballotStorageInstance || !this.ballotStorageInstance.methods) return
     return {
       to: this.addresses.BALLOT_STORAGE_ADDRESS,

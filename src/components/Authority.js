@@ -24,10 +24,10 @@ class Authority extends React.Component {
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
     }
 
-    breakLine(description) {
-      var br = React.createElement('br');
-      var regex = /(<br>)/g;
-      return description.split(regex).map((line, index) => line.match(regex) ? <br key={"key_" + index} /> : line)
+    breakLine (description) {
+      var br = React.createElement('br')
+      var regex = /(<br>)/g
+      return description.split(regex).map((line, index) => line.match(regex) ? <br key={'key_' + index} /> : line)
     }
 
     onReadMoreClick (index) {
@@ -42,22 +42,22 @@ class Authority extends React.Component {
       this.data.authorityOriginData.map((item, i) => {
         list.push(
           <div key={item.addr} className='authorityComp'>
-            <div className="authorityComp_contnet">
-              <div className="img_container">
-                <img src={item.logo} alt=''/>
+            <div className='authorityComp_contnet'>
+              <div className='img_container'>
+                <img src={item.logo} alt='' />
               </div>
-              <div className={i === index ? "text_container long" : "text_container short"}>
-                <p className="title">{item.title}</p>
-                <p className="address">Address: {item.addr}</p>
-                <p className={"description"}>{this.breakLine(item.description)}</p>
-                <div className="link_container">
-                  <a className="more" onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
-                  <div className="SNSList">
+              <div className={i === index ? 'text_container long' : 'text_container short'}>
+                <p className='title'>{item.title}</p>
+                <p className='address'>Address: {item.addr}</p>
+                <p className={'description'}>{this.breakLine(item.description)}</p>
+                <div className='link_container'>
+                  <a className='more' onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
+                  <div className='SNSList'>
                     {this.getSNSList(item.sns)}
                     <a
                       className='snsGroup'
                       href={item.homepage}>
-                      <i className="fas fa-home fa-2x"></i>
+                      <i className='fas fa-home fa-2x' />
                     </a>
                   </div>
                 </div>
@@ -90,7 +90,7 @@ class Authority extends React.Component {
             key={key}
             className='snsGroup'
             href={snsList[key]}>
-            <i className={icon}></i>
+            <i className={icon} />
           </a>
         )
       }
@@ -102,7 +102,7 @@ class Authority extends React.Component {
 
     render () {
       return (
-        <div className="background">
+        <div className='background'>
           <div className='contentDiv'>
             <div className='apply_proposal_Btn_container'><Button className='apply_proposal_Btn' onClick={this.onApplyBtnClick}>Apply for Authority</Button></div>
             <div className='card_container'>

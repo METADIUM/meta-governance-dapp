@@ -1,4 +1,4 @@
-import {web3Instance} from './ethereum/web3'
+import { web3Instance } from './ethereum/web3'
 
 const fetch = require('node-fetch')
 
@@ -83,9 +83,9 @@ function refineSubmitData (m) {
       case 'oldLockAmount':
       case 'newLockAmount': m[key] = web3Instance.web3.utils.toWei(m[key].toString(), 'ether'); break
       case 'memo': m[key] = web3Instance.web3.utils.fromAscii(m[key]); break
-      case 'node': 
-      case 'newNode': 
-      case 'oldNode': let {node, ip, port} = splitNodeDescription(m[key]); m[key] = {node, ip, port}; break
+      case 'node':
+      case 'newNode':
+      case 'oldNode': let { node, ip, port } = splitNodeDescription(m[key]); m[key] = { node, ip, port }; break
       default: if (!m[key]) m[key] = ''; break
     }
   })
@@ -140,10 +140,10 @@ async function getAuthorityLists (org, repo, branch, source) {
   return fetch(URL).then(response => response.json())
 }
 
-function splitNodeDescription(str) {
+function splitNodeDescription (str) {
   let node, ip, port, splitedStr
   splitedStr = str.split('@')
-  node = '0x'+splitedStr[0]
+  node = '0x' + splitedStr[0]
   splitedStr = splitedStr[1].split(':')
   ip = web3Instance.web3.utils.fromAscii(splitedStr[0])
   splitedStr = splitedStr[1].split('?')

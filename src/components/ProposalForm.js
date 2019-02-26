@@ -32,7 +32,6 @@ class ProposalForm extends React.Component {
 
     /* Type casting and save form data. */
     handleChange = (e) => {
-      
       // if (type == 'number') {
       //   e.target.value = e.target.value.replace(' ', '')
       //   this.data.formData[this.data.selectedVoteTopic][e.target.name] = Number(e.target.value)
@@ -53,7 +52,7 @@ class ProposalForm extends React.Component {
       }
       util.refineSubmitData(this.data.formData)
 
-      if(this.data.selectedVoteTopic === 'add') {
+      if (this.data.selectedVoteTopic === 'add') {
         trx = this.props.contracts.govImp.addProposalToAddMember(
           this.data.formData.addr,
           this.data.formData.node.node,
@@ -90,25 +89,25 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <h3> META Amount to be locked {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='lockAmount' onChange={this.handleChange }/>
+            <Input addonAfter='META' style={{ marginBottom: '0%' }} name='lockAmount' onChange={this.handleChange} />
           </Form.Item>
           <h3> New Authority Address {<span style={{ color: 'red' }}>*</span>} </h3>
           <Form.Item>
-            <Input style={ {marginBottom: '0%'} } name='addr' onChange={this.handleChange }/>
+            <Input style={{ marginBottom: '0%' }} name='addr' onChange={this.handleChange} />
           </Form.Item>
           <h3> New Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            <Input style={ {marginBottom: '0%'} } name='node' onChange={this.handleChange }/>
+            <Input style={{ marginBottom: '0%' }} name='node' onChange={this.handleChange} />
           </Form.Item>
           <h3> Description </h3>
           <Form.Item>
-              <TextArea
-                rows={4}
-                placeholder='Max. 256 bytes'
-                autosize={{ minRows: 2, maxRows: 4 }}
-                name='memo'
-                onChange={this.handleChange}
-              />
+            <TextArea
+              rows={4}
+              placeholder='Max. 256 bytes'
+              autosize={{ minRows: 2, maxRows: 4 }}
+              name='memo'
+              onChange={this.handleChange}
+            />
           </Form.Item>
 
           <h4 style={{ color: 'red', marginTop: '2%' }}>*Mandatory</h4>
@@ -119,42 +118,42 @@ class ProposalForm extends React.Component {
       </div>)
     }
 
-    getReplaceProposalForm() {
+    getReplaceProposalForm () {
       return (<div>
         <Form onSubmit={this.handleSubmit}>
           <h3> META Amount to be locked (New) {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='newLockAmount' onChange={this.handleChange }/>
+            <Input addonAfter='META' style={{ marginBottom: '0%' }} name='newLockAmount' onChange={this.handleChange} />
           </Form.Item>
           <h3> New Authority Address {<span style={{ color: 'red' }}>*</span>} </h3>
           <Form.Item>
-            <Input style={ {marginBottom: '0%'} } name='newAddr' onChange={this.handleChange }/>
+            <Input style={{ marginBottom: '0%' }} name='newAddr' onChange={this.handleChange} />
           </Form.Item>
           <h3> New Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            <Input style={ {marginBottom: '0%'} } name='newNode' onChange={this.handleChange }/>
+            <Input style={{ marginBottom: '0%' }} name='newNode' onChange={this.handleChange} />
           </Form.Item>
           <h3> META Amount to be unlocked (Old) {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            <Input addonAfter='META' style={ {marginBottom: '0%'} } name='oldLockAmount' onChange={this.handleChange }/>
+            <Input addonAfter='META' style={{ marginBottom: '0%' }} name='oldLockAmount' onChange={this.handleChange} />
           </Form.Item>
           <h3> Old Authority Address {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            <Input style={ {marginBottom: '0%'} } name='oldAddr' onChange={this.handleChange }/>
+            <Input style={{ marginBottom: '0%' }} name='oldAddr' onChange={this.handleChange} />
           </Form.Item>
           <h3> Old Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
           <Form.Item>
-            <Input style={ {marginBottom: '0%'} } name='oldNode' onChange={this.handleChange }/>
+            <Input style={{ marginBottom: '0%' }} name='oldNode' onChange={this.handleChange} />
           </Form.Item>
           <h3> Description </h3>
           <Form.Item>
-              <TextArea
-                rows={4}
-                placeholder='Max. 256 bytes'
-                autosize={{ minRows: 2, maxRows: 4 }}
-                name='memo'
-                onChange={this.handleChange}
-              />
+            <TextArea
+              rows={4}
+              placeholder='Max. 256 bytes'
+              autosize={{ minRows: 2, maxRows: 4 }}
+              name='memo'
+              onChange={this.handleChange}
+            />
           </Form.Item>
 
           <h4 style={{ color: 'red', marginTop: '2%' }}>*Mandatory</h4>
@@ -187,8 +186,8 @@ class ProposalForm extends React.Component {
                     <Select.Option value='replace'>Replace Authority</Select.Option>
                   </Select><hr />
                 </div><br /><br />
-                { this.data.selectedVoteTopic !== '' ?
-                  <div style={{ marginTop: '2%' }}>
+                { this.data.selectedVoteTopic !== ''
+                  ? <div style={{ marginTop: '2%' }}>
                     { this.data.selectedVoteTopic === 'add' ? this.getAddProposalForm() : this.getReplaceProposalForm() }
                   </div> : ''
                 }

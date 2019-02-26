@@ -15,7 +15,7 @@ class Voting extends React.Component {
       proposalItems: [],
       finalizedItems: [],
       ballotCnt: 0,
-      isMember: false,
+      isMember: false
     }
     state = {
       isBallotLoading: false,
@@ -75,12 +75,12 @@ class Voting extends React.Component {
                 ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetail}>+</Button> : ''}
             </div>
             <div className='voteDiv'>
-            { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-            ?<div>
-              <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
-              <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button></div>
-            :<div><Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
-            <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button></div>}
+              { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                ? <div>
+                  <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
+                  <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button></div>
+                : <div><Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
+                  <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button></div>}
               <span>
                 <h4 style={{ float: 'left' }}>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}</h4>
                 <h4 style={{ float: 'right' }}>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}</h4>
@@ -100,7 +100,7 @@ class Voting extends React.Component {
                   <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
                 </div> : null}
               { item.ballotType === constants.ballotTypes.MemberChange
-                ?<p>Old Authority Address : </p> 
+                ? <p>Old Authority Address : </p>
                 : null }
               <p>New Authority Address : </p>
               <p>META To be Replaced : </p>
@@ -143,7 +143,7 @@ class Voting extends React.Component {
       console.log('onClickDetailBtn: ', e.target.props, this)
     }
 
-    async onClickVote(e, id) {
+    async onClickVote (e, id) {
       if (!web3Instance.web3) return
 
       let approval
@@ -151,7 +151,6 @@ class Voting extends React.Component {
       else approval = true
 
       let { to, data } = this.props.contracts.govImp.vote(id, approval)
-      console.log(to, data)
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
         to: to,
@@ -171,12 +170,11 @@ class Voting extends React.Component {
       if (e === 'change') {
         trx = await this.props.contracts.ballotStorage.updateBallotDuration(id, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
         // Using updateMemo
-        //trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
-      }
-      else {
+        // trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
+      } else {
         trx = this.props.contracts.ballotStorage.cancelBallot(id)
       }
-      console.log(trx,id,parseInt(constants.ballotState.Canceled))
+      console.log(trx, id, parseInt(constants.ballotState.Canceled))
 
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
@@ -189,9 +187,9 @@ class Voting extends React.Component {
     }
 
     onClickSubMenu = (e) => {
-      console.log('position ' , e);
+      console.log('position ', e)
       this.setState({
-        position: e.key,
+        position: e.key
       })
     }
 
@@ -199,34 +197,34 @@ class Voting extends React.Component {
       return (
         <div>
           {!this.state.newProposal
-            ? <div className="background">
-              <div className="sub-header">
-                <div className="functionDiv">
+            ? <div className='background'>
+              <div className='sub-header'>
+                <div className='functionDiv'>
                   <div>
                     <Input.Search
                       placeholder='Search by Type, Proposal, Keywords'
                       enterButton
                     />
                     {!this.data.isMember
-                    ? <Button disabled className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
-                      <span>+</span>
-                      <span className="text_btn">New Proposal</span>
-                    </Button>
-                    : <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
-                    <span>+</span>
-                    <span className="text_btn">New Proposal</span>
-                  </Button>}
+                      ? <Button disabled className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
+                        <span>+</span>
+                        <span className='text_btn'>New Proposal</span>
+                      </Button>
+                      : <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
+                        <span>+</span>
+                        <span className='text_btn'>New Proposal</span>
+                      </Button>}
                   </div>
                 </div>
                 <Affix>
-                  <div className="sub-menu">
+                  <div className='sub-menu'>
                     <Menu
                       onClick={this.onClickSubMenu}
                       selectedKeys={[this.state.position]}
-                      mode="horizontal">
-                      <Menu.Item key="active">Active</Menu.Item>
-                      <Menu.Item key="proposal">Proposal</Menu.Item>
-                      <Menu.Item key="finalized">Finalized</Menu.Item>
+                      mode='horizontal'>
+                      <Menu.Item key='active'>Active</Menu.Item>
+                      <Menu.Item key='proposal'>Proposal</Menu.Item>
+                      <Menu.Item key='finalized'>Finalized</Menu.Item>
                     </Menu>
                   </div>
                 </Affix>
@@ -242,7 +240,7 @@ class Voting extends React.Component {
               </div>
             </div>
             : <div>
-              <ProposalForm contracts = {this.props.contracts}/>
+              <ProposalForm contracts={this.props.contracts} />
             </div>
           }
         </div>

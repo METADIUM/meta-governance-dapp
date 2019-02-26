@@ -11,8 +11,6 @@ import getWeb3Instance from './ethereum/web3'
 import { web3Instance } from './ethereum/web3'
 import Web3 from 'web3'
 
-
-
 // Contracts
 import { contracts, initContracts } from './ethereum/web3Components/contracts'
 
@@ -20,13 +18,17 @@ const { Header, Content, Footer } = Layout
 const TabPane = Tabs.TabPane
 
 class App extends React.Component {
+  data = {
+    balance: 0,
+    lockedBalance: 0,
+    selectedStakingTopic: 'deposit',
+    amount: 0,
+  }
   state = {
     loadWeb3: false,
     nav: '1',
     contractReady: false,
-    availableBalance: 0,
-    lockedBalance: 0,
-    stakingModalVisible: false
+    stakingModalVisible: false,
   };
 
   constructor (props) {
@@ -47,17 +49,13 @@ class App extends React.Component {
       web3: web3,
       netid: web3.netid
     }).then(async () => {
-      let {availableBalance, lockedBalance} = contracts.staking.getBalance(web3Instance.defaultAccount)
-      console.log(availableBalance)
-      console.log(lockedBalance)
+      this.data.balance = await contracts.staking.balanceOf(web3Instance.defaultAccount)
+      this.data.lockedBalance = await contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
       this.setState({ contractReady: true })
-  })
+    })
   }
 
-  onMenuClick = ({key}) => {
-    this.setState({ nav: key })
-    console.log(key)
-  }
+  onMenuClick = ({ key }) => { this.setState({ nav: key }) }
 
   getErrModal () {
     return <Modal
@@ -77,54 +75,79 @@ class App extends React.Component {
       case '2': return <Voting title='Voting' contracts={contracts} />
       default:
     }
-    this.setState({ selectedMenu: true})
+    this.setState({ selectedMenu: true })
   }
 
-  showStakingModal = (e) => {
-    this.setState({
-      stakingModalVisible: true,
-    });
+  submitMetaStaking = (e) => {
+    let trx = {}
+    this.data.amount = web3Instance.web3.utils.toWei(this.data.amount, 'ether')
+    if (this.data.selectedStakingTopic === 'deposit') {
+      trx = contracts.staking.deposit()
+      web3Instance.web3.eth.sendTransaction({
+        from: web3Instance.defaultAccount,
+        value: this.data.amount,
+        to: trx.to,
+        data: trx.data
+      }, (err, hash) => {
+        if (err) console.log('err: ', err)
+        else {
+          console.log('hash: ', hash)
+        }
+      })
+    } else {
+      trx = contracts.staking.withdraw(this.data.amount)
+      web3Instance.web3.eth.sendTransaction({
+        from: web3Instance.defaultAccount,
+        to: trx.to,
+        data: trx.data
+      }, (err, hash) => {
+        if (err) console.log('err: ', err)
+        else {
+          console.log('hash: ', hash)
+        }
+      })
+    }
+    
+    this.setState({ stakingModalVisible: false })
   }
 
-  hideStakingModal = (e) => {
-    this.setState({
-      stakingModalVisible: false,
-    });
-  }
+  handleSelectChange = (e) => { this.data.selectedStakingTopic = e }
 
-  submitMetaStaing = (e) => {
-    this.setState({
-      stakingModalVisible: false,
-    });
-  }
+  handleInputChange = (e) => { this.data.amount = e.target.value }
 
   render () {
     return (
       <Layout className='layout'>
-        <Header>
-          <TopNav
-            nav={ this.state.nav}
-            onMenuClick={ this.onMenuClick }
-            showStakingModal={ this.showStakingModal }
-            availableBalance={this.state.availableBalance}
-            lockedBalance={this.state.lockedBalance}/>
-        </Header>
+      {this.state.contractReady ?
+        <div>
+          <Header>
+            <TopNav
+              nav={this.state.nav}
+              onMenuClick={this.onMenuClick}
+              showStakingModal={() => this.setState({ stakingModalVisible: true })}
+              balance={this.data.balance}
+              lockedBalance={this.data.lockedBalance} />
+          </Header>
 
-        <StakingModal
-          stakingModalVisible={ this.state.stakingModalVisible}
-          hideStakingModal={ this.hideStakingModal }
-          submitMetaStaing = { this.submitMetaStaing } />
+          <StakingModal
+            accountBalance = {{ balance: this.data.balance, lockedBalance: this.data.lockedBalance }}
+            stakingModalVisible={this.state.stakingModalVisible}
+            hideStakingModal= {() => this.setState({ stakingModalVisible: false })}
+            submitMetaStaking={this.submitMetaStaking}
+            handleInputChange={this.handleInputChange}
+            handleSelectChange={this.handleSelectChange}/>
 
-        <Content style={{ backgroundColor: 'white' }}>
-          {this.state.loadWeb3
-            ? <div> {this.getContent()} </div>
-            : <div> { this.getErrModal()} </div>
-          }
-        </Content>
+          <Content style={{ backgroundColor: 'white' }}>
+            {this.state.loadWeb3
+              ? <div> {this.getContent()} </div>
+              : <div> { this.getErrModal()} </div>
+            }
+          </Content>
 
-        <Footer>
-          <FootNav/>
-        </Footer>
+          <Footer>
+            <FootNav />
+          </Footer> 
+          </div>: null}
       </Layout>
     )
   }
