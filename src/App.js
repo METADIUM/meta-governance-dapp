@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Modal, Tabs } from 'antd'
+import { Layout, Modal } from 'antd'
 import { TopNav, FootNav } from './components/Nav'
 import { StakingModal } from './components/StakingModal'
 import { Voting } from './components/Voting'
@@ -9,14 +9,11 @@ import './App.css'
 // web3
 import getWeb3Instance from './ethereum/web3'
 import { web3Instance } from './ethereum/web3'
-import Web3 from 'web3'
 
 // Contracts
 import { contracts, initContracts } from './ethereum/web3Components/contracts'
 
 const { Header, Content, Footer } = Layout
-const TabPane = Tabs.TabPane
-
 class App extends React.Component {
   data = {
     balance: 0,

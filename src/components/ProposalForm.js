@@ -4,8 +4,7 @@ import './style/style.css'
 import { Voting } from './Voting'
 import { web3Instance } from '../ethereum/web3'
 import * as util from '../util'
-
-import { validNumber, validAddress, validLength } from '../util'
+//import { validNumber, validAddress, validLength } from '../util'
 const { TextArea } = Input
 
 class ProposalForm extends React.Component {

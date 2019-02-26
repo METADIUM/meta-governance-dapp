@@ -51,7 +51,7 @@ class Authority extends React.Component {
                 <p className='address'>Address: {item.addr}</p>
                 <p className={'description'}>{this.breakLine(item.description)}</p>
                 <div className='link_container'>
-                  <a className='more' onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
+                  <a href='#' className='more' onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
                   <div className='SNSList'>
                     {this.getSNSList(item.sns)}
                     <a

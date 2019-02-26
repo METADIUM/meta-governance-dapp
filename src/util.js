@@ -170,7 +170,7 @@ var setAchievementsToLocal = (obj) => save('achievements', obj)
  */
 const validNumber = (rule, value, callback) => {
   const v = Number(value)
-  if (value == undefined || value == '') {
+  if (value === undefined || value === '') {
     callback('Please input ...')
     return
   } else if (isNaN(v)) {
@@ -182,17 +182,17 @@ const validNumber = (rule, value, callback) => {
   callback()
 }
 const validAddress = (rule, value, callback) => {
-  if (value == undefined || value == '') {
+  if (value === undefined || value === '') {
     callback('Please input ...')
     return
-  } else if (value.substring(0, 2) != '0x' || isNaN(Number(value))) {
+  } else if (value.substring(0, 2) !== '0x' || isNaN(Number(value))) {
     callback('Invalid address')
     return
   }
   callback()
 }
 const validLength = (rule, value, callback) => {
-  if (value == undefined) {
+  if (value === undefined) {
     callback()
     return
   } else if (value.length > 256) {
