@@ -10,7 +10,7 @@ class Voting extends React.Component {
     data = {
       ballotBasicOriginData: [],
       ballotBasicOriginItems: [],
-      ballotUpdateData: { duration: 0, memo: 'new memo' },
+      ballotUpdateData: { duration: 2, memo: 'new memo' },
       activeItems: [],
       proposalItems: [],
       finalizedItems: [],
@@ -42,6 +42,8 @@ class Voting extends React.Component {
 
     async getBallotOriginItem () {
       let list = []
+      this.data.ballotBasicOriginData = []
+
       // Use origin data in contract
       if (!this.data.ballotCnt) return
       for (var i = 1; i <= this.data.ballotCnt; i++) {
@@ -73,8 +75,12 @@ class Voting extends React.Component {
                 ? <Button type='primary' id='ballotDetailBtn' onClick={this.onClickDetail}>+</Button> : ''}
             </div>
             <div className='voteDiv'>
-              <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
-              <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
+            { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+            ?<div>
+              <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
+              <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button></div>
+            :<div><Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
+            <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button></div>}
               <span>
                 <h4 style={{ float: 'left' }}>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}</h4>
                 <h4 style={{ float: 'right' }}>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}</h4>
@@ -137,7 +143,7 @@ class Voting extends React.Component {
       console.log('onClickDetailBtn: ', e.target.props, this)
     }
 
-    onClickVote = (e, id) => {
+    async onClickVote(e, id) {
       if (!web3Instance.web3) return
 
       let approval
@@ -145,6 +151,7 @@ class Voting extends React.Component {
       else approval = true
 
       let { to, data } = this.props.contracts.govImp.vote(id, approval)
+      console.log(to, data)
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
         to: to,
@@ -152,6 +159,8 @@ class Voting extends React.Component {
       }, (err, hash) => {
         if (err) console.log('err: ', err)
         else {
+          console.log('hash: ', hash)
+          this.getBallotOriginItem()
           this.setState({ didVoted: true })
         }
       })
@@ -199,7 +208,7 @@ class Voting extends React.Component {
                       enterButton
                     />
                     {!this.data.isMember
-                    ? <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
+                    ? <Button disabled className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
                       <span>+</span>
                       <span className="text_btn">New Proposal</span>
                     </Button>

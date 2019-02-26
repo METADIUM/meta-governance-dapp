@@ -45,7 +45,7 @@ class App extends React.Component {
   async initContracts (web3) {
     initContracts({
       web3: web3,
-      netid: web3Config.netid
+      netid: web3.netid
     }).then(async () => {
       let {availableBalance, lockedBalance} = contracts.staking.getBalance(web3Instance.defaultAccount)
       console.log(availableBalance)
