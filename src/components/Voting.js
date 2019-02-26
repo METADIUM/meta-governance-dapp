@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Progress, Input } from 'antd'
+import { Button, Progress, Input, Affix, Menu } from 'antd'
 import './style/style.css'
 import { ProposalForm } from './ProposalForm'
 import * as util from '../util'
@@ -20,7 +20,8 @@ class Voting extends React.Component {
       isBallotLoading: false,
       isBallotDetailLoading: false,
       didVoted: false,
-      newProposal: false
+      newProposal: false,
+      position: 'active'
     }
 
     constructor (props) {
@@ -176,28 +177,54 @@ class Voting extends React.Component {
       }
     }
 
+    onClickSubMenu = (e) => {
+      console.log('position ' , e);
+      this.setState({
+        position: e.key,
+      })
+    }
+
     render () {
       return (
         <div>
           {!this.state.newProposal
-            ? <div className='contentDiv'>
-              <div>
-                <Input.Search
-                  placeholder='Search by Type, Proposal, Keywords'
-                  enterButton
-                  style={{ width: '70%', margin: '1% 0 1% 1.5%' }}
-                />
-                <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>New Proposal</Button>
+            ? <div className="background">
+              <div className="sub-header">
+                <div className="functionDiv">
+                  <div>
+                    <Input.Search
+                      placeholder='Search by Type, Proposal, Keywords'
+                      enterButton
+                    />
+                    <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
+                      <span>+</span>
+                      <span className="text_btn">New Proposal</span>
+                    </Button>
+                  </div>
+                </div>
+                <Affix>
+                  <div className="sub-menu">
+                    <Menu
+                      onClick={this.onClickSubMenu}
+                      selectedKeys={[this.state.position]}
+                      mode="horizontal">
+                      <Menu.Item key="active">Active</Menu.Item>
+                      <Menu.Item key="proposal">Proposal</Menu.Item>
+                      <Menu.Item key="finalized">Finalized</Menu.Item>
+                    </Menu>
+                  </div>
+                </Affix>
               </div>
+              <div className='contentDiv'>
+                <h1>Active</h1>
+                {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }<br /><br />
 
-              <h1>Active</h1>
-              {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }<br /><br />
+                <h1>Proposals</h1>
+                {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }<br /><br />
 
-              <h1>Proposals</h1>
-              {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }<br /><br />
-
-              <h1>Finalized</h1>
-              {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}<br /><br />
+                <h1>Finalized</h1>
+                {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}<br /><br />
+              </div>
             </div>
             : <div>
               <ProposalForm />
