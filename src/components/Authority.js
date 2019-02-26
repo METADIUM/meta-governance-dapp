@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from 'antd'
 import './style/style.css'
-import { getAuthorityLists } from '../util'
+import * as util from '../util'
 import { constants } from '../ethereum/constants'
 
 class Authority extends React.Component {
@@ -15,6 +15,7 @@ class Authority extends React.Component {
     }
 
     async componentDidMount () {
+      util.splitNodeDescription('6f8a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301')
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
       this.getAuthorityList()
     }
@@ -36,7 +37,7 @@ class Authority extends React.Component {
 
     async getAuthorityList (index) {
       let list = []
-      this.data.authorityOriginData = await getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
+      this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
 
       this.data.authorityOriginData.map((item, i) => {
         list.push(

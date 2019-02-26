@@ -10,18 +10,21 @@ class Voting extends React.Component {
     data = {
       ballotBasicOriginData: [],
       ballotBasicOriginItems: [],
-      ballotUpdateData: { duration: 3, memo: 'new memo' },
+      ballotUpdateData: { duration: 0, memo: 'new memo' },
       activeItems: [],
       proposalItems: [],
       finalizedItems: [],
-      ballotCnt: 0
+      ballotCnt: 0,
+      isMember: false,
     }
     state = {
       isBallotLoading: false,
       isBallotDetailLoading: false,
+      isUpdated: false,
       didVoted: false,
       newProposal: false,
       position: 'active'
+
     }
 
     constructor (props) {
@@ -31,7 +34,8 @@ class Voting extends React.Component {
       this.onClickUpdateProposal = this.onClickUpdateProposal.bind(this)
     }
 
-    async componentWillMount () {
+    async componentDidMount () {
+      this.data.isMember = await this.props.contracts.gov.isMember(web3Instance.defaultAccount)
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
       this.getBallotOriginItem()
     }
@@ -102,6 +106,7 @@ class Voting extends React.Component {
         )
       })
       this.data.ballotBasicOriginItems = list
+
       this.getBallotDetailInfo()
       this.setState({ isBallotLoading: true })
     }
@@ -150,31 +155,26 @@ class Voting extends React.Component {
       })
     }
 
-    onClickUpdateProposal = (e, id) => {
-      switch (e) {
-        case 'change':
-          let { c_to, c_data } = this.props.contracts.ballotStorage.updateBallotDuration(id, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
-          web3Instance.web3.eth.sendTransaction({
-            from: web3Instance.defaultAccount,
-            to: c_to,
-            data: c_data
-          }, (err, hash) => {
-            if (err) console.log('err: ', err)
-            else console.log('hash: ', hash)
-          })
-          break
-        case 'revoke':
-          let { r_to, r_data } = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
-          web3Instance.web3.eth.sendTransaction({
-            from: web3Instance.defaultAccount,
-            to: r_to,
-            data: r_data
-          }, (err, hash) => {
-            if (err) console.log('err: ', err)
-            else console.log('hash: ', hash)
-          })
-          break
+    async onClickUpdateProposal (e, id) {
+      let trx
+      if (e === 'change') {
+        trx = await this.props.contracts.ballotStorage.updateBallotDuration(id, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
+        // Using updateMemo
+        //trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
       }
+      else {
+        trx = this.props.contracts.ballotStorage.cancelBallot(id)
+      }
+      console.log(trx,id,parseInt(constants.ballotState.Canceled))
+
+      web3Instance.web3.eth.sendTransaction({
+        from: web3Instance.defaultAccount,
+        to: trx.to,
+        data: trx.data
+      }, (err, hash) => {
+        if (err) console.log('err: ', err)
+        else this.setState({ isUpdated: true })
+      })
     }
 
     onClickSubMenu = (e) => {
@@ -196,10 +196,15 @@ class Voting extends React.Component {
                       placeholder='Search by Type, Proposal, Keywords'
                       enterButton
                     />
-                    <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
+                    {!this.data.isMember
+                    ? <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
                       <span>+</span>
                       <span className="text_btn">New Proposal</span>
                     </Button>
+                    : <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
+                    <span>+</span>
+                    <span className="text_btn">New Proposal</span>
+                  </Button>}
                   </div>
                 </div>
                 <Affix>
@@ -218,7 +223,6 @@ class Voting extends React.Component {
               <div className='contentDiv'>
                 <h1>Active</h1>
                 {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }<br /><br />
-
                 <h1>Proposals</h1>
                 {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }<br /><br />
 
@@ -227,7 +231,7 @@ class Voting extends React.Component {
               </div>
             </div>
             : <div>
-              <ProposalForm />
+              <ProposalForm contracts = {this.props.contracts}/>
             </div>
           }
         </div>

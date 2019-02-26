@@ -13,5 +13,14 @@ class Gov {
     if (!this.govInstance || !this.govInstance.methods) return
     return await this.govInstance.methods.ballotLength().call()
   }
+
+  /**
+   * 
+   * @param {address} addr 
+   */
+  async isMember(addr) {
+    if (!this.govInstance || !this.govInstance.methods) return
+    return await this.govInstance.methods.isMember(addr).call()
+  }
 }
 export { Gov }

@@ -10,7 +10,8 @@ import './App.css'
 import getWeb3Instance from './ethereum/web3'
 import { web3Instance } from './ethereum/web3'
 import Web3 from 'web3'
-import web3Config from './ethereum/web3-config.json'
+
+
 
 // Contracts
 import { contracts, initContracts } from './ethereum/web3Components/contracts'
@@ -30,7 +31,6 @@ class App extends React.Component {
 
   constructor (props) {
     super(props)
-
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       console.log(web3Config)
@@ -77,6 +77,7 @@ class App extends React.Component {
       case '2': return <Voting title='Voting' contracts={contracts} />
       default:
     }
+    this.setState({ selectedMenu: true})
   }
 
   showStakingModal = (e) => {
