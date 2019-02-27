@@ -115,7 +115,7 @@ class Voting extends React.Component {
                       </div> : null }
                     { item.state === constants.ballotState.Ready
                       ? <div>
-                        <div><span>duration</span><span>{item.duration}days</span></div>
+                        <div><span>duration</span><span>{item.duration === 0? 1 : item.duration}days</span></div>
                         <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
                       </div> : null }
                   </div>

@@ -17,7 +17,7 @@ var dayTimestamp = 86400
 function timeConverter (timestamp) {
   var a = new Date(timestamp * 1000)
   var month = months[a.getMonth()]
-  return a.getFullYear() + ' / ' + month + ' / ' + a.getDate()
+  return a.getFullYear() + '/' + +0+(a.getMonth()+1) + '/' + a.getDate() +' ' + a.getHours() + ':' + a.getMinutes() + '(UTC)'
 }
 
 function convertDayToTimestamp (day) {

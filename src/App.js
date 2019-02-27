@@ -4,6 +4,7 @@ import { TopNav, FootNav } from './components/Nav'
 import { StakingModal } from './components/StakingModal'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
+import { BaseLoader } from './components/BaseLoader'
 import './App.css'
 
 // web3
@@ -48,6 +49,8 @@ class App extends React.Component {
     }).then(async () => {
       this.data.balance = await contracts.staking.balanceOf(web3Instance.defaultAccount)
       this.data.lockedBalance = await contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
+      this.data.balance = web3Instance.web3.utils.fromWei(this.data.balance, 'ether')
+      this.data.lockedBalance = web3Instance.web3.utils.fromWei(this.data.lockedBalance, 'ether')
       this.setState({ contractReady: true })
     })
   }
@@ -115,7 +118,7 @@ class App extends React.Component {
   render () {
     return (
       <Layout className='layout'>
-        {this.state.contractReady
+        {this.state.contractReady && this.state.loadWeb3
           ? <div>
             <Header>
               <TopNav
@@ -144,7 +147,11 @@ class App extends React.Component {
             <Footer>
               <FootNav />
             </Footer>
-          </div> : null}
+          </div>
+          :
+          <div>
+            <BaseLoader />
+          </div>}
       </Layout>
     )
   }

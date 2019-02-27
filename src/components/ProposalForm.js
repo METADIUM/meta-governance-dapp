@@ -36,10 +36,14 @@ class ProposalForm extends React.Component {
       let trx = {}
       let isMember = await this.props.contracts.gov.isMember(web3Instance.defaultAccount)
       if (!isMember) {
-        console.log('Not Member')
+        window.alert('Not Member')
         return
       }
       util.refineSubmitData(this.data.formData)
+
+      if (!await this.props.contracts.staking.balanceOf(this.data.formData.newAddr) ||!await this.props.contracts.gov.isMember(this.data.formData.newAddr)) {
+        window.alert('Not Exist staking meta or New member is Exist')
+      }
 
       if (this.data.selectedVoteTopic === 'add') {
         trx = this.props.contracts.govImp.addProposalToAddMember(
@@ -51,6 +55,10 @@ class ProposalForm extends React.Component {
           this.data.formData.memo
         )
       } else {
+        let isExistMember = await this.props.contracts.gov.isMember(this.data.formData.oldAddr)
+        let alreadyNewMember = this.props.contracts.gov.isMember(this.data.formData.newAddr)
+        
+        if (!isExistMember) {window.alert('Not Member')}return
         trx = this.props.contracts.govImp.addProposalToChangeMember(
           this.data.formData.oldAddr,
           this.data.formData.newAddr,

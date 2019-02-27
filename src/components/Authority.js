@@ -3,6 +3,7 @@ import { Button } from 'antd'
 import './style/style.css'
 import * as util from '../util'
 import { constants } from '../ethereum/constants'
+import { web3Instance } from '../ethereum/web3';
 
 class Authority extends React.Component {
     data = {
@@ -16,7 +17,9 @@ class Authority extends React.Component {
 
     async componentDidMount () {
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
-      this.getAuthorityList()
+      await this.getAuthorityList()
+      this.setState({ getAuthorityInfo: true })
+
     }
 
     onApplyBtnClick () {
@@ -38,33 +41,36 @@ class Authority extends React.Component {
       let list = []
       this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
 
-      this.data.authorityOriginData.map((item, i) => {
-        list.push(
-          <div key={item.addr} className='authorityComp'>
-            <div className='authorityComp_contnet'>
-              <div className='img_container'>
-                <img src={item.logo} alt='' />
-              </div>
-              <div className={i === index ? 'text_container long' : 'text_container short'}>
-                <p className='title'>{item.title}</p>
-                <p className='address'>Address: {item.addr}</p>
-                <p className={'description'}>{this.breakLine(item.description)}</p>
-                <div className='link_container'>
-                  <a className='more' onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
-                  <div className='SNSList'>
-                    {this.getSNSList(item.sns)}
-                    <a className='snsGroup' href={item.homepage}> <i className='fas fa-home fa-2x' /> </a>
+      this.data.authorityOriginData.map(async (item, i) => {
+        let isMember =  await this.props.contracts.gov.isMember(item.addr)
+        if (isMember) {
+          list.push(
+            <div key={item.addr} className='authorityComp'>
+              <div className='authorityComp_contnet'>
+                <div className='img_container'>
+                  <img src={item.logo} alt='' />
+                </div>
+                <div className={i === index ? 'text_container long' : 'text_container short'}>
+                  <p className='title'>{item.title}</p>
+                  <p className='address'>Address: {item.addr}</p>
+                  <p className={'description'}>{this.breakLine(item.description)}</p>
+                  <div className='link_container'>
+                    <a className='more' onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
+                    <div className='SNSList'>
+                      {this.getSNSList(item.sns)}
+                      <a className='snsGroup' href={item.homepage}> <i className='fas fa-home fa-2x' /> </a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )
-        return list
+          )
+        }
+        this.data.authorityItems = list
+        this.setState({ getAuthorityInfo: true })
+        console.log(this.state.getAuthorityInfo)
       })
-
-      this.data.authorityItems = list
-      this.setState({ getAuthorityInfo: true })
+      
     }
 
     getSNSList (snsList) {
