@@ -8,6 +8,8 @@ import { constants } from '../ethereum/constants'
 
 class Voting extends React.Component {
     data = {
+      // Mapped with ballotBasicOriginData
+      ballotMemberOriginData: {},
       ballotBasicOriginData: [],
       ballotBasicOriginItems: [],
       ballotUpdateData: { duration: 2, memo: 'new memo' },
@@ -41,23 +43,32 @@ class Voting extends React.Component {
     async componentDidMount () {
       this.data.isMember = await this.props.contracts.gov.isMember(web3Instance.defaultAccount)
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
-      this.getBallotOriginItem()
+      this.getOriginData()
     }
 
-    async getBallotOriginItem () {
-      let list = []
-      this.data.ballotBasicOriginData = []
-
-      // Use origin data in contract
+    async getOriginData () {
       if (!this.data.ballotCnt) return
       for (var i = 1; i <= this.data.ballotCnt; i++) {
         await this.props.contracts.ballotStorage.getBallotBasic(i).then(
           ret => {
             ret.id = i // Add ballot id
             this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
-          })
+        })
+        await this.props.contracts.ballotStorage.getBallotMember(i).then(
+          ret => {
+            ret.id = i // Add ballot id
+            this.data.ballotMemberOriginData[i] = ret
+        })
+        console.log(this.data.ballotMemberOriginData[i].oldMemeberAddress)
       }
-      if (!this.data.ballotBasicOriginData) return
+      this.getBallotOriginItem()
+    }
+
+    async getBallotOriginItem () {
+      if (!this.data.ballotBasicOriginData || !this.data.ballotMemberOriginData) return
+      let list = []
+      // Use origin data in contract
+      
       this.data.ballotBasicOriginData.map((item, index) => {
         list.push(
           <div className={"ballotDiv state" + item.state} state={item.state} key={list.length} id={item.id} ref={ ref => this.ballotDestals.set(index, ref)}>
@@ -92,8 +103,8 @@ class Voting extends React.Component {
                 </div>
                 <div className="textContent">
                   { item.ballotType === constants.ballotTypes.MemberChange
-                  ? <p className="description">Old Authority Address: <br/>New Authority Address: <br/>META To be Locked: </p>
-                  : <p className="description">New Authority Address: <br/>META To be Locked: </p> }
+                  ? <p className="description">Old Authority Address: {this.data.ballotMemberOriginData[item.id].oldMemeberAddress}<br/>New Authority Address: {this.data.ballotMemberOriginData[item.id].newMemeberAddress}<br/>META To be Locked: {this.data.ballotMemberOriginData[item.id].lockAmount}</p>
+                  : <p className="description">New Authority Address: {this.data.ballotMemberOriginData[item.id].newMemeberAddress}<br/>META To be Locked: {this.data.ballotMemberOriginData[item.id].lockAmount}</p>}
                   <div className="duration">
                     { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected || item.state === constants.ballotState.InProgress
                     ? <div>

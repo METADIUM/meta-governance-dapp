@@ -31,12 +31,6 @@ class ProposalForm extends React.Component {
 
     /* Type casting and save form data. */
     handleChange = (e) => {
-      // if (type == 'number') {
-      //   e.target.value = e.target.value.replace(' ', '')
-      //   this.data.formData[this.data.selectedVoteTopic][e.target.name] = Number(e.target.value)
-      // } else {
-      //   this.data.formData[this.data.selectedVoteTopic][e.target.name] = e.target.value
-      // }
       this.data.formData[e.target.name] = e.target.value
     }
 
