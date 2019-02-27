@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Select, Input, Form } from 'antd'
+import { Button, Select, Input, Form, Icon } from 'antd'
 import './style/style.css'
 import { Voting } from './Voting'
 import { web3Instance } from '../ethereum/web3'
@@ -84,80 +84,80 @@ class ProposalForm extends React.Component {
     }
 
     getAddProposalForm () {
-      return (<div>
+      return (<div className='proposalBody'>
         <Form onSubmit={this.handleSubmit}>
-          <h3> META Amount to be locked {<span style={{ color: 'red' }}>*</span>}</h3>
+          <p className="subtitle">META Amount to be locked <span className="required">*</span></p>
           <Form.Item>
-            <Input addonAfter='META' style={{ marginBottom: '0%' }} name='lockAmount' onChange={this.handleChange} />
+            <Input addonAfter='META' name='lockAmount' onChange={this.handleChange} />
           </Form.Item>
-          <h3> New Authority Address {<span style={{ color: 'red' }}>*</span>} </h3>
+          <p className="subtitle">New Authority Address <span className="required">*</span></p>
           <Form.Item>
-            <Input style={{ marginBottom: '0%' }} name='addr' onChange={this.handleChange} />
+            <Input name='addr' onChange={this.handleChange} />
           </Form.Item>
-          <h3> New Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
+          <p className="subtitle">New Authority Node Description <span className="required">*</span></p>
           <Form.Item>
-            <Input style={{ marginBottom: '0%' }} name='node' onChange={this.handleChange} />
+            <Input type="primary" name='node' onChange={this.handleChange} />
           </Form.Item>
-          <h3> Description </h3>
+          <p className="subtitle">Description</p>
           <Form.Item>
             <TextArea
               rows={4}
               placeholder='Max. 256 bytes'
-              autosize={{ minRows: 2, maxRows: 4 }}
+              autosize={{ minRows: 4, maxRows: 4 }}
               name='memo'
               onChange={this.handleChange}
             />
           </Form.Item>
-
-          <h4 style={{ color: 'red', marginTop: '2%' }}>*Mandatory</h4>
           <Form.Item>
-            <Button className='submit_Btn' shape='round' htmlType='submit'>submit </Button>
+            <div className="submitDiv">
+              <Button className='submit_Btn' htmlType='submit'>Submit </Button>
+            </div>
           </Form.Item>
         </Form>
       </div>)
     }
 
     getReplaceProposalForm () {
-      return (<div>
+      return (<div className='proposalBody'>
         <Form onSubmit={this.handleSubmit}>
-          <h3> META Amount to be locked (New) {<span style={{ color: 'red' }}>*</span>}</h3>
+          <p className="subtitle">META Amount to be locked (New) <span className="required">*</span></p>
           <Form.Item>
             <Input addonAfter='META' style={{ marginBottom: '0%' }} name='newLockAmount' onChange={this.handleChange} />
           </Form.Item>
-          <h3> New Authority Address {<span style={{ color: 'red' }}>*</span>} </h3>
+          <p className="subtitle">New Authority Address <span className="required">*</span></p>
           <Form.Item>
             <Input style={{ marginBottom: '0%' }} name='newAddr' onChange={this.handleChange} />
           </Form.Item>
-          <h3> New Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
+          <p className="subtitle">New Authority Node Description <span className="required">*</span></p>
           <Form.Item>
             <Input style={{ marginBottom: '0%' }} name='newNode' onChange={this.handleChange} />
           </Form.Item>
-          <h3> META Amount to be unlocked (Old) {<span style={{ color: 'red' }}>*</span>}</h3>
+          <p className="subtitle">META Amount to be unlocked (Old) <span className="required">*</span></p>
           <Form.Item>
             <Input addonAfter='META' style={{ marginBottom: '0%' }} name='oldLockAmount' onChange={this.handleChange} />
           </Form.Item>
-          <h3> Old Authority Address {<span style={{ color: 'red' }}>*</span>}</h3>
+          <p className="subtitle">Old Authority Address <span className="required">*</span></p>
           <Form.Item>
             <Input style={{ marginBottom: '0%' }} name='oldAddr' onChange={this.handleChange} />
           </Form.Item>
-          <h3> Old Authority Node Description {<span style={{ color: 'red' }}>*</span>}</h3>
+          <p className="subtitle">Old Authority Node Description <span className="required">*</span></p>
           <Form.Item>
             <Input style={{ marginBottom: '0%' }} name='oldNode' onChange={this.handleChange} />
           </Form.Item>
-          <h3> Description </h3>
+          <p className="subtitle">Description </p>
           <Form.Item>
             <TextArea
               rows={4}
               placeholder='Max. 256 bytes'
-              autosize={{ minRows: 2, maxRows: 4 }}
+              autosize={{ minRows: 4, maxRows: 4 }}
               name='memo'
               onChange={this.handleChange}
             />
           </Form.Item>
-
-          <h4 style={{ color: 'red', marginTop: '2%' }}>*Mandatory</h4>
           <Form.Item>
-            <Button className='submit_Btn' shape='round' htmlType='submit'>submit</Button>
+            <div className="submitDiv">
+              <Button className='submit_Btn' htmlType='submit'>Submit </Button>
+            </div>
           </Form.Item>
         </Form>
       </div>)
@@ -167,26 +167,30 @@ class ProposalForm extends React.Component {
       return (
         <div>
           {!this.state.isBack
-            ? <div>
-              <div style={{ margin: '1% 2% 3% 16%' }}>
-                <Button style={{ float: 'left', marginRight: '2%' }} onClick={() => { this.setState({ isBack: !this.state.isBack }) }}>←</Button>
-                <h2>Back to Voting</h2>
+            ? <div className="contentDiv">
+              <div className="backBtnDiv">
+                <Button onClick={() => { this.setState({ isBack: !this.state.isBack }) }}>
+                  <span><Icon type="left" /></span>
+                  <span className='text_btn'>Back to Voting</span>
+                </Button>
               </div>
               <div className='contentVotingDiv'>
-                <div>
-                  <h2>New Proposal</h2><hr /><br />
-                  <h2>Topic for voting <span style={{ color: 'red' }}>*</span></h2>
+                <div className='proposalHead'>
+                  <div className="title">
+                    <p>New Proposal</p>
+                    <p>* Mandatory</p>
+                  </div>
+                  <p className="subtitle">Topic for voting <span className="required">*</span></p>
                   <Select
                     showArrow
                     onChange={this.onSelectChange}
-                    style={{ width: '100%', marginBottom: '2%' }}
                   >
                     <Select.Option value='add'>Add Authority</Select.Option>
                     <Select.Option value='replace'>Replace Authority</Select.Option>
-                  </Select><hr />
-                </div><br /><br />
+                  </Select>
+                </div>
                 { this.data.selectedVoteTopic !== ''
-                  ? <div style={{ marginTop: '2%' }}>
+                  ? <div>
                     { this.data.selectedVoteTopic === 'add' ? this.getAddProposalForm() : this.getReplaceProposalForm() }
                   </div> : ''
                 }

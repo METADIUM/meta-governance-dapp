@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Progress, Input, Affix, Menu } from 'antd'
+import { Button, Progress, Input, Affix, Menu, Modal, Slider } from 'antd'
 import './style/style.css'
 import { ProposalForm } from './ProposalForm'
 import * as util from '../util'
@@ -23,7 +23,9 @@ class Voting extends React.Component {
       isUpdated: false,
       didVoted: false,
       newProposal: false,
-      position: 'active'
+      position: 'active',
+      updateModal: false,
+      changeDay: 0
     }
 
     constructor (props) {
@@ -173,24 +175,27 @@ class Voting extends React.Component {
     }
 
     async onClickUpdateProposal (e, id) {
-      let trx
-      if (e === 'change') {
-        trx = await this.props.contracts.ballotStorage.updateBallotDuration(id, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
-        // Using updateMemo
-        // trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
-      } else {
-        trx = this.props.contracts.ballotStorage.cancelBallot(id)
-      }
-      console.log(trx, id, parseInt(constants.ballotState.Canceled))
+      // Stae의 changeDay를 item의 duration값으로 setStae해주세요
+      let duration = 3;
+      this.setState({updateModal: true, changeDay: duration})
+      // let trx
+      // if (e === 'change') {
+      //   trx = await this.props.contracts.ballotStorage.updateBallotDuration(id, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
+      //   // Using updateMemo
+      //   // trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
+      // } else {
+      //   trx = this.props.contracts.ballotStorage.cancelBallot(id)
+      // }
+      // console.log(trx, id, parseInt(constants.ballotState.Canceled))
 
-      web3Instance.web3.eth.sendTransaction({
-        from: web3Instance.defaultAccount,
-        to: trx.to,
-        data: trx.data
-      }, (err, hash) => {
-        if (err) console.log('err: ', err)
-        else this.setState({ isUpdated: true })
-      })
+      // web3Instance.web3.eth.sendTransaction({
+      //   from: web3Instance.defaultAccount,
+      //   to: trx.to,
+      //   data: trx.data
+      // }, (err, hash) => {
+      //   if (err) console.log('err: ', err)
+      //   else this.setState({ isUpdated: true })
+      // })
     }
 
     onClickSubMenu = (e) => {
@@ -206,7 +211,21 @@ class Voting extends React.Component {
       this.setState({ position: e.key })
     }
 
+    completeModal = (e) => {
+      this.setState({updateModal: false})
+    }
+
+    cancleModal = (e) => {
+      this.setState({updateModal: false})
+    }
+
+    sliderChange = (value) => {
+      let newDuration = value / 20;
+      this.setState({changeDay: newDuration})
+    }
+
     render () {
+      const changeDay = this.state.changeDay;
       return (
         <div>
           {!this.state.newProposal
@@ -242,6 +261,14 @@ class Voting extends React.Component {
                   </div>
                 </Affix>
               </div>
+              <Modal
+                title="Voting Duration Change"
+                visible={this.state.updateModal}
+                onOk={this.completeModal}
+                onCancel={this.cancleModal} >
+                <p className="changeDay">{changeDay}days</p>
+                <Slider marks={{0: '0 days', 60: '3 days', 100: '5days'}} step={20} defaultValue={changeDay * 20} tooltipVisible={false} onChange={this.sliderChange}/>
+              </Modal>
               <div className='contentDiv'>
                 <p className="stateTitle" ref={ ref => {this.activeTitle = ref;} }>Active</p>
                 {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }

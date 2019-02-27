@@ -16,7 +16,7 @@ const TopNav = ({ nav, onMenuClick, showStakingModal=f=>f, balance, lockedBalanc
         </div>
         <div className="header-staking">
         <div>
-            <p className="staked">Staked {balance} Meta</p>
+            <p className="staked">Staked {balance} META</p>
             <p className="meta">(Locked {lockedBalance} META)</p>
         </div>
         <Button type="primary" onClick={ showStakingModal }>META Staking</Button>
