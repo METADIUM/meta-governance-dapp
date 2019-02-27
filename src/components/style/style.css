@@ -29,11 +29,6 @@
     outline: none;
 }
 
-.contentVotingDiv{
-  padding: 0 20%;
-  border-radius: 10px;
-}
-
 .ballotExplainDiv{
   padding: 2% 5%;
   height: 100px;
@@ -102,8 +97,6 @@
   padding-bottom: 56px;
   max-width: 1152px;
   height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .apply_proposal_Btn_container {
@@ -429,9 +422,18 @@
   border-color: #261BC9;
 }
 
+.ant-modal-body .changeDay {
+  font-size: 46px;
+  color: rgba(0,0,0,0.87);
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
 .stateTitle {
   color: #000000;
   font-size: 30px;
+  line-height: 38px;
   font-weight: 600;
   margin: 32px 0 24px 0;
 }
@@ -650,4 +652,94 @@
 } .moreDiv button:hover {
   color: #ffffff;
   background-color: #261BC9;
+}
+
+/* proposal */
+.backBtnDiv {
+  padding: 24px 16px 16px 16px;
+}
+
+.backBtnDiv button {
+  height: 40px;
+  width: 208px;
+  display: flex;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.backBtnDiv button span {
+  color: rgba(0,0,0,0.87);
+  font-size: 16px;
+}
+
+.contentVotingDiv {
+  margin: 0 16px 24px 16px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.contentVotingDiv .proposalHead {
+  padding: 24px 16px;
+}
+
+.contentVotingDiv .proposalHead .title {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.contentVotingDiv .proposalHead .title p:first-child {
+  font-size: 30px;
+  color: rgba(0,0,0,0.87);
+  margin: 0;
+  line-height: 38px;
+  font-weight: 600;
+  flex: 100;
+}
+
+.contentVotingDiv .proposalHead .title p:last-child {
+  margin: 0;
+  color:#FC0F1B;
+}
+
+.contentVotingDiv .subtitle {
+  color: rgba(0,0,0,0.6);
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+.contentVotingDiv .required {
+  color:#FC0F1B;
+}
+
+.contentVotingDiv .proposalHead .ant-select-enabled {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.contentVotingDiv .proposalBody {
+  border-top: #EEEEF0 solid 2px;
+  padding: 8px 16px 24px 16px;
+}
+
+.contentVotingDiv .ant-form-item {
+  margin-top: 8px;
+  margin-bottom: 0px;
+}
+
+.contentVotingDiv .proposalBody button[type="submit"] {
+  margin: 0;
+  color: #ffffff;
+  background-color: #261BC9;
+  border: none;
+  border-radius: 4px;
+  width: 208px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.contentVotingDiv .proposalBody .submitDiv {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
 }
