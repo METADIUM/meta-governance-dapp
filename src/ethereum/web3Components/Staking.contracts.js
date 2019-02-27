@@ -19,7 +19,7 @@ class Staking {
     return await this.stakingInstance.methods.balanceOf(address).call()
   }
 
-  deposit() {
+  deposit () {
     if (!this.stakingInstance || !this.stakingInstance.methods) return
     return {
       to: this.addresses.STAKING_ADDRESS,
@@ -27,7 +27,7 @@ class Staking {
     }
   }
 
-  withdraw(amount) {
+  withdraw (amount) {
     if (!this.stakingInstance || !this.stakingInstance.methods) return
     return {
       to: this.addresses.STAKING_ADDRESS,

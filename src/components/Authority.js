@@ -15,7 +15,6 @@ class Authority extends React.Component {
     }
 
     async componentDidMount () {
-      util.splitNodeDescription('6f8a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301')
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
       this.getAuthorityList()
     }
@@ -51,20 +50,17 @@ class Authority extends React.Component {
                 <p className='address'>Address: {item.addr}</p>
                 <p className={'description'}>{this.breakLine(item.description)}</p>
                 <div className='link_container'>
-                  <a href='#' className='more' onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
+                  <a className='more' onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
                   <div className='SNSList'>
                     {this.getSNSList(item.sns)}
-                    <a
-                      className='snsGroup'
-                      href={item.homepage}>
-                      <i className='fas fa-home fa-2x' />
-                    </a>
+                    <a className='snsGroup' href={item.homepage}> <i className='fas fa-home fa-2x' /> </a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         )
+        return list
       })
 
       this.data.authorityItems = list
@@ -75,7 +71,6 @@ class Authority extends React.Component {
       let sns = []
       for (var key in snsList) {
         let icon = null
-
         switch (key) {
           case 'twitter': icon = 'fab fa-twitter fa-2x'; break
           case 'medium': icon = 'fab fa-medium fa-2x'; break
@@ -83,16 +78,9 @@ class Authority extends React.Component {
           case 'instagram': icon = 'fab fa-instagram fa-2x'; break
           case 'telegram': icon = 'fab fa-telegram fa-2x'; break
           case 'linkedin': icon = 'fab fa-linkedin fa-2x'; break
+          default: break
         }
-
-        sns.push(
-          <a
-            key={key}
-            className='snsGroup'
-            href={snsList[key]}>
-            <i className={icon} />
-          </a>
-        )
+        sns.push(<a key={key} className='snsGroup' href={snsList[key]}> <i className={icon} /> </a>)
       }
 
       /* Reversed. */

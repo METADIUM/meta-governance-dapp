@@ -17,6 +17,7 @@ class Voting extends React.Component {
       proposalItems: [],
       finalizedItems: [],
       ballotCnt: 0,
+      curBallotIdx: 0,
       isMember: false
     }
     state = {
@@ -26,8 +27,7 @@ class Voting extends React.Component {
       didVoted: false,
       newProposal: false,
       position: 'active',
-      updateModal: false,
-      changeDay: 0
+      updateModal: false
     }
 
     constructor (props) {
@@ -35,6 +35,7 @@ class Voting extends React.Component {
       this.onClickDetail = this.onClickDetail.bind(this)
       this.onClickVote = this.onClickVote.bind(this)
       this.onClickUpdateProposal = this.onClickUpdateProposal.bind(this)
+      this.completeModal = this.completeModal.bind(this)
 
       this.activeTitle = null;
       this.proposalTitle = null;
@@ -55,13 +56,12 @@ class Voting extends React.Component {
           ret => {
             ret.id = i // Add ballot id
             this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
-        })
+          })
         await this.props.contracts.ballotStorage.getBallotMember(i).then(
           ret => {
             ret.id = i // Add ballot id
             this.data.ballotMemberOriginData[i] = ret
-        })
-        console.log(this.data.ballotMemberOriginData[i].oldMemeberAddress)
+          })
       }
       this.getBallotOriginItem()
     }
@@ -70,65 +70,65 @@ class Voting extends React.Component {
       if (!this.data.ballotBasicOriginData || !this.data.ballotMemberOriginData) return
       let list = []
       // Use origin data in contract
-      
+
       this.data.ballotBasicOriginData.map((item, index) => {
         list.push(
-          <div className={"ballotDiv state" + item.state} state={item.state} key={list.length} id={item.id} ref={ ref => this.ballotDestals.set(index, ref)}>
-            <div className="ballotInfoDiv">
-              <div className="infoLeft">
-                <p className="topic">{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
-                <p className="company">Proposal: METADIUM_EXAM</p>
-                <p className="addr">Proposal Address: {item.creator}</p>
+          <div className={'ballotDiv state' + item.state} state={item.state} key={list.length} id={item.id} ref={ref => this.ballotDestals.set(index, ref)}>
+            <div className='ballotInfoDiv'>
+              <div className='infoLeft'>
+                <p className='topic'>{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
+                <p className='company'>Proposal: METADIUM_EXAM</p>
+                <p className='addr'>Proposal Address: {item.creator}</p>
               </div>
-              <div className="infoRight">
+              <div className='infoRight'>
                 {item.state === constants.ballotState.Ready || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                  ? <Button type='primary' id='ballotDetailBtn' onClick={e => this.onClickDetail(index, e)} icon="down"/> : <div>&nbsp;</div>}
-                <p className="status">Status : {constants.ballotStateArr[parseInt(item.state)]}</p>
+                  ? <Button type='primary' id='ballotDetailBtn' onClick={e => this.onClickDetail(index, e)} icon='down' /> : <div>&nbsp;</div>}
+                <p className='status'>Status : {constants.ballotStateArr[parseInt(item.state)]}</p>
               </div>
             </div>
-	          <div className="ballotContentDiv">
-              <div className="voteDiv">
-                <div className="imageContent">
-                { !this.data.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                ? <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
-                : <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button> }
-                  <div className="chart">
-                    <div className="number">
+            <div className='ballotContentDiv'>
+              <div className='voteDiv'>
+                <div className='imageContent'>
+                  { !this.data.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                    ? <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
+                    : <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button> }
+                  <div className='chart'>
+                    <div className='number'>
                       <span>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}%</span>
                       <span>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}%</span>
                     </div>
-                    <Progress percent={item.powerOfAccepts} status="active" showInfo={false} />
+                    <Progress percent={item.powerOfAccepts} status='active' showInfo={false} />
                   </div>
-                { !this.data.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                ? <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
-                : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button> }
+                  { !this.data.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                    ? <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
+                    : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button> }
                 </div>
-                <div className="textContent">
+                <div className='textContent'>
                   { item.ballotType === constants.ballotTypes.MemberChange
-                  ? <p className="description">Old Authority Address: {this.data.ballotMemberOriginData[item.id].oldMemeberAddress}<br/>New Authority Address: {this.data.ballotMemberOriginData[item.id].newMemeberAddress}<br/>META To be Locked: {this.data.ballotMemberOriginData[item.id].lockAmount}</p>
-                  : <p className="description">New Authority Address: {this.data.ballotMemberOriginData[item.id].newMemeberAddress}<br/>META To be Locked: {this.data.ballotMemberOriginData[item.id].lockAmount}</p>}
-                  <div className="duration">
+                    ? <p className='description'>Old Authority Address: {this.data.ballotMemberOriginData[item.id].oldMemberAddress}<br />New Authority Address: {this.data.ballotMemberOriginData[item.id].newMemberAddress}<br />META To be Locked: {this.data.ballotMemberOriginData[item.id].lockAmount}</p>
+                    : <p className='description'>New Authority Address: {this.data.ballotMemberOriginData[item.id].newMemberAddress}<br />META To be Locked: {this.data.ballotMemberOriginData[item.id].lockAmount}</p>}
+                  <div className='duration'>
                     { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected || item.state === constants.ballotState.InProgress
-                    ? <div>
-                      <div><span>Start : </span><span>{item.startTime}</span></div>
-                      <div><span>End : </span><span>{item.endTime}</span></div>
-                    </div> : null }
+                      ? <div>
+                        <div><span>Start : </span><span>{item.startTime}</span></div>
+                        <div><span>End : </span><span>{item.endTime}</span></div>
+                      </div> : null }
                     { item.state === constants.ballotState.Ready
-                    ? <div>
-                      <div><span>duration</span><span>{item.duration}days</span></div>
-                      <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
-                    </div> : null }
+                      ? <div>
+                        <div><span>duration</span><span>{item.duration}days</span></div>
+                        <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
+                      </div> : null }
                   </div>
                 </div>
               </div>
-              <div className="memoDiv">
+              <div className='memoDiv'>
                 <p>MEMO</p>
                 <p>{item.memo}</p>
               </div>
               { item.state === '1'
-              ? <div className="revokeDiv">
-                <Button onClick={() => this.onClickUpdateProposal('revoke', item.id)}>Revoke</Button>
-              </div> : null }
+                ? <div className='revokeDiv'>
+                  <Button onClick={() => this.onClickUpdateProposal('revoke', item.id)}>Revoke</Button>
+                </div> : null }
             </div>
           </div>
         )
@@ -160,7 +160,7 @@ class Voting extends React.Component {
     }
 
     onClickDetail = (index, e) => {
-      this.ballotDestals.get(index).style.height = this.ballotDestals.get(index).style.height === "auto" ? "124px" : "auto";
+      this.ballotDestals.get(index).style.height = this.ballotDestals.get(index).style.height === 'auto' ? '124px' : 'auto'
     }
 
     async onClickVote (e, id) {
@@ -186,57 +186,58 @@ class Voting extends React.Component {
     }
 
     async onClickUpdateProposal (e, id) {
-      // Stae의 changeDay를 item의 duration값으로 setStae해주세요
-      let duration = 3;
-      this.setState({updateModal: true, changeDay: duration})
-      // let trx
-      // if (e === 'change') {
-      //   trx = await this.props.contracts.ballotStorage.updateBallotDuration(id, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
-      //   // Using updateMemo
-      //   // trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
-      // } else {
-      //   trx = this.props.contracts.ballotStorage.cancelBallot(id)
-      // }
-      // console.log(trx, id, parseInt(constants.ballotState.Canceled))
-
-      // web3Instance.web3.eth.sendTransaction({
-      //   from: web3Instance.defaultAccount,
-      //   to: trx.to,
-      //   data: trx.data
-      // }, (err, hash) => {
-      //   if (err) console.log('err: ', err)
-      //   else this.setState({ isUpdated: true })
-      // })
+      this.data.curBallotIdx = id
+      let trx
+      if (e === 'change') {
+        this.setState({ updateModal: true })
+        return
+      } else {
+        trx = this.props.contracts.ballotStorage.cancelBallot(id)
+      }
+      web3Instance.web3.eth.sendTransaction({
+        from: web3Instance.defaultAccount,
+        to: trx.to,
+        data: trx.data
+      }, (err, hash) => {
+        if (err) console.log('err: ', err)
+        else this.setState({ isUpdated: true })
+      })
     }
 
     onClickSubMenu = (e) => {
-      switch(e.key) {
+      switch (e.key) {
         case 'active': window.scrollTo(0, this.activeTitle.offsetTop - 70)
           break
         case 'proposal': window.scrollTo(0, this.proposalTitle.offsetTop - 70)
           break
         case 'finalized': window.scrollTo(0, this.finalizedTitle.offsetTop - 70)
-         break
+          break
         default: break
       }
       this.setState({ position: e.key })
     }
 
-    completeModal = (e) => {
-      this.setState({updateModal: false})
-    }
-
-    cancleModal = (e) => {
-      this.setState({updateModal: false})
+    async completeModal (e) {
+      let trx = await this.props.contracts.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
+      // Using updateMemo
+      // trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
+      web3Instance.web3.eth.sendTransaction({
+        from: web3Instance.defaultAccount,
+        to: trx.to,
+        data: trx.data
+      }, (err, hash) => {
+        if (err) console.log('err: ', err)
+        else this.setState({ isUpdated: true })
+      })
+      this.setState({ updateModal: false })
     }
 
     sliderChange = (value) => {
-      let newDuration = value / 20;
-      this.setState({changeDay: newDuration})
+      this.data.ballotUpdateData.duration = value / 20
+      this.setState({ isUpdated: true })
     }
 
     render () {
-      const changeDay = this.state.changeDay;
       return (
         <div>
           {!this.state.newProposal
@@ -273,36 +274,36 @@ class Voting extends React.Component {
                 </Affix>
               </div>
               <Modal
-                title="Voting Duration Change"
+                title='Voting Duration Change'
                 visible={this.state.updateModal}
                 onOk={this.completeModal}
-                onCancel={this.cancleModal} >
-                <p className="changeDay">{changeDay}days</p>
-                <Slider marks={{0: '0 days', 60: '3 days', 100: '5days'}} step={20} defaultValue={changeDay * 20} tooltipVisible={false} onChange={this.sliderChange}/>
+                onCancel={e => this.setState({ updateModal: false })} >
+                <p className='changeDay'>{this.data.ballotUpdateData.duration}days</p>
+                <Slider marks={{ 0: '0 days', 60: '3 days', 100: '5days' }} step={20} defaultValue={this.data.ballotUpdateData.duration * 20} tooltipVisible={false} onChange={this.sliderChange} />
               </Modal>
               <div className='contentDiv'>
-                <p className="stateTitle" ref={ ref => {this.activeTitle = ref;} }>Active</p>
+                <p className='stateTitle' ref={ref => { this.activeTitle = ref }}>Active</p>
                 {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }
-                <p className="stateTitle" ref={ ref => {this.proposalTitle = ref;} }>Proposals</p>
+                <p className='stateTitle' ref={ref => { this.proposalTitle = ref }}>Proposals</p>
                 {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }
                 {this.data.proposalItems.length > 0
-                ? <div className="moreDiv">
-                  <Button value="large">
-                    <span>+</span>
-                    <span className="text_btn">Read More</span>
-                  </Button>
-                </div>
-                : null}
-                <p className="stateTitle"ref={ ref => {this.finalizedTitle = ref;} }>Finalized</p>
+                  ? <div className='moreDiv'>
+                    <Button value='large'>
+                      <span>+</span>
+                      <span className='text_btn'>Read More</span>
+                    </Button>
+                  </div>
+                  : null}
+                <p className='stateTitle'ref={ref => { this.finalizedTitle = ref }}>Finalized</p>
                 {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}
                 {this.data.finalizedItems.length > 0
-                ? <div className="moreDiv">
-                  <Button value="large">
-                    <span>+</span>
-                    <span className="text_btn">Read More</span>
-                  </Button>
-                </div>
-                : null}
+                  ? <div className='moreDiv'>
+                    <Button value='large'>
+                      <span>+</span>
+                      <span className='text_btn'>Read More</span>
+                    </Button>
+                  </div>
+                  : null}
               </div>
             </div>
             : <div>

@@ -4,7 +4,7 @@ import './style/style.css'
 
 const Option = Select.Option
 
-const StakingModal = ({ accountBalance = accountBalance, stakingModalVisible, submitMetaStaking, hideStakingModal, handleSelectChange, handleInputChange = f => f }) =>
+const StakingModal = ({ accountBalance, stakingModalVisible, submitMetaStaking, hideStakingModal, handleSelectChange, handleInputChange = f => f }) =>
   <Modal
     className='stakingModal'
     title='META Staking'

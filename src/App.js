@@ -19,13 +19,13 @@ class App extends React.Component {
     balance: 0,
     lockedBalance: 0,
     selectedStakingTopic: 'deposit',
-    amount: 0,
+    amount: 0
   }
   state = {
     loadWeb3: false,
     nav: '1',
     contractReady: false,
-    stakingModalVisible: false,
+    stakingModalVisible: false
   };
 
   constructor (props) {
@@ -104,7 +104,7 @@ class App extends React.Component {
         }
       })
     }
-    
+
     this.setState({ stakingModalVisible: false })
   }
 
@@ -115,36 +115,36 @@ class App extends React.Component {
   render () {
     return (
       <Layout className='layout'>
-      {this.state.contractReady ?
-        <div>
-          <Header>
-            <TopNav
-              nav={this.state.nav}
-              onMenuClick={this.onMenuClick}
-              showStakingModal={() => this.setState({ stakingModalVisible: true })}
-              balance={this.data.balance}
-              lockedBalance={this.data.lockedBalance} />
-          </Header>
+        {this.state.contractReady
+          ? <div>
+            <Header>
+              <TopNav
+                nav={this.state.nav}
+                onMenuClick={this.onMenuClick}
+                showStakingModal={() => this.setState({ stakingModalVisible: true })}
+                balance={this.data.balance}
+                lockedBalance={this.data.lockedBalance} />
+            </Header>
 
-          <StakingModal
-            accountBalance = {{ balance: this.data.balance, lockedBalance: this.data.lockedBalance }}
-            stakingModalVisible={this.state.stakingModalVisible}
-            hideStakingModal= {() => this.setState({ stakingModalVisible: false })}
-            submitMetaStaking={this.submitMetaStaking}
-            handleInputChange={this.handleInputChange}
-            handleSelectChange={this.handleSelectChange}/>
+            <StakingModal
+              accountBalance={{ balance: this.data.balance, lockedBalance: this.data.lockedBalance }}
+              stakingModalVisible={this.state.stakingModalVisible}
+              hideStakingModal={() => this.setState({ stakingModalVisible: false })}
+              submitMetaStaking={this.submitMetaStaking}
+              handleInputChange={this.handleInputChange}
+              handleSelectChange={this.handleSelectChange} />
 
-          <Content style={{ backgroundColor: '##EEEEF0' }}>
-            {this.state.loadWeb3
-              ? <div> {this.getContent()} </div>
-              : <div> { this.getErrModal()} </div>
-            }
-          </Content>
+            <Content style={{ backgroundColor: '##EEEEF0' }}>
+              {this.state.loadWeb3
+                ? <div> {this.getContent()} </div>
+                : <div> { this.getErrModal()} </div>
+              }
+            </Content>
 
-          <Footer>
-            <FootNav />
-          </Footer> 
-          </div>: null}
+            <Footer>
+              <FootNav />
+            </Footer>
+          </div> : null}
       </Layout>
     )
   }

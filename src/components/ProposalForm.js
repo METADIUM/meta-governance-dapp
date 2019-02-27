@@ -4,7 +4,7 @@ import './style/style.css'
 import { Voting } from './Voting'
 import { web3Instance } from '../ethereum/web3'
 import * as util from '../util'
-//import { validNumber, validAddress, validLength } from '../util'
+// import { validNumber, validAddress, validLength } from '../util'
 const { TextArea } = Input
 
 class ProposalForm extends React.Component {
@@ -16,10 +16,6 @@ class ProposalForm extends React.Component {
       isBack: false,
       selectedChange: false,
       submitForm: false
-    }
-
-    constructor (props) {
-      super(props)
     }
 
     onSelectChange = async (value) => {
@@ -80,19 +76,19 @@ class ProposalForm extends React.Component {
     getAddProposalForm () {
       return (<div className='proposalBody'>
         <Form onSubmit={this.handleSubmit}>
-          <p className="subtitle">META Amount to be locked <span className="required">*</span></p>
+          <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
           <Form.Item>
             <Input addonAfter='META' name='lockAmount' onChange={this.handleChange} />
           </Form.Item>
-          <p className="subtitle">New Authority Address <span className="required">*</span></p>
+          <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
           <Form.Item>
             <Input name='addr' onChange={this.handleChange} />
           </Form.Item>
-          <p className="subtitle">New Authority Node Description <span className="required">*</span></p>
+          <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input type="primary" name='node' onChange={this.handleChange} />
+            <Input type='primary' name='node' onChange={this.handleChange} />
           </Form.Item>
-          <p className="subtitle">Description</p>
+          <p className='subtitle'>Description</p>
           <Form.Item>
             <TextArea
               rows={4}
@@ -103,7 +99,7 @@ class ProposalForm extends React.Component {
             />
           </Form.Item>
           <Form.Item>
-            <div className="submitDiv">
+            <div className='submitDiv'>
               <Button className='submit_Btn' htmlType='submit'>Submit </Button>
             </div>
           </Form.Item>
@@ -114,31 +110,31 @@ class ProposalForm extends React.Component {
     getReplaceProposalForm () {
       return (<div className='proposalBody'>
         <Form onSubmit={this.handleSubmit}>
-          <p className="subtitle">META Amount to be locked (New) <span className="required">*</span></p>
+          <p className='subtitle'>META Amount to be locked (New) <span className='required'>*</span></p>
           <Form.Item>
             <Input addonAfter='META' style={{ marginBottom: '0%' }} name='newLockAmount' onChange={this.handleChange} />
           </Form.Item>
-          <p className="subtitle">New Authority Address <span className="required">*</span></p>
+          <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
           <Form.Item>
             <Input style={{ marginBottom: '0%' }} name='newAddr' onChange={this.handleChange} />
           </Form.Item>
-          <p className="subtitle">New Authority Node Description <span className="required">*</span></p>
+          <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
             <Input style={{ marginBottom: '0%' }} name='newNode' onChange={this.handleChange} />
           </Form.Item>
-          <p className="subtitle">META Amount to be unlocked (Old) <span className="required">*</span></p>
+          <p className='subtitle'>META Amount to be unlocked (Old) <span className='required'>*</span></p>
           <Form.Item>
             <Input addonAfter='META' style={{ marginBottom: '0%' }} name='oldLockAmount' onChange={this.handleChange} />
           </Form.Item>
-          <p className="subtitle">Old Authority Address <span className="required">*</span></p>
+          <p className='subtitle'>Old Authority Address <span className='required'>*</span></p>
           <Form.Item>
             <Input style={{ marginBottom: '0%' }} name='oldAddr' onChange={this.handleChange} />
           </Form.Item>
-          <p className="subtitle">Old Authority Node Description <span className="required">*</span></p>
+          <p className='subtitle'>Old Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
             <Input style={{ marginBottom: '0%' }} name='oldNode' onChange={this.handleChange} />
           </Form.Item>
-          <p className="subtitle">Description </p>
+          <p className='subtitle'>Description </p>
           <Form.Item>
             <TextArea
               rows={4}
@@ -149,7 +145,7 @@ class ProposalForm extends React.Component {
             />
           </Form.Item>
           <Form.Item>
-            <div className="submitDiv">
+            <div className='submitDiv'>
               <Button className='submit_Btn' htmlType='submit'>Submit </Button>
             </div>
           </Form.Item>
@@ -161,20 +157,20 @@ class ProposalForm extends React.Component {
       return (
         <div>
           {!this.state.isBack
-            ? <div className="contentDiv">
-              <div className="backBtnDiv">
+            ? <div className='contentDiv'>
+              <div className='backBtnDiv'>
                 <Button onClick={() => { this.setState({ isBack: !this.state.isBack }) }}>
-                  <span><Icon type="left" /></span>
+                  <span><Icon type='left' /></span>
                   <span className='text_btn'>Back to Voting</span>
                 </Button>
               </div>
               <div className='contentVotingDiv'>
                 <div className='proposalHead'>
-                  <div className="title">
+                  <div className='title'>
                     <p>New Proposal</p>
                     <p>* Mandatory</p>
                   </div>
-                  <p className="subtitle">Topic for voting <span className="required">*</span></p>
+                  <p className='subtitle'>Topic for voting <span className='required'>*</span></p>
                   <Select
                     showArrow
                     onChange={this.onSelectChange}
