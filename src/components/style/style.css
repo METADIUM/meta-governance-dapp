@@ -1,134 +1,749 @@
-.Collapsible {
-  padding: 5px 5px;
-  width: 80%;
-  margin-bottom: 10px;
-  color: rgb(0, 0, 0);
-  position: relative;
-  line-height: 22px;
-  border-color: #e0dcdc;
-  border-style: double;
-  border-radius: 10px;
-  font-family: auto;
+.layout > div {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.Collapsible__trigger {
-    margin-bottom: 10px;
-    display: block;
-    color: black;
-    padding: 12px 12px 12px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    background-color: rgba(0,0,0,.04);
-    font-size: larger;
-    outline: none;
+/* Authority */
+
+.contentDiv {
+  margin: 0 auto;
+  padding-bottom: 56px;
+  max-width: 1152px;
+  height: 100%;
 }
 
-.contentDiv{
-  padding: 0 15%;
-  border-radius: 10px;
+.apply_proposal_Btn_container {
+  padding: 24px 16px 16px 16px;
+  display: flex;
+  justify-content: flex-end;
 }
 
-.ballotExplainDiv{
-  padding: 2% 5%;
-  
-  height: 100px;
-  margin: 3% 0 3% 0;
+.apply_proposal_Btn_container .apply_proposal_Btn {
+  height: 40px;
+  width: 208px;
+  border-radius: 4px;
+  color: #000000;
+  padding: 0 20px;
+} .apply_proposal_Btn_container .apply_proposal_Btn:hover {
+  color: #ffffff;
+  background-color: #261BC9;
 }
 
 .authorityComp{
-  background-color: #f9f0f0;
-  margin: 3% 0%;
-  height: 250px;
+  margin-bottom: 24px;
+  padding: 0 16px;
 }
 
-.snsGroup{
-  border-radius: 100px;
-  margin: 0 1%;
-  float: right;
+.authorityComp .authorityComp_contnet {
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+} .authorityComp .authorityComp_contnet:hover {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.authorityComp .authorityComp_contnet .img_container {
+  width: 192px;
+  height: 192px;
+  margin-right: 16px;
+  display: flex;
+  align-content: center;
+  overflow: hidden;
+}
+
+.authorityComp .authorityComp_contnet .img_container img {
+  width: 100%;
+}
+
+.authorityComp .authorityComp_contnet .text_container {
+  flex: 100;
+  padding-left: 24px;
+  border-left: #EEEEF0 solid 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+.authorityComp .authorityComp_contnet .long {
+  min-height: 192px;
+}
+
+.authorityComp .authorityComp_contnet .short {
+  height: 192px;
+}
+
+.authorityComp .authorityComp_contnet .text_container .title {
+  margin: 8px 0 0 0;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.authorityComp .authorityComp_contnet .text_container .address {
+  margin: 0;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.authorityComp .authorityComp_contnet .text_container .description {
+  flex: 100;
+  margin: 12px 0 0 0;
+  overflow: hidden;
+}
+
+.authorityComp .authorityComp_contnet .text_container .link_container {
+  margin: 12px 0 0 0;
+  display: flex;
+  align-items: flex-end;
+}
+
+.authorityComp .authorityComp_contnet .text_container .more {
+  line-height: 24px;
+  color: #261BC9;
+}
+
+.authorityComp .authorityComp_contnet .text_container .SNSList {
+  flex: 100;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup {
+  margin: 0 0 0 8px;
+} 
+
+.authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x {
+  font-size: 24px;
+  color: rgba(0,0,0,0.6);
+  transition: color 0.3s;
+  color: rgba(0,0,0,0.6);
+} .authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x:hover {
+  color: #261BC9;
+}
+
+/* header */
+
+.ant-layout-header {
+  background: #261BC9;
+  padding: 0;
+  z-index: 100;
+}
+
+.ant-layout-header .ant-row {
+  margin: 0 auto;
+  max-width: 1152px;
+  height: 100%;
+  display: flex;
+}
+
+.ant-layout-header .ant-row .header-logo {
+  width: 240px;
+  display: flex;
+  align-content: center;
+  padding: 0 16px;
+}
+
+.ant-layout-header .ant-row .header-logo img {
+  height: 24px;
+  margin: 20px 16px 0 0;
+}
+
+.ant-layout-header .ant-row .header-logo span {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ant-layout-header .ant-row .header-menu {
+  width: 240px;
+  height: 40px;
+  margin: auto 0;
+  padding: 0 16px;
+  border-left: #ffffff solid 2px;
+}
+
+.ant-layout-header .ant-row .header-menu .ant-menu-horizontal {
+  height: 40px;
+  border: none;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+}
+
+.ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item {
+  padding: 0 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  border: none;
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-selected {
+  color: #ffffff;
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-active {
+  color: #ffffff;
+}
+
+.ant-layout-header .ant-row .header-staking {
+  flex: 100;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 16px;
+}
+
+.ant-layout-header .ant-row .header-staking div {
+  padding: 0 12px 0 16px;
+  flex: 100;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ant-layout-header .ant-row .header-staking div p {
+  line-height: 1.5;
+  margin: 0;
+  text-align: end;
+} .ant-layout-header .ant-row .header-staking div .staked {
+  color: #ffffff;
+} .ant-layout-header .ant-row .header-staking div .meta {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.ant-layout-header .ant-row .header-staking button {
+  background: transparent;
+  font-size: 16px;
+  border: #ffffff solid 2px;
+  height: 40px;
+} .ant-layout-header .ant-row .header-staking button:hover {
+  background: #ffffff;
+  color: #261BC9;
+}
+
+/* footer */
+
+.ant-layout-footer {
+  padding: 0;
+  background-color: #ffffff;
+}
+
+.ant-layout-footer .ant-row {
+  padding: 24px 16px;
+  margin: 0 auto;
+  max-width: 1152px;
+  display: flex;
+  align-items: center;
+}
+
+.ant-layout-footer .ant-row p {
+  margin: 0;
+}
+
+.ant-layout-footer .ant-row div {
+  flex: 100;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ant-layout-footer .ant-row div .ant-btn {
+  height: 22px;
+  margin-left: 16px;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.ant-layout-footer .ant-row div .ant-btn img {
+  height: 22px;
+  opacity: 0.87;
+}
+
+/* vote */
+
+.text_btn {
+  flex: 100;
+}
+
+.sub-header {
+  background-color: #ffffff;
+}
+
+.sub-header .functionDiv {
+  border-bottom: #EEEEF0 solid 2px;
+}
+
+.sub-header .functionDiv > div {
+  display: flex;
+  padding: 24px 16px 24px 16px;
+  margin: 0 auto;
+  max-width: 1152px;
+  z-index: 90;
+}
+
+.sub-header .functionDiv .ant-input-group-wrapper {
+  flex: 100;
+}
+
+.sub-header .functionDiv .ant-input-group-wrapper .ant-input {
+  height: 40px;
+  font-size: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-top: #C2C4C4 solid 2px;
+  border-right: none;
+  border-bottom: #C2C4C4 solid 2px;
+  border-left: #C2C4C4 solid 2px;
+}
+
+.sub-header .functionDiv .ant-input-group-wrapper button {
+  height: 40px;
+  background-color: #261BC9;
+  border: none;
+}
+
+.sub-header .functionDiv > div > button {
+  width: 208px;
+  height: 40px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #261BC9;
+  margin-left: 32px;
+  display: flex;
+  justify-content: space-between;
+  border: none;
+}
+
+.sub-header .sub-menu {
+  background-color:#ffffff;
+  z-index: 80;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  display: flex;
+  justify-content: center;
+}
+
+.sub-header .sub-menu .ant-menu-item {
+  font-size: 16px;
+  line-height: 50px;
+} .sub-header .sub-menu .ant-menu-item-selected {
+  color: #261BC9;
+  border-color: #261BC9;
+} .sub-header .sub-menu .ant-menu-item-active {
+  color: #261BC9;
+  border-color: #261BC9;
+}
+
+.ant-modal-body .changeDay {
+  font-size: 46px;
+  color: rgba(0,0,0,0.87);
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+.stateTitle {
+  color: #000000;
+  font-size: 30px;
+  line-height: 38px;
+  font-weight: 600;
+  margin: 32px 0 24px 0;
 }
 
 .ballotDiv {
   background-color: white;
-  padding: 24;
-  min-height: 400;
-  height: 420px;
-  margin-bottom: 2%;
-  border-width: 1px;
-  border-color: #f9f0f0;
-  border-style: solid;
+  margin-bottom: 24px;
+  height: 124px;
+  overflow-y: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: 0.3s;
+} .ballotDiv:hover {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}.state2 {
+  height: auto !important;
 }
 
-.ballotInfoDiv{
-  background-color: #f9f0f0;
-  padding: 0.5% 1% 0.5% 3%;
-  margin-bottom: 2%;
-  height: 80px;
+.ballotDiv .ballotInfoDiv {
+  padding: 24px 16px 24px 16px;
+  display: flex;
 }
 
-.ballotInfoDiv h4{
-  margin-bottom: 0.05em;
+.ballotDiv .ballotInfoDiv .infoLeft {
+  flex: 100;
 }
 
-.ballotDetailDiv {
-  float: left;
-  margin-right: 2%;
+.ballotDiv .ballotInfoDiv .infoLeft .topic {
+  font-size: 20px;
+  font-weight: 500;
+  color: #261BC9;
+  margin-bottom: 8px;
 }
 
-.apply_proposal_Btn{
-  float: right;
-  border-radius: 20px;
-  background-color: #363333;
+.ballotDiv .ballotInfoDiv .infoLeft .company {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(0,0,0,0.87);
+}
+
+.ballotDiv .ballotInfoDiv .infoLeft .addr {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(0,0,0,0.6);
+}
+
+.ballotDiv .ballotInfoDiv .infoRight {
+  width: 208px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.ballotDiv .ballotInfoDiv .infoRight button {
+  height: 28px;
+  width: 28px;
+  padding: 0 !important;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+} .ballotDiv .ballotInfoDiv .infoRight button:visited {
+  transform: rotate( 180deg );
+}
+
+.ballotDiv .ballotInfoDiv .infoRight button i {
+  height: 20px;
+  color: rgba(0,0,0,0.87);
+  font-size: 20px;
+}
+
+.ballotDiv .ballotInfoDiv .infoRight .status {
+  margin: 0;
+  color: #261BC9;
+  font-size: 12px;
+}
+
+.ballotContentDiv .voteDiv {
+  padding: 24px 16px 24px 16px;
+  border-top: #EEEEF0 solid 2px;
+  border-bottom: #EEEEF0 solid 2px;
+}
+
+.ballotContentDiv .voteDiv .imageContent {
+  display: flex;
+  height: 40px;
+}
+
+.ballotContentDiv .voteDiv .imageContent button {
+  height: 40px;
+  width: 64px;
+  font-size: 16px;
+  border: none;
+} .ballotContentDiv .voteDiv .imageContent #yesVotingBtn {
+  background-color: #261BC9;
   color: white;
-  width: 18%;
-  border-color: #363333;
-  margin: 1% 1.5% 0% 0%
+  margin-right: 16px;
+} .ballotContentDiv .voteDiv .imageContent #noVotingBtn {
+  background-color: #FEC3C2;
+  margin-left: 16px;
+} .ballotContentDiv .voteDiv .imageContent button:disabled {
+  background-color: #EEEEF0 !important;
+  color: rgba(0,0,0,0.6) !important;
 }
 
-#noVotingBtn{
-  float: left;
-  margin: 0 2% 0 4%;
-  height: 50px;
-  background-color: firebrick;
-  color: white;
+.ballotContentDiv .voteDiv .imageContent .chart {
+  flex: 100;
+  padding: 4px 0 2px 0px;
 }
 
-#yesVotingBtn{
-  float: right;
-  margin: 0 4% 0 2%;
-  height: 50px;
-  background-color: teal;
-  color: white;
+.ballotContentDiv .voteDiv .imageContent .chart .number {
+  line-height: 22px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
 }
 
-#finalizeBtn{
-  float: left;
-  cursor: default;
-  background-color: darkgray;
-  border: 0px;
-  color: inherit;
-  width: 10%;
+.ballotContentDiv .voteDiv .imageContent .chart .number {
+  color: rgba(0,0,0,0.87);
+  font-weight: 500;
 }
 
-#detailBtn {
-  float: left;
-  border-radius: 30%;
-  margin: 7% 10% 0 0;
-}
-
-#ballotDetailBtn {
-  float: right;
-}
-
-.ant-progress-outer {
-  width: 70%;
-  margin-top: 2%;
-}
 .ant-progress {
-  display: inline;
+  display: block !important;
+  line-height: 1 !important;
+  font-size: 8px !important;
 }
-.ant-list-grid .ant-list-item {
-  /* border-bottom: none; */
-  padding-top: 0;
-  padding-bottom: 0;
-  /* margin-bottom: 16px; */
+
+.ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer {
+  margin: 0;
+}
+
+.ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer .ant-progress-inner {
+  background-color: #FEC3C2;
+}
+
+.ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer .ant-progress-inner .ant-progress-bg {
+  background-color: #261BC9;
+}
+
+.ballotContentDiv .voteDiv .textContent {
+  margin-top: 24px;
+  display: flex;
+  line-height: 22px;
+}
+
+.ballotContentDiv .voteDiv .description {
+  color: rgba(0,0,0,0.6);
+  min-height: 66px;
+  flex: 100;
+  margin: 0;
+}
+
+.ballotContentDiv .voteDiv .duration {
+  width: 208px;
+  margin-left: 96px;
+}
+
+.ballotContentDiv .voteDiv .duration > div > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ballotContentDiv .voteDiv .duration > div > div span:first-child {
+  color: rgba(0,0,0,0.87);
+}
+
+.ballotContentDiv .voteDiv .duration > div button {
+  height: 30px;
+  width: 208px;
+  margin-top: 4px;
+  border: none;
+  background-color: #EEEEF0;
+  color: rgba(0,0,0,0.87);
+}
+
+.ballotContentDiv .memoDiv {
+  padding: 24px 16px 24px 16px;
+}
+
+.ballotContentDiv .memoDiv p:first-child {
+  color: rgba(0,0,0,0.87);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.ballotContentDiv .memoDiv p:last-child {
+  color: rgba(0,0,0,0.6);
+}
+
+.ballotContentDiv .revokeDiv {
+  padding: 24px 16px 24px 16px;
+  border-top: #EEEEF0 solid 2px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ballotContentDiv .revokeDiv button {
+  height: 30px;
+  width: 208px;
+  border: none;
+  background-color: #EEEEF0;
+  color: rgba(0,0,0,0.87);
+}
+
+.moreDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.moreDiv button {
+  height: 40px;
+  width: 208px;
+  border-radius: 4px;
+  border:none;
+  color: #000000;
+  padding: 0 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  display: flex;
+} .moreDiv button:hover {
+  color: #ffffff;
+  background-color: #261BC9;
+}
+
+/* proposal */
+.backBtnDiv {
+  padding: 24px 16px 16px 16px;
+}
+
+.backBtnDiv button {
+  height: 40px;
+  width: 208px;
+  display: flex;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.backBtnDiv button span {
+  color: rgba(0,0,0,0.87);
+  font-size: 16px;
+}
+
+.contentVotingDiv {
+  margin: 0 16px 24px 16px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.contentVotingDiv .proposalHead {
+  padding: 24px 16px;
+}
+
+.contentVotingDiv .proposalHead .title {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.contentVotingDiv .proposalHead .title p:first-child {
+  font-size: 30px;
+  color: rgba(0,0,0,0.87);
+  margin: 0;
+  line-height: 38px;
+  font-weight: 600;
+  flex: 100;
+}
+
+.contentVotingDiv .proposalHead .title p:last-child {
+  margin: 0;
+  color:#FC0F1B;
+}
+
+.contentVotingDiv .subtitle {
+  color: rgba(0,0,0,0.6);
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+.contentVotingDiv .required {
+  color:#FC0F1B;
+}
+
+.contentVotingDiv .proposalHead .ant-select-enabled {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.contentVotingDiv .proposalBody {
+  border-top: #EEEEF0 solid 2px;
+  padding: 8px 16px 24px 16px;
+}
+
+.contentVotingDiv .ant-form-item {
+  margin-top: 8px;
+  margin-bottom: 0px;
+}
+
+.contentVotingDiv .proposalBody button[type="submit"] {
+  margin: 0;
+  color: #ffffff;
+  background-color: #261BC9;
+  border: none;
+  border-radius: 4px;
+  width: 208px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.contentVotingDiv .proposalBody .submitDiv {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.loading {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 206px;
+	margin: -30px 0 0 -111.5px;
+	padding-top: 50px
+}
+
+.loading:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 206px;
+	height: 35px;
+	background-image: url("./loading.png");
+	background-position: 0 0
+}
+
+.loading-container {
+	position: fixed;
+	z-index: 1000000;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background-color: rgba(38,27,201,0.7)
+}
+
+.loading-i {
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+	animation-iteration-count: infinite;
+	animation-name: fadeOut;
+	animation-timing-function: linear;
+	opacity: .2;
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	background-color: #fff
+}
+
+.loading-i:nth-child(2) {
+	animation-delay: .1s
+}
+
+.loading-i:nth-child(3) {
+	animation-delay: .2s
+}
+
+.loading-i:nth-child(4) {
+	animation-delay: .3s
+}
+
+.loading-i:nth-child(5) {
+	animation-delay: .4s
+}
+
+.loading-i:nth-child(6) {
+	animation-delay: .5s
+}
+.hidden {
+  display: none
+}
+@keyframes fadeOut {
+  0% {
+    opacity: .2
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1)
+  }
+  100% {
+    opacity: .2;
+    transform: scale(0.3)
+  }
 }

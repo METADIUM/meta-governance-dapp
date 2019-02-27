@@ -1,12 +1,16 @@
 import Web3 from 'web3'
 import { constants } from './constants'
+var web3Instance
 
 let getWeb3Instance = () => {
+  if (web3Instance) return web3Instance
+
   return new Promise((resolve, reject) => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener('load', async () => {
-      let web3 = null
       // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+      let web3
+
       if (window.ethereum) {
         web3 = new Web3(window.ethereum)
         console.log('Injected web3 detected.')
@@ -20,6 +24,9 @@ let getWeb3Instance = () => {
       } else if (typeof window.web3 !== 'undefined') {
         web3 = new Web3(window.web3.currentProvider)
         console.log('Injected web3 detected.')
+      } else {
+        console.error('User denied account access')
+        reject({ message: 'User denied account access' })
       }
 
       let errorMsg = null
@@ -48,7 +55,6 @@ let getWeb3Instance = () => {
         console.error('Metamask not found')
 
         netId = constants.NETID_TESTNET
-
         const network = constants.NETWORKS[netId]
 
         web3 = new Web3(new Web3.providers.HttpProvider(network.RPC))
@@ -59,15 +65,15 @@ let getWeb3Instance = () => {
         reject({ message: errorMsg })
         return
       }
-
-      resolve({
-        web3Instance: web3,
+      web3Instance = {
+        web3: web3,
         netIdName,
         netId,
         defaultAccount
-      })
+      }
+      resolve(web3Instance)
     })
   })
 }
-
 export default getWeb3Instance
+export { web3Instance }

@@ -55,3 +55,23 @@
     transform: rotate(360deg);
   }
 }
+
+/* modal */
+.stakingModal .ant-modal-body p {
+  margin-bottom: 12px;
+  font-size: 12px;
+} .stakingModal .ant-modal-body p:first-child {
+  color:rgba(0, 0, 0, 0.87);
+  font-size: 14px;
+  margin:0;
+}
+
+.stakingModal .ant-modal-body .ant-select {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.ant-modal-footer .ant-btn-primary {
+  background: #261BC9 ;
+  border: 0;
+}

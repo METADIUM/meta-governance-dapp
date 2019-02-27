@@ -1,27 +1,40 @@
 import React from 'react'
-import { Layout, Button, Row, Col, Modal, Tabs } from 'antd'
+import { Layout, Modal } from 'antd'
+import { TopNav, FootNav } from './components/Nav'
+import { StakingModal } from './components/StakingModal'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
+import { BaseLoader } from './components/BaseLoader'
 import './App.css'
 
 // web3
-import getWeb3Instance from '../src/ethereum/web3'
+import getWeb3Instance from './ethereum/web3'
+import { web3Instance } from './ethereum/web3'
+
+// Contracts
+import { contracts, initContracts } from './ethereum/web3Components/contracts'
 
 const { Header, Content, Footer } = Layout
-const TabPane = Tabs.TabPane
-
 class App extends React.Component {
+  data = {
+    balance: 0,
+    lockedBalance: 0,
+    selectedStakingTopic: 'deposit',
+    amount: 0
+  }
   state = {
     loadWeb3: false,
-    nav: '1'
+    nav: '1',
+    contractReady: false,
+    stakingModalVisible: false
   };
 
   constructor (props) {
     super(props)
-
-    // Get web3 instance
+    /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
-      console.log('web3 information: ', web3Config)
+      console.log(web3Config)
+      this.initContracts(web3Config.web3)
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
@@ -29,10 +42,20 @@ class App extends React.Component {
     })
   }
 
-  onMenuClick = (key) => {
-    this.setState({ nav: key })
-    console.log(key)
+  async initContracts (web3) {
+    initContracts({
+      web3: web3,
+      netid: web3.netid
+    }).then(async () => {
+      this.data.balance = await contracts.staking.balanceOf(web3Instance.defaultAccount)
+      this.data.lockedBalance = await contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
+      this.data.balance = web3Instance.web3.utils.fromWei(this.data.balance, 'ether')
+      this.data.lockedBalance = web3Instance.web3.utils.fromWei(this.data.lockedBalance, 'ether')
+      this.setState({ contractReady: true })
+    })
   }
+
+  onMenuClick = ({ key }) => { this.setState({ nav: key }) }
 
   getErrModal () {
     return <Modal
@@ -48,37 +71,87 @@ class App extends React.Component {
   getContent () {
     if (!this.state.loadWeb3) return
     switch (this.state.nav) {
-      case '1': return <Authority title='Authority' />
-      case '2': return <Voting title='Voting' />
+      case '1': return <Authority title='Authority' contracts={contracts} />
+      case '2': return <Voting title='Voting' contracts={contracts} />
       default:
     }
+    this.setState({ selectedMenu: true })
   }
+
+  submitMetaStaking = (e) => {
+    let trx = {}
+    this.data.amount = web3Instance.web3.utils.toWei(this.data.amount, 'ether')
+    if (this.data.selectedStakingTopic === 'deposit') {
+      trx = contracts.staking.deposit()
+      web3Instance.web3.eth.sendTransaction({
+        from: web3Instance.defaultAccount,
+        value: this.data.amount,
+        to: trx.to,
+        data: trx.data
+      }, (err, hash) => {
+        if (err) console.log('err: ', err)
+        else {
+          console.log('hash: ', hash)
+        }
+      })
+    } else {
+      trx = contracts.staking.withdraw(this.data.amount)
+      web3Instance.web3.eth.sendTransaction({
+        from: web3Instance.defaultAccount,
+        to: trx.to,
+        data: trx.data
+      }, (err, hash) => {
+        if (err) console.log('err: ', err)
+        else {
+          console.log('hash: ', hash)
+        }
+      })
+    }
+
+    this.setState({ stakingModalVisible: false })
+  }
+
+  handleSelectChange = (e) => { this.data.selectedStakingTopic = e }
+
+  handleInputChange = (e) => { this.data.amount = e.target.value }
 
   render () {
     return (
       <Layout className='layout'>
-        <Header style={{ padding: '0 15%', backgroundColor: 'white', borderBottom: 'inset' }}>
-          <Row>
-            <Col span={4}><img src='https://raw.githubusercontent.com/METADIUM/metadium-token-contract/master/misc/Metadium_Logo_Vertical_PNG.png' alt='' width='35%' height='35%' style={{ float: 'left' }} /><h3>Governance</h3></Col>
-            <Col offset={15} span={5}>
-              <Tabs defaultActiveKey='1' onChange={this.onMenuClick}>
-                <TabPane tab='Authority' key='1' />
-                <TabPane tab='Voting' key='2' />
-              </Tabs>
-            </Col>
-          </Row>
-        </Header>
+        {this.state.contractReady && this.state.loadWeb3
+          ? <div>
+            <Header>
+              <TopNav
+                nav={this.state.nav}
+                onMenuClick={this.onMenuClick}
+                showStakingModal={() => this.setState({ stakingModalVisible: true })}
+                balance={this.data.balance}
+                lockedBalance={this.data.lockedBalance} />
+            </Header>
 
-        <Content style={{ backgroundColor: 'white' }}>
-          {this.state.loadWeb3
-            ? <div> {this.getContent()} </div>
-            : <div> { this.getErrModal()} </div>
-          }
-        </Content>
+            <StakingModal
+              accountBalance={{ balance: this.data.balance, lockedBalance: this.data.lockedBalance }}
+              stakingModalVisible={this.state.stakingModalVisible}
+              hideStakingModal={() => this.setState({ stakingModalVisible: false })}
+              submitMetaStaking={this.submitMetaStaking}
+              handleInputChange={this.handleInputChange}
+              handleSelectChange={this.handleSelectChange} />
 
-        <Footer style={{ textAlign: 'center' }}>
-          Copyright © Since 2018 Metadium Technology, Inc. All rights reserved
-        </Footer>
+            <Content style={{ backgroundColor: '##EEEEF0' }}>
+              {this.state.loadWeb3
+                ? <div> {this.getContent()} </div>
+                : <div> { this.getErrModal()} </div>
+              }
+            </Content>
+
+            <Footer>
+              <FootNav />
+            </Footer>
+          </div>
+          :
+          <div>
+            <BaseLoader />
+          </div>}
       </Layout>
     )
   }

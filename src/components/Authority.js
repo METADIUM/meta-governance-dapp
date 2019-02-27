@@ -1,11 +1,13 @@
 import React from 'react'
-import { Button, List, Progress } from 'antd'
+import { Button } from 'antd'
 import './style/style.css'
-import { testData } from './test/testData'
-import { getGithubContents } from '../util'
+import * as util from '../util'
+import { constants } from '../ethereum/constants'
+import { web3Instance } from '../ethereum/web3';
 
 class Authority extends React.Component {
     data = {
+      authorityOriginData: [],
       authorityItems: []
     }
 
@@ -13,64 +15,91 @@ class Authority extends React.Component {
       getAuthorityInfo: false
     }
 
-    constructor (props) {
-      super(props)
-    }
+    async componentDidMount () {
+      this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
+      await this.getAuthorityList()
+      this.setState({ getAuthorityInfo: true })
 
-    componentWillMount () {
-      this.getAuthorityList()
     }
 
     onApplyBtnClick () {
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
     }
 
-    async getAuthorityList () {
-      let list = []
-      testData.govTestData = await getGithubContents('METADIUM', 'meta-authorities', 'master', 'authorities.json');
-      console.log('getAuthorityList length: ', testData.govTestData.length)
+    breakLine (description) {
+      var br = React.createElement('br')
+      var regex = /(<br>)/g
+      return description.split(regex).map((line, index) => line.match(regex) ? <br key={'key_' + index} /> : line)
+    }
 
-      testData.govTestData.map(item => {
-        list.push(
-          <div className='authorityComp'>
-            <div style={{ float: 'left', width: '19%', backgroundColor: '#FFEAF6' }}>
-              <img src={item.logo} alt='' width='100%' height='auto' />
-            </div>
-            <div style={{ padding: 30, float: 'left', width: '81%' }}>
-              <div style={{ height: '70px' }}>
-                <h2 style={{ float: 'left' }}>{item.title}</h2>
-                <h4 style={{ float: 'right' }}>Address: {item.addr}</h4>
-              </div>
-              <div style={{ height: '80px' }}><p>{item.description}</p></div>
-              <div style={{ height: '80px' }}>
-                <div><h3><a href={item.homepage} target='_blank'>{item.title} Web site</a></h3></div>
-                <div>
-                  {this.getSNSList(item.sns)}
+    onReadMoreClick (index) {
+      console.log(index)
+      this.getAuthorityList(index)
+    }
+
+    async getAuthorityList (index) {
+      let list = []
+      this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
+
+      this.data.authorityOriginData.map(async (item, i) => {
+        let isMember =  await this.props.contracts.gov.isMember(item.addr)
+        if (isMember) {
+          list.push(
+            <div key={item.addr} className='authorityComp'>
+              <div className='authorityComp_contnet'>
+                <div className='img_container'>
+                  <img src={item.logo} alt='' />
+                </div>
+                <div className={i === index ? 'text_container long' : 'text_container short'}>
+                  <p className='title'>{item.title}</p>
+                  <p className='address'>Address: {item.addr}</p>
+                  <p className={'description'}>{this.breakLine(item.description)}</p>
+                  <div className='link_container'>
+                    <a className='more' onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
+                    <div className='SNSList'>
+                      {this.getSNSList(item.sns)}
+                      <a className='snsGroup' href={item.homepage}> <i className='fas fa-home fa-2x' /> </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )
+          )
+        }
+        this.data.authorityItems = list
+        this.setState({ getAuthorityInfo: true })
+        console.log(this.state.getAuthorityInfo)
       })
-
-      this.data.authorityItems = list
-      this.setState({ getAuthorityInfo: true })
+      
     }
 
     getSNSList (snsList) {
       let sns = []
       for (var key in snsList) {
-        sns.push(<Button className='snsGroup'>{snsList[key]}</Button>)
+        let icon = null
+        switch (key) {
+          case 'twitter': icon = 'fab fa-twitter fa-2x'; break
+          case 'medium': icon = 'fab fa-medium fa-2x'; break
+          case 'facebook': icon = 'fab fa-facebook fa-2x'; break
+          case 'instagram': icon = 'fab fa-instagram fa-2x'; break
+          case 'telegram': icon = 'fab fa-telegram fa-2x'; break
+          case 'linkedin': icon = 'fab fa-linkedin fa-2x'; break
+          default: break
+        }
+        sns.push(<a key={key} className='snsGroup' href={snsList[key]}> <i className={icon} /> </a>)
       }
+
+      /* Reversed. */
+      sns.reverse()
       return sns
     }
 
     render () {
       return (
-        <div>
+        <div className='background'>
           <div className='contentDiv'>
-            <div><Button className='apply_proposal_Btn' onClick={this.onApplyBtnClick}>Apply for Authority</Button></div>
-            <div style={{ padding: 20, minHeight: 500 }}>
+            <div className='apply_proposal_Btn_container'><Button className='apply_proposal_Btn' onClick={this.onApplyBtnClick}>Apply for Authority</Button></div>
+            <div className='card_container'>
               {this.state.getAuthorityInfo
                 ? this.data.authorityItems
                 : <div>empty</div>

@@ -1,4 +1,4 @@
-import web3 from './ethereum/web3'
+import { web3Instance } from './ethereum/web3'
 
 const fetch = require('node-fetch')
 
@@ -8,6 +8,7 @@ var borderColor = {
 }
 
 var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+var dayTimestamp = 86400
 
 /**
  * Convert UNIX timestamp to readable
@@ -16,7 +17,11 @@ var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oc
 function timeConverter (timestamp) {
   var a = new Date(timestamp * 1000)
   var month = months[a.getMonth()]
-  return a.getFullYear() + ' / ' + month + ' / ' + a.getDate()
+  return a.getFullYear() + '/' + +0+(a.getMonth()+1) + '/' + a.getDate() +' ' + a.getHours() + ':' + a.getMinutes() + '(UTC)'
+}
+
+function convertDayToTimestamp (day) {
+  return day * dayTimestamp
 }
 
 function convertHexToString (input) {
@@ -43,9 +48,44 @@ function refine (m) {
     switch (key) {
       case 'title': m[key] = convertHexToString(m[key]); break
       case 'explanation': m[key] = convertHexToString(m[key]); break
-      case 'reward': m[key + 'Meta'] = web3.utils.fromWei(m[key], 'ether') + 'META'; break
-      case 'reserved': m[key + 'Meta'] = web3.utils.fromWei(m[key], 'ether') + 'META'; break
+      case 'reward': m[key + 'Meta'] = web3Instance.web3.utils.fromWei(m[key], 'ether') + 'META'; break
+      case 'reserved': m[key + 'Meta'] = web3Instance.web3.utils.fromWei(m[key], 'ether') + 'META'; break
       case 'createdAt': m[key] = timeConverter(m[key]); break
+      default: if (!m[key]) m[key] = ''; break
+    }
+  })
+  return m
+}
+
+function refineBallotBasic (m) {
+  if (!m) return null
+  Object.keys(m).forEach(key => {
+    if (!isNaN(key)) return delete m[key]
+    switch (key) {
+      case 'startTime': m[key] = timeConverter(m[key]); break
+      case 'endTime': m[key] = timeConverter(m[key]); break
+      case 'memo': m[key] = convertHexToString(m[key]); break
+      case 'duration': m[key] /= dayTimestamp; break
+      case 'powerOfRejects':
+      case 'powerOfAccepts': m[key] = parseInt(m[key]) / 100; break
+      default: if (!m[key]) m[key] = ''; break
+    }
+  })
+  return m
+}
+
+function refineSubmitData (m) {
+  if (!m) return null
+  Object.keys(m).forEach(key => {
+    if (!isNaN(key)) return delete m[key]
+    switch (key) {
+      case 'lockAmount':
+      case 'oldLockAmount':
+      case 'newLockAmount': m[key] = web3Instance.web3.utils.toWei(m[key].toString(), 'ether'); break
+      case 'memo': m[key] = web3Instance.web3.utils.fromAscii(m[key]); break
+      case 'node':
+      case 'newNode':
+      case 'oldNode': let { node, ip, port } = splitNodeDescription(m[key]); m[key] = { node, ip, port }; break
       default: if (!m[key]) m[key] = ''; break
     }
   })
@@ -74,7 +114,7 @@ function validate (key, val) {
       if (val < 5) return { b: false, err: key.toUpperCase() + ' should be greater than 5 META' }
       return { b: true }
     case 'issuer':
-      if (!val || !web3.utils.isAddress(val)) return { b: false, err: 'Please fill up valid issuers' }
+      if (!val || !web3Instance.web3.utils.isAddress(val)) return { b: false, err: 'Please fill up valid issuers' }
       return { b: true }
     case 'topics':
       if (!val || val.length === 0) return { b: false, err: 'Select at least 1 topic' }
@@ -95,9 +135,21 @@ function isValidLength (str) {
   return encoder.encode(str).length
 }
 
-async function getGithubContents (org, repo, branch, source) {
+async function getAuthorityLists (org, repo, branch, source) {
   const URL = `https://raw.githubusercontent.com/${org}/${repo}/${branch}/${source}`
   return fetch(URL).then(response => response.json())
+}
+
+function splitNodeDescription (str) {
+  let node, ip, port, splitedStr
+  splitedStr = str.split('@')
+  node = '0x' + splitedStr[0]
+  splitedStr = splitedStr[1].split(':')
+  ip = web3Instance.web3.utils.fromAscii(splitedStr[0])
+  splitedStr = splitedStr[1].split('?')
+  port = parseInt(splitedStr[0])
+
+  return { node, ip, port }
 }
 
 /**
@@ -113,16 +165,56 @@ var setUsersToLocal = (obj) => save('users', obj)
 var setTopicsToLocal = (obj) => save('topics', obj)
 var setAchievementsToLocal = (obj) => save('achievements', obj)
 
+/**
+ * Validators for ant design form
+ */
+const validNumber = (rule, value, callback) => {
+  const v = Number(value)
+  if (value === undefined || value === '') {
+    callback('Please input ...')
+    return
+  } else if (isNaN(v)) {
+    callback('Invalid number')
+    return
+  } else if (v % 1 !== 0) {
+    callback('Only Integer')
+  }
+  callback()
+}
+const validAddress = (rule, value, callback) => {
+  if (value === undefined || value === '') {
+    callback('Please input ...')
+    return
+  } else if (value.substring(0, 2) !== '0x' || isNaN(Number(value))) {
+    callback('Invalid address')
+    return
+  }
+  callback()
+}
+const validLength = (rule, value, callback) => {
+  if (value === undefined) {
+    callback()
+    return
+  } else if (value.length > 256) {
+    callback('Longer than 256')
+    return
+  }
+  callback()
+}
+
 export {
   borderColor,
   timeConverter,
   sleep,
   convertHexToString,
+  convertDayToTimestamp,
   asyncForEach,
   refine,
+  refineBallotBasic,
+  refineSubmitData,
   cmpIgnoreCase,
   isValidLength,
-  getGithubContents,
+  getAuthorityLists,
   validate,
   save,
   load,
@@ -131,5 +223,9 @@ export {
   getAchievementsFromLocal,
   setUsersToLocal,
   setTopicsToLocal,
-  setAchievementsToLocal
+  setAchievementsToLocal,
+  validNumber,
+  validAddress,
+  validLength,
+  splitNodeDescription
 }
