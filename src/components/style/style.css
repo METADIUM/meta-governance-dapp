@@ -4,92 +4,6 @@
   flex-direction: column;
 }
 
-.Collapsible {
-  padding: 5px 5px;
-  width: 80%;
-  margin-bottom: 10px;
-  color: rgb(0, 0, 0);
-  position: relative;
-  line-height: 22px;
-  border-color: #e0dcdc;
-  border-style: double;
-  border-radius: 10px;
-  font-family: auto;
-}
-
-.Collapsible__trigger {
-    margin-bottom: 10px;
-    display: block;
-    color: black;
-    padding: 12px 12px 12px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    background-color: rgba(0,0,0,.04);
-    font-size: larger;
-    outline: none;
-}
-
-.ballotExplainDiv{
-  padding: 2% 5%;
-  height: 100px;
-  margin: 3% 0 3% 0;
-}
-
-.snsGroup{
-  border-radius: 100px;
-  margin: 0 1%;
-  float: right;
-  border: 0px;
-}
-
-.ballotDetailDiv {
-  float: left;
-  margin-right: 2%;
-}
-
-.submit_Btn{
-
-  border-radius: 20px;
-  background-color: #363333;
-  color: white;
-  border-color: #363333;
-  width: 10%;
-  margin: 2% 45%
-}
-
-#finalizeBtn{
-  float: left;
-  cursor: default;
-  background-color: darkgray;
-  border: 0px;
-  color: inherit;
-  width: 10%;
-}
-
-#detailBtn {
-  float: left;
-  border-radius: 30%;
-  margin: 7% 10% 0 0;
-}
-
-#ballotDetailBtn {
-  float: right;
-}
-
-.ant-progress-outer {
-  width: 70%;
-  margin-top: 2%;
-}
-.ant-progress {
-  display: inline;
-}
-.ant-list-grid .ant-list-item {
-  /* border-bottom: none; */
-  padding-top: 0;
-  padding-bottom: 0;
-  /* margin-bottom: 16px; */
-}
-
 /* Authority */
 
 .contentDiv {
@@ -197,6 +111,8 @@
   flex: 100;
   width: 24px;
   height: 24px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup {
@@ -205,8 +121,9 @@
 
 .authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x {
   font-size: 24px;
+  color: rgba(0,0,0,0.6);
   transition: color 0.3s;
-} .authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x:hover {
+} .authorityComp .authorityComp_contnet .text_container .SNSList .s nsGroup .fa-2x:hover {
   color: #261BC9;
 }
 
@@ -533,6 +450,9 @@
 } .ballotContentDiv .voteDiv .imageContent #noVotingBtn {
   background-color: #FEC3C2;
   margin-left: 16px;
+} .ballotContentDiv .voteDiv .imageContent button:disabled {
+  background-color: #EEEEF0 !important;
+  color: rgba(0,0,0,0.6) !important;
 }
 
 .ballotContentDiv .voteDiv .imageContent .chart {
