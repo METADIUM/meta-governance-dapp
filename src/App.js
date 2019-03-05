@@ -21,7 +21,8 @@ class App extends React.Component {
     balance: 0,
     lockedBalance: 0,
     selectedStakingTopic: 'deposit',
-    amount: 0
+    amount: 0,
+    eventsWatch: null
   }
   state = {
     loadWeb3: false,
@@ -49,25 +50,41 @@ class App extends React.Component {
   async updateDefaultAccount(account){
     if(web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase() ){
       console.log("change address:",account);
-      //alert("Update Changed:"+web3Instance.defaultAccount+" => "+ data.selectedAddress);
       web3Instance.defaultAccount = account;
       await this.updateAccountBalance();
-      // stakingEventsListen = contracts.staking.stakingInstance.events.allEvents(
-      //   {
-      //     filter: {payee:[web3Instance.defaultAccount]},
-      //     fromBlock: 'latest'
-      //   }, 
-      //   (error, events) => { 
-      //     console.log(events); 
-      //     if(error){
-      //       console.log("error", error)
-      //     }else {
-      //       updateAccountBalanceForRefresh()
-      //     }
-      //   })
+      this.setStakingEventsWatch();
     }else{
       console.log("notChanged");
     }
+  }
+  setStakingEventsWatch(address){
+    if (this.data.eventsWatch ){
+      let subscription = this.data.eventsWatch;
+      subscription.unsubscribe(function(error, success){
+        if(success)
+            console.log('Successfully unsubscribed!');
+      });
+    }
+    var filteraddress = web3Instance.web3.eth.abi.encodeParameter('address', web3Instance.defaultAccount);
+    var updateAccountBalanceForRefresh = this.updateAccountBalance.bind(this);
+    this.data.eventsWatch = contracts.staking.stakingInstance.events.allEvents(
+      {
+        fromBlock: 'latest',
+        topics: [
+          null,
+          filteraddress
+        ]
+      },
+      (error, events) => { 
+        console.log(events); 
+        if(error){
+          console.log("error", error)
+        }else {
+          updateAccountBalanceForRefresh()
+        }
+      }
+    )
+    console.log("Successfully subscribed!");
   }
   async updateAccountBalance(){
     this.data.balance = await contracts.staking.balanceOf(web3Instance.defaultAccount)
@@ -76,6 +93,7 @@ class App extends React.Component {
       this.data.lockedBalance = web3Instance.web3.utils.fromWei(this.data.lockedBalance, 'ether')
       this.setState({ stakingModalVisible: false })
   }
+  
   async initContracts (web3) {
     initContracts({
       web3: web3,
@@ -88,6 +106,7 @@ class App extends React.Component {
       window.ethereum.on('accountsChanged', async function (chagedAccounts) {
         await updateAcount(chagedAccounts[0]);
       })
+      this.setStakingEventsWatch();
     })
   }
 
