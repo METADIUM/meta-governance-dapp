@@ -15,7 +15,10 @@ class ProposalForm extends React.Component {
     state = {
       isBack: false,
       selectedChange: false,
-      submitForm: false
+      submitForm: false,
+      newLockAmountErr: false,
+      newAddrErr: false,
+      nodeErr: false
     }
 
     onSelectChange = async (value) => {
@@ -28,7 +31,24 @@ class ProposalForm extends React.Component {
     /* Type casting and save form data. */
     handleChange = (e) => {
       this.data.formData[e.target.name] = e.target.value
+
+      switch(e.target.name) {
+        case 'newLockAmount': this.setState({newLockAmountErr: !this.checkLockAmount(e.target.value)}); break
+        case 'newAddr': this.setState({newAddrErr: !this.checkAddr(e.target.value)}); break
+        case 'node': this.setState({nodeErr: !this.checkNode(e.target.value)}); break
+      }
     }
+
+    checkLockAmount = (amount) => {
+      const STAKING_MAX = 10
+      const STAKING_MIN = 2
+
+      return (/^[1-9]\d*$/.test(amount) && Number(amount) < STAKING_MAX && Number(amount) > STAKING_MIN )
+    }
+
+    checkAddr = (addr) => /^0x[a-fA-F0-9]{40}$/.test(addr)
+
+    checkNode = (node) => /^[a-fA-F0-9]+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})+(\?discport=([0-9]{5}))$/.test(node)
 
     /* Submit form data. */
     handleSubmit = async (e) => {
@@ -105,15 +125,18 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
           <Form.Item>
-            <Input addonAfter='META' name='newLockAmount' onChange={this.handleChange} />
+            <Input type="number" addonAfter='META' name='newLockAmount' onChange={this.handleChange} className={this.state.newLockAmountErr ? 'errInput' : ''}/>
+            <p className={this.state.newLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>
           </Form.Item>
           <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='newAddr' onChange={this.handleChange} />
+            <Input name='newAddr' onChange={this.handleChange} className={this.state.newAddrErr ? 'errInput' : ''}/>
+            <p className={this.state.newAddrErr ? 'errHint' : ''}>Invalid Address</p>
           </Form.Item>
           <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input type='primary' name='node' onChange={this.handleChange} />
+            <Input type='primary' name='node' onChange={this.handleChange} className={this.state.nodeErr ? 'errInput' : ''}/>
+            <p className={this.state.nodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
           <p className='subtitle'>Description</p>
           <Form.Item>

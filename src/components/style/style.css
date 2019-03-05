@@ -646,6 +646,30 @@
 .contentVotingDiv .ant-form-item {
   margin-top: 8px;
   margin-bottom: 0px;
+  line-height: 1.5;
+}
+
+.contentVotingDiv .ant-form-item p {
+  display: none;
+}
+
+.contentVotingDiv .ant-form-item .errHint {
+  display: block;
+  line-height: 1.5;
+  margin: 0;
+  color:#FC0F1B;
+}
+
+.contentVotingDiv .ant-form-item .errInput input{
+  border-color:#FC0F1B;
+} .contentVotingDiv .ant-form-item .errInput input:focus{
+  border-color: #261BC9;
+}
+
+.contentVotingDiv .ant-form-item input.errInput {
+  border-color:#FC0F1B;
+} .contentVotingDiv .ant-form-item input.errInput:focus{
+  border-color: #261BC9;
 }
 
 .contentVotingDiv .proposalBody button[type="submit"] {

@@ -152,8 +152,10 @@ class App extends React.Component {
         to: trx.to,
         data: trx.data
       },  async (err, hash) => {
-        if (err) console.log('err: ', err)
-        else {
+        if (err) {
+           console.log('err: ', err)
+           this.getErrModal(err)
+        } else {
           console.log('hash: ', hash)
         }
       })
@@ -164,14 +166,14 @@ class App extends React.Component {
         to: trx.to,
         data: trx.data
       }, async (err, hash) => {
-        if (err) console.log('err: ', err)
-        else {
+        if (err) {
+          console.log('err: ', err)
+          this.getErrModal(err)
+        } else {
           console.log('hash: ', hash)
         }
       })
     }
-
-    
   }
 
   handleSelectChange = (e) => {
