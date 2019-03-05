@@ -3,7 +3,6 @@ import { Button, Modal, Icon } from 'antd'
 import './style/style.css'
 
 const ErrModal = ({title, err, visible, coloseErrModal=f => f}) => {
-    console.log(err)
     return <Modal
         className='errorModal'
         title={title}

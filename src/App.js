@@ -21,7 +21,7 @@ class App extends React.Component {
     balance: 0,
     lockedBalance: 0,
     selectedStakingTopic: 'deposit',
-    amount: 0,
+    amount: '',
     eventsWatch: null
   }
   state = {
@@ -29,6 +29,7 @@ class App extends React.Component {
     nav: '1',
     contractReady: false,
     stakingModalVisible: false,
+    stakingLoading: false,
     errTitle: '',
     errContent: '',
     errVisible: false
@@ -91,7 +92,7 @@ class App extends React.Component {
       this.data.lockedBalance = await contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
       this.data.balance = web3Instance.web3.utils.fromWei(this.data.balance, 'ether')
       this.data.lockedBalance = web3Instance.web3.utils.fromWei(this.data.lockedBalance, 'ether')
-      this.setState({ stakingModalVisible: false })
+      this.setState({ stakingModalVisible: false, stakingLoading: false })
   }
   
   async initContracts (web3) {
@@ -131,16 +132,23 @@ class App extends React.Component {
   }
 
   submitMetaStaking = (e) => {
+    if(!/^[1-9]\d*$/.test(this.data.amount)) {
+      this.setState({ stakingModalVisible: false })
+      this.getErrModal('The staking amount format is incorrect.', 'Staking Error')
+      return
+    }
+
+    this.setState({stakingLoading: true})
     let trx = {}
     console.log("before this.data.amount;",this.data.amount )
-    this.data.amount = web3Instance.web3.utils.toWei(this.data.amount, 'ether')
-    console.log("after this.data.amount;",this.data.amount )
+    let amount = web3Instance.web3.utils.toWei(this.data.amount, 'ether')
+    console.log("after this.data.amount;", amount )
     if (this.data.selectedStakingTopic === 'deposit') {
       console.log("Send Transaction for deposit");
       trx = contracts.staking.deposit()
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
-        value: this.data.amount,
+        value: amount,
         to: trx.to,
         data: trx.data
       },  async (err, hash) => {
@@ -150,7 +158,7 @@ class App extends React.Component {
         }
       })
     } else {
-      trx = contracts.staking.withdraw(this.data.amount)
+      trx = contracts.staking.withdraw(amount)
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
         to: trx.to,
@@ -166,9 +174,21 @@ class App extends React.Component {
     
   }
 
-  handleSelectChange = (e) => { this.data.selectedStakingTopic = e }
+  handleSelectChange = (e) => {
+    this.data.selectedStakingTopic = e
+    this.setState({})
+  }
 
-  handleInputChange = (e) => { this.data.amount = e.target.value }
+  handleInputChange = (e) => {
+    this.data.amount = e.target.value
+    this.setState({})
+  }
+
+  showStakingModal = () => {
+    this.data.amount = ''
+    this.data.selectedStakingTopic = 'deposit'
+    this.setState({ stakingModalVisible: true })
+  }
 
   render () {
     return (
@@ -179,7 +199,7 @@ class App extends React.Component {
               <TopNav
                 nav={this.state.nav}
                 onMenuClick={this.onMenuClick}
-                showStakingModal={() => this.setState({ stakingModalVisible: true })}
+                showStakingModal={this.showStakingModal}
                 balance={this.data.balance}
                 lockedBalance={this.data.lockedBalance} />
             </Header>
@@ -187,10 +207,13 @@ class App extends React.Component {
             <StakingModal
               accountBalance={{ balance: this.data.balance, lockedBalance: this.data.lockedBalance }}
               stakingModalVisible={this.state.stakingModalVisible}
-              hideStakingModal={() => this.setState({ stakingModalVisible: false })}
+              hideStakingModal={() => {if(!this.state.stakingLoading) this.setState({ stakingModalVisible: false })}}
               submitMetaStaking={this.submitMetaStaking}
               handleInputChange={this.handleInputChange}
-              handleSelectChange={this.handleSelectChange} />
+              handleSelectChange={this.handleSelectChange}
+              stakingLoading={this.state.stakingLoading}
+              amount={this.data.amount}
+              selectedStakingTopic={this.data.selectedStakingTopic} />
 
             <ErrModal
               title={this.state.errTitle}

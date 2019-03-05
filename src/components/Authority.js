@@ -68,7 +68,6 @@ class Authority extends React.Component {
         }
         this.data.authorityItems = list
         this.setState({ getAuthorityInfo: true })
-        console.log(this.state.getAuthorityInfo)
       })
       
     }
