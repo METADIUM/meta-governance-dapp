@@ -18,7 +18,9 @@ class Voting extends React.Component {
       finalizedItems: [],
       ballotCnt: 0,
       curBallotIdx: 0,
-      isMember: false
+      isMember: false,
+      newMemberaddr: [],
+      oldMemberaddr: []
     }
     state = {
       isBallotLoading: false,
@@ -72,6 +74,8 @@ class Voting extends React.Component {
       // Use origin data in contract
 
       this.data.ballotBasicOriginData.map((item, index) => {
+        this.data.newMemberaddr.push(this.data.ballotMemberOriginData[item.id].newMemberAddress)
+        this.data.oldMemberaddr.push(this.data.ballotMemberOriginData[item.id].oldMemberAddress)
         list.push(
           <div className={'ballotDiv state' + item.state} state={item.state} key={list.length} id={item.id} ref={ref => this.ballotDestals.set(index, ref)}>
             <div className='ballotInfoDiv'>
@@ -307,7 +311,7 @@ class Voting extends React.Component {
               </div>
             </div>
             : <div>
-              <ProposalForm contracts={this.props.contracts} />
+              <ProposalForm contracts={this.props.contracts} getErrModal={this.props.getErrModal} newMemberaddr={this.data.newMemberaddr} oldMemberaddr={this.data.oldMemberaddr} />
             </div>
           }
         </div>

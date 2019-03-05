@@ -2,6 +2,7 @@ import React from 'react'
 import { Layout, Modal } from 'antd'
 import { TopNav, FootNav } from './components/Nav'
 import { StakingModal } from './components/StakingModal'
+import { ErrModal } from './components/ErrorModal'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
 import { BaseLoader } from './components/BaseLoader'
@@ -26,7 +27,10 @@ class App extends React.Component {
     loadWeb3: false,
     nav: '1',
     contractReady: false,
-    stakingModalVisible: false
+    stakingModalVisible: false,
+    errTitle: '',
+    errContent: '',
+    errVisible: false
   };
 
   constructor (props) {
@@ -89,22 +93,19 @@ class App extends React.Component {
 
   onMenuClick = ({ key }) => { this.setState({ nav: key }) }
 
-  getErrModal () {
-    return <Modal
-      title='ERROR'
-      visible={!this.state.loadWeb3}
-      okButtonProps={{ disabled: true }}
-      cancelButtonProps={{ disabled: true }}
-    >
-      <p>This is an unknown network. Please connect to Metadium network</p>
-    </Modal>
+  getErrModal = (_err = 'Unknown Error', _title = 'Unknown Error') => {
+    this.setState({
+      errTitle: _title,
+      errContent: _err,
+      errVisible: true,
+    })
   }
 
   getContent () {
     if (!this.state.loadWeb3) return
     switch (this.state.nav) {
-      case '1': return <Authority title='Authority' contracts={contracts} />
-      case '2': return <Voting title='Voting' contracts={contracts} />
+      case '1': return <Authority title='Authority' contracts={contracts} getErrModal={this.getErrModal} />
+      case '2': return <Voting title='Voting' contracts={contracts} getErrModal={this.getErrModal} />
       default:
     }
     this.setState({ selectedMenu: true })
@@ -172,10 +173,16 @@ class App extends React.Component {
               handleInputChange={this.handleInputChange}
               handleSelectChange={this.handleSelectChange} />
 
+            <ErrModal
+              title={this.state.errTitle}
+              err={this.state.errContent}
+              visible={this.state.errVisible}
+              coloseErrModal = {() => this.setState({ errVisible: !this.state.loadWeb3})} />
+
             <Content style={{ backgroundColor: '##EEEEF0' }}>
               {this.state.loadWeb3
                 ? <div> {this.getContent()} </div>
-                : <div> { this.getErrModal()} </div>
+                : this.getErrModal('This is an unknown network. Please connect to Metadium network', 'Connecting Error')
               }
             </Content>
 

@@ -35,14 +35,25 @@ class ProposalForm extends React.Component {
       e.preventDefault()
       let trx = {}
       let isMember = await this.props.contracts.gov.isMember(web3Instance.defaultAccount)
+      //check memeber
       if (!isMember) {
-        window.alert('Not Member')
+        this.props.getErrModal('You are not member', 'Proposal Submit Error')
         return
       }
       util.refineSubmitData(this.data.formData)
 
-      if (!await this.props.contracts.staking.balanceOf(this.data.formData.newAddr) ||!await this.props.contracts.gov.isMember(this.data.formData.newAddr)) {
-        window.alert('Not Exist staking meta or New member is Exist')
+      //check new member staking error & aleardy member error & aleardy proposal exist error
+      let newMemberBalance = Number(await this.props.contracts.staking.balanceOf(this.data.formData.newAddr))
+      let newLockedAmount = Number(this.data.formData.newLockAmount)
+      if (newMemberBalance < newLockedAmount) {
+        this.props.getErrModal('Not Enough META Stake (New)', 'Proposal Submit Error')
+        return
+      } else if(await this.props.contracts.gov.isMember(this.data.formData.newAddr)) {
+        this.props.getErrModal('Existing Member Address (New)', 'Proposal Submit Error')
+        return
+      } else if(this.props.newMemberaddr.some((item) => item === this.data.formData.newAddr)) {
+        this.props.getErrModal('Address with existing ballot (New)', 'Proposal Submit Error')
+        return
       }
 
       if (this.data.selectedVoteTopic === 'add') {
@@ -55,10 +66,18 @@ class ProposalForm extends React.Component {
           this.data.formData.memo
         )
       } else {
-        let isExistMember = await this.props.contracts.gov.isMember(this.data.formData.oldAddr)
-        let alreadyNewMember = this.props.contracts.gov.isMember(this.data.formData.newAddr)
-        
-        if (!isExistMember) {window.alert('Not Member')}return
+        let oldMemberBalance = Number(await this.props.contracts.staking.lockedBalanceOf(this.data.formData.oldAddr))
+        if(oldMemberBalance !== newLockedAmount) {
+          this.props.getErrModal('Invalid Replace META Amount', 'Proposal Submit Error')
+          return
+        } else if(!await this.props.contracts.gov.isMember(this.data.formData.oldAddr)) {
+          this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
+          return
+        } else if(this.props.oldMemberaddr.some((item) => item === this.data.formData.newAddr)) {
+          this.props.getErrModal('Address with existing ballot (Old)', 'Proposal Submit Error')
+          return
+        }
+
         trx = this.props.contracts.govImp.addProposalToChangeMember(
           this.data.formData.oldAddr,
           this.data.formData.newAddr,
@@ -86,11 +105,11 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
           <Form.Item>
-            <Input addonAfter='META' name='lockAmount' onChange={this.handleChange} />
+            <Input addonAfter='META' name='newLockAmount' onChange={this.handleChange} />
           </Form.Item>
           <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='addr' onChange={this.handleChange} />
+            <Input name='newAddr' onChange={this.handleChange} />
           </Form.Item>
           <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
@@ -118,7 +137,7 @@ class ProposalForm extends React.Component {
     getReplaceProposalForm () {
       return (<div className='proposalBody'>
         <Form onSubmit={this.handleSubmit}>
-          <p className='subtitle'>META Amount to be locked (New) <span className='required'>*</span></p>
+          <p className='subtitle'>Replace META Amount <span className='required'>*</span></p>
           <Form.Item>
             <Input addonAfter='META' style={{ marginBottom: '0%' }} name='newLockAmount' onChange={this.handleChange} />
           </Form.Item>
@@ -129,10 +148,6 @@ class ProposalForm extends React.Component {
           <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
             <Input style={{ marginBottom: '0%' }} name='newNode' onChange={this.handleChange} />
-          </Form.Item>
-          <p className='subtitle'>META Amount to be unlocked (Old) <span className='required'>*</span></p>
-          <Form.Item>
-            <Input addonAfter='META' style={{ marginBottom: '0%' }} name='oldLockAmount' onChange={this.handleChange} />
           </Form.Item>
           <p className='subtitle'>Old Authority Address <span className='required'>*</span></p>
           <Form.Item>

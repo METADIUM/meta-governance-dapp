@@ -75,3 +75,34 @@
   background: #261BC9 ;
   border: 0;
 }
+
+/* error Modal */
+
+.errorModal .ant-modal-body > p {
+  color:rgba(0, 0, 0, 0.87);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.errorModal .ant-modal-body > div {
+  background-color: #eeeef0;
+  padding: 16px;
+}
+
+.errorModal .ant-modal-body > div div {
+  display: flex;
+}
+
+.errorModal .ant-modal-body > div div svg {
+  height: 24px;
+  width: 24px;
+  padding: 2px;
+}
+
+.errorModal .ant-modal-body > div div svg path {
+  color: #FC0F1B;
+}
+
+.errorModal .ant-modal-body > div div p {
+  margin: 1px 0 0 8px;
+}
