@@ -18,7 +18,9 @@ class ProposalForm extends React.Component {
       submitForm: false,
       newLockAmountErr: false,
       newAddrErr: false,
-      nodeErr: false
+      newNodeErr: false,
+      oldAdderr: false,
+      oldNodeErr: false
     }
 
     onSelectChange = async (value) => {
@@ -35,7 +37,9 @@ class ProposalForm extends React.Component {
       switch(e.target.name) {
         case 'newLockAmount': this.setState({newLockAmountErr: !this.checkLockAmount(e.target.value)}); break
         case 'newAddr': this.setState({newAddrErr: !this.checkAddr(e.target.value)}); break
-        case 'node': this.setState({nodeErr: !this.checkNode(e.target.value)}); break
+        case 'newNode': this.setState({newNodeErr: !this.checkNode(e.target.value)}); break
+        case 'oldAddr': this.setState({oldAddrErr: !this.checkAddr(e.target.value)}); break
+        case 'oldNode': this.setState({oldNodeErr: !this.checkNode(e.target.value)}); break
       }
     }
 
@@ -135,8 +139,8 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input type='primary' name='node' onChange={this.handleChange} className={this.state.nodeErr ? 'errInput' : ''}/>
-            <p className={this.state.nodeErr ? 'errHint' : ''}>Invalid Node</p>
+            <Input type='primary' name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''}/>
+            <p className={this.state.newNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
           <p className='subtitle'>Description</p>
           <Form.Item>
@@ -150,7 +154,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button className='submit_Btn' htmlType='submit'>Submit </Button>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr}>Submit </Button>
             </div>
           </Form.Item>
         </Form>
@@ -162,23 +166,28 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <p className='subtitle'>Replace META Amount <span className='required'>*</span></p>
           <Form.Item>
-            <Input addonAfter='META' style={{ marginBottom: '0%' }} name='newLockAmount' onChange={this.handleChange} />
+            <Input type='number' addonAfter='META' name='newLockAmount' onChange={this.handleChange} className={this.state.newLockAmountErr ? 'errInput' : ''} />
+            <p className={this.state.newLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>
           </Form.Item>
           <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
           <Form.Item>
-            <Input style={{ marginBottom: '0%' }} name='newAddr' onChange={this.handleChange} />
+            <Input name='newAddr' onChange={this.handleChange} className={this.state.newAddrErr ? 'errInput' : ''}/>
+            <p className={this.state.newAddrErr ? 'errHint' : ''}>Invalid Address</p>
           </Form.Item>
           <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input style={{ marginBottom: '0%' }} name='newNode' onChange={this.handleChange} />
+            <Input name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''}/>
+            <p className={this.state.newNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
           <p className='subtitle'>Old Authority Address <span className='required'>*</span></p>
           <Form.Item>
-            <Input style={{ marginBottom: '0%' }} name='oldAddr' onChange={this.handleChange} />
+            <Input name='oldAddr' onChange={this.handleChange} className={this.state.oldAddrErr ? 'errInput' : ''}/>
+            <p className={this.state.oldAddrErr ? 'errHint' : ''}>Invalid Address</p>
           </Form.Item>
           <p className='subtitle'>Old Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input style={{ marginBottom: '0%' }} name='oldNode' onChange={this.handleChange} />
+            <Input name='oldNode' onChange={this.handleChange} className={this.state.oldNodeErr ? 'errInput' : ''}/>
+            <p className={this.state.oldNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
           <p className='subtitle'>Description </p>
           <Form.Item>
@@ -192,7 +201,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button className='submit_Btn' htmlType='submit'>Submit </Button>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr || this.state.oldAdderr || this.state.oldNodeErr}>Submit </Button>
             </div>
           </Form.Item>
         </Form>

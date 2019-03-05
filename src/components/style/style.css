@@ -681,6 +681,9 @@
   width: 208px;
   height: 40px;
   font-size: 16px;
+} .contentVotingDiv .proposalBody button[type="submit"]:disabled {
+  color: rgba(0,0,0,0.87);
+  background-color: #EEEEF0;
 }
 
 .contentVotingDiv .proposalBody .submitDiv {
