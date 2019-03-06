@@ -3,6 +3,7 @@ import { Button, Select, Input, Form, Icon } from 'antd'
 import './style/style.css'
 import { Voting } from './Voting'
 import { web3Instance } from '../ethereum/web3'
+import { constants } from '../ethereum/constants'
 import * as util from '../util'
 // import { validNumber, validAddress, validLength } from '../util'
 const { TextArea } = Input
@@ -44,10 +45,7 @@ class ProposalForm extends React.Component {
     }
 
     checkLockAmount = (amount) => {
-      const STAKING_MAX = 10
-      const STAKING_MIN = 2
-
-      return (/^[1-9]\d*$/.test(amount) && Number(amount) < STAKING_MAX && Number(amount) > STAKING_MIN )
+      return (/^[1-9]\d*$/.test(amount) && Number(amount) < constants.limitAmount.stakingMax && Number(amount) > constants.limitAmount.stakingMin )
     }
 
     checkAddr = (addr) => /^0x[a-fA-F0-9]{40}$/.test(addr)
