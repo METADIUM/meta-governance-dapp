@@ -75,21 +75,28 @@ function refineBallotBasic (m) {
 }
 
 function refineSubmitData (m) {
-  if (!m) return null
-  Object.keys(m).forEach(key => {
-    if (!isNaN(key)) return delete m[key]
+  if (m === null || typeof(m) !== "object") {
+    return m;
+  }
+  let copy = {};
+  for(let key in m) {
+    copy[key] = m[key];
+  }
+
+  Object.keys(copy).forEach(key => {
+    if (!isNaN(key)) return delete copy[key]
     switch (key) {
       case 'lockAmount':
       case 'oldLockAmount':
-      case 'newLockAmount': m[key] = web3Instance.web3.utils.toWei(m[key].toString(), 'ether'); break
-      case 'memo': m[key] = web3Instance.web3.utils.fromAscii(m[key]); break
+      case 'newLockAmount': copy[key] = web3Instance.web3.utils.toWei(copy[key].toString(), 'ether'); break
+      case 'memo': copy[key] = web3Instance.web3.utils.fromAscii(copy[key]); break
       case 'node':
       case 'newNode':
-      case 'oldNode': let { node, ip, port } = splitNodeDescription(m[key]); m[key] = { node, ip, port }; break
-      default: if (!m[key]) m[key] = ''; break
+      case 'oldNode': let { node, ip, port } = splitNodeDescription(copy[key]); copy[key] = { node, ip, port }; break
+      default: if (!copy[key]) copy[key] = ''; break
     }
   })
-  return m
+  return copy
 }
 
 function cmpIgnoreCase (a, b) {
