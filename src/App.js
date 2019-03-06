@@ -62,7 +62,8 @@ class App extends React.Component {
       console.log("change address:",account);
       web3Instance.defaultAccount = account;
       await this.updateAccountBalance();
-      this.setStakingEventsWatch();
+      this.setStakingEventsWatch(); 
+      //TODO: check new 
     }else{
       console.log("notChanged");
     }

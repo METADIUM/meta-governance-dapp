@@ -19,6 +19,11 @@ class Staking {
     return await this.stakingInstance.methods.balanceOf(address).call()
   }
 
+  async availableBalanceOf (address) {
+    if (!this.stakingInstance || !this.stakingInstance.methods) return
+    return await this.stakingInstance.methods.availableBalanceOf(address).call()
+  }
+
   deposit () {
     if (!this.stakingInstance || !this.stakingInstance.methods) return
     return {
