@@ -7,7 +7,6 @@ import { web3Instance } from '../ethereum/web3';
 
 class Authority extends React.Component {
     data = {
-      authorityOriginData: [],
       authorityItems: []
     }
 
@@ -19,7 +18,6 @@ class Authority extends React.Component {
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
       await this.getAuthorityList()
       this.setState({ getAuthorityInfo: true })
-
     }
 
     onApplyBtnClick () {
@@ -39,9 +37,8 @@ class Authority extends React.Component {
 
     async getAuthorityList (index) {
       let list = []
-      this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
 
-      this.data.authorityOriginData.map(async (item, i) => {
+      this.props.authorityOriginData.map(async (item, i) => {
         let isMember =  await this.props.contracts.gov.isMember(item.addr)
         if (isMember) {
           list.push(

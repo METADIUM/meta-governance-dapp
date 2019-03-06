@@ -6,6 +6,9 @@ import { ErrModal } from './components/ErrorModal'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
 import { BaseLoader } from './components/BaseLoader'
+
+import * as util from './util'
+import { constants } from './ethereum/constants'
 import './App.css'
 
 // web3
@@ -22,7 +25,8 @@ class App extends React.Component {
     lockedBalance: 0,
     selectedStakingTopic: 'deposit',
     amount: '',
-    eventsWatch: null
+    eventsWatch: null,
+    authorityOriginData: []
   }
   state = {
     loadWeb3: false,
@@ -41,11 +45,16 @@ class App extends React.Component {
     getWeb3Instance().then(async web3Config => {
       console.log(web3Config)
       this.initContracts(web3Config.web3)
+      await this.initAuthorityLists()
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
       this.setState({ loadWeb3: false })
     })
+  }
+
+  async initAuthorityLists () {
+    this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
   }
   
   async updateDefaultAccount(account){
@@ -124,8 +133,8 @@ class App extends React.Component {
   getContent () {
     if (!this.state.loadWeb3) return
     switch (this.state.nav) {
-      case '1': return <Authority title='Authority' contracts={contracts} getErrModal={this.getErrModal} />
-      case '2': return <Voting title='Voting' contracts={contracts} getErrModal={this.getErrModal} />
+      case '1': return <Authority title='Authority' contracts={contracts} getErrModal={this.getErrModal} authorityOriginData={this.data.authorityOriginData}/>
+      case '2': return <Voting title='Voting' contracts={contracts} getErrModal={this.getErrModal} authorityOriginData={this.data.authorityOriginData}/>
       default:
     }
     this.setState({ selectedMenu: true })

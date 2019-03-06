@@ -20,7 +20,8 @@ class Voting extends React.Component {
       curBallotIdx: 0,
       isMember: false,
       newMemberaddr: [],
-      oldMemberaddr: []
+      oldMemberaddr: [],
+      authorityNames: new Map()
     }
     state = {
       isBallotLoading: false,
@@ -48,6 +49,7 @@ class Voting extends React.Component {
     async componentDidMount () {
       this.data.isMember = await this.props.contracts.gov.isMember(web3Instance.defaultAccount)
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
+      this.props.authorityOriginData.map(item => this.data.authorityNames.set(item.addr, item.title))
       this.getOriginData()
     }
 
@@ -81,7 +83,7 @@ class Voting extends React.Component {
             <div className='ballotInfoDiv'>
               <div className='infoLeft'>
                 <p className='topic'>{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
-                <p className='company'>Proposal: METADIUM_EXAM</p>
+                <p className='company'>{this.data.authorityNames.get(item.creator)}</p>
                 <p className='addr'>Proposal Address: {item.creator}</p>
               </div>
               <div className='infoRight'>
