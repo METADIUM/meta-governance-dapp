@@ -20,6 +20,7 @@ class ProposalForm extends React.Component {
       newLockAmountErr: false,
       newAddrErr: false,
       newNodeErr: false,
+      oldLockAmountErr: false,
       oldAdderr: false,
       oldNodeErr: false
     }
@@ -39,6 +40,7 @@ class ProposalForm extends React.Component {
         case 'newLockAmount': this.setState({newLockAmountErr: !this.checkLockAmount(e.target.value)}); break
         case 'newAddr': this.setState({newAddrErr: !this.checkAddr(e.target.value)}); break
         case 'newNode': this.setState({newNodeErr: !this.checkNode(e.target.value)}); break
+        case 'oldLockAmount': this.setState({oldLockAmountErr: !this.checkLockAmount(e.target.value)}); break
         case 'oldAddr': this.setState({oldAddrErr: !this.checkAddr(e.target.value)}); break
         case 'oldNode': this.setState({oldNodeErr: !this.checkNode(e.target.value)}); break
       }
@@ -56,15 +58,32 @@ class ProposalForm extends React.Component {
     handleSubmit = async (e) => {
       e.preventDefault()
       let trx = {}
-      let isMember = await this.props.contracts.gov.isMember(web3Instance.defaultAccount)
-      //check memeber
-      if (!isMember) {
-        this.props.getErrModal('You are not member', 'Proposal Submit Error')
-        return
-      }
       let formData = util.refineSubmitData(this.data.formData)
-
-      if(this.data.selectedVoteTopic === 'update') {
+      if(await this.handleProposalError(formData)) return
+      
+      if (this.data.selectedVoteTopic === 'add') {
+        trx = this.props.contracts.govImp.addProposalToAddMember(
+          formData.newAddr,
+          formData.newNode.node,
+          formData.newNode.ip,
+          formData.newNode.port,
+          formData.newLockAmount,
+          formData.memo
+        )
+      } else if(this.data.selectedVoteTopic === 'replace') {
+        trx = this.props.contracts.govImp.addProposalToChangeMember(
+          formData.oldAddr,
+          formData.newAddr,
+          formData.newNode.node,
+          formData.newNode.ip,
+          formData.newNode.port,
+          formData.newLockAmount,
+          formData.memo
+        )
+      } else if(this.data.selectedVoteTopic === 'romove') {
+        this.props.getErrModal('This function is not yet available', 'Proposal Submit Error')
+        return
+      } else if(this.data.selectedVoteTopic === 'update') {
         trx = this.props.contracts.govImp.addProposalToChangeMember(
           web3Instance.defaultAccount,
           web3Instance.defaultAccount,
@@ -74,57 +93,9 @@ class ProposalForm extends React.Component {
           await this.props.contracts.staking.lockedBalanceOf(web3Instance.defaultAccount),
           formData.memo
         )
-
         this.props.getErrModal('This function is not yet available', 'Proposal Submit Error')
         return
-      } else {
-        //check new member staking error & aleardy member error & aleardy proposal exist error
-        let newMemberBalance = Number(await this.props.contracts.staking.balanceOf(formData.newAddr))
-        let newLockedAmount = Number(formData.newLockAmount)
-        if (newMemberBalance < newLockedAmount) {
-          this.props.getErrModal('Not Enough META Stake (New)', 'Proposal Submit Error')
-          return
-        } else if(await this.props.contracts.gov.isMember(formData.newAddr)) {
-          this.props.getErrModal('Existing Member Address (New)', 'Proposal Submit Error')
-          return
-        } else if(this.props.newMemberaddr.some((item) => item === formData.newAddr)) {
-          this.props.getErrModal('Address with existing ballot (New)', 'Proposal Submit Error')
-          return
-        }
-
-        if (this.data.selectedVoteTopic === 'add') {
-          trx = this.props.contracts.govImp.addProposalToAddMember(
-            formData.newAddr,
-            formData.newNode.node,
-            formData.newNode.ip,
-            formData.newNode.port,
-            formData.newLockAmount,
-            formData.memo
-          )
-        } else if(this.data.selectedVoteTopic === 'replace') {
-          let oldMemberBalance = Number(await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr))
-          if(oldMemberBalance !== newLockedAmount) {
-            this.props.getErrModal('Invalid Replace META Amount', 'Proposal Submit Error')
-            return
-          } else if(!await this.props.contracts.gov.isMember(formData.oldAddr)) {
-            this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
-            return
-          } else if(this.props.oldMemberaddr.some((item) => item === formData.newAddr)) {
-            this.props.getErrModal('Address with existing ballot (Old)', 'Proposal Submit Error')
-            return
-          }
-
-          trx = this.props.contracts.govImp.addProposalToChangeMember(
-            formData.oldAddr,
-            formData.newAddr,
-            formData.newNode.node,
-            formData.newNode.ip,
-            formData.newNode.port,
-            formData.newLockAmount,
-            formData.memo
-          )
-        }
-      }
+      } else return
       console.log(formData)
 
       web3Instance.web3.eth.sendTransaction({
@@ -135,6 +106,65 @@ class ProposalForm extends React.Component {
         if (err) console.log('err: ', err)
         else console.log('hash: ', hash)
       })
+    }
+
+    async handleProposalError(formData) {
+      let memberBalance, lockedAmount
+      if (!await this.props.contracts.gov.isMember(web3Instance.defaultAccount)) {
+        this.props.getErrModal('You are not member', 'Proposal Submit Error')
+        return true
+      }
+
+      if(this.data.selectedVoteTopic === 'add') {
+        memberBalance = Number(await this.props.contracts.staking.balanceOf(formData.newAddr))
+        lockedAmount = Number(formData.newLockAmount)
+
+        if(await this.props.contracts.gov.isMember(formData.newAddr)) {
+          this.props.getErrModal('Existing Member Address (New)', 'Proposal Submit Error')
+          return true
+        } else if(this.props.newMemberaddr.some((item) => item === formData.newAddr)) {
+          this.props.getErrModal('Address with existing ballot (New)', 'Proposal Submit Error')
+          return true
+        } else if (memberBalance < lockedAmount) {
+          this.props.getErrModal('Not Enough META Stake (New)', 'Proposal Submit Error')
+          return true
+        }
+      } else if(this.data.selectedVoteTopic === 'replace') {
+        memberBalance = Number(await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr))
+        lockedAmount = Number(formData.newLockAmount)
+
+        if(await this.props.contracts.gov.isMember(formData.newAddr)) {
+          this.props.getErrModal('Existing Member Address (New)', 'Proposal Submit Error')
+          return true
+        } else if(!await this.props.contracts.gov.isMember(formData.oldAddr)) {
+          this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
+          return true
+        } else if(this.props.newMemberaddr.some((item) => item === formData.newAddr)) {
+          this.props.getErrModal('Address with existing ballot (New)', 'Proposal Submit Error')
+          return true
+        } else if(this.props.oldMemberaddr.some((item) => item === formData.oldAddr)) {
+          this.props.getErrModal('Address with existing ballot (Old)', 'Proposal Submit Error')
+          return true
+        } else if(memberBalance !== lockedAmount) {
+          this.props.getErrModal('Invalid enough META Stake (New)', 'Proposal Submit Error')
+          return true
+        }
+      } else if(this.data.selectedVoteTopic === 'remove') {
+        memberBalance = Number(await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr))
+        lockedAmount = Number(formData.oldLockAmount)
+
+        if(!await this.props.contracts.gov.isMember(formData.oldAddr)) {
+          this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
+          return true
+        } else if(this.props.oldMemberaddr.some((item) => item === formData.oldAddr)) {
+          this.props.getErrModal('Address with existing ballot (Old)', 'Proposal Submit Error')
+          return true
+        } else if(memberBalance !== lockedAmount) {
+          this.props.getErrModal('Invalid META Unlock Amount', 'Proposal Submit Error')
+          return true
+        }
+      }
+      return false;
     }
 
     getAddProposalForm () {
@@ -167,7 +197,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr}>Submit </Button>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr}>Submit</Button>
             </div>
           </Form.Item>
         </Form>
@@ -214,7 +244,39 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr || this.state.oldAdderr || this.state.oldNodeErr}>Submit </Button>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr || this.state.oldAdderr || this.state.oldNodeErr}>Submit</Button>
+            </div>
+          </Form.Item>
+        </Form>
+      </div>)
+    }
+
+    getRmoveProposalForm () {
+      return (<div className='proposalBody'>
+        <Form onSubmit={this.handleSubmit}>
+          <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
+          <Form.Item>
+            <Input type="number" addonAfter='META' name='oldLockAmount' onChange={this.handleChange} className={this.state.oldLockAmountErr ? 'errInput' : ''}/>
+            <p className={this.state.oldLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>
+          </Form.Item>
+          <p className='subtitle'>Old Authority Address <span className='required'>*</span></p>
+          <Form.Item>
+            <Input name='oldAddr' onChange={this.handleChange} className={this.state.oldAddrErr ? 'errInput' : ''}/>
+            <p className={this.state.oldAddrErr ? 'errHint' : ''}>Invalid Address</p>
+          </Form.Item>
+          <p className='subtitle'>Description</p>
+          <Form.Item>
+            <TextArea
+              rows={4}
+              placeholder='Max. 256 bytes'
+              autosize={{ minRows: 4, maxRows: 4 }}
+              name='memo'
+              onChange={this.handleChange}
+            />
+          </Form.Item>
+          <Form.Item>
+            <div className='submitDiv'>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.oldLockAmountErr || this.state.oldAddrErr}>Submit</Button>
             </div>
           </Form.Item>
         </Form>
@@ -257,6 +319,7 @@ class ProposalForm extends React.Component {
         case 'add': return this.getAddProposalForm()
         case 'replace': return this.getReplaceProposalForm()
         case 'update': return this.getUpdateProposalForm()
+        case 'remove': return this.getRmoveProposalForm()
       }
     }
 
@@ -283,6 +346,7 @@ class ProposalForm extends React.Component {
                     onChange={this.onSelectChange}>
                     <Select.Option value='add'>Add Authority</Select.Option>
                     <Select.Option value='replace'>Replace Authority</Select.Option>
+                    <Select.Option value='remove'>Remove Authority</Select.Option>
                     <Select.Option value='update'>Update Authority</Select.Option>
                   </Select>
                 </div>
