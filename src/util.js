@@ -62,6 +62,7 @@ function refineBallotBasic (m) {
   Object.keys(m).forEach(key => {
     if (!isNaN(key)) return delete m[key]
     switch (key) {
+      case 'creator': m[key] = web3Instance.web3.utils.toChecksumAddress(m[key]); break
       case 'startTime': m[key] = timeConverter(m[key]); break
       case 'endTime': m[key] = timeConverter(m[key]); break
       case 'memo': m[key] = convertHexToString(m[key]); break
@@ -86,6 +87,8 @@ function refineSubmitData (m) {
   Object.keys(copy).forEach(key => {
     if (!isNaN(key)) return delete copy[key]
     switch (key) {
+      case 'newAddr':
+      case 'oldAddr': copy[key] = web3Instance.web3.utils.toChecksumAddress(copy[key]); break
       case 'lockAmount':
       case 'oldLockAmount':
       case 'newLockAmount': copy[key] = web3Instance.web3.utils.toWei(copy[key].toString(), 'ether'); break

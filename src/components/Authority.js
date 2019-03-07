@@ -37,7 +37,7 @@ class Authority extends React.Component {
 
     async getAuthorityList (index) {
       let list = []
-
+      
       this.props.authorityOriginData.map(async (item, i) => {
         let isMember =  await this.props.contracts.gov.isMember(item.addr)
         if (isMember) {

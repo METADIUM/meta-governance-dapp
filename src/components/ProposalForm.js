@@ -14,7 +14,6 @@ class ProposalForm extends React.Component {
       formData: {}
     }
     state = {
-      isBack: false,
       selectedChange: false,
       submitForm: false,
       newLockAmountErr: false,
@@ -52,60 +51,66 @@ class ProposalForm extends React.Component {
 
     checkAddr = (addr) => /^0x[a-fA-F0-9]{40}$/.test(addr)
 
-    checkNode = (node) => /^[a-fA-F0-9]+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})+(\?discport=([0-9]{5}))$/.test(node)
+    checkNode = (node) => /^[a-fA-F0-9]+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})$/.test(node)
 
     /* Submit form data. */
     handleSubmit = async (e) => {
-      e.preventDefault()
-      let trx = {}
-      let formData = util.refineSubmitData(this.data.formData)
-      if(await this.handleProposalError(formData)) return
-      
-      if (this.data.selectedVoteTopic === 'add') {
-        trx = this.props.contracts.govImp.addProposalToAddMember(
-          formData.newAddr,
-          formData.newNode.node,
-          formData.newNode.ip,
-          formData.newNode.port,
-          formData.newLockAmount,
-          formData.memo
-        )
-      } else if(this.data.selectedVoteTopic === 'replace') {
-        trx = this.props.contracts.govImp.addProposalToChangeMember(
-          formData.oldAddr,
-          formData.newAddr,
-          formData.newNode.node,
-          formData.newNode.ip,
-          formData.newNode.port,
-          formData.newLockAmount,
-          formData.memo
-        )
-      } else if(this.data.selectedVoteTopic === 'romove') {
-        this.props.getErrModal('This function is not yet available', 'Proposal Submit Error')
-        return
-      } else if(this.data.selectedVoteTopic === 'update') {
-        trx = this.props.contracts.govImp.addProposalToChangeMember(
-          web3Instance.defaultAccount,
-          web3Instance.defaultAccount,
-          formData.newNode.node,
-          formData.newNode.ip,
-          formData.newNode.port,
-          await this.props.contracts.staking.lockedBalanceOf(web3Instance.defaultAccount),
-          formData.memo
-        )
-        this.props.getErrModal('This function is not yet available', 'Proposal Submit Error')
-        return
-      } else return
-      console.log(formData)
+      try {
+        e.preventDefault()
+        let trx = {}
+        let formData = util.refineSubmitData(this.data.formData)
+        if(await this.handleProposalError(formData)) return
+        
+        if (this.data.selectedVoteTopic === 'add') {
+          trx = this.props.contracts.govImp.addProposalToAddMember(
+            formData.newAddr,
+            formData.newNode.node,
+            formData.newNode.ip,
+            formData.newNode.port,
+            formData.newLockAmount,
+            formData.memo
+          )
+        } else if(this.data.selectedVoteTopic === 'replace') {
+          trx = this.props.contracts.govImp.addProposalToChangeMember(
+            formData.oldAddr,
+            formData.newAddr,
+            formData.newNode.node,
+            formData.newNode.ip,
+            formData.newNode.port,
+            formData.newLockAmount,
+            formData.memo
+          )
+        } else if(this.data.selectedVoteTopic === 'romove') {
+          this.props.getErrModal('This function is not yet available', 'Proposal Submit Error')
+          return
+        } else if(this.data.selectedVoteTopic === 'update') {
+          trx = this.props.contracts.govImp.addProposalToChangeMember(
+            web3Instance.defaultAccount,
+            web3Instance.defaultAccount,
+            formData.newNode.node,
+            formData.newNode.ip,
+            formData.newNode.port,
+            await this.props.contracts.staking.lockedBalanceOf(web3Instance.defaultAccount),
+            formData.memo
+          )
+          this.props.getErrModal('This function is not yet available', 'Proposal Submit Error')
+          return
+        } else return
 
-      web3Instance.web3.eth.sendTransaction({
-        from: web3Instance.defaultAccount,
-        to: trx.to,
-        data: trx.data
-      }, (err, hash) => {
-        if (err) this.props.getErrModal(err, 'Proposal Submit Error')
-        else console.log('hash: ', hash)
-      })
+        web3Instance.web3.eth.sendTransaction({
+          from: web3Instance.defaultAccount,
+          to: trx.to,
+          data: trx.data
+        }, (err, hash) => {
+          if (err) throw(err)
+          else console.log('hash: ', hash)
+        })
+      } catch(err) {
+        console.log(err)
+        this.props.getErrModal(err.message, err.name)
+      } finally {
+        return
+      }
     }
 
     async handleProposalError(formData) {
@@ -176,7 +181,7 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
           <Form.Item>
-            <Input type="number" addonAfter='META' name='newLockAmount' onChange={this.handleChange} className={this.state.newLockAmountErr ? 'errInput' : ''}/>
+            <Input type="number" addonAfter='META' name='newLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.newLockAmountErr ? 'errInput' : ''}/>
             <p className={this.state.newLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>
           </Form.Item>
           <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
@@ -213,7 +218,7 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <p className='subtitle'>Replace META Amount <span className='required'>*</span></p>
           <Form.Item>
-            <Input type='number' addonAfter='META' name='newLockAmount' onChange={this.handleChange} className={this.state.newLockAmountErr ? 'errInput' : ''} />
+            <Input type='number' addonAfter='META' name='newLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.newLockAmountErr ? 'errInput' : ''} />
             <p className={this.state.newLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>
           </Form.Item>
           <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
@@ -330,41 +335,36 @@ class ProposalForm extends React.Component {
     render () {
       return (
         <div>
-          {!this.state.isBack
-            ? <div className='contentDiv'>
-              <div className='backBtnDiv'>
-                <Button onClick={() => { this.setState({ isBack: !this.state.isBack }) }}>
-                  <span><Icon type='left' /></span>
-                  <span className='text_btn'>Back to Voting</span>
-                </Button>
-              </div>
-              <div className='contentVotingDiv'>
-                <div className='proposalHead'>
-                  <div className='title'>
-                    <p>New Proposal</p>
-                    <p>* Mandatory</p>
-                  </div>
-                  <p className='subtitle'>Topic for voting <span className='required'>*</span></p>
-                  <Select
-                    showArrow
-                    onChange={this.onSelectChange}>
-                    <Select.Option value='add'>Add Authority</Select.Option>
-                    <Select.Option value='replace'>Replace Authority</Select.Option>
-                    <Select.Option value='remove'>Remove Authority</Select.Option>
-                    <Select.Option value='update'>Update Authority</Select.Option>
-                  </Select>
+          <div className='contentDiv'>
+            <div className='backBtnDiv'>
+              <Button onClick={e => this.props.convertComponent('voting')}>
+                <span><Icon type='left' /></span>
+                <span className='text_btn'>Back to Voting</span>
+              </Button>
+            </div>
+            <div className='contentVotingDiv'>
+              <div className='proposalHead'>
+                <div className='title'>
+                  <p>New Proposal</p>
+                  <p>* Mandatory</p>
                 </div>
-                { this.data.selectedVoteTopic !== ''
-                  ? <div>
-                    {this.getProposalForm()}
-                  </div> : ''
-                }
+                <p className='subtitle'>Topic for voting <span className='required'>*</span></p>
+                <Select
+                  showArrow
+                  onChange={this.onSelectChange}>
+                  <Select.Option value='add'>Add Authority</Select.Option>
+                  <Select.Option value='replace'>Replace Authority</Select.Option>
+                  <Select.Option value='remove'>Remove Authority</Select.Option>
+                  <Select.Option value='update'>Update Authority</Select.Option>
+                </Select>
               </div>
+              { this.data.selectedVoteTopic !== ''
+                ? <div>
+                  {this.getProposalForm()}
+                </div> : ''
+              }
             </div>
-            : <div>
-              <Voting contracts={this.props.contracts} />
-            </div>
-          }
+          </div>
         </div>
       )
     }

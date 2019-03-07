@@ -28,7 +28,6 @@ class Voting extends React.Component {
       isBallotDetailLoading: false,
       isUpdated: false,
       didVoted: false,
-      newProposal: false,
       position: 'active',
       updateModal: false
     }
@@ -50,6 +49,7 @@ class Voting extends React.Component {
       this.data.isMember = await this.props.contracts.gov.isMember(web3Instance.defaultAccount)
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
       this.props.authorityOriginData.map(item => this.data.authorityNames.set(item.addr, item.title))
+      console.log(this.data.authorityNames)
       this.getOriginData()
     }
 
@@ -246,7 +246,7 @@ class Voting extends React.Component {
     render () {
       return (
         <div>
-          {!this.state.newProposal
+          {!this.props.newProposal
             ? <div className='background'>
               <div className='sub-header'>
                 <div className='functionDiv'>
@@ -256,11 +256,11 @@ class Voting extends React.Component {
                       enterButton
                     />
                     {!this.data.isMember
-                      ? <Button disabled className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
+                      ? <Button disabled className='apply_proposal_Btn' onClick={e => this.props.convertComponent('proposal')}>
                         <span>+</span>
                         <span className='text_btn'>New Proposal</span>
                       </Button>
-                      : <Button className='apply_proposal_Btn' onClick={() => this.setState({ newProposal: !this.state.newProposal })}>
+                      : <Button className='apply_proposal_Btn' onClick={e => this.props.convertComponent('proposal')}>
                         <span>+</span>
                         <span className='text_btn'>New Proposal</span>
                       </Button>}
@@ -313,7 +313,7 @@ class Voting extends React.Component {
               </div>
             </div>
             : <div>
-              <ProposalForm contracts={this.props.contracts} getErrModal={this.props.getErrModal} newMemberaddr={this.data.newMemberaddr} oldMemberaddr={this.data.oldMemberaddr} />
+              <ProposalForm contracts={this.props.contracts} getErrModal={this.props.getErrModal} newMemberaddr={this.data.newMemberaddr} oldMemberaddr={this.data.oldMemberaddr} convertComponent={this.props.convertComponent}/>
             </div>
           }
         </div>

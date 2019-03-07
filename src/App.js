@@ -36,7 +36,8 @@ class App extends React.Component {
     stakingLoading: false,
     errTitle: '',
     errContent: '',
-    errVisible: false
+    errVisible: false.key,
+    newProposal: false
   };
 
   constructor (props) {
@@ -55,6 +56,9 @@ class App extends React.Component {
 
   async initAuthorityLists () {
     this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
+    Object.keys(this.data.authorityOriginData).forEach((index) => {
+      this.data.authorityOriginData[index].addr = web3Instance.web3.utils.toChecksumAddress(this.data.authorityOriginData[index].addr)
+    })
   }
   
   async updateDefaultAccount(account){
@@ -62,12 +66,14 @@ class App extends React.Component {
       console.log("change address:",account);
       web3Instance.defaultAccount = account;
       await this.updateAccountBalance();
-      this.setStakingEventsWatch(); 
-      //TODO: check new 
+      this.setStakingEventsWatch();
+      //TODO: check new
+      this.setState({newProposal: false})
     }else{
       console.log("notChanged");
     }
   }
+
   setStakingEventsWatch(address){
     if (this.data.eventsWatch ){
       let subscription = this.data.eventsWatch;
@@ -97,6 +103,7 @@ class App extends React.Component {
     )
     console.log("Successfully subscribed!");
   }
+
   async updateAccountBalance(){
     this.data.balance = await contracts.staking.balanceOf(web3Instance.defaultAccount)
       this.data.lockedBalance = await contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
@@ -131,11 +138,18 @@ class App extends React.Component {
     })
   }
 
+  convertVotingComponent = (component) => {
+    switch(component) {
+      case 'voting': this.setState({newProposal: false}); break
+      case 'proposal': this.setState({newProposal: true}); break
+    }
+  }
+
   getContent () {
     if (!this.state.loadWeb3) return
     switch (this.state.nav) {
       case '1': return <Authority title='Authority' contracts={contracts} getErrModal={this.getErrModal} authorityOriginData={this.data.authorityOriginData}/>
-      case '2': return <Voting title='Voting' contracts={contracts} getErrModal={this.getErrModal} authorityOriginData={this.data.authorityOriginData}/>
+      case '2': return <Voting title='Voting' contracts={contracts} getErrModal={this.getErrModal} authorityOriginData={this.data.authorityOriginData} convertComponent={this.convertVotingComponent} newProposal={this.state.newProposal}/>
       default:
     }
     this.setState({ selectedMenu: true })
