@@ -55,11 +55,15 @@ class ProposalForm extends React.Component {
 
     /* Submit form data. */
     handleSubmit = async (e) => {
+      this.props.convertButtonLoading(true)
       try {
         e.preventDefault()
         let trx = {}
         let formData = util.refineSubmitData(this.data.formData)
-        if(await this.handleProposalError(formData)) return
+        if(await this.handleProposalError(formData)) {
+          this.props.convertButtonLoading(false)
+          return
+        }
         
         if (this.data.selectedVoteTopic === 'add') {
           trx = this.props.contracts.govImp.addProposalToAddMember(
@@ -82,6 +86,7 @@ class ProposalForm extends React.Component {
           )
         } else if(this.data.selectedVoteTopic === 'romove') {
           this.props.getErrModal('This function is not yet available', 'Proposal Submit Error')
+          this.props.convertButtonLoading(false)
           return
         } else if(this.data.selectedVoteTopic === 'update') {
           trx = this.props.contracts.govImp.addProposalToChangeMember(
@@ -94,6 +99,7 @@ class ProposalForm extends React.Component {
             formData.memo
           )
           this.props.getErrModal('This function is not yet available', 'Proposal Submit Error')
+          this.props.convertButtonLoading(false)
           return
         } else return
 
@@ -102,13 +108,18 @@ class ProposalForm extends React.Component {
           to: trx.to,
           data: trx.data
         }, (err, hash) => {
-          if (err) throw(err)
+          if (err) {
+            this.props.getErrModal(err.message, 'Proposal Submit Error')
+            this.props.convertButtonLoading(false)
+            return
+          }
           else console.log('hash: ', hash)
         })
       } catch(err) {
         console.log(err)
         this.props.getErrModal(err.message, err.name)
       } finally {
+        this.props.convertButtonLoading(false)
         return
       }
     }
@@ -206,7 +217,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr}>Submit</Button>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr} loading={this.props.buttonLoading}>Submit</Button>
             </div>
           </Form.Item>
         </Form>
@@ -253,7 +264,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr || this.state.oldAdderr || this.state.oldNodeErr}>Submit</Button>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr || this.state.oldAdderr || this.state.oldNodeErr}  loading={this.props.buttonLoading}>Submit</Button>
             </div>
           </Form.Item>
         </Form>
@@ -285,7 +296,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button className='submit_Btn' htmlType='submit' disabled={this.state.oldLockAmountErr || this.state.oldAddrErr}>Submit</Button>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.oldLockAmountErr || this.state.oldAddrErr} loading={this.props.buttonLoading}>Submit</Button>
             </div>
           </Form.Item>
         </Form>
@@ -316,7 +327,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newNodeErr}>Submit </Button>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newNodeErr} loading={this.props.buttonLoading}>Submit </Button>
             </div>
           </Form.Item>
         </Form>

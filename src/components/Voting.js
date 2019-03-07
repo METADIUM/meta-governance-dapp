@@ -18,7 +18,6 @@ class Voting extends React.Component {
       finalizedItems: [],
       ballotCnt: 0,
       curBallotIdx: 0,
-      isMember: false,
       newMemberaddr: [],
       oldMemberaddr: [],
       authorityNames: new Map()
@@ -46,7 +45,6 @@ class Voting extends React.Component {
     }
 
     async componentDidMount () {
-      this.data.isMember = await this.props.contracts.gov.isMember(web3Instance.defaultAccount)
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
       this.props.authorityOriginData.map(item => this.data.authorityNames.set(item.addr, item.title))
       console.log(this.data.authorityNames)
@@ -95,7 +93,7 @@ class Voting extends React.Component {
             <div className='ballotContentDiv'>
               <div className='voteDiv'>
                 <div className='imageContent'>
-                  { !this.data.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                  { !this.props.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
                     ? <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
                     : <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button> }
                   <div className='chart'>
@@ -105,7 +103,7 @@ class Voting extends React.Component {
                     </div>
                     <Progress percent={item.powerOfAccepts} status='active' showInfo={false} />
                   </div>
-                  { !this.data.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                  { !this.props.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
                     ? <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
                     : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button> }
                 </div>
@@ -255,7 +253,7 @@ class Voting extends React.Component {
                       placeholder='Search by Type, Proposal, Keywords'
                       enterButton
                     />
-                    {!this.data.isMember
+                    {!this.props.isMember
                       ? <Button disabled className='apply_proposal_Btn' onClick={e => this.props.convertComponent('proposal')}>
                         <span>+</span>
                         <span className='text_btn'>New Proposal</span>
@@ -313,7 +311,14 @@ class Voting extends React.Component {
               </div>
             </div>
             : <div>
-              <ProposalForm contracts={this.props.contracts} getErrModal={this.props.getErrModal} newMemberaddr={this.data.newMemberaddr} oldMemberaddr={this.data.oldMemberaddr} convertComponent={this.props.convertComponent}/>
+              <ProposalForm
+                contracts={this.props.contracts}
+                getErrModal={this.props.getErrModal}
+                newMemberaddr={this.data.newMemberaddr}
+                oldMemberaddr={this.data.oldMemberaddr}
+                convertComponent={this.props.convertComponent}
+                buttonLoading={this.props.buttonLoading}
+                convertButtonLoading={this.props.convertButtonLoading}/>
             </div>
           }
         </div>

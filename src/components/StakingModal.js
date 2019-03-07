@@ -4,7 +4,7 @@ import './style/style.css'
 
 const Option = Select.Option
 
-const StakingModal = ({ accountBalance, stakingModalVisible, submitMetaStaking, hideStakingModal, handleSelectChange, handleInputChange = f => f, stakingLoading, amount, selectedStakingTopic }) =>
+const StakingModal = ({ accountBalance, stakingModalVisible, submitMetaStaking, hideStakingModal, handleSelectChange, handleInputChange = f => f, stakingLoading, amount, selectedStakingTopic, stakingInvalidErr }) =>
   <Modal
     className='stakingModal'
     title='META Staking'
@@ -21,7 +21,8 @@ const StakingModal = ({ accountBalance, stakingModalVisible, submitMetaStaking, 
       <Option value='deposit'>Deposit Staking</Option>
       <Option value='withdraw'>Withdraw Staking</Option>
     </Select>
-    <Input onChange={handleInputChange} type='number' placeholder='META Amount' addonAfter='META' value={amount}/>
+    <Input onChange={handleInputChange} type='number' placeholder='META Amount' addonAfter='META' value={amount} className={stakingInvalidErr ? 'errInput' : ''}/>
+    <p className={stakingInvalidErr ? 'errHint' : ''}>Invalid Amount</p>
   </Modal>
 
 export { StakingModal }

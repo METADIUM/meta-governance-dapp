@@ -653,22 +653,22 @@
   display: none;
 }
 
-.contentVotingDiv .ant-form-item .errHint {
-  display: block;
+.errHint {
+  display: block !important;
   line-height: 1.5;
   margin: 0;
   color:#FC0F1B;
 }
 
-.contentVotingDiv .ant-form-item .errInput input{
+span.errInput input{
   border-color:#FC0F1B;
-} .contentVotingDiv .ant-form-item .errInput input:focus{
+} span.errInput input:focus{
   border-color: #261BC9;
 }
 
-.contentVotingDiv .ant-form-item input.errInput {
+input.errInput {
   border-color:#FC0F1B;
-} .contentVotingDiv .ant-form-item input.errInput:focus{
+} input.errInput:focus{
   border-color: #261BC9;
 }
 
