@@ -7,8 +7,7 @@ import { web3Instance } from '../ethereum/web3';
 
 class Authority extends React.Component {
     data = {
-      authorityOriginData: [],
-      authorityItems: []
+      authorityItems: new Map()
     }
 
     state = {
@@ -19,7 +18,6 @@ class Authority extends React.Component {
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
       await this.getAuthorityList()
       this.setState({ getAuthorityInfo: true })
-
     }
 
     onApplyBtnClick () {
@@ -38,13 +36,12 @@ class Authority extends React.Component {
     }
 
     async getAuthorityList (index) {
-      let list = []
-      this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
-
-      this.data.authorityOriginData.map(async (item, i) => {
+      let list = new Map()
+      
+      this.props.authorityOriginData.map(async (item, i) => {
         let isMember =  await this.props.contracts.gov.isMember(item.addr)
         if (isMember) {
-          list.push(
+          list.set(i,
             <div key={item.addr} className='authorityComp'>
               <div className='authorityComp_contnet'>
                 <div className='img_container'>
@@ -66,11 +63,9 @@ class Authority extends React.Component {
             </div>
           )
         }
-        this.data.authorityItems = list
+        this.data.authorityItems = new Map([...list.entries()].sort())
         this.setState({ getAuthorityInfo: true })
-        console.log(this.state.getAuthorityInfo)
       })
-      
     }
 
     getSNSList (snsList) {
@@ -101,7 +96,7 @@ class Authority extends React.Component {
             <div className='apply_proposal_Btn_container'><Button className='apply_proposal_Btn' onClick={this.onApplyBtnClick}>Apply for Authority</Button></div>
             <div className='card_container'>
               {this.state.getAuthorityInfo
-                ? this.data.authorityItems
+                ? [...this.data.authorityItems.values()]
                 : <div>empty</div>
               }
             </div>

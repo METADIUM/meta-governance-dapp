@@ -57,13 +57,16 @@
 }
 
 /* modal */
-.stakingModal .ant-modal-body p {
-  margin-bottom: 12px;
-  font-size: 12px;
-} .stakingModal .ant-modal-body p:first-child {
+.stakingModal .ant-modal-body p:nth-child(1) {
   color:rgba(0, 0, 0, 0.87);
   font-size: 14px;
   margin:0;
+} .stakingModal .ant-modal-body p:nth-child(2) {
+  margin-bottom: 12px;
+  font-size: 12px;
+} .stakingModal .ant-modal-body p:last-child {
+  margin: 0;
+  display: none;
 }
 
 .stakingModal .ant-modal-body .ant-select {
@@ -74,4 +77,35 @@
 .ant-modal-footer .ant-btn-primary {
   background: #261BC9 ;
   border: 0;
+}
+
+/* error Modal */
+
+.errorModal .ant-modal-body > p {
+  color:rgba(0, 0, 0, 0.87);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.errorModal .ant-modal-body > div {
+  background-color: #eeeef0;
+  padding: 16px;
+}
+
+.errorModal .ant-modal-body > div div {
+  display: flex;
+}
+
+.errorModal .ant-modal-body > div div svg {
+  height: 24px;
+  width: 24px;
+  padding: 2px;
+}
+
+.errorModal .ant-modal-body > div div svg path {
+  color: #FC0F1B;
+}
+
+.errorModal .ant-modal-body > div div p {
+  margin: 1px 0 0 8px;
 }

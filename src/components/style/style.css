@@ -274,6 +274,7 @@
 
 .sub-header {
   background-color: #ffffff;
+  z-index: 90;
 }
 
 .sub-header .functionDiv {
@@ -285,7 +286,6 @@
   padding: 24px 16px 24px 16px;
   margin: 0 auto;
   max-width: 1152px;
-  z-index: 90;
 }
 
 .sub-header .functionDiv .ant-input-group-wrapper {
@@ -323,7 +323,6 @@
 
 .sub-header .sub-menu {
   background-color:#ffffff;
-  z-index: 80;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   display: flex;
   justify-content: center;
@@ -451,7 +450,9 @@
 } .ballotContentDiv .voteDiv .imageContent #noVotingBtn {
   background-color: #FEC3C2;
   margin-left: 16px;
-} .ballotContentDiv .voteDiv .imageContent button:disabled {
+} .ballotContentDiv .voteDiv .imageContent #noVotingBtn:hover {
+  color: rgba(0,0,0,0.6);
+}.ballotContentDiv .voteDiv .imageContent button:disabled {
   background-color: #EEEEF0 !important;
   color: rgba(0,0,0,0.6) !important;
 }
@@ -646,6 +647,34 @@
 .contentVotingDiv .ant-form-item {
   margin-top: 8px;
   margin-bottom: 0px;
+  line-height: 1.5;
+}
+
+.contentVotingDiv .ant-form-item p {
+  display: none;
+}
+
+.contentVotingDiv .ant-form-item .ant-input-search-button {
+  width: 208px !important;
+}
+
+.errHint {
+  display: block !important;
+  line-height: 1.5;
+  margin: 0;
+  color:#FC0F1B;
+}
+
+span.errInput input{
+  border-color:#FC0F1B;
+} span.errInput input:focus{
+  border-color: #261BC9;
+}
+
+input.errInput {
+  border-color:#FC0F1B;
+} input.errInput:focus{
+  border-color: #261BC9;
 }
 
 .contentVotingDiv .proposalBody button[type="submit"] {
@@ -657,6 +686,9 @@
   width: 208px;
   height: 40px;
   font-size: 16px;
+} .contentVotingDiv .proposalBody button[type="submit"]:disabled {
+  color: rgba(0,0,0,0.87);
+  background-color: #EEEEF0;
 }
 
 .contentVotingDiv .proposalBody .submitDiv {
@@ -664,6 +696,19 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.contentVotingDiv .proposalBody .divider {
+  display: flex;
+}
+
+.contentVotingDiv .proposalBody .divider > div {
+  flex:100;
+}
+
+.contentVotingDiv .proposalBody .divider > div:first-child {
+  margin-right: 32px;
+}
+
 
 .loading {
 	display: -ms-flexbox;
@@ -691,7 +736,7 @@
 
 .loading-container {
 	position: fixed;
-	z-index: 1000000;
+	z-index: 80;
 	left: 0;
 	right: 0;
 	top: 0;

@@ -56,5 +56,19 @@ class GovImp {
       data: this.govImpInstance.methods.addProposalToChangeMember(target, nMember, nEnode, nIp, nPort, lockAmount, memo).encodeABI()
     }
   }
+
+  /**
+   *
+   * @param {address} member
+   * @param {uint256} lockAmount
+   * @param {bytes} memo
+   */
+  addProposalToRemoveMember (member, lockAmount, memo) {
+    if (!this.govImpInstance || !this.govImpInstance.methods) return
+    return {
+      to: this.addresses.GOV_ADDRESS,
+      data: this.govImpInstance.methods.addProposalToRemoveMember(member, lockAmount, memo).encodeABI()
+    }
+  }
 }
 export { GovImp }

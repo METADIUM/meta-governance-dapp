@@ -2,9 +2,13 @@ import React from 'react'
 import { Layout, Modal } from 'antd'
 import { TopNav, FootNav } from './components/Nav'
 import { StakingModal } from './components/StakingModal'
+import { ErrModal } from './components/ErrorModal'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
 import { BaseLoader } from './components/BaseLoader'
+
+import * as util from './util'
+import { constants } from './ethereum/constants'
 import './App.css'
 
 // web3
@@ -20,14 +24,22 @@ class App extends React.Component {
     balance: 0,
     lockedBalance: 0,
     selectedStakingTopic: 'deposit',
-    amount: 0,
-    eventsWatch: null
+    amount: '1',
+    eventsWatch: null,
+    authorityOriginData: [],
+    errTitle: '',
+    errContent: '',
+    isMember: false
   }
   state = {
     loadWeb3: false,
     nav: '1',
     contractReady: false,
-    stakingModalVisible: false
+    stakingModalVisible: false,
+    buttonLoading: false,
+    errVisible: false,
+    newProposal: false,
+    stakingInvalidErr: false
   };
 
   constructor (props) {
@@ -36,10 +48,17 @@ class App extends React.Component {
     getWeb3Instance().then(async web3Config => {
       console.log(web3Config)
       this.initContracts(web3Config.web3)
+      await this.initAuthorityLists()
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
       this.setState({ loadWeb3: false })
+    })
+  }
+  async initAuthorityLists () {
+    this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
+    Object.keys(this.data.authorityOriginData).forEach((index) => {
+      this.data.authorityOriginData[index].addr = web3Instance.web3.utils.toChecksumAddress(this.data.authorityOriginData[index].addr)
     })
   }
   
@@ -49,10 +68,13 @@ class App extends React.Component {
       web3Instance.defaultAccount = account;
       await this.updateAccountBalance();
       this.setStakingEventsWatch();
+      //TODO: check new
+      this.setState({newProposal: false})
     }else{
       console.log("notChanged");
     }
   }
+
   setStakingEventsWatch(address){
     if (this.data.eventsWatch ){
       let subscription = this.data.eventsWatch;
@@ -82,12 +104,14 @@ class App extends React.Component {
     )
     console.log("Successfully subscribed!");
   }
+
   async updateAccountBalance(){
     this.data.balance = await contracts.staking.balanceOf(web3Instance.defaultAccount)
       this.data.lockedBalance = await contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
       this.data.balance = web3Instance.web3.utils.fromWei(this.data.balance, 'ether')
       this.data.lockedBalance = web3Instance.web3.utils.fromWei(this.data.lockedBalance, 'ether')
-      this.setState({ stakingModalVisible: false })
+      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
+      this.setState({ stakingModalVisible: false, buttonLoading: false })
   }
   
   async initContracts (web3) {
@@ -103,71 +127,117 @@ class App extends React.Component {
         await updateAcount(chagedAccounts[0]);
       })
       this.setStakingEventsWatch();
+      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
     })
   }
 
   onMenuClick = ({ key }) => { this.setState({ nav: key }) }
 
-  getErrModal () {
-    return <Modal
-      title='ERROR'
-      visible={!this.state.loadWeb3}
-      okButtonProps={{ disabled: true }}
-      cancelButtonProps={{ disabled: true }}
-    >
-      <p>This is an unknown network. Please connect to Metadium network</p>
-    </Modal>
+  getErrModal = (_err = 'Unknown Error', _title = 'Unknown Error') => {
+    console.log(typeof(_err))
+    if(_err.includes('error:')) _err = _err.split('error:')[1]
+
+    this.data.errTitle = _title
+    this.data.errContent = _err
+    this.setState({errVisible: true})
   }
 
   getContent () {
     if (!this.state.loadWeb3) return
     switch (this.state.nav) {
-      case '1': return <Authority title='Authority' contracts={contracts} />
-      case '2': return <Voting title='Voting' contracts={contracts} />
+      case '1': return <Authority
+        title='Authority'
+        contracts={contracts}
+        getErrModal={this.getErrModal}
+        authorityOriginData={this.data.authorityOriginData}
+        buttonLoading={this.state.buttonLoading}
+        convertButtonLoading={this.convertButtonLoading}/>
+      case '2': return <Voting
+        title='Voting' contracts={contracts}
+        getErrModal={this.getErrModal}
+        authorityOriginData={this.data.authorityOriginData}
+        convertComponent={this.convertVotingComponent}
+        newProposal={this.state.newProposal}
+        buttonLoading={this.state.buttonLoading}
+        convertButtonLoading={this.convertButtonLoading}
+        isMember={this.data.isMember}/>
       default:
     }
     this.setState({ selectedMenu: true })
   }
 
+  convertVotingComponent = (component) => {
+    switch(component) {
+      case 'voting': this.setState({newProposal: false}); break
+      case 'proposal': this.setState({newProposal: true}); break
+    }
+  }
+
+  convertButtonLoading = (state) => {
+    if(typeof(state) === 'boolean') this.setState({ buttonLoading: state })
+  }
+
   submitMetaStaking = (e) => {
+    if(!/^[1-9]\d*$/.test(this.data.amount)) {
+      this.setState({ stakingModalVisible: false })
+      this.getErrModal('The staking amount format is incorrect.', 'Staking Error')
+      return
+    }
+
+    this.setState({buttonLoading: true})
     let trx = {}
     console.log("before this.data.amount;",this.data.amount )
-    this.data.amount = web3Instance.web3.utils.toWei(this.data.amount, 'ether')
-    console.log("after this.data.amount;",this.data.amount )
+    let amount = web3Instance.web3.utils.toWei(this.data.amount, 'ether')
+    console.log("after this.data.amount;", amount )
     if (this.data.selectedStakingTopic === 'deposit') {
       console.log("Send Transaction for deposit");
       trx = contracts.staking.deposit()
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
-        value: this.data.amount,
+        value: amount,
         to: trx.to,
         data: trx.data
       },  async (err, hash) => {
-        if (err) console.log('err: ', err)
-        else {
+        if (err) {
+          this.getErrModal(err.message, 'Deposit Error')
+          this.setState({ stakingModalVisible: false, buttonLoading: false })
+        } else {
           console.log('hash: ', hash)
         }
       })
     } else {
-      trx = contracts.staking.withdraw(this.data.amount)
+      trx = contracts.staking.withdraw(amount)
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
         to: trx.to,
         data: trx.data
       }, async (err, hash) => {
-        if (err) console.log('err: ', err)
-        else {
+        if (err) {
+          this.getErrModal(err.message, 'Withdraw Error')
+          this.setState({ stakingModalVisible: false, buttonLoading: false })
+        } else {
           console.log('hash: ', hash)
         }
       })
     }
-
-    
   }
 
-  handleSelectChange = (e) => { this.data.selectedStakingTopic = e }
+  handleSelectChange = (e) => {
+    this.data.selectedStakingTopic = e
+    this.setState({})
+  }
 
-  handleInputChange = (e) => { this.data.amount = e.target.value }
+  handleInputChange = (e) => {
+    this.data.amount = e.target.value
+    if(/^[1-9]([0-9]*)$/.test(e.target.value)) this.setState({stakingInvalidErr: false})
+    else this.setState({stakingInvalidErr: true})
+  }
+
+  showStakingModal = () => {
+    this.data.amount = '1'
+    this.data.selectedStakingTopic = 'deposit'
+    this.setState({ stakingModalVisible: true })
+  }
 
   render () {
     return (
@@ -178,7 +248,7 @@ class App extends React.Component {
               <TopNav
                 nav={this.state.nav}
                 onMenuClick={this.onMenuClick}
-                showStakingModal={() => this.setState({ stakingModalVisible: true })}
+                showStakingModal={this.showStakingModal}
                 balance={this.data.balance}
                 lockedBalance={this.data.lockedBalance} />
             </Header>
@@ -186,15 +256,25 @@ class App extends React.Component {
             <StakingModal
               accountBalance={{ balance: this.data.balance, lockedBalance: this.data.lockedBalance }}
               stakingModalVisible={this.state.stakingModalVisible}
-              hideStakingModal={() => this.setState({ stakingModalVisible: false })}
+              hideStakingModal={() => {if(!this.state.buttonLoading) this.setState({ stakingModalVisible: false })}}
               submitMetaStaking={this.submitMetaStaking}
               handleInputChange={this.handleInputChange}
-              handleSelectChange={this.handleSelectChange} />
+              handleSelectChange={this.handleSelectChange}
+              stakingLoading={this.state.buttonLoading}
+              amount={this.data.amount}
+              selectedStakingTopic={this.data.selectedStakingTopic}
+              stakingInvalidErr={this.state.stakingInvalidErr} />
+
+            <ErrModal
+              title={this.data.errTitle}
+              err={this.data.errContent}
+              visible={this.state.errVisible}
+              coloseErrModal = {() => this.setState({ errVisible: !this.state.loadWeb3})} />
 
             <Content style={{ backgroundColor: '##EEEEF0' }}>
               {this.state.loadWeb3
                 ? <div> {this.getContent()} </div>
-                : <div> { this.getErrModal()} </div>
+                : this.getErrModal('This is an unknown network. Please connect to Metadium network', 'Connecting Error')
               }
             </Content>
 
