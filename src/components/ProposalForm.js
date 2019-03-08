@@ -20,7 +20,8 @@ class ProposalForm extends React.Component {
       newNodeErr: false,
       oldLockAmountErr: false,
       oldAddrErr: false,
-      oldNodeErr: false
+      oldNodeErr: false,
+      showLockAmount: ''
     }
 
     onSelectChange = async (value) => {
@@ -160,7 +161,7 @@ class ProposalForm extends React.Component {
           return true
         }
       } else if(this.data.selectedVoteTopic === 'replace') {
-        const oldMemberLockedBalance = Number(await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr))
+        const oldMemberLockedBalance = await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr)
         const newMemberBalance = Number(await this.props.contracts.staking.availableBalanceOf(formData.newAddr))
         const newLockedAmount = Number(formData.newLockAmount)
 
@@ -176,8 +177,8 @@ class ProposalForm extends React.Component {
         } else if(this.props.oldMemberaddr.some((item) => item === formData.oldAddr)) {
           this.props.getErrModal('Address with existing ballot (Old)', 'Proposal Submit Error')
           return true
-        } else if(oldMemberLockedBalance !== newLockedAmount) {
-          this.props.getErrModal('Invalid Replace META Amount', 'Proposal Submit Error')
+        } else if(Number(oldMemberLockedBalance) !== newLockedAmount) {
+        this.props.getErrModal(["Invalid Replace META Amount", <br/>, `(Old Address: ${web3Instance.web3.utils.fromWei(oldMemberLockedBalance, 'ether')} META Locked)`], 'Proposal Submit Error')
           return true
         } else if (newMemberBalance < newLockedAmount) {
           this.props.getErrModal('Not Enough META Stake (New)', 'Proposal Submit Error')
@@ -310,16 +311,32 @@ class ProposalForm extends React.Component {
     getRmoveProposalForm () {
       return (<div className='proposalBody'>
         <Form onSubmit={this.handleSubmit}>
-          <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
-          <Form.Item>
-            <Input type="number" addonAfter='META' name='oldLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.oldLockAmountErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
-            <p className={this.state.oldLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>
-          </Form.Item>
           <p className='subtitle'>Address to be removed <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='oldAddr' onChange={this.handleChange} className={this.state.oldAddrErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
+            <Input.Search
+              name='oldAddr'
+              onChange={this.handleChange}
+              className={this.state.oldAddrErr ? 'errInput' : ''}
+              disabled={this.props.buttonLoading}
+              enterButton={<span><Icon type="search" /><span> Check Balance</span></span>}
+              onSearch = {value => this.showLockAmount(value)}/>
             <p className={this.state.oldAddrErr ? 'errHint' : ''}>Invalid Address</p>
           </Form.Item>
+          <div className="divider">
+            <div>
+              <p className='subtitle'>Locked META Amount</p>
+              <Form.Item>
+                <Input name="showLockAmount" value={this.state.showLockAmount} addonAfter='META' disabled/>
+              </Form.Item>
+            </div>
+            <div>
+              <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
+              <Form.Item>
+                <Input type="number" addonAfter='META' name='oldLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.oldLockAmountErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
+                <p className={this.state.oldLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>
+              </Form.Item>
+            </div>
+          </div>
           <p className='subtitle'>Description</p>
           <Form.Item>
             <TextArea
@@ -370,6 +387,32 @@ class ProposalForm extends React.Component {
           </Form.Item>
         </Form>
       </div>)
+    }
+
+    async showLockAmount(value) {
+      if(!/^0x[a-fA-F0-9]{40}$/.test(value)) {
+        this.props.getErrModal('Invalid Adress', 'Proposal Submit Error')
+        this.setState({showLockAmount: ''})
+        return
+      } else if(!web3Instance.web3.utils.checkAddressChecksum(value)) {
+        value = web3Instance.web3.utils.toChecksumAddress(value)
+      }
+      if(!await this.props.contracts.gov.isMember(value)) {
+        this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
+        this.setState({showLockAmount: ''})
+        return
+      }
+
+      try {
+        let lockedBalance = await this.props.contracts.staking.lockedBalanceOf(value)
+        lockedBalance = web3Instance.web3.utils.fromWei(lockedBalance)
+        this.setState({showLockAmount: lockedBalance})
+      } catch(err) {
+        console.log(err)
+        this.props.getErrModal(err.message, err.name)
+        this.props.convertButtonLoading(false)
+        this.setState({showLockAmount: ''})
+      }
     }
 
     getProposalForm() {
