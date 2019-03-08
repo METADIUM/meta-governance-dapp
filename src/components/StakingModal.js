@@ -17,11 +17,11 @@ const StakingModal = ({ accountBalance, stakingModalVisible, submitMetaStaking, 
       </Button>
     ]}>
     <p>staked { accountBalance.balance } META </p> <p>(Locked { accountBalance.lockedBalance } META)</p>
-    <Select value={selectedStakingTopic} onChange={handleSelectChange}>
+    <Select value={selectedStakingTopic} onChange={handleSelectChange} disabled={stakingLoading}>
       <Option value='deposit'>Deposit Staking</Option>
       <Option value='withdraw'>Withdraw Staking</Option>
     </Select>
-    <Input onChange={handleInputChange} type='number' placeholder='META Amount' addonAfter='META' value={amount} className={stakingInvalidErr ? 'errInput' : ''}/>
+    <Input onChange={handleInputChange} type='number' placeholder='META Amount' addonAfter='META' value={amount} className={stakingInvalidErr ? 'errInput' : ''} disabled={stakingLoading}/>
     <p className={stakingInvalidErr ? 'errHint' : ''}>Invalid Amount</p>
   </Modal>
 

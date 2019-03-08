@@ -134,6 +134,9 @@ class App extends React.Component {
   onMenuClick = ({ key }) => { this.setState({ nav: key }) }
 
   getErrModal = (_err = 'Unknown Error', _title = 'Unknown Error') => {
+    console.log(typeof(_err))
+    if(_err.includes('error:')) _err = _err.split('error:')[1]
+
     this.data.errTitle = _title
     this.data.errContent = _err
     this.setState({errVisible: true})

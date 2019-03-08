@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Progress, Input, Affix, Menu, Modal, Slider } from 'antd'
 import './style/style.css'
 import { ProposalForm } from './ProposalForm'
+import { BaseLoader } from './BaseLoader'
 import * as util from '../util'
 import { web3Instance } from '../ethereum/web3'
 import { constants } from '../ethereum/constants'
@@ -28,7 +29,9 @@ class Voting extends React.Component {
       isUpdated: false,
       didVoted: false,
       position: 'active',
-      updateModal: false
+      updateModal: false,
+      proposalCount: 1,
+      finalizedCount: 1
     }
 
     constructor (props) {
@@ -95,7 +98,7 @@ class Voting extends React.Component {
                 <div className='imageContent'>
                   { !this.props.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
                     ? <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
-                    : <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button> }
+                    : <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} loading={this.props.buttonLoading}>Yes</Button> }
                   <div className='chart'>
                     <div className='number'>
                       <span>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}%</span>
@@ -105,7 +108,7 @@ class Voting extends React.Component {
                   </div>
                   { !this.props.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
                     ? <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
-                    : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button> }
+                    : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} loading={this.props.buttonLoading} >No</Button> }
                 </div>
                 <div className='textContent'>
                   { item.ballotType === constants.ballotTypes.MemberChange
@@ -168,7 +171,11 @@ class Voting extends React.Component {
     }
 
     async onClickVote (e, id) {
-      if (!web3Instance.web3) return
+      this.props.convertButtonLoading(true)
+      if (!web3Instance.web3) {
+        this.props.convertButtonLoading(false)
+        return
+      }
 
       let approval
       if (e === 'N') approval = false
@@ -180,7 +187,11 @@ class Voting extends React.Component {
         to: to,
         data: data
       }, (err, hash) => {
-        if (err) console.log('err: ', err)
+        if (err) {
+          console.log(err)
+          this.props.getErrModal(err.message, err.name)
+          this.props.convertButtonLoading(false)
+        }
         else {
           console.log('hash: ', hash)
           this.getBallotOriginItem()
@@ -203,7 +214,11 @@ class Voting extends React.Component {
         to: trx.to,
         data: trx.data
       }, (err, hash) => {
-        if (err) console.log('err: ', err)
+        if (err) {
+          console.log(err)
+          this.props.getErrModal(err.message, err.name)
+          this.props.convertButtonLoading(false)
+        }
         else this.setState({ isUpdated: true })
       })
     }
@@ -221,6 +236,13 @@ class Voting extends React.Component {
       this.setState({ position: e.key })
     }
 
+    onClickReadMore = (state) => {
+      switch(state) {
+        case 'proposal': this.setState({proposalCount: this.state.proposalCount + 5}); break
+        case 'finalized': this.setState({finalizedCount: this.state.finalizedCount + 5}); break
+      }
+    }
+
     async completeModal (e) {
       let trx = await this.props.contracts.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
       // Using updateMemo
@@ -230,7 +252,11 @@ class Voting extends React.Component {
         to: trx.to,
         data: trx.data
       }, (err, hash) => {
-        if (err) console.log('err: ', err)
+        if (err) {
+          console.log(err)
+          this.props.getErrModal(err.message, err.name)
+          this.props.convertButtonLoading(false)
+        }
         else this.setState({ isUpdated: true })
       })
       this.setState({ updateModal: false })
@@ -285,30 +311,31 @@ class Voting extends React.Component {
                 <p className='changeDay'>{this.data.ballotUpdateData.duration}days</p>
                 <Slider marks={{ 0: '0 days', 60: '3 days', 100: '5days' }} step={20} defaultValue={this.data.ballotUpdateData.duration * 20} tooltipVisible={false} onChange={this.sliderChange} />
               </Modal>
-              <div className='contentDiv'>
-                <p className='stateTitle' ref={ref => { this.activeTitle = ref }}>Active</p>
-                {this.state.isBallotLoading ? this.data.activeItems : <div>empty</div> }
-                <p className='stateTitle' ref={ref => { this.proposalTitle = ref }}>Proposals</p>
-                {this.state.isBallotLoading ? this.data.proposalItems : <div>empty</div> }
-                {this.data.proposalItems.length > 0
+                {!this.state.isBallotLoading ? <div><BaseLoader /></div> :
+                <div className='contentDiv'>
+                  <p className='stateTitle' ref={ref => { this.activeTitle = ref }}>Active</p>
+                  {this.data.activeItems}
+                  <p className='stateTitle' ref={ref => { this.proposalTitle = ref }}>Proposals</p>
+                  {this.data.proposalItems.slice(0, this.state.proposalCount)}
+                  {this.data.proposalItems.length > 0
                   ? <div className='moreDiv'>
-                    <Button value='large'>
+                    <Button value='large' onClick={(e) => this.onClickReadMore('proposal')}>
                       <span>+</span>
                       <span className='text_btn'>Read More</span>
                     </Button>
                   </div>
                   : null}
-                <p className='stateTitle'ref={ref => { this.finalizedTitle = ref }}>Finalized</p>
-                {this.state.isBallotLoading ? this.data.finalizedItems : <div>empty</div>}
-                {this.data.finalizedItems.length > 0
+                  <p className='stateTitle'ref={ref => { this.finalizedTitle = ref }}>Finalized</p>
+                  {this.data.finalizedItems.slice(0, this.state.finalizedCount)}
+                  {this.data.finalizedItems.length > 0
                   ? <div className='moreDiv'>
-                    <Button value='large'>
+                    <Button value='large' onClick={(e) => this.onClickReadMore('finalized')}>
                       <span>+</span>
                       <span className='text_btn'>Read More</span>
                     </Button>
                   </div>
                   : null}
-              </div>
+                </div>}
             </div>
             : <div>
               <ProposalForm

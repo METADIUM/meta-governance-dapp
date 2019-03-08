@@ -141,15 +141,14 @@ class ProposalForm extends React.Component {
     }
 
     async handleProposalError(formData) {
-      let memberBalance, oldMemberLockedBalance, lockedAmount
       if (!await this.props.contracts.gov.isMember(web3Instance.defaultAccount)) {
         this.props.getErrModal('You are not member', 'Proposal Submit Error')
         return true
       }
 
       if(this.data.selectedVoteTopic === 'add') {
-        memberBalance = Number(await this.props.contracts.staking.availableBalanceOf(formData.newAddr))
-        lockedAmount = Number(formData.newLockAmount)
+        const newMemberBalance = Number(await this.props.contracts.staking.availableBalanceOf(formData.newAddr))
+        const newLockedAmount = Number(formData.newLockAmount)
 
         if(await this.props.contracts.gov.isMember(formData.newAddr)) {
           this.props.getErrModal('Existing Member Address (New)', 'Proposal Submit Error')
@@ -157,14 +156,14 @@ class ProposalForm extends React.Component {
         } else if(this.props.newMemberaddr.some((item) => item === formData.newAddr)) {
           this.props.getErrModal('Address with existing ballot (New)', 'Proposal Submit Error')
           return true
-        } else if (memberBalance < lockedAmount) {
+        } else if (newMemberBalance < newLockedAmount) {
           this.props.getErrModal('Not Enough META Stake (New)', 'Proposal Submit Error')
           return true
         }
       } else if(this.data.selectedVoteTopic === 'replace') {
-        oldMemberLockedBalance = Number(await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr))
-        memberBalance = Number(await this.props.contracts.staking.availableBalanceOf(formData.newAddr))
-        lockedAmount = Number(formData.newLockAmount)
+        const oldMemberLockedBalance = Number(await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr))
+        const newMemberBalance = Number(await this.props.contracts.staking.availableBalanceOf(formData.newAddr))
+        const newLockedAmount = Number(formData.newLockAmount)
 
         if(await this.props.contracts.gov.isMember(formData.newAddr)) {
           this.props.getErrModal('Existing Member Address (New)', 'Proposal Submit Error')
@@ -178,16 +177,16 @@ class ProposalForm extends React.Component {
         } else if(this.props.oldMemberaddr.some((item) => item === formData.oldAddr)) {
           this.props.getErrModal('Address with existing ballot (Old)', 'Proposal Submit Error')
           return true
-        } else if(oldMemberLockedBalance !== lockedAmount) {
+        } else if(oldMemberLockedBalance !== newLockedAmount) {
           this.props.getErrModal('Invalid Replace META Amount', 'Proposal Submit Error')
           return true
-        } else if (memberBalance < lockedAmount) {
+        } else if (newMemberBalance < newLockedAmount) {
           this.props.getErrModal('Not Enough META Stake (New)', 'Proposal Submit Error')
           return true
         }
       } else if(this.data.selectedVoteTopic === 'remove') {
-        memberBalance = Number(await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr))
-        lockedAmount = Number(formData.oldLockAmount)
+        const oldMemberBalance = Number(await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr))
+        const oldLockedAmount = Number(formData.oldLockAmount)
 
         if(!await this.props.contracts.gov.isMember(formData.oldAddr)) {
           this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
@@ -195,7 +194,7 @@ class ProposalForm extends React.Component {
         } else if(this.props.oldMemberaddr.some((item) => item === formData.oldAddr)) {
           this.props.getErrModal('Address with existing ballot (Old)', 'Proposal Submit Error')
           return true
-        } else if(memberBalance !== lockedAmount) {
+        } else if(oldMemberBalance < oldLockedAmount) {
           this.props.getErrModal('Invalid META Unlock Amount', 'Proposal Submit Error')
           return true
         }
@@ -208,27 +207,27 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='newAddr' onChange={this.handleChange} className={this.state.newAddrErr ? 'errInput' : ''}/>
+            <Input name='newAddr' onChange={this.handleChange} className={this.state.newAddrErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
             <p className={this.state.newAddrErr ? 'errHint' : ''}>Invalid Address</p>
           </Form.Item>
           <div className="divider">
             <div>
               <p className='subtitle'>Node Name <span className='required'>*</span></p>
               <Form.Item>
-                <Input name='newName' onChange={this.handleChange}/>
+                <Input name='newName' onChange={this.handleChange} disabled={this.props.buttonLoading}/>
               </Form.Item>
             </div>
             <div>
               <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
               <Form.Item>
-                <Input type="number" addonAfter='META' name='newLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.newLockAmountErr ? 'errInput' : ''}/>
+                <Input type="number" addonAfter='META' name='newLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.newLockAmountErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
                 <p className={this.state.newLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>
               </Form.Item>
             </div>
           </div>
           <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''}/>
+            <Input name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
             <p className={this.state.newNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
           <p className='subtitle'>Description</p>
@@ -239,6 +238,7 @@ class ProposalForm extends React.Component {
               autosize={{ minRows: 4, maxRows: 4 }}
               name='memo'
               onChange={this.handleChange}
+              disabled={this.props.buttonLoading}
             />
           </Form.Item>
           <Form.Item>
@@ -255,37 +255,37 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <p className='subtitle'>Old Authority Address <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='oldAddr' onChange={this.handleChange} className={this.state.oldAddrErr ? 'errInput' : ''}/>
+            <Input name='oldAddr' onChange={this.handleChange} className={this.state.oldAddrErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
             <p className={this.state.oldAddrErr ? 'errHint' : ''}>Invalid Address</p>
           </Form.Item>
           <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='newAddr' onChange={this.handleChange} className={this.state.newAddrErr ? 'errInput' : ''}/>
+            <Input name='newAddr' onChange={this.handleChange} className={this.state.newAddrErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
             <p className={this.state.newAddrErr ? 'errHint' : ''}>Invalid Address</p>
           </Form.Item>
           <div className="divider">
             <div>
               <p className='subtitle'>Node Name <span className='required'>*</span></p>
               <Form.Item>
-                <Input name='newName' onChange={this.handleChange}/>
+                <Input name='newName' onChange={this.handleChange} disabled={this.props.buttonLoading}/>
               </Form.Item>
             </div>
             <div>
               <p className='subtitle'>Replace META Amount <span className='required'>*</span></p>
               <Form.Item>
-                <Input type='number' addonAfter='META' name='newLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.newLockAmountErr ? 'errInput' : ''} />
+                <Input type='number' addonAfter='META' name='newLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.newLockAmountErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
                 <p className={this.state.newLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>
               </Form.Item>
             </div>
           </div>
           <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''}/>
+            <Input name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
             <p className={this.state.newNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
           <p className='subtitle'>Old Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='oldNode' onChange={this.handleChange} className={this.state.oldNodeErr ? 'errInput' : ''}/>
+            <Input name='oldNode' onChange={this.handleChange} className={this.state.oldNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
             <p className={this.state.oldNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
           <p className='subtitle'>Description </p>
@@ -296,6 +296,7 @@ class ProposalForm extends React.Component {
               autosize={{ minRows: 4, maxRows: 4 }}
               name='memo'
               onChange={this.handleChange}
+              disabled={this.props.buttonLoading}
             />
           </Form.Item>
           <Form.Item>
@@ -312,12 +313,12 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
           <Form.Item>
-            <Input type="number" addonAfter='META' name='oldLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.oldLockAmountErr ? 'errInput' : ''}/>
+            <Input type="number" addonAfter='META' name='oldLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.oldLockAmountErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
             <p className={this.state.oldLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>
           </Form.Item>
           <p className='subtitle'>Address to be removed <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='oldAddr' onChange={this.handleChange} className={this.state.oldAddrErr ? 'errInput' : ''}/>
+            <Input name='oldAddr' onChange={this.handleChange} className={this.state.oldAddrErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
             <p className={this.state.oldAddrErr ? 'errHint' : ''}>Invalid Address</p>
           </Form.Item>
           <p className='subtitle'>Description</p>
@@ -328,6 +329,7 @@ class ProposalForm extends React.Component {
               autosize={{ minRows: 4, maxRows: 4 }}
               name='memo'
               onChange={this.handleChange}
+              disabled={this.props.buttonLoading}
             />
           </Form.Item>
           <Form.Item>
@@ -344,11 +346,11 @@ class ProposalForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <p className='subtitle'>New Node Name <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='newName' onChange={this.handleChange}/>
+            <Input name='newName' onChange={this.handleChange} disabled={this.props.buttonLoading}/>
           </Form.Item>
           <p className='subtitle'>New Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input type='primary' name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''}/>
+            <Input type='primary' name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
             <p className={this.state.newNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
           <p className='subtitle'>Description</p>
@@ -359,6 +361,7 @@ class ProposalForm extends React.Component {
               autosize={{ minRows: 4, maxRows: 4 }}
               name='memo'
               onChange={this.handleChange}
+              disabled={this.props.buttonLoading}
             />
           </Form.Item>
           <Form.Item>
