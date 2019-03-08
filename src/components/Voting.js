@@ -30,8 +30,8 @@ class Voting extends React.Component {
       didVoted: false,
       position: 'active',
       updateModal: false,
-      proposalCount: 1,
-      finalizedCount: 1
+      proposalCount: 5,
+      finalizedCount: 5
     }
 
     constructor (props) {
@@ -77,13 +77,16 @@ class Voting extends React.Component {
       // Use origin data in contract
 
       this.data.ballotBasicOriginData.map((item, index) => {
-        this.data.newMemberaddr.push(this.data.ballotMemberOriginData[item.id].newMemberAddress)
-        this.data.oldMemberaddr.push(this.data.ballotMemberOriginData[item.id].oldMemberAddress)
+        const newMemberAddress = this.data.ballotMemberOriginData[item.id].newMemberAddress
+        const oldMemberAddress = this.data.ballotMemberOriginData[item.id].oldMemberAddress
+
+        this.data.newMemberaddr.push(newMemberAddress)
+        this.data.oldMemberaddr.push(oldMemberAddress)
         list.push(
           <div className={'ballotDiv state' + item.state} state={item.state} key={list.length} id={item.id} ref={ref => this.ballotDestals.set(index, ref)}>
             <div className='ballotInfoDiv'>
               <div className='infoLeft'>
-                <p className='topic'>{constants.ballotTypesArr[parseInt(item.ballotType)]}</p>
+                <p className='topic'>{this.setTopic(constants.ballotTypesArr[parseInt(item.ballotType)], newMemberAddress, oldMemberAddress)}</p>
                 <p className='company'>{this.data.authorityNames.get(item.creator)}</p>
                 <p className='addr'>Proposal Address: {item.creator}</p>
               </div>
@@ -111,9 +114,7 @@ class Voting extends React.Component {
                     : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} loading={this.props.buttonLoading} >No</Button> }
                 </div>
                 <div className='textContent'>
-                  { item.ballotType === constants.ballotTypes.MemberChange
-                    ? <p className='description'>Old Authority Address: {this.data.ballotMemberOriginData[item.id].oldMemberAddress}<br />New Authority Address: {this.data.ballotMemberOriginData[item.id].newMemberAddress}<br />META To be Locked: {this.data.ballotMemberOriginData[item.id].lockAmount}</p>
-                    : <p className='description'>New Authority Address: {this.data.ballotMemberOriginData[item.id].newMemberAddress}<br />META To be Locked: {this.data.ballotMemberOriginData[item.id].lockAmount}</p>}
+                  {this.setDescription(item.ballotType, newMemberAddress, oldMemberAddress, item.id)}
                   <div className='duration'>
                     { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected || item.state === constants.ballotState.InProgress
                       ? <div>
@@ -144,6 +145,44 @@ class Voting extends React.Component {
 
       this.getBallotDetailInfo()
       this.setState({ isBallotLoading: true })
+    }
+
+    setTopic(topic, newAddr, oldAddr) {
+      if(newAddr === oldAddr) topic = 'MemberUpdate'
+      return topic
+    }
+
+    setDescription(type, newAddr, oldAddr, id) {
+      const lockAmount = web3Instance.web3.utils.fromWei(this.data.ballotMemberOriginData[id].lockAmount, 'ether')
+      switch(type) {
+        case constants.ballotTypes.MemverAdd:
+          return <p className='description'>
+            New Authority Address: {newAddr}<br />
+            META To be Locked: {lockAmount}META
+          </p>
+        case constants.ballotTypes.MemberRemoval:
+          return <p className='description'>
+            Address To be Removed: {oldAddr}<br />
+            META To be Locked: {lockAmount}META
+          </p>
+        case constants.ballotState.MemberChange:
+          if(newAddr === oldAddr) {
+            return <p className='description'>
+            META To be Locked: {lockAmount}META
+          </p>
+          } else {
+            return <p className='description'>
+            Old Authority Address: {oldAddr}<br />
+            New Authority Address: {newAddr}<br />
+            META To be Locked: {lockAmount}META
+          </p>
+          }
+        default:
+          return <p className='description'>
+          New Authority Address: {newAddr}<br />
+          META To be Locked: {lockAmount}META
+        </p>
+      }
     }
 
     getBallotDetailInfo () {

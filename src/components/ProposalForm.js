@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, Select, Input, Form, Icon } from 'antd'
 import './style/style.css'
-import { Voting } from './Voting'
 import { web3Instance } from '../ethereum/web3'
 import { constants } from '../ethereum/constants'
 import * as util from '../util'
