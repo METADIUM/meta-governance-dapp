@@ -174,7 +174,10 @@ class App extends React.Component {
   }
 
   convertButtonLoading = (state) => {
-    if(typeof(state) === 'boolean') this.setState({ buttonLoading: state })
+    if(typeof(state) === 'boolean') {
+      console.log("button loading", state)
+      this.setState({ buttonLoading: state })
+    } 
   }
 
   submitMetaStaking = (e) => {

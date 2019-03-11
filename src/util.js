@@ -59,7 +59,7 @@ function refine (m) {
 
 function refineBallotBasic (m) {
   if (!m) return null
-  if(m.state === '2' && m.startTime * 1000 < Date.now()) m.state = '4'
+  if(m.state === '2' && m.endTime * 1000 < Date.now()) m.state = '4'
   Object.keys(m).forEach(key => {
     if (!isNaN(key)) return delete m[key]
     switch (key) {

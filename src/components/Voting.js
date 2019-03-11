@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Progress, Input, Affix, Menu, Modal, Slider } from 'antd'
+import { Button, Progress, Input, Affix, Menu, Modal, Slider, Icon } from 'antd'
 import './style/style.css'
 import { ProposalForm } from './ProposalForm'
 import { BaseLoader } from './BaseLoader'
@@ -101,7 +101,7 @@ class Voting extends React.Component {
                 <div className='imageContent'>
                   { !this.props.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
                     ? <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
-                    : <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} loading={this.props.buttonLoading}>Yes</Button> }
+                    : <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)}>Yes</Button> }
                   <div className='chart'>
                     <div className='number'>
                       <span>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}%</span>
@@ -111,7 +111,7 @@ class Voting extends React.Component {
                   </div>
                   { !this.props.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
                     ? <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
-                    : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} loading={this.props.buttonLoading} >No</Button> }
+                    : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)}>No</Button> }
                 </div>
                 <div className='textContent'>
                   {this.setDescription(item.ballotType, newMemberAddress, oldMemberAddress, item.id)}
@@ -233,7 +233,7 @@ class Voting extends React.Component {
         }
         else {
           console.log('hash: ', hash)
-          this.getBallotOriginItem()
+          this.getOriginData()
           this.setState({ didVoted: true })
         }
       })
@@ -246,6 +246,7 @@ class Voting extends React.Component {
         this.setState({ updateModal: true })
         return
       } else {
+        this.props.convertButtonLoading(true)
         trx = this.props.contracts.ballotStorage.cancelBallot(id)
       }
       web3Instance.web3.eth.sendTransaction({
@@ -264,11 +265,11 @@ class Voting extends React.Component {
 
     onClickSubMenu = (e) => {
       switch (e.key) {
-        case 'active': window.scrollTo(0, this.activeTitle.offsetTop - 70)
+        case 'active': if(this.activeTitle) window.scrollTo(0, this.activeTitle.offsetTop - 70)
           break
-        case 'proposal': window.scrollTo(0, this.proposalTitle.offsetTop - 70)
+        case 'proposal': if(this.proposalTitle) window.scrollTo(0, this.proposalTitle.offsetTop - 70)
           break
-        case 'finalized': window.scrollTo(0, this.finalizedTitle.offsetTop - 70)
+        case 'finalized': if(this.finalizedTitle) window.scrollTo(0, this.finalizedTitle.offsetTop - 70)
           break
         default: break
       }
@@ -283,6 +284,7 @@ class Voting extends React.Component {
     }
 
     async completeModal (e) {
+      this.props.convertButtonLoading(true)
       let trx = await this.props.contracts.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
       // Using updateMemo
       // trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
@@ -350,7 +352,7 @@ class Voting extends React.Component {
                 <p className='changeDay'>{this.data.ballotUpdateData.duration}days</p>
                 <Slider marks={{ 0: '0 days', 60: '3 days', 100: '5days' }} step={20} defaultValue={this.data.ballotUpdateData.duration * 20} tooltipVisible={false} onChange={this.sliderChange} />
               </Modal>
-                {!this.state.isBallotLoading ? <div><BaseLoader /></div> :
+                {!this.state.isBallotLoading || this.props.buttonLoading ? <div><BaseLoader/></div> : null}
                 <div className='contentDiv'>
                   <p className='stateTitle' ref={ref => { this.activeTitle = ref }}>Active</p>
                   {this.data.activeItems}
@@ -374,7 +376,7 @@ class Voting extends React.Component {
                     </Button>
                   </div>
                   : null}
-                </div>}
+                </div>
             </div>
             : <div>
               <ProposalForm
