@@ -352,7 +352,7 @@ class ProposalForm extends React.Component {
               </Form.Item>
             </div>
             <div>
-              <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
+              <p className='subtitle'>META Amount to be unlocked <span className='required'>*</span></p>
               <Form.Item>
                 <Input type="number" addonAfter='META' name='oldLockAmount' defaultValue={constants.limitAmount.stakingMin} onChange={this.handleChange} className={this.state.oldLockAmountErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
                 <p className={this.state.oldLockAmountErr ? 'errHint' : ''}>Invalid Amount</p>

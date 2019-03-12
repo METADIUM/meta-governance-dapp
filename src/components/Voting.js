@@ -58,7 +58,7 @@ class Voting extends React.Component {
       this.getOriginData()
     }
 
-    async reloadVoting(component,) {
+    async reloadVoting(component) {
       if(component) this.props.convertComponent(component)
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
       this.data.ballotBasicOriginData = []
@@ -124,9 +124,9 @@ class Voting extends React.Component {
             <div className='ballotContentDiv'>
               <div className='voteDiv'>
                 <div className='imageContent'>
-                  { !this.props.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                    ? <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)} >Yes</Button>
-                    : <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id)}>Yes</Button> }
+                  { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                    ? <Button disabled id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id, item.endTime, this.state)} >Yes</Button>
+                    : <Button id='yesVotingBtn' onClick={() => this.onClickVote('Y', item.id, item.endTime, this.state)}>Yes</Button> }
                   <div className='chart'>
                     <div className='number'>
                       <span>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}%</span>
@@ -134,9 +134,9 @@ class Voting extends React.Component {
                     </div>
                     <Progress percent={item.powerOfAccepts} status='active' showInfo={false} />
                   </div>
-                  { !this.props.isMember || item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-                    ? <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)} >No</Button>
-                    : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id)}>No</Button> }
+                  { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
+                    ? <Button disabled id='noVotingBtn' onClick={() => this.onClickVote('N', item.id, item.endTime, this.state)} >No</Button>
+                    : <Button id='noVotingBtn' onClick={() => this.onClickVote('N', item.id, item.endTime, this.state)}>No</Button> }
                 </div>
                 <div className='textContent'>
                   {this.setDescription(item.ballotType, newMemberAddress, oldMemberAddress, item.id)}
@@ -144,7 +144,7 @@ class Voting extends React.Component {
                     { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected || item.state === constants.ballotState.InProgress
                       ? <div>
                         <div><span>Start : </span><span>{item.startTime}</span></div>
-                        <div><span>End : </span><span>{item.endTime}</span></div>
+                        <div><span>End : </span><span>{item.endTimeConverted}</span></div>
                       </div> : null }
                     { item.state === constants.ballotState.Ready
                       ? <div>
@@ -187,7 +187,7 @@ class Voting extends React.Component {
         case constants.ballotTypes.MemberRemoval:
           return <p className='description'>
             Address To be Removed: {oldAddr}<br />
-            META To be Locked: {lockAmount}META
+            META Amount to be unlocked: {lockAmount}META
           </p>
         case constants.ballotTypes.MemberChange:
           if(newAddr === oldAddr) {
@@ -259,12 +259,21 @@ class Voting extends React.Component {
       });
     }
 
-    async onClickVote (e, id) {
-      this.props.convertButtonLoading(true)
+    async onClickVote (e, id, endTime, state) {
+      console.log(new Date(endTime * 1000))
       if (!web3Instance.web3) {
-        this.props.convertButtonLoading(false)
+        this.props.getErrModal("web3 is not exist", "Voting Error")
+        return
+      } else if (!this.props.isMember) {
+        this.props.getErrModal("You are not member", "Voting Error")
+        return
+      } else if( state === '2' && new Date(endTime * 1000) < Date.now()) {
+        this.props.getErrModal("This Ballot is timeouted", "Voting Error")
+        this.reloadVoting(false)
         return
       }
+
+      this.props.convertButtonLoading(true)
 
       let approval
       if (e === 'N') approval = false

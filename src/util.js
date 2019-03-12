@@ -65,7 +65,7 @@ function refineBallotBasic (m) {
     switch (key) {
       case 'creator': m[key] = web3Instance.web3.utils.toChecksumAddress(m[key]); break
       case 'startTime': m[key] = timeConverter(m[key]); break
-      case 'endTime': m[key] = timeConverter(m[key]); break
+      case 'endTime': m.endTimeConverted = timeConverter(m[key]); break
       case 'memo': m[key] = convertHexToString(m[key]); break
       case 'duration': m[key] /= dayTimestamp; break
       case 'powerOfRejects':
