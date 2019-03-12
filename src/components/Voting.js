@@ -40,18 +40,29 @@ class Voting extends React.Component {
       this.onClickVote = this.onClickVote.bind(this)
       this.onClickUpdateProposal = this.onClickUpdateProposal.bind(this)
       this.completeModal = this.completeModal.bind(this)
+      this.reloadVoting = this.reloadVoting.bind(this)
 
       this.activeTitle = null;
       this.proposalTitle = null;
       this.finalizedTitle = null;
       this.ballotDestals = new Map();
+      this.ballotDurations = new Map();
     }
 
     async componentDidMount () {
       this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
       this.props.authorityOriginData.map(item => this.data.authorityNames.set(item.addr, item.title))
-      console.log(this.data.authorityNames)
       this.getOriginData()
+    }
+
+    async reloadVoting(component,) {
+      if(component) this.props.convertComponent(component)
+      this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
+      this.data.ballotBasicOriginData = []
+      this.data.newMemberaddr = []
+      this.data.oldMemberaddr = []
+      await this.getOriginData()
+      this.props.convertButtonLoading(false)
     }
 
     async getOriginData () {
@@ -74,14 +85,17 @@ class Voting extends React.Component {
     async getBallotOriginItem () {
       if (!this.data.ballotBasicOriginData || !this.data.ballotMemberOriginData) return
       let list = []
+
       // Use origin data in contract
 
       this.data.ballotBasicOriginData.map((item, index) => {
         const newMemberAddress = this.data.ballotMemberOriginData[item.id].newMemberAddress
         const oldMemberAddress = this.data.ballotMemberOriginData[item.id].oldMemberAddress
 
-        this.data.newMemberaddr.push(newMemberAddress)
-        this.data.oldMemberaddr.push(oldMemberAddress)
+        if(item.state == '1' || item.state == '2') {
+          this.data.newMemberaddr.push(newMemberAddress)
+          this.data.oldMemberaddr.push(oldMemberAddress)
+        }
         list.push(
           <div className={'ballotDiv state' + item.state} state={item.state} key={list.length} id={item.id} ref={ref => this.ballotDestals.set(index, ref)}>
             <div className='ballotInfoDiv'>
@@ -123,8 +137,8 @@ class Voting extends React.Component {
                       </div> : null }
                     { item.state === constants.ballotState.Ready
                       ? <div>
-                        <div><span>duration</span><span>{item.duration === 0? 1 : item.duration}days</span></div>
-                        <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id)}>Change</Button>
+                        <div><span>duration</span><span className="days" ref={ref => this.ballotDurations.set(item.id, ref)}>{item.duration === 0? 1 : item.duration}days</span></div>
+                        <Button type='primary' onClick={() => this.onClickUpdateProposal('change', item.id, index, newMemberAddress, oldMemberAddress)}>Change</Button>
                       </div> : null }
                   </div>
                 </div>
@@ -135,7 +149,7 @@ class Voting extends React.Component {
               </div>
               { item.state === '1'
                 ? <div className='revokeDiv'>
-                  <Button onClick={() => this.onClickUpdateProposal('revoke', item.id)}>Revoke</Button>
+                  <Button onClick={() => this.onClickUpdateProposal('revoke', item.id, index, newMemberAddress, oldMemberAddress)}>Revoke</Button>
                 </div> : null }
             </div>
           </div>
@@ -165,7 +179,7 @@ class Voting extends React.Component {
             Address To be Removed: {oldAddr}<br />
             META To be Locked: {lockAmount}META
           </p>
-        case constants.ballotState.MemberChange:
+        case constants.ballotTypes.MemberChange:
           if(newAddr === oldAddr) {
             return <p className='description'>
             META To be Locked: {lockAmount}META
@@ -233,16 +247,45 @@ class Voting extends React.Component {
         }
         else {
           console.log('hash: ', hash)
-          this.getOriginData()
-          this.setState({ didVoted: true })
+          this.waitForReceipt(hash, async (receipt)=>{
+            console.log("Updated :",receipt);
+            if(receipt.status) this.reloadVoting(false)
+            else this.props.getErrModal("You don't have voting authority", "Voting Error", receipt.transactionHash)
+          });
         }
       })
     }
 
-    async onClickUpdateProposal (e, id) {
+    waitForReceipt = (hash,cb) =>{
+      console.log('Start waitForReceipt: ', hash);
+      var waitFortxn = this.waitForReceipt.bind(this)
+      web3Instance.web3.eth.getTransactionReceipt(hash, function (err, receipt) {
+        console.log('getTransactionReceipt: ', receipt);
+        if (err) {
+           console.log('err: ', err)
+        }
+        if (receipt  === undefined || receipt === null){
+          console.log('Try again in 1 second')
+          // Try again in 1 second
+          window.setTimeout(function () {
+            console.log('timeout...')
+            waitFortxn(hash, cb);
+          }, 1000);
+        } else {
+          console.log('receipt : ', receipt)
+          // Transaction went through
+          if (cb) {
+            cb(receipt);
+          }
+        }
+      });
+    }
+
+    async onClickUpdateProposal (e, id, index, newMemberAddress, oldMemberAddress) {
       this.data.curBallotIdx = id
       let trx
       if (e === 'change') {
+        this.data.ballotUpdateData.duration = this.ballotDurations.get(this.data.curBallotIdx).innerHTML.replace('days','')
         this.setState({ updateModal: true })
         return
       } else {
@@ -259,7 +302,19 @@ class Voting extends React.Component {
           this.props.getErrModal(err.message, err.name)
           this.props.convertButtonLoading(false)
         }
-        else this.setState({ isUpdated: true })
+        else{
+          console.log("hash:",hash) 
+          this.waitForReceipt(hash, (receipt)=>{
+            console.log("Updated :",receipt);
+            this.props.convertButtonLoading(false)
+            if(receipt.status) {
+              this.ballotDestals.get(index).style.display = 'none'
+              this.data.newMemberaddr = this.data.newMemberaddr.filter(value => value !== newMemberAddress)
+              this.data.oldMemberaddr = this.data.oldMemberaddr.filter(value => value !== oldMemberAddress)
+            }
+            else this.props.getErrModal("You don't have revoke authority", "Revoke Error", receipt.transactionHash)
+          });
+        }
       })
     }
 
@@ -286,6 +341,7 @@ class Voting extends React.Component {
     async completeModal (e) {
       this.props.convertButtonLoading(true)
       let trx = await this.props.contracts.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.data.ballotUpdateData.duration))
+      
       // Using updateMemo
       // trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.data.ballotUpdateData.memo))
       web3Instance.web3.eth.sendTransaction({
@@ -294,11 +350,18 @@ class Voting extends React.Component {
         data: trx.data
       }, (err, hash) => {
         if (err) {
-          console.log(err)
           this.props.getErrModal(err.message, err.name)
           this.props.convertButtonLoading(false)
         }
-        else this.setState({ isUpdated: true })
+        else {
+          this.setState({ isUpdated: true })
+          this.waitForReceipt(hash, (receipt)=>{
+            console.log("Updated :",receipt);
+            this.props.convertButtonLoading(false)
+            if(receipt.status) this.ballotDurations.get(this.data.curBallotIdx).innerHTML = this.data.ballotUpdateData.duration + 'days'
+            else this.props.getErrModal("You don't have change authority", "Change Error", receipt.transactionHash)
+          });
+        }
       })
       this.setState({ updateModal: false })
     }
@@ -325,7 +388,7 @@ class Voting extends React.Component {
                         <span>+</span>
                         <span className='text_btn'>New Proposal</span>
                       </Button>
-                      : <Button className='apply_proposal_Btn' onClick={e => this.props.convertComponent('proposal')}>
+                      : <Button className='apply_proposal_Btn' onClick={e => this.props.convertComponent('proposal')} loading={!this.state.isBallotLoading || this.props.buttonLoading}>
                         <span>+</span>
                         <span className='text_btn'>New Proposal</span>
                       </Button>}
@@ -350,7 +413,7 @@ class Voting extends React.Component {
                 onOk={this.completeModal}
                 onCancel={e => this.setState({ updateModal: false })} >
                 <p className='changeDay'>{this.data.ballotUpdateData.duration}days</p>
-                <Slider marks={{ 0: '0 days', 60: '3 days', 100: '5days' }} step={20} defaultValue={this.data.ballotUpdateData.duration * 20} tooltipVisible={false} onChange={this.sliderChange} />
+                <Slider marks={{ 0: '0 days', 60: '3 days', 100: '5days' }} step={20} value={this.data.ballotUpdateData.duration * 20} tooltipVisible={false} onChange={this.sliderChange} />
               </Modal>
                 {!this.state.isBallotLoading || this.props.buttonLoading ? <div><BaseLoader/></div> : null}
                 <div className='contentDiv'>
@@ -384,9 +447,10 @@ class Voting extends React.Component {
                 getErrModal={this.props.getErrModal}
                 newMemberaddr={this.data.newMemberaddr}
                 oldMemberaddr={this.data.oldMemberaddr}
-                convertComponent={this.props.convertComponent}
+                convertComponent={this.reloadVoting.bind(this)}
                 buttonLoading={this.props.buttonLoading}
-                convertButtonLoading={this.props.convertButtonLoading}/>
+                convertButtonLoading={this.props.convertButtonLoading}
+                waitForReceipt={this.waitForReceipt}/>
             </div>
           }
         </div>

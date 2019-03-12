@@ -29,6 +29,7 @@ class App extends React.Component {
     authorityOriginData: [],
     errTitle: '',
     errContent: '',
+    errLink: null,
     isMember: false
   }
   state = {
@@ -133,12 +134,13 @@ class App extends React.Component {
 
   onMenuClick = ({ key }) => { this.setState({ nav: key }) }
 
-  getErrModal = (_err = 'Unknown Error', _title = 'Unknown Error') => {
+  getErrModal = (_err = 'Unknown Error', _title = 'Unknown Error', _link = false) => {
     console.log(typeof(_err))
     if(_err.includes('error:')) _err = _err.split('error:')[1]
 
     this.data.errTitle = _title
     this.data.errContent = _err
+    if(_link) this.data.errLink = constants.NETWORKS[web3Instance.netId] + _link
     this.setState({errVisible: true})
   }
 
@@ -271,6 +273,7 @@ class App extends React.Component {
             <ErrModal
               title={this.data.errTitle}
               err={this.data.errContent}
+              link={this.data.errLink}
               visible={this.state.errVisible}
               coloseErrModal = {() => this.setState({ errVisible: !this.state.loadWeb3})} />
 

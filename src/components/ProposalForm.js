@@ -70,7 +70,7 @@ class ProposalForm extends React.Component {
 
     checkAddr = (addr) => /^0x[a-fA-F0-9]{40}$/.test(addr)
 
-    checkNode = (node) => /^[a-fA-F0-9]+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})$/.test(node)
+    checkNode = (node) => /^([a-fA-F0-9]{128})+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})$/.test(node)
 
     /* Submit form data. */
     handleSubmit = async (e) => {
@@ -109,13 +109,14 @@ class ProposalForm extends React.Component {
             formData.memo
           )
         } else if(this.data.selectedVoteTopic === 'update') {
+          let myLockBalance = await this.props.contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
           trx = this.props.contracts.govImp.addProposalToChangeMember(
             web3Instance.defaultAccount,
             web3Instance.defaultAccount,
             formData.newNode.node,
             formData.newNode.ip,
             formData.newNode.port,
-            await this.props.contracts.staking.lockedBalanceOf(web3Instance.defaultAccount),
+            myLockBalance,
             formData.memo
           )
         } else return
@@ -130,7 +131,16 @@ class ProposalForm extends React.Component {
             this.props.convertButtonLoading(false)
             return
           }
-          else console.log('hash: ', hash)
+          else {
+            console.log("hash:",hash) 
+            this.props.waitForReceipt(hash, async (receipt)=>{
+              console.log("Updated :",receipt);
+              if(receipt.status) {
+                await this.props.convertComponent('voting')
+              }
+              else this.props.getErrModal("You don't have proposal submit authority", "Proposal Submit Error", receipt.transactionHash)
+            });
+          }
         })
       } catch(err) {
         console.log(err)
@@ -227,9 +237,15 @@ class ProposalForm extends React.Component {
           </div>
           <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
+            <Input name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading} placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"/>
             <p className={this.state.newNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
+          <div className="helpDescription">
+            <Icon type="question-circle" />
+            <p>
+              The hexadecimal node ID is encoded in the username portion of the URL, separated from the host by an @ sign. The hostname can only be given as an IP address, DNS domain names are not allowed. The port in the host name section is the TCP listening port.
+            </p>
+          </div>
           <p className='subtitle'>Description</p>
           <Form.Item>
             <TextArea
@@ -280,12 +296,18 @@ class ProposalForm extends React.Component {
           </div>
           <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
+            <Input name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading} placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"/>
             <p className={this.state.newNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
+          <div className="helpDescription">
+            <Icon type="question-circle" />
+            <p>
+              The hexadecimal node ID is encoded in the username portion of the URL, separated from the host by an @ sign. The hostname can only be given as an IP address, DNS domain names are not allowed. The port in the host name section is the TCP listening port.
+            </p>
+          </div>
           <p className='subtitle'>Old Authority Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input name='oldNode' onChange={this.handleChange} className={this.state.oldNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
+            <Input name='oldNode' onChange={this.handleChange} className={this.state.oldNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading} placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"/>
             <p className={this.state.oldNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
           <p className='subtitle'>Description </p>
@@ -366,9 +388,15 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <p className='subtitle'>New Node Description <span className='required'>*</span></p>
           <Form.Item>
-            <Input type='primary' name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading}/>
+            <Input type='primary' name='newNode' onChange={this.handleChange} className={this.state.newNodeErr ? 'errInput' : ''} disabled={this.props.buttonLoading} placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"/>
             <p className={this.state.newNodeErr ? 'errHint' : ''}>Invalid Node</p>
           </Form.Item>
+          <div className="helpDescription">
+            <Icon type="question-circle" />
+            <p>
+              The hexadecimal node ID is encoded in the username portion of the URL, separated from the host by an @ sign. The hostname can only be given as an IP address, DNS domain names are not allowed. The port in the host name section is the TCP listening port.
+            </p>
+          </div>
           <p className='subtitle'>Description</p>
           <Form.Item>
             <TextArea
@@ -429,7 +457,7 @@ class ProposalForm extends React.Component {
         <div>
           <div className='contentDiv'>
             <div className='backBtnDiv'>
-              <Button onClick={e => this.props.convertComponent('voting')}>
+              <Button onClick={e => this.props.convertComponent('voting')} loading={this.props.buttonLoading}>
                 <span><Icon type='left' /></span>
                 <span className='text_btn'>Back to Voting</span>
               </Button>
@@ -443,7 +471,8 @@ class ProposalForm extends React.Component {
                 <p className='subtitle'>Topic for voting <span className='required'>*</span></p>
                 <Select
                   showArrow
-                  onChange={this.onSelectChange}>
+                  onChange={this.onSelectChange}
+                  disabled={this.props.buttonLoading}>
                   <Select.Option value='add'>Add Authority</Select.Option>
                   <Select.Option value='replace'>Replace Authority</Select.Option>
                   <Select.Option value='remove'>Remove Authority</Select.Option>

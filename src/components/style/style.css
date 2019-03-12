@@ -4,6 +4,14 @@
   flex-direction: column;
 }
 
+.ant-btn-loading {
+  align-items: center;
+}
+
+.ant-btn-loading span i {
+  display: none;
+}
+
 /* Authority */
 
 .contentDiv {
@@ -689,7 +697,7 @@
   color:#FC0F1B;
 }
 
-.contentVotingDiv .proposalHead .ant-select-enabled {
+.contentVotingDiv .proposalHead .ant-select {
   margin-top: 8px;
   width: 100%;
 }
@@ -730,6 +738,27 @@ input.errInput {
   border-color:#FC0F1B;
 } input.errInput:focus{
   border-color: #261BC9;
+}
+
+.contentVotingDiv .proposalBody .helpDescription {
+  display: flex;
+  background-color: #eeeef0;
+  padding: 16px;
+  margin-top: 4px;
+}
+
+.contentVotingDiv .proposalBody .helpDescription svg {
+  height: 24px;
+  width: 24px;
+  padding: 2px;
+}
+
+.contentVotingDiv .proposalBody .helpDescription svg path {
+  color: #261BC9;
+}
+
+.contentVotingDiv .proposalBody .helpDescription p {
+  margin: 1px 0 0 8px;
 }
 
 .contentVotingDiv .proposalBody button[type="submit"] {

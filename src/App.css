@@ -109,3 +109,7 @@
 .errorModal .ant-modal-body > div div p {
   margin: 1px 0 0 8px;
 }
+
+.errorModal .ant-modal-footer a {
+  margin-right: 8px;
+}
