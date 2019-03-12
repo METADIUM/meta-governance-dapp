@@ -31,7 +31,9 @@ class Voting extends React.Component {
       position: 'active',
       updateModal: false,
       proposalCount: 5,
-      finalizedCount: 5
+      finalizedCount: 5,
+      visibleProposalItems: [],
+      visibleFinalizedItems: []
     }
 
     constructor (props) {
@@ -41,6 +43,7 @@ class Voting extends React.Component {
       this.onClickUpdateProposal = this.onClickUpdateProposal.bind(this)
       this.completeModal = this.completeModal.bind(this)
       this.reloadVoting = this.reloadVoting.bind(this)
+      this.searchBallot = this.searchBallot.bind(this)
 
       this.activeTitle = null;
       this.proposalTitle = null;
@@ -97,7 +100,15 @@ class Voting extends React.Component {
           this.data.oldMemberaddr.push(oldMemberAddress)
         }
         list.push(
-          <div className={'ballotDiv state' + item.state} state={item.state} key={list.length} id={item.id} ref={ref => this.ballotDestals.set(index, ref)}>
+          <div className={'ballotDiv state' + item.state} state={item.state}
+            key={list.length}
+            id={item.id}
+            topic={constants.ballotTypesArr[parseInt(item.ballotType)]}
+            company={this.data.authorityNames.get(item.creator)}
+            creator={item.creator}
+            newaddr={newMemberAddress}
+            oldaddr={oldMemberAddress}
+            ref={ref => this.ballotDestals.set(index, ref)}>
             <div className='ballotInfoDiv'>
               <div className='infoLeft'>
                 <p className='topic'>{this.setTopic(constants.ballotTypesArr[parseInt(item.ballotType)], newMemberAddress, oldMemberAddress)}</p>
@@ -158,7 +169,6 @@ class Voting extends React.Component {
       this.data.ballotBasicOriginItems = list
 
       this.getBallotDetailInfo()
-      this.setState({ isBallotLoading: true })
     }
 
     setTopic(topic, newAddr, oldAddr) {
@@ -217,10 +227,36 @@ class Voting extends React.Component {
       this.data.activeItems = activeList
       this.data.proposalItems = proposalList
       this.data.finalizedItems = finalizedList
+      this.setState({visibleProposalItems: proposalList, visibleFinalizedList: finalizedList, isBallotLoading: true})
     }
 
     onClickDetail = (index, e) => {
       this.ballotDestals.get(index).style.height = this.ballotDestals.get(index).style.height === 'auto' ? '124px' : 'auto'
+    }
+
+    waitForReceipt = (hash,cb) =>{
+      console.log('Start waitForReceipt: ', hash);
+      var waitFortxn = this.waitForReceipt.bind(this)
+      web3Instance.web3.eth.getTransactionReceipt(hash, function (err, receipt) {
+        console.log('getTransactionReceipt: ', receipt);
+        if (err) {
+           console.log('err: ', err)
+        }
+        if (receipt  === undefined || receipt === null){
+          console.log('Try again in 1 second')
+          // Try again in 1 second
+          window.setTimeout(function () {
+            console.log('timeout...')
+            waitFortxn(hash, cb);
+          }, 1000);
+        } else {
+          console.log('receipt : ', receipt)
+          // Transaction went through
+          if (cb) {
+            cb(receipt);
+          }
+        }
+      });
     }
 
     async onClickVote (e, id) {
@@ -254,31 +290,6 @@ class Voting extends React.Component {
           });
         }
       })
-    }
-
-    waitForReceipt = (hash,cb) =>{
-      console.log('Start waitForReceipt: ', hash);
-      var waitFortxn = this.waitForReceipt.bind(this)
-      web3Instance.web3.eth.getTransactionReceipt(hash, function (err, receipt) {
-        console.log('getTransactionReceipt: ', receipt);
-        if (err) {
-           console.log('err: ', err)
-        }
-        if (receipt  === undefined || receipt === null){
-          console.log('Try again in 1 second')
-          // Try again in 1 second
-          window.setTimeout(function () {
-            console.log('timeout...')
-            waitFortxn(hash, cb);
-          }, 1000);
-        } else {
-          console.log('receipt : ', receipt)
-          // Transaction went through
-          if (cb) {
-            cb(receipt);
-          }
-        }
-      });
     }
 
     async onClickUpdateProposal (e, id, index, newMemberAddress, oldMemberAddress) {
@@ -371,6 +382,17 @@ class Voting extends React.Component {
       this.setState({ isUpdated: true })
     }
 
+    searchBallot(str) {
+      str = str.toLowerCase()
+      let proposalItems = this.data.proposalItems.filter(value => {
+        return value.props.topic.toLowerCase().indexOf(str) !== -1 || value.props.company.toLowerCase().indexOf(str) !== -1 || value.props.creator.toLowerCase().indexOf(str) !== -1 || value.props.newaddr.toLowerCase().indexOf(str) !== -1 || value.props.oldaddr.toLowerCase().indexOf(str) !== -1
+      })
+      let finalizedItems = this.data.finalizedItems.filter(value => {
+        return value.props.topic.toLowerCase().indexOf(str) !== -1 || value.props.company.toLowerCase().indexOf(str) !== -1 || value.props.creator.toLowerCase().indexOf(str) !== -1 || value.props.newaddr.toLowerCase().indexOf(str) !== -1 || value.props.oldaddr.toLowerCase().indexOf(str) !== -1
+      })
+      this.setState({visibleProposalItems: proposalItems, visibleFinalizedItems: finalizedItems})
+    }
+
     render () {
       return (
         <div>
@@ -381,6 +403,7 @@ class Voting extends React.Component {
                   <div>
                     <Input.Search
                       placeholder='Search by Type, Proposal, Keywords'
+                      onSearch = {value => this.searchBallot(value)}
                       enterButton
                     />
                     {!this.props.isMember
@@ -420,8 +443,8 @@ class Voting extends React.Component {
                   <p className='stateTitle' ref={ref => { this.activeTitle = ref }}>Active</p>
                   {this.data.activeItems}
                   <p className='stateTitle' ref={ref => { this.proposalTitle = ref }}>Proposals</p>
-                  {this.data.proposalItems.slice(0, this.state.proposalCount)}
-                  {this.data.proposalItems.length > 0
+                  {this.state.visibleProposalItems.slice(0, this.state.proposalCount)}
+                  {this.state.visibleProposalItems.length > 0
                   ? <div className='moreDiv'>
                     <Button value='large' onClick={(e) => this.onClickReadMore('proposal')}>
                       <span>+</span>
@@ -430,8 +453,8 @@ class Voting extends React.Component {
                   </div>
                   : null}
                   <p className='stateTitle'ref={ref => { this.finalizedTitle = ref }}>Finalized</p>
-                  {this.data.finalizedItems.slice(0, this.state.finalizedCount)}
-                  {this.data.finalizedItems.length > 0
+                  {this.state.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
+                  {this.state.visibleFinalizedItems.length > 0
                   ? <div className='moreDiv'>
                     <Button value='large' onClick={(e) => this.onClickReadMore('finalized')}>
                       <span>+</span>
