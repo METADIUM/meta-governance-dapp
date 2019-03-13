@@ -58,7 +58,7 @@ class ProposalForm extends React.Component {
         case 'newLockAmount': this.setState({newLockAmountErr: !this.checkLockAmount(e.target.value)}); break
         case 'newAddr': this.setState({newAddrErr: !this.checkAddr(e.target.value)}); break
         case 'newNode': this.setState({newNodeErr: !this.checkNode(e.target.value)}); break
-        case 'oldLockAmount': this.setState({oldLockAmountErr: !this.checkLockAmount(e.target.value)}); break
+        case 'oldLockAmount': this.setState({oldLockAmountErr: !this.checkUnlockAmount(e.target.value)}); break
         case 'oldAddr': this.setState({oldAddrErr: !this.checkAddr(e.target.value)}); break
         case 'oldNode': this.setState({oldNodeErr: !this.checkNode(e.target.value)}); break
       }
@@ -67,6 +67,8 @@ class ProposalForm extends React.Component {
     checkLockAmount = (amount) => {
       return (/^[1-9]\d*$/.test(amount) && Number(amount) <= constants.limitAmount.stakingMax && Number(amount) >= constants.limitAmount.stakingMin )
     }
+
+    checkUnlockAmount = (amount) => /^[1-9]\d*$/.test(amount)
 
     checkAddr = (addr) => /^0x[a-fA-F0-9]{40}$/.test(addr)
 
