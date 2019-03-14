@@ -18,6 +18,7 @@ class ProposalForm extends React.Component {
       newLockAmountErr: false,
       newAddrErr: false,
       newNodeErr: false,
+      newNameErr: false,
       oldLockAmountErr: false,
       oldAddrErr: false,
       oldNodeErr: false,
@@ -32,6 +33,7 @@ class ProposalForm extends React.Component {
         newLockAmountErr: false,
         newAddrErr: false,
         newNodeErr: false,
+        newNameErr: false,
         oldLockAmountErr: false,
         oldAddrErr: false,
         oldNodeErr: false})
@@ -58,6 +60,7 @@ class ProposalForm extends React.Component {
         case 'newLockAmount': this.setState({newLockAmountErr: !this.checkLockAmount(e.target.value)}); break
         case 'newAddr': this.setState({newAddrErr: !this.checkAddr(e.target.value)}); break
         case 'newNode': this.setState({newNodeErr: !this.checkNode(e.target.value)}); break
+        case 'newName': this.setState({newNameErr: !this.checkName(e.target.value)}); break
         case 'oldLockAmount': this.setState({oldLockAmountErr: !this.checkUnlockAmount(e.target.value)}); break
         case 'oldAddr': this.setState({oldAddrErr: !this.checkAddr(e.target.value)}); break
         case 'oldNode': this.setState({oldNodeErr: !this.checkNode(e.target.value)}); break
@@ -74,6 +77,8 @@ class ProposalForm extends React.Component {
 
     checkNode = (node) => /^([a-fA-F0-9]{128})+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})$/.test(node)
 
+    checkName = (name) => /^[A-Za-z0-9+]{64}$/.test(name)
+
     /* Submit form data. */
     handleSubmit = async (e) => {
       this.props.convertButtonLoading(true)
@@ -88,20 +93,19 @@ class ProposalForm extends React.Component {
         if (this.data.selectedVoteTopic === 'add') {
           trx = this.props.contracts.govImp.addProposalToAddMember(
             formData.newAddr,
+            formData.newName,
             formData.newNode.node,
             formData.newNode.ip,
-            formData.newNode.port,
-            formData.newLockAmount,
+            [formData.newNode.port, formData.newLockAmount],
             formData.memo
           )
         } else if(this.data.selectedVoteTopic === 'replace') {
           trx = this.props.contracts.govImp.addProposalToChangeMember(
-            formData.oldAddr,
-            formData.newAddr,
+            [formData.oldAddr, formData.newAddr],
+            formData.newName,
             formData.newNode.node,
             formData.newNode.ip,
-            formData.newNode.port,
-            formData.newLockAmount,
+            [formData.newNode.port, formData.newLockAmount],
             formData.memo
           )
         } else if(this.data.selectedVoteTopic === 'remove') {
@@ -113,12 +117,10 @@ class ProposalForm extends React.Component {
         } else if(this.data.selectedVoteTopic === 'update') {
           let myLockBalance = await this.props.contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
           trx = this.props.contracts.govImp.addProposalToChangeMember(
-            web3Instance.defaultAccount,
-            web3Instance.defaultAccount,
+            [web3Instance.defaultAccount, web3Instance.defaultAccount],
             formData.newNode.node,
             formData.newNode.ip,
-            formData.newNode.port,
-            myLockBalance,
+            [formData.newNode.port, myLockBalance],
             formData.memo
           )
         } else return
@@ -261,7 +263,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button name='submit' className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr} loading={this.props.buttonLoading}>Submit</Button>
+              <Button name='submit' className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr || this.state.newNameErr} loading={this.props.buttonLoading}>Submit</Button>
             </div>
           </Form.Item>
         </Form>
@@ -325,7 +327,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr || this.state.oldAddrErr || this.state.oldNodeErr}  loading={this.props.buttonLoading}>Submit</Button>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newLockAmountErr || this.state.newAddrErr || this.state.newNodeErr || this.state.newNameErr || this.state.oldAddrErr || this.state.oldNodeErr}  loading={this.props.buttonLoading}>Submit</Button>
             </div>
           </Form.Item>
         </Form>
@@ -412,7 +414,7 @@ class ProposalForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <div className='submitDiv'>
-              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newNodeErr} loading={this.props.buttonLoading}>Submit </Button>
+              <Button className='submit_Btn' htmlType='submit' disabled={this.state.newNodeErr || this.state.newNameErr} loading={this.props.buttonLoading}>Submit </Button>
             </div>
           </Form.Item>
         </Form>

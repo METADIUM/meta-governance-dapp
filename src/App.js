@@ -1,8 +1,7 @@
 import React from 'react'
-import { Layout, Modal } from 'antd'
+import { Layout } from 'antd'
 import { TopNav, FootNav } from './components/Nav'
-import { StakingModal } from './components/StakingModal'
-import { ErrModal } from './components/ErrorModal'
+import { StakingModal, ErrModal } from './components/Modal'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
 import { BaseLoader } from './components/BaseLoader'
@@ -21,14 +20,14 @@ import { contracts, initContracts } from './ethereum/web3Components/contracts'
 const { Header, Content, Footer } = Layout
 class App extends React.Component {
   data = {
-    balance: 0,
-    lockedBalance: 0,
-    selectedStakingTopic: 'deposit',
-    amount: '1',
+    myBalance: 0,
+    myLockedBalance: 0,
+    stakingTopic: 'deposit',
+    stakingAmount: '1',
     eventsWatch: null,
     authorityOriginData: [],
-    errTitle: '',
-    errContent: '',
+    errTitle: null,
+    errContent: null,
     errLink: null,
     isMember: false
   }
@@ -37,14 +36,26 @@ class App extends React.Component {
     nav: '1',
     contractReady: false,
     stakingModalVisible: false,
-    buttonLoading: false,
-    errVisible: false,
-    newProposal: false,
-    stakingInvalidErr: false
+    stakingInvalidErr: false,
+    errModalVisible: false,
+    loading: false,
+    showProposal: false
   };
 
   constructor (props) {
     super(props)
+    this.updateAccountBalance = this.updateAccountBalance.bind(this)
+    this.updateDefaultAccount = this.updateDefaultAccount.bind(this)
+    this.onMenuClick = this.onMenuClick.bind(this)
+    this.getContent = this.getContent.bind(this)
+    this.getErrModal = this.getErrModal.bind(this)
+    this.submitMetaStaking = this.submitMetaStaking.bind(this)
+    this.convertVotingComponent = this.convertVotingComponent.bind(this)
+    this.convertloading = this.convertloading.bind(this)
+    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.getStakingModal = this.getStakingModal.bind(this)
+
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       console.log(web3Config)
@@ -56,11 +67,28 @@ class App extends React.Component {
       this.setState({ loadWeb3: false })
     })
   }
-  async initAuthorityLists () {
-    this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
-    Object.keys(this.data.authorityOriginData).forEach((index) => {
-      this.data.authorityOriginData[index].addr = web3Instance.web3.utils.toChecksumAddress(this.data.authorityOriginData[index].addr)
+  
+  async initContracts (web3) {
+    initContracts({
+      web3: web3,
+      netid: web3.netid
+    }).then(async () => {
+      await this.updateAccountBalance();
+      window.ethereum.on('accountsChanged', async (chagedAccounts) => {
+        await this.updateDefaultAccount(chagedAccounts[0]);
+      })
+      this.setStakingEventsWatch();
+      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
+      this.setState({ contractReady: true })
     })
+  }
+
+  async updateAccountBalance(){
+    this.data.myBalance = await contracts.staking.balanceOf(web3Instance.defaultAccount)
+    this.data.myLockedBalance = await contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
+    this.data.myBalance = web3Instance.web3.utils.fromWei(this.data.myBalance, 'ether')
+    this.data.myLockedBalance = web3Instance.web3.utils.fromWei(this.data.myLockedBalance, 'ether')
+    this.setState({stakingModalVisible: false, loading: false})
   }
   
   async updateDefaultAccount(account){
@@ -69,14 +97,14 @@ class App extends React.Component {
       web3Instance.defaultAccount = account;
       await this.updateAccountBalance();
       this.setStakingEventsWatch();
-      //TODO: check new
-      this.setState({newProposal: false})
+      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
+      this.setState({showProposal: false})
     }else{
       console.log("notChanged");
     }
   }
 
-  setStakingEventsWatch(address){
+  setStakingEventsWatch(){
     if (this.data.eventsWatch ){
       let subscription = this.data.eventsWatch;
       subscription.unsubscribe(function(error, success){
@@ -85,63 +113,28 @@ class App extends React.Component {
       });
     }
     var filteraddress = web3Instance.web3.eth.abi.encodeParameter('address', web3Instance.defaultAccount);
-    var updateAccountBalanceForRefresh = this.updateAccountBalance.bind(this);
     this.data.eventsWatch = contracts.staking.stakingInstance.events.allEvents(
       {
         fromBlock: 'latest',
-        topics: [
-          null,
-          filteraddress
-        ]
-      },
-      (error, events) => { 
+        topics: [null, filteraddress]
+      }, (error, events) => { 
         console.log(events); 
-        if(error){
-          console.log("error", error)
-        }else {
-          updateAccountBalanceForRefresh()
-        }
+        if(error) console.log("error", error)
+        else this.updateAccountBalance()
       }
     )
     console.log("Successfully subscribed!");
   }
 
-  async updateAccountBalance(){
-    this.data.balance = await contracts.staking.balanceOf(web3Instance.defaultAccount)
-      this.data.lockedBalance = await contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
-      this.data.balance = web3Instance.web3.utils.fromWei(this.data.balance, 'ether')
-      this.data.lockedBalance = web3Instance.web3.utils.fromWei(this.data.lockedBalance, 'ether')
-      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
-      this.setState({ stakingModalVisible: false, buttonLoading: false })
-  }
-  
-  async initContracts (web3) {
-    initContracts({
-      web3: web3,
-      netid: web3.netid
-    }).then(async () => {
-      await this.updateAccountBalance();
-      this.setState({ contractReady: true })
-
-      var updateAcount = this.updateDefaultAccount.bind(this);
-      window.ethereum.on('accountsChanged', async function (chagedAccounts) {
-        await updateAcount(chagedAccounts[0]);
-      })
-      this.setStakingEventsWatch();
-      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
+  async initAuthorityLists () {
+    this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
+    Object.keys(this.data.authorityOriginData).forEach((index) => {
+      this.data.authorityOriginData[index].addr = web3Instance.web3.utils.toChecksumAddress(this.data.authorityOriginData[index].addr)
     })
   }
 
-  onMenuClick = ({ key }) => { this.setState({ nav: key }) }
-
-  getErrModal = (_err = 'Unknown Error', _title = 'Unknown Error', _link = false) => {
-    console.log(typeof(_err))
-    if(_err.includes('error:')) _err = _err.split('error:')[1]
-
-    this.data.errTitle = _title
-    this.data.errContent = _err
-    if(_link) this.data.errLink = constants.NETWORKS[web3Instance.netId] + _link
-    this.setState({errVisible: true})
+  onMenuClick({ key }) {
+    this.setState({ nav: key })
   }
 
   getContent () {
@@ -152,49 +145,65 @@ class App extends React.Component {
         contracts={contracts}
         getErrModal={this.getErrModal}
         authorityOriginData={this.data.authorityOriginData}
-        buttonLoading={this.state.buttonLoading}
-        convertButtonLoading={this.convertButtonLoading}/>
+        buttonLoading={this.state.loading}
+        convertButtonLoading={this.convertloading}/>
       case '2': return <Voting
-        title='Voting' contracts={contracts}
+        title='Voting'
+        contracts={contracts}
         getErrModal={this.getErrModal}
         authorityOriginData={this.data.authorityOriginData}
         convertComponent={this.convertVotingComponent}
-        newProposal={this.state.newProposal}
-        buttonLoading={this.state.buttonLoading}
-        convertButtonLoading={this.convertButtonLoading}
+        buttonLoading={this.state.loading}
+        convertButtonLoading={this.convertloading}
+        newProposal={this.state.showProposal}
         isMember={this.data.isMember}/>
       default:
     }
     this.setState({ selectedMenu: true })
   }
 
-  convertVotingComponent = (component) => {
+  convertVotingComponent(component) {
     switch(component) {
-      case 'voting': this.setState({newProposal: false}); break
-      case 'proposal': this.setState({newProposal: true}); break
+      case 'voting': this.setState({showProposal: false}); break
+      case 'proposal': this.setState({showProposal: true}); break
     }
   }
 
-  convertButtonLoading = (state) => {
+  convertloading(state) {
     if(typeof(state) === 'boolean') {
-      console.log("button loading", state)
-      this.setState({ buttonLoading: state })
+      this.setState({ loading: state })
     } 
   }
 
-  submitMetaStaking = (e) => {
-    if(!/^[1-9]\d*$/.test(this.data.amount)) {
+  getErrModal(_err = 'Unknown Error', _title = 'Unknown Error', _link = false) {
+    if(_err.includes('error:')) _err = _err.split('error:')[1]
+
+    this.data.errTitle = _title
+    this.data.errContent = _err
+    if(_link) this.data.errLink = constants.NETWORKS[web3Instance.netId] + _link
+    else this.data.errLink = false
+    this.setState({errModalVisible: true})
+  }
+
+  getStakingModal() {
+    this.data.stakingAmount = '1'
+    this.data.stakingTopic = 'deposit'
+    this.setState({ stakingModalVisible: true })
+  }
+
+  submitMetaStaking() {
+    if(!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
       this.setState({ stakingModalVisible: false })
       this.getErrModal('The staking amount format is incorrect.', 'Staking Error')
       return
     }
 
-    this.setState({buttonLoading: true})
+    this.setState({loading: true})
     let trx = {}
-    console.log("before this.data.amount;",this.data.amount )
-    let amount = web3Instance.web3.utils.toWei(this.data.amount, 'ether')
-    console.log("after this.data.amount;", amount )
-    if (this.data.selectedStakingTopic === 'deposit') {
+    console.log("before this.data.stakingAmount;",this.data.stakingAmount )
+    let amount = web3Instance.web3.utils.toWei(this.data.stakingAmount, 'ether')
+    console.log("after this.data.stakingAmount;", amount )
+    if (this.data.stakingTopic === 'deposit') {
       console.log("Send Transaction for deposit");
       trx = contracts.staking.deposit()
       web3Instance.web3.eth.sendTransaction({
@@ -205,7 +214,7 @@ class App extends React.Component {
       },  async (err, hash) => {
         if (err) {
           this.getErrModal(err.message, 'Deposit Error')
-          this.setState({ stakingModalVisible: false, buttonLoading: false })
+          this.setState({ stakingModalVisible: false, loading: false })
         } else {
           console.log('hash: ', hash)
         }
@@ -219,7 +228,7 @@ class App extends React.Component {
       }, async (err, hash) => {
         if (err) {
           this.getErrModal(err.message, 'Withdraw Error')
-          this.setState({ stakingModalVisible: false, buttonLoading: false })
+          this.setState({ stakingModalVisible: false, loading: false })
         } else {
           console.log('hash: ', hash)
         }
@@ -227,21 +236,15 @@ class App extends React.Component {
     }
   }
 
-  handleSelectChange = (e) => {
-    this.data.selectedStakingTopic = e
+  handleSelectChange(topic) {
+    this.data.stakingTopic = topic
     this.setState({})
   }
 
-  handleInputChange = (e) => {
-    this.data.amount = e.target.value
-    if(/^[1-9]([0-9]*)$/.test(e.target.value)) this.setState({stakingInvalidErr: false})
+  handleInputChange(event) {
+    this.data.stakingAmount = event.target.value
+    if(/^[1-9]([0-9]*)$/.test(event.target.value)) this.setState({stakingInvalidErr: false})
     else this.setState({stakingInvalidErr: true})
-  }
-
-  showStakingModal = () => {
-    this.data.amount = '1'
-    this.data.selectedStakingTopic = 'deposit'
-    this.setState({ stakingModalVisible: true })
   }
 
   render () {
@@ -253,29 +256,29 @@ class App extends React.Component {
               <TopNav
                 nav={this.state.nav}
                 onMenuClick={this.onMenuClick}
-                showStakingModal={this.showStakingModal}
-                balance={this.data.balance}
-                lockedBalance={this.data.lockedBalance} />
+                showStakingModal={this.getStakingModal}
+                balance={this.data.myBalance}
+                lockedBalance={this.data.myLockedBalance} />
             </Header>
 
             <StakingModal
-              accountBalance={{ balance: this.data.balance, lockedBalance: this.data.lockedBalance }}
+              accountBalance={{ balance: this.data.myBalance, lockedBalance: this.data.myLockedBalance }}
               stakingModalVisible={this.state.stakingModalVisible}
-              hideStakingModal={() => {if(!this.state.buttonLoading) this.setState({ stakingModalVisible: false })}}
+              hideStakingModal={() => {if(!this.state.loading) this.setState({ stakingModalVisible: false })}}
               submitMetaStaking={this.submitMetaStaking}
               handleInputChange={this.handleInputChange}
               handleSelectChange={this.handleSelectChange}
-              stakingLoading={this.state.buttonLoading}
-              amount={this.data.amount}
-              selectedStakingTopic={this.data.selectedStakingTopic}
+              stakingLoading={this.state.loading}
+              amount={this.data.stakingAmount}
+              selectedStakingTopic={this.data.stakingTopic}
               stakingInvalidErr={this.state.stakingInvalidErr} />
 
             <ErrModal
               title={this.data.errTitle}
               err={this.data.errContent}
               link={this.data.errLink}
-              visible={this.state.errVisible}
-              coloseErrModal = {() => this.setState({ errVisible: !this.state.loadWeb3})} />
+              visible={this.state.errModalVisible}
+              coloseErrModal = {() => this.setState({ errModalVisible: !this.state.loadWeb3})} />
 
             <Content style={{ backgroundColor: '##EEEEF0' }}>
               {this.state.loadWeb3
