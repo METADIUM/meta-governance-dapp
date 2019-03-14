@@ -4,6 +4,14 @@
   flex-direction: column;
 }
 
+.ant-btn-loading {
+  align-items: center;
+}
+
+.ant-btn-loading span i {
+  display: none;
+}
+
 /* Authority */
 
 .contentDiv {
@@ -274,6 +282,7 @@
 
 .sub-header {
   background-color: #ffffff;
+  position: relative;
   z-index: 90;
 }
 
@@ -326,6 +335,11 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   display: flex;
   justify-content: center;
+  z-index: 80;
+}
+
+.ant-affix {
+  z-index: 80 !important;
 }
 
 .sub-header .sub-menu .ant-menu-item {
@@ -359,6 +373,7 @@
   background-color: white;
   margin-bottom: 24px;
   height: 124px;
+  border-radius: 4px;
   overflow-y: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: 0.3s;
@@ -425,6 +440,54 @@
   margin: 0;
   color: #261BC9;
   font-size: 12px;
+}
+
+.ballotContentDiv {
+  position: relative;
+  border-radius: 4px;
+}
+
+.ballotContentDiv .ballotLoadingContainer {
+  position: absolute;
+  top: 2px;
+  z-index: 10;
+  width: 100%;
+  height: calc(100% - 2px);
+  background-color: rgba(38,27,201,0.38);
+  border-radius: 4px;
+  display: none;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.ballotContentDiv .ballotLoading:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 206px;
+	height: 35px;
+	background-image: url("./loading.png");
+	background-position: 0 0
+}
+
+.ballotContentDiv .ballotLoading {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 206px;
+	margin: -30px 0 0 -111.5px;
+	padding-top: 50px
+}
+
+.ballotContentDiv .ballotLoading svg {
+  color: #261BC9;
+  width: 68px;
+  height: 68px;
 }
 
 .ballotContentDiv .voteDiv {
@@ -634,7 +697,7 @@
   color:#FC0F1B;
 }
 
-.contentVotingDiv .proposalHead .ant-select-enabled {
+.contentVotingDiv .proposalHead .ant-select {
   margin-top: 8px;
   width: 100%;
 }
@@ -677,6 +740,27 @@ input.errInput {
   border-color: #261BC9;
 }
 
+.contentVotingDiv .proposalBody .helpDescription {
+  display: flex;
+  background-color: #eeeef0;
+  padding: 16px;
+  margin-top: 4px;
+}
+
+.contentVotingDiv .proposalBody .helpDescription svg {
+  height: 24px;
+  width: 24px;
+  padding: 2px;
+}
+
+.contentVotingDiv .proposalBody .helpDescription svg path {
+  color: #261BC9;
+}
+
+.contentVotingDiv .proposalBody .helpDescription p {
+  margin: 1px 0 0 8px;
+}
+
 .contentVotingDiv .proposalBody button[type="submit"] {
   margin: 0;
   color: #ffffff;
@@ -716,10 +800,7 @@ input.errInput {
 	-ms-flex-pack: justify;
 	justify-content: space-between;
 	position: absolute;
-	left: 50%;
-	top: 50%;
 	width: 206px;
-	margin: -30px 0 0 -111.5px;
 	padding-top: 50px
 }
 
@@ -735,12 +816,15 @@ input.errInput {
 }
 
 .loading-container {
-	position: fixed;
-	z-index: 80;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 	left: 0;
 	right: 0;
-	top: 0;
+	top: 52px;
 	bottom: 0;
+  z-index: 80;
 	background-color: rgba(38,27,201,0.7)
 }
 

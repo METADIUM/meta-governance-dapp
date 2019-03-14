@@ -15,10 +15,19 @@ constants.NETID_TESTNET = '101'
 constants.NETWORKS = {
   '101': {
     NAME: 'TESTNET',
-    RPC: 'https://api-dev.metadium.com/test',
+    RPC: 'https://api.metadium.com/dev',
     BRANCH: 'master',
     NETWORK: 'private',
-    TESTNET: true
+    TESTNET: true,
+    explorerUrl: 'https://testnetexplorer.metadium.com/txs/'
+  },
+  '11': {
+    NAME: 'MAINNET',
+    RPC: 'https://api.metadium.com/prod',
+    BRANCH: 'master',
+    NETWORK: 'private',
+    TESTNET: true,
+    explorerUrl: 'https://explorer.metadium.com/txs/'
   }
 }
 constants.branchName = 'testnet'

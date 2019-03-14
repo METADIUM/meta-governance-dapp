@@ -1,9 +1,6 @@
 import React from 'react'
 import { Button } from 'antd'
 import './style/style.css'
-import * as util from '../util'
-import { constants } from '../ethereum/constants'
-import { web3Instance } from '../ethereum/web3';
 
 class Authority extends React.Component {
     data = {

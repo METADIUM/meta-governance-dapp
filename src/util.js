@@ -59,12 +59,13 @@ function refine (m) {
 
 function refineBallotBasic (m) {
   if (!m) return null
+  if(m.state === '2' && m.endTime * 1000 < Date.now()) m.state = '4'
   Object.keys(m).forEach(key => {
     if (!isNaN(key)) return delete m[key]
     switch (key) {
       case 'creator': m[key] = web3Instance.web3.utils.toChecksumAddress(m[key]); break
       case 'startTime': m[key] = timeConverter(m[key]); break
-      case 'endTime': m[key] = timeConverter(m[key]); break
+      case 'endTime': m.endTimeConverted = timeConverter(m[key]); break
       case 'memo': m[key] = convertHexToString(m[key]); break
       case 'duration': m[key] /= dayTimestamp; break
       case 'powerOfRejects':
@@ -80,9 +81,7 @@ function refineSubmitData (m) {
     return m;
   }
   let copy = {};
-  for(let key in m) {
-    copy[key] = m[key];
-  }
+  for(let key in m) { copy[key] = m[key] }
 
   Object.keys(copy).forEach(key => {
     if (!isNaN(key)) return delete copy[key]
@@ -92,7 +91,8 @@ function refineSubmitData (m) {
       case 'lockAmount':
       case 'oldLockAmount':
       case 'newLockAmount': copy[key] = web3Instance.web3.utils.toWei(copy[key].toString(), 'ether'); break
-      case 'memo': copy[key] = web3Instance.web3.utils.fromAscii(copy[key]); break
+      case 'memo': 
+      case 'newName': copy[key] = web3Instance.web3.utils.asciiToHex(copy[key]); break
       case 'node':
       case 'newNode':
       case 'oldNode': let { node, ip, port } = splitNodeDescription(copy[key]); copy[key] = { node, ip, port }; break
@@ -155,7 +155,7 @@ function splitNodeDescription (str) {
   splitedStr = str.split('@')
   node = '0x' + splitedStr[0]
   splitedStr = splitedStr[1].split(':')
-  ip = web3Instance.web3.utils.fromAscii(splitedStr[0])
+  ip = web3Instance.web3.utils.asciiToHex(splitedStr[0])
   splitedStr = splitedStr[1].split('?')
   port = parseInt(splitedStr[0])
 
