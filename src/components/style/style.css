@@ -1,284 +1,120 @@
-.layout > div {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.ant-btn-loading {
-  align-items: center;
-}
-
-.ant-btn-loading span i {
-  display: none;
-}
-
-/* Authority */
-
-.contentDiv {
-  margin: 0 auto;
-  padding-bottom: 56px;
-  max-width: 1152px;
-  height: 100%;
-}
-
-.apply_proposal_Btn_container {
-  padding: 24px 16px 16px 16px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.apply_proposal_Btn_container .apply_proposal_Btn {
-  height: 40px;
-  width: 208px;
-  border-radius: 4px;
-  color: #000000;
-  padding: 0 20px;
-} .apply_proposal_Btn_container .apply_proposal_Btn:hover {
-  color: #ffffff;
-  background-color: #261BC9;
-}
-
-.authorityComp{
-  margin-bottom: 24px;
-  padding: 0 16px;
-}
-
-.authorityComp .authorityComp_contnet {
-  background-color: #ffffff;
-  border-radius: 4px;
-  padding: 16px;
-  display: flex;
-  align-items: flex-start;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-} .authorityComp .authorityComp_contnet:hover {
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
-
-.authorityComp .authorityComp_contnet .img_container {
-  width: 192px;
-  height: 192px;
-  margin-right: 16px;
-  display: flex;
-  align-content: center;
-  overflow: hidden;
-}
-
-.authorityComp .authorityComp_contnet .img_container img {
-  width: 100%;
-}
-
-.authorityComp .authorityComp_contnet .text_container {
-  flex: 100;
-  padding-left: 24px;
-  border-left: #EEEEF0 solid 2px;
-  display: flex;
-  flex-direction: column;
-}
-
-.authorityComp .authorityComp_contnet .long {
-  min-height: 192px;
-}
-
-.authorityComp .authorityComp_contnet .short {
-  height: 192px;
-}
-
-.authorityComp .authorityComp_contnet .text_container .title {
-  margin: 8px 0 0 0;
-  font-size: 20px;
-  line-height: 28px;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.8);
-}
-
-.authorityComp .authorityComp_contnet .text_container .address {
-  margin: 0;
-  font-size: 12px;
-  line-height: 20px;
-}
-
-.authorityComp .authorityComp_contnet .text_container .description {
-  flex: 100;
-  margin: 12px 0 0 0;
-  overflow: hidden;
-}
-
-.authorityComp .authorityComp_contnet .text_container .link_container {
-  margin: 12px 0 0 0;
-  display: flex;
-  align-items: flex-end;
-}
-
-.authorityComp .authorityComp_contnet .text_container .more {
-  line-height: 24px;
-  color: #261BC9;
-}
-
-.authorityComp .authorityComp_contnet .text_container .SNSList {
-  flex: 100;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup {
-  margin: 0 0 0 8px;
-} 
-
-.authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x {
-  font-size: 24px;
-  color: rgba(0,0,0,0.6);
-  transition: color 0.3s;
-  color: rgba(0,0,0,0.6);
-} .authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x:hover {
-  color: #261BC9;
-}
-
 /* header */
 
 .ant-layout-header {
-  background: #261BC9;
   padding: 0;
   z-index: 100;
+} .ant-layout-header.mainNet {
+  background: #FFFFFF;
+} .ant-layout-header.testNet {
+  background: #000000;
 }
 
-.ant-layout-header .ant-row {
-  margin: 0 auto;
-  max-width: 1152px;
-  height: 100%;
-  display: flex;
-}
-
-.ant-layout-header .ant-row .header-logo {
+.ant-layout-header .header-logo {
   width: 240px;
-  display: flex;
-  align-content: center;
   padding: 0 16px;
 }
 
-.ant-layout-header .ant-row .header-logo img {
-  height: 24px;
-  margin: 20px 16px 0 0;
+.ant-layout-header .header-logo img {
+  height: 32px;
 }
 
-.ant-layout-header .ant-row .header-logo span {
-  font-size: 24px;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.ant-layout-header .ant-row .header-menu {
+.ant-layout-header .header-menu {
   width: 240px;
   height: 40px;
-  margin: auto 0;
   padding: 0 16px;
-  border-left: #ffffff solid 2px;
+} .ant-layout-header .header-menu.mainNet {
+  border-left: #eeeef0 solid 2px;
+} .ant-layout-header .header-menu.testNet {
+  border-left: #595959 solid 2px;
 }
 
-.ant-layout-header .ant-row .header-menu .ant-menu-horizontal {
+.ant-layout-header .header-menu .ant-menu-horizontal {
   height: 40px;
   border: none;
-  display: flex;
-  align-items: center;
   background-color: transparent;
 }
 
-.ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item {
+.ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item  {
   padding: 0 12px;
-  font-size: 16px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
   border: none;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-selected {
-  color: #ffffff;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-active {
-  color: #ffffff;
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item.mainNet {
+  color: rgba(0, 0, 0, 0.6);
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-selected.mainNet {
+  color: #261BC9;
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-active.mainNet {
+  color: #261BC9;
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item.testNet {
+  color: #595959;
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-selected.testNet {
+  color: #FFFFFF;
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-active.testNet {
+  color: #FFFFFF;
 }
 
 .ant-layout-header .ant-row .header-staking {
-  flex: 100;
-  display: flex;
   height: 100%;
-  align-items: center;
-  justify-content: flex-end;
   padding: 0 16px;
 }
 
 .ant-layout-header .ant-row .header-staking div {
   padding: 0 12px 0 16px;
-  flex: 100;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .ant-layout-header .ant-row .header-staking div p {
   line-height: 1.5;
-  margin: 0;
   text-align: end;
-} .ant-layout-header .ant-row .header-staking div .staked {
-  color: #ffffff;
-} .ant-layout-header .ant-row .header-staking div .meta {
+} .ant-layout-header .ant-row .header-staking div .staked.mainNet {
+  color: rgba(0, 0, 0, 0.87);
+} .ant-layout-header .ant-row .header-staking div .staked.testNet {
+  color: #FFFFFF;
+} .ant-layout-header .ant-row .header-staking div .meta.mainNet {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+} .ant-layout-header .ant-row .header-staking div .meta.testNet {
+  font-size: 12px;
+  color: #C2C4C4;
 }
 
 .ant-layout-header .ant-row .header-staking button {
-  background: transparent;
-  font-size: 16px;
-  border: #ffffff solid 2px;
   height: 40px;
-} .ant-layout-header .ant-row .header-staking button:hover {
-  background: #ffffff;
-  color: #261BC9;
 }
 
-/* footer */
+/* staking modal */
 
-.ant-layout-footer {
-  padding: 0;
-  background-color: #ffffff;
+.stakingModal .text-container {
+  margin-top: 16px;
 }
 
-.ant-layout-footer .ant-row {
-  padding: 24px 16px;
-  margin: 0 auto;
-  max-width: 1152px;
-  display: flex;
-  align-items: center;
+.stakingModal .text-container .staked {
+  color:rgba(0, 0, 0, 0.87);
 }
 
-.ant-layout-footer .ant-row p {
-  margin: 0;
+.stakingModal .ant-modal-body .ant-select {
+  width: 100%;
+  margin-bottom: 8px;
 }
 
-.ant-layout-footer .ant-row div {
-  flex: 100;
-  display: flex;
-  justify-content: flex-end;
+.ant-modal-footer .ant-btn-primary {
+  background: #261BC9 ;
+  border: 0;
 }
 
-.ant-layout-footer .ant-row div .ant-btn {
-  height: 22px;
-  margin-left: 16px;
-  padding: 0;
-  border: none;
-  box-shadow: none;
+/* error Modal */
+
+.errorModal .ant-modal-body > p {
+  color:rgba(0, 0, 0, 0.87);
+  margin-bottom: 16px;
 }
 
-.ant-layout-footer .ant-row div .ant-btn img {
-  height: 22px;
-  opacity: 0.87;
+.errorModal .ant-modal-body > div div p {
+  margin: 1px 0 0 8px;
 }
 
-/* vote */
-
-.text_btn {
-  flex: 100;
+.errorModal .ant-modal-footer a {
+  margin-right: 8px;
 }
+
+/* sub header */
 
 .sub-header {
   background-color: #ffffff;
@@ -286,22 +122,13 @@
   z-index: 90;
 }
 
-.sub-header .functionDiv {
-  border-bottom: #EEEEF0 solid 2px;
+.sub-header .functionDiv.mainNet {
+  padding: 8px 16px 16px 16px;
+} .sub-header .functionDiv.testNet {
+  padding: 16px 16px 16px 16px;
 }
 
-.sub-header .functionDiv > div {
-  display: flex;
-  padding: 24px 16px 24px 16px;
-  margin: 0 auto;
-  max-width: 1152px;
-}
-
-.sub-header .functionDiv .ant-input-group-wrapper {
-  flex: 100;
-}
-
-.sub-header .functionDiv .ant-input-group-wrapper .ant-input {
+.sub-header .functionDiv .ant-input {
   height: 40px;
   font-size: 16px;
   padding-left: 16px;
@@ -312,23 +139,24 @@
   border-left: #C2C4C4 solid 2px;
 }
 
-.sub-header .functionDiv .ant-input-group-wrapper button {
-  height: 40px;
-  background-color: #261BC9;
-  border: none;
-}
-
-.sub-header .functionDiv > div > button {
-  width: 208px;
+.sub-header .functionDiv button {
   height: 40px;
   font-size: 16px;
-  color: #ffffff;
-  background-color: #261BC9;
-  margin-left: 32px;
-  display: flex;
-  justify-content: space-between;
   border: none;
+  color: #ffffff;
+} .sub-header .functionDiv.mainNet button {
+  background-color: #261BC9;
+} .sub-header .functionDiv.testNet button {
+  background-color: #000000;
 }
+
+.sub-header .functionDiv > button {
+  width: 208px;
+  margin-left: 32px;
+  justify-content: space-between;
+}
+
+/* affix */
 
 .sub-header .sub-menu {
   background-color:#ffffff;
@@ -351,6 +179,120 @@
 } .sub-header .sub-menu .ant-menu-item-active {
   color: #261BC9;
   border-color: #261BC9;
+}
+
+/* footer */
+
+.ant-layout-footer {
+  padding: 0;
+  background-color: #ffffff;
+}
+
+.ant-layout-footer .ant-row {
+  padding: 24px 16px;
+}
+
+.ant-layout-footer .ant-row div {
+  justify-content: flex-end;
+}
+
+.ant-layout-footer .ant-row div .ant-btn {
+  height: 24px;
+  margin-left: 16px;
+}
+
+.ant-layout-footer .ant-row div .ant-btn img {
+  height: 24px;
+}
+
+/* Authority */
+
+.contentDiv {
+  padding-bottom: 64px;
+}
+
+.authorityComp {
+  margin-top: 16px;
+  padding: 0 16px;
+} .authorityComp:first-child {
+  margin-top: 24px;
+}
+
+.authorityComp .authorityComp_contnet {
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 16px;
+  align-items: flex-start;
+}
+
+.authorityComp .authorityComp_contnet .img_container {
+  width: 192px;
+  height: 192px;
+  margin-right: 16px;
+  overflow: hidden;
+}
+
+.authorityComp .authorityComp_contnet .img_container img {
+  width: 100%;
+}
+
+.authorityComp .authorityComp_contnet .text_container {
+  padding-left: 24px;
+  border-left: #EEEEF0 solid 2px;
+  height: 192px;
+} .authorityComp .authorityComp_contnet .text_container.long {
+  height: auto;
+  min-height: 192px;
+}
+
+.authorityComp .authorityComp_contnet .text_container .title {
+  margin: 8px 0 0 0;
+  line-height: 28px;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.authorityComp .authorityComp_contnet .text_container .address {
+  line-height: 20px;
+}
+
+.authorityComp .authorityComp_contnet .text_container .description {
+  margin: 12px 0 0 0;
+  overflow: hidden;
+}
+
+.authorityComp .authorityComp_contnet .text_container .link_container {
+  margin: 12px 0 0 0;
+  align-items: flex-end;
+}
+
+.authorityComp .authorityComp_contnet .text_container .more {
+  line-height: 24px;
+  color: #261BC9;
+}
+
+.authorityComp .authorityComp_contnet .text_container .SNSList {
+  width: 24px;
+  height: 24px;
+  justify-content: flex-end;
+}
+
+.authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup {
+  margin: 0 0 0 8px;
+} 
+
+.authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x {
+  font-size: 24px;
+  color: rgba(0,0,0,0.6);
+  transition: color 0.3s;
+  color: rgba(0,0,0,0.6);
+} .authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x:hover {
+  color: #261BC9;
+}
+
+/* vote */
+
+.text_btn {
+  flex: 100;
 }
 
 .ant-modal-body .changeDay {
@@ -719,13 +661,6 @@
 
 .contentVotingDiv .ant-form-item .ant-input-search-button {
   width: 208px !important;
-}
-
-.errHint {
-  display: block !important;
-  line-height: 1.5;
-  margin: 0;
-  color:#FC0F1B;
 }
 
 span.errInput input{

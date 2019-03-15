@@ -47,11 +47,12 @@ class App extends React.Component {
     this.updateAccountBalance = this.updateAccountBalance.bind(this)
     this.updateDefaultAccount = this.updateDefaultAccount.bind(this)
     this.onMenuClick = this.onMenuClick.bind(this)
+    this.getIsMainNet = this.getIsMainNet.bind(this)
     this.getContent = this.getContent.bind(this)
     this.getErrModal = this.getErrModal.bind(this)
     this.submitMetaStaking = this.submitMetaStaking.bind(this)
     this.convertVotingComponent = this.convertVotingComponent.bind(this)
-    this.convertloading = this.convertloading.bind(this)
+    this.convertLoading = this.convertLoading.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
     this.getStakingModal = this.getStakingModal.bind(this)
@@ -59,7 +60,7 @@ class App extends React.Component {
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       console.log(web3Config)
-      this.initContracts(web3Config.web3)
+      this.initContracts(web3Config)
       await this.initAuthorityLists()
       this.setState({ loadWeb3: true })
     }, async error => {
@@ -68,10 +69,10 @@ class App extends React.Component {
     })
   }
   
-  async initContracts (web3) {
+  async initContracts (web3Config) {
     initContracts({
-      web3: web3,
-      netid: web3.netid
+      web3: web3Config.web3,
+      netid: web3Config.netId
     }).then(async () => {
       await this.updateAccountBalance();
       window.ethereum.on('accountsChanged', async (chagedAccounts) => {
@@ -145,8 +146,7 @@ class App extends React.Component {
         contracts={contracts}
         getErrModal={this.getErrModal}
         authorityOriginData={this.data.authorityOriginData}
-        buttonLoading={this.state.loading}
-        convertButtonLoading={this.convertloading}/>
+        netid={this.getIsMainNet()}/>
       case '2': return <Voting
         title='Voting'
         contracts={contracts}
@@ -154,7 +154,7 @@ class App extends React.Component {
         authorityOriginData={this.data.authorityOriginData}
         convertComponent={this.convertVotingComponent}
         buttonLoading={this.state.loading}
-        convertButtonLoading={this.convertloading}
+        convertButtonLoading={this.convertLoading}
         newProposal={this.state.showProposal}
         isMember={this.data.isMember}/>
       default:
@@ -169,10 +169,15 @@ class App extends React.Component {
     }
   }
 
-  convertloading(state) {
+  convertLoading(state) {
     if(typeof(state) === 'boolean') {
       this.setState({ loading: state })
     } 
+  }
+
+  getIsMainNet() {
+    //return constants.NETWORKS[web3Instance.netId].NAME === 'MAINNET' ? 'mainNet' : 'testNet'
+    return 'mainNet'
   }
 
   getErrModal(_err = 'Unknown Error', _title = 'Unknown Error', _link = false) {
@@ -213,6 +218,7 @@ class App extends React.Component {
         data: trx.data
       },  async (err, hash) => {
         if (err) {
+          console.log(err)
           this.getErrModal(err.message, 'Deposit Error')
           this.setState({ stakingModalVisible: false, loading: false })
         } else {
@@ -227,6 +233,7 @@ class App extends React.Component {
         data: trx.data
       }, async (err, hash) => {
         if (err) {
+          console.log(err)
           this.getErrModal(err.message, 'Withdraw Error')
           this.setState({ stakingModalVisible: false, loading: false })
         } else {
@@ -251,36 +258,39 @@ class App extends React.Component {
     return (
       <Layout className='layout'>
         {this.state.contractReady && this.state.loadWeb3
-          ? <div>
-            <Header>
+          ? <div className="flex-column">
+            <Header className={this.getIsMainNet()}>
               <TopNav
+                netid={this.getIsMainNet()}
                 nav={this.state.nav}
+                myBalance={this.data.myBalance}
+                myLockedBalance={this.data.myLockedBalance} 
                 onMenuClick={this.onMenuClick}
-                showStakingModal={this.getStakingModal}
-                balance={this.data.myBalance}
-                lockedBalance={this.data.myLockedBalance} />
+                getStakingModal={this.getStakingModal}/>
             </Header>
 
             <StakingModal
+              netid={this.getIsMainNet()}
               accountBalance={{ balance: this.data.myBalance, lockedBalance: this.data.myLockedBalance }}
               stakingModalVisible={this.state.stakingModalVisible}
+              loading={this.state.loading}
+              stakingAmount={this.data.stakingAmount}
+              stakingTopic={this.data.stakingTopic}
+              stakingInvalidErr={this.state.stakingInvalidErr}
               hideStakingModal={() => {if(!this.state.loading) this.setState({ stakingModalVisible: false })}}
               submitMetaStaking={this.submitMetaStaking}
               handleInputChange={this.handleInputChange}
-              handleSelectChange={this.handleSelectChange}
-              stakingLoading={this.state.loading}
-              amount={this.data.stakingAmount}
-              selectedStakingTopic={this.data.stakingTopic}
-              stakingInvalidErr={this.state.stakingInvalidErr} />
+              handleSelectChange={this.handleSelectChange} />
 
             <ErrModal
+              netid={this.getIsMainNet()}
               title={this.data.errTitle}
               err={this.data.errContent}
               link={this.data.errLink}
               visible={this.state.errModalVisible}
               coloseErrModal = {() => this.setState({ errModalVisible: !this.state.loadWeb3})} />
 
-            <Content style={{ backgroundColor: '##EEEEF0' }}>
+            <Content>
               {this.state.loadWeb3
                 ? <div> {this.getContent()} </div>
                 : this.getErrModal('This is an unknown network. Please connect to Metadium network', 'Connecting Error')
@@ -288,7 +298,7 @@ class App extends React.Component {
             </Content>
 
             <Footer>
-              <FootNav />
+              <FootNav netid={this.getIsMainNet()} />
             </Footer>
           </div>
           :

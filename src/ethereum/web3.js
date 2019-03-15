@@ -54,7 +54,7 @@ let getWeb3Instance = () => {
         console.log('No web3 instance injected, using Local web3.')
         console.error('Metamask not found')
 
-        netId = constants.NETID_TESTNET
+        netId = constants.NET_ID
         const network = constants.NETWORKS[netId]
 
         web3 = new Web3(new Web3.providers.HttpProvider(network.RPC))

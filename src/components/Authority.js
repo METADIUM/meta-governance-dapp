@@ -1,71 +1,56 @@
 import React from 'react'
-import { Button } from 'antd'
+import { SubHeader } from './Nav'
+import { AuthorityItem } from './AuthorityItem'
 import './style/style.css'
 
 class Authority extends React.Component {
     data = {
-      authorityItems: new Map()
+      authorityItems: new Map(),
+      textContainers: new Map()
     }
 
     state = {
+      visibleAuthorityItems: [],
       getAuthorityInfo: false
     }
 
-    async componentDidMount () {
-      this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
-      await this.getAuthorityList()
-      this.setState({ getAuthorityInfo: true })
+    constructor (props) {
+      super(props)
+      this.onSearchBtnClick = this.onSearchBtnClick.bind(this)
+      this.onReadMoreClick = this.onReadMoreClick.bind(this)
+      this.getAuthorityList = this.getAuthorityList.bind(this)
+    }
+
+    componentDidMount () {
+      this.getAuthorityList()
+    }
+
+    onSearchBtnClick(str) {
+      str = str.toLowerCase()
+      let authorityItems = []
+      this.data.authorityItems.forEach((value) => {
+        if(value.props.item.title.toLowerCase().indexOf(str) !== -1 || value.props.item.addr.toLowerCase().indexOf(str) !== -1) {
+          authorityItems.push(value)
+        }
+      })
+      this.setState({visibleAuthorityItems: authorityItems})
     }
 
     onApplyBtnClick () {
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
     }
 
-    breakLine (description) {
-      var br = React.createElement('br')
+    onReadMoreClick(index) {
+      if(!this.data.textContainers.get(index).className.includes('long')) this.data.textContainers.get(index).className = 'text_container flex-full flex-column long'
+      else this.data.textContainers.get(index).className = 'text_container text_container flex-full flex-column'
+    }
+
+    breakLine(description) {
       var regex = /(<br>)/g
       return description.split(regex).map((line, index) => line.match(regex) ? <br key={'key_' + index} /> : line)
     }
 
-    onReadMoreClick (index) {
-      console.log(index)
-      this.getAuthorityList(index)
-    }
-
-    async getAuthorityList (index) {
-      let list = new Map()
-      
-      this.props.authorityOriginData.map(async (item, i) => {
-        let isMember =  await this.props.contracts.gov.isMember(item.addr)
-        if (isMember) {
-          list.set(i,
-            <div key={item.addr} className='authorityComp'>
-              <div className='authorityComp_contnet'>
-                <div className='img_container'>
-                  <img src={item.logo} alt='' />
-                </div>
-                <div className={i === index ? 'text_container long' : 'text_container short'}>
-                  <p className='title'>{item.title}</p>
-                  <p className='address'>Address: {item.addr}</p>
-                  <p className={'description'}>{this.breakLine(item.description)}</p>
-                  <div className='link_container'>
-                    <a className='more' onClick={e => this.onReadMoreClick(i)}>+ Read More</a>
-                    <div className='SNSList'>
-                      {this.getSNSList(item.sns)}
-                      <a className='snsGroup' href={item.homepage}> <i className='fas fa-home fa-2x' /> </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        }
-        this.data.authorityItems = new Map([...list.entries()].sort())
-        this.setState({ getAuthorityInfo: true })
-      })
-    }
-
-    getSNSList (snsList) {
+    getSNSList(snsList) {
       let sns = []
       for (var key in snsList) {
         let icon = null
@@ -86,15 +71,42 @@ class Authority extends React.Component {
       return sns
     }
 
-    render () {
+    async getAuthorityList() {
+      let list = new Map()
+      this.props.authorityOriginData.map(async (item, index) => {
+        let isMember =  await this.props.contracts.gov.isMember(item.addr)
+        if (isMember) {
+          list.set(index, <AuthorityItem
+            key={item.addr}
+            item={item}
+            index={index}
+            textContainers={this.data.textContainers}
+            breakLine={this.breakLine}
+            onReadMoreClick={this.onReadMoreClick}
+            getSNSList={this.getSNSList}/>
+          )
+        }
+
+        this.data.authorityItems = new Map([...list.entries()].sort())
+        this.setState({ getAuthorityInfo: true, visibleAuthorityItems: [...this.data.authorityItems.values()] })
+      })
+    }
+
+    render() {
       return (
         <div className='background'>
-          <div className='contentDiv'>
-            <div className='apply_proposal_Btn_container'><Button className='apply_proposal_Btn' onClick={this.onApplyBtnClick}>Apply for Authority</Button></div>
+          <SubHeader
+            netid={this.props.netid}
+            placeholder='Search by Authority Name, Adress'
+            btnText='Apply for Authority'
+            btnFunction={this.onApplyBtnClick}
+            searchFunction={this.onSearchBtnClick} />
+            
+          <div className='contentDiv container'>
             <div className='card_container'>
               {this.state.getAuthorityInfo
-                ? [...this.data.authorityItems.values()]
-                : <div>empty</div>
+                ? this.state.visibleAuthorityItems
+                : <div>loading</div>
               }
             </div>
           </div>

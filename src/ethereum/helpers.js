@@ -6,6 +6,7 @@ function addressesURL (branch) {
   const URL = `https://raw.githubusercontent.com/${constants.organization}/${constants.repoName}/${branch}/${
     constants.addressesSourceFile
   }`
+  console.log('address URL : ', URL)
   return URL
 }
 
@@ -13,6 +14,7 @@ function ABIURL (branch, contract) {
   const URL = `https://raw.githubusercontent.com/${constants.organization}/${constants.repoName}/${branch}/abis/${
     constants.ABIsSources[contract]
   }`
+  console.log('ABI URL : ', URL)
   return URL
 }
 
@@ -22,12 +24,13 @@ function getABI (branch, contract) {
 }
 
 function getBranch (netId) {
-  switch (netId) {
-    case constants.NETID_TESTNET:
-      return 'testnet'
-    default:
-      return 'testnet'
-  }
+  // switch (netId) {
+  //   case constants.NETID_TESTNET:
+  //     return 'mainnet'
+  //   default:
+  //     return 'mainnet'
+  // }
+  return constants.NETWORKS[netId].BRANCH;
 }
 
 export {

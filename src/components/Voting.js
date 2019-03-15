@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Progress, Input, Affix, Menu, Modal, Slider, Icon } from 'antd'
+import { Button, Progress, Input, Affix, Menu, Modal, Slider } from 'antd'
 import './style/style.css'
 import { ProposalForm } from './ProposalForm'
 import { BaseLoader } from './BaseLoader'
@@ -70,11 +70,13 @@ class Voting extends React.Component {
 
     async getOriginData () {
       if (!this.data.ballotCnt) return
+      console.log('Ballot Count: ', this.data.ballotCnt)
       for (var i = 1; i <= this.data.ballotCnt; i++) {
         await this.props.contracts.ballotStorage.getBallotBasic(i).then(
           ret => {
             ret.id = i // Add ballot id
             this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
+            console.log('Ballot Items: ', util.refineBallotBasic(ret))
           })
         await this.props.contracts.ballotStorage.getBallotMember(i).then(
           ret => {
@@ -166,6 +168,7 @@ class Voting extends React.Component {
           </div>
         )
       })
+      console.log("list", list)
       this.data.ballotBasicOriginItems = list
 
       this.getBallotDetailInfo()
@@ -227,7 +230,8 @@ class Voting extends React.Component {
       this.data.activeItems = activeList
       this.data.proposalItems = proposalList
       this.data.finalizedItems = finalizedList
-      this.setState({visibleProposalItems: proposalList, visibleFinalizedList: finalizedList, isBallotLoading: true})
+      console.log(finalizedList)
+      this.setState({visibleProposalItems: proposalList, visibleFinalizedItems: finalizedList, isBallotLoading: true})
     }
 
     onClickDetail = (index, e) => {
@@ -399,6 +403,7 @@ class Voting extends React.Component {
       let finalizedItems = this.data.finalizedItems.filter(value => {
         return value.props.topic.toLowerCase().indexOf(str) !== -1 || value.props.company.toLowerCase().indexOf(str) !== -1 || value.props.creator.toLowerCase().indexOf(str) !== -1 || value.props.newaddr.toLowerCase().indexOf(str) !== -1 || value.props.oldaddr.toLowerCase().indexOf(str) !== -1
       })
+      console.log(finalizedItems)
       this.setState({visibleProposalItems: proposalItems, visibleFinalizedItems: finalizedItems})
     }
 
