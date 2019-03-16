@@ -158,25 +158,19 @@
 
 /* affix */
 
-.sub-header .sub-menu {
+.sub-menu {
   background-color:#ffffff;
+  border-top: #eeeef0 2px solid;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  display: flex;
-  justify-content: center;
-  z-index: 80;
 }
 
-.ant-affix {
-  z-index: 80 !important;
-}
-
-.sub-header .sub-menu .ant-menu-item {
+.sub-menu .ant-menu-item {
   font-size: 16px;
   line-height: 50px;
-} .sub-header .sub-menu .ant-menu-item-selected {
+} .sub-menu .ant-menu-item-selected {
   color: #261BC9;
   border-color: #261BC9;
-} .sub-header .sub-menu .ant-menu-item-active {
+} .sub-menu .ant-menu-item-active {
   color: #261BC9;
   border-color: #261BC9;
 }
@@ -291,15 +285,9 @@
 
 /* vote */
 
-.text_btn {
-  flex: 100;
-}
-
 .ant-modal-body .changeDay {
   font-size: 46px;
   color: rgba(0,0,0,0.87);
-  display: flex;
-  justify-content: center;
   margin: 0;
 }
 
@@ -307,56 +295,37 @@
   color: #000000;
   font-size: 30px;
   line-height: 38px;
-  font-weight: 600;
   margin: 32px 0 24px 0;
+  padding: 0 16px 0 16px;
 }
 
 .ballotDiv {
-  background-color: white;
-  margin-bottom: 24px;
+  background-color: #FFFFFF;
+  margin: 0 16px 16px 16px;
   height: 124px;
   border-radius: 4px;
   overflow-y: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: 0.3s;
 } .ballotDiv:hover {
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}.state2 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+} .ballotDiv.InProgress {
   height: auto !important;
 }
 
 .ballotDiv .ballotInfoDiv {
   padding: 24px 16px 24px 16px;
-  display: flex;
-}
-
-.ballotDiv .ballotInfoDiv .infoLeft {
-  flex: 100;
 }
 
 .ballotDiv .ballotInfoDiv .infoLeft .topic {
-  font-size: 20px;
-  font-weight: 500;
   color: #261BC9;
   margin-bottom: 8px;
 }
 
 .ballotDiv .ballotInfoDiv .infoLeft .company {
-  margin: 0;
-  font-size: 12px;
   color: rgba(0,0,0,0.87);
-}
-
-.ballotDiv .ballotInfoDiv .infoLeft .addr {
-  margin: 0;
-  font-size: 12px;
-  color: rgba(0,0,0,0.6);
 }
 
 .ballotDiv .ballotInfoDiv .infoRight {
   width: 208px;
-  display: flex;
-  flex-direction: column;
   align-items: flex-end;
   justify-content: space-between;
 }
@@ -364,72 +333,11 @@
 .ballotDiv .ballotInfoDiv .infoRight button {
   height: 28px;
   width: 28px;
-  padding: 0 !important;
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
-} .ballotDiv .ballotInfoDiv .infoRight button:visited {
-  transform: rotate( 180deg );
-}
-
-.ballotDiv .ballotInfoDiv .infoRight button i {
-  height: 20px;
   color: rgba(0,0,0,0.87);
-  font-size: 20px;
 }
 
 .ballotDiv .ballotInfoDiv .infoRight .status {
-  margin: 0;
   color: #261BC9;
-  font-size: 12px;
-}
-
-.ballotContentDiv {
-  position: relative;
-  border-radius: 4px;
-}
-
-.ballotContentDiv .ballotLoadingContainer {
-  position: absolute;
-  top: 2px;
-  z-index: 10;
-  width: 100%;
-  height: calc(100% - 2px);
-  background-color: rgba(38,27,201,0.38);
-  border-radius: 4px;
-  display: none;
-  opacity: 0;
-  transition: 0.3s;
-}
-
-.ballotContentDiv .ballotLoading:before {
-	content: '';
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 206px;
-	height: 35px;
-	background-image: url("./loading.png");
-	background-position: 0 0
-}
-
-.ballotContentDiv .ballotLoading {
-	display: -ms-flexbox;
-	display: flex;
-	-ms-flex-pack: justify;
-	justify-content: space-between;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	width: 206px;
-	margin: -30px 0 0 -111.5px;
-	padding-top: 50px
-}
-
-.ballotContentDiv .ballotLoading svg {
-  color: #261BC9;
-  width: 68px;
-  height: 68px;
 }
 
 .ballotContentDiv .voteDiv {
@@ -439,33 +347,31 @@
 }
 
 .ballotContentDiv .voteDiv .imageContent {
-  display: flex;
   height: 40px;
 }
 
 .ballotContentDiv .voteDiv .imageContent button {
   height: 40px;
   width: 64px;
-  font-size: 16px;
   border: none;
 } .ballotContentDiv .voteDiv .imageContent #yesVotingBtn {
   background-color: #261BC9;
   color: white;
   margin-right: 16px;
 } .ballotContentDiv .voteDiv .imageContent #noVotingBtn {
+  color: rgba(0,0,0,0.6) !important;
   background-color: #FEC3C2;
   margin-left: 16px;
-} .ballotContentDiv .voteDiv .imageContent #noVotingBtn:hover {
-  color: rgba(0,0,0,0.6);
-}.ballotContentDiv .voteDiv .imageContent button:disabled {
+} .ballotContentDiv .voteDiv .imageContent button:disabled {
   background-color: #EEEEF0 !important;
   color: rgba(0,0,0,0.6) !important;
 }
 
 .ballotContentDiv .voteDiv .imageContent .chart {
-  flex: 100;
   padding: 4px 0 2px 0px;
 }
+
+/*----------------------------------------------------------------*/
 
 .ballotContentDiv .voteDiv .imageContent .chart .number {
   line-height: 22px;

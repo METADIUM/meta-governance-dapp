@@ -1,7 +1,11 @@
+* {
+  transition: 0.3s;
+}
+
 html {
   font-size: 14px;
   font-weight: 400;
-  color:  rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 0.6);
 }
 
 p {
@@ -43,9 +47,10 @@ p {
 }
 
 .btn-img {
-  padding: 0;
+  padding: 0 !important;
   border: none;
   box-shadow: none;
+  background-color: transparent !important;
 }
 
 .center-vertical {
@@ -100,6 +105,10 @@ p {
 }
 
 .flex-full {
+  flex: 100;
+}
+
+.text_btn {
   flex: 100;
 }
 

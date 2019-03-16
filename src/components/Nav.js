@@ -24,7 +24,7 @@ const TopNav = ({ netid, nav, myBalance, myLockedBalance, onMenuClick = f => f, 
     </div>
   </Row>
 
-const SubHeader = ({netid,placeholder, condition = true, btnText, btnIcon = null, loading = false, searchFunction = f => f, btnFunction = f => f }) => 
+const SubHeader = ({netid, placeholder, condition = true, btnText, btnIcon = null, loading = false, searchFunction = f => f, btnFunction = f => f }) => 
   <div className="sub-header">
     <div className={'functionDiv flex container ' + netid}>
       <Input.Search
@@ -33,7 +33,7 @@ const SubHeader = ({netid,placeholder, condition = true, btnText, btnIcon = null
         onSearch = {searchFunction}
         enterButton
       />
-      <Button className='apply_proposal_Btn flex' disabled={!condition} onClick={e => btnFunction} loading={loading}>
+      <Button className='apply_proposal_Btn flex' disabled={!condition} onClick={e => btnFunction()} loading={loading}>
         <span>{btnIcon}</span>
         <span className='text_btn'>{btnText}</span>
       </Button>

@@ -5,8 +5,7 @@ import './style/style.css'
 
 class Authority extends React.Component {
     data = {
-      authorityItems: new Map(),
-      textContainers: new Map()
+      authorityItems: new Map()
     }
 
     state = {
@@ -19,6 +18,8 @@ class Authority extends React.Component {
       this.onSearchBtnClick = this.onSearchBtnClick.bind(this)
       this.onReadMoreClick = this.onReadMoreClick.bind(this)
       this.getAuthorityList = this.getAuthorityList.bind(this)
+
+      this.textContainers = new Map()
     }
 
     componentDidMount () {
@@ -41,8 +42,8 @@ class Authority extends React.Component {
     }
 
     onReadMoreClick(index) {
-      if(!this.data.textContainers.get(index).className.includes('long')) this.data.textContainers.get(index).className = 'text_container flex-full flex-column long'
-      else this.data.textContainers.get(index).className = 'text_container text_container flex-full flex-column'
+      if(!this.textContainers.get(index).className.includes('long')) this.textContainers.get(index).className = 'text_container flex-full flex-column long'
+      else this.textContainers.get(index).className = 'text_container text_container flex-full flex-column'
     }
 
     breakLine(description) {
@@ -80,7 +81,7 @@ class Authority extends React.Component {
             key={item.addr}
             item={item}
             index={index}
-            textContainers={this.data.textContainers}
+            textContainers={this.textContainers}
             breakLine={this.breakLine}
             onReadMoreClick={this.onReadMoreClick}
             getSNSList={this.getSNSList}/>

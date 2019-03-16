@@ -152,11 +152,12 @@ class App extends React.Component {
         contracts={contracts}
         getErrModal={this.getErrModal}
         authorityOriginData={this.data.authorityOriginData}
-        convertComponent={this.convertVotingComponent}
-        buttonLoading={this.state.loading}
-        convertButtonLoading={this.convertLoading}
-        newProposal={this.state.showProposal}
-        isMember={this.data.isMember}/>
+        convertVotingComponent={this.convertVotingComponent}
+        loading={this.state.loading}
+        convertLoading={this.convertLoading}
+        showProposal={this.state.showProposal}
+        isMember={this.data.isMember}
+        netid={this.getIsMainNet()}/>
       default:
     }
     this.setState({ selectedMenu: true })
