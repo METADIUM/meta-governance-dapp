@@ -25,10 +25,10 @@ const VotingBallots = ({item, ballotDetails, authorityName, newMemberAddress, ol
           <Button
             disabled={item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected}
             className="text-large" id='yesVotingBtn' onClick={() => onClickVote('Y', item.id, item.endTime, this.state)} >Yes</Button>
-          <div className='chart flex'>
-            <div className='number'>
-              <span>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}%</span>
-              <span>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}%</span>
+          <div className='chart flex-column flex-full'>
+            <div className='number flex'>
+              <span className='text-bold'>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}%</span>
+              <span className='text-bold'>{item.powerOfRejects === 0 ? '0' : item.powerOfRejects}%</span>
             </div>
             <Progress percent={item.powerOfAccepts} status='active' showInfo={false} />
           </div>
@@ -36,29 +36,29 @@ const VotingBallots = ({item, ballotDetails, authorityName, newMemberAddress, ol
             disabled={item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected}
             className="text-large" id='noVotingBtn' onClick={() => onClickVote('N', item.id, item.endTime, this.state)} >No</Button>
         </div>
-        <div className='textContent'>
+        <div className='textContent flex'>
           {setDescription(item.ballotType, newMemberAddress, oldMemberAddress, item.id)}
           <div className='duration'>
             { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected || item.state === constants.ballotState.InProgress
               ? <div>
-                <div><span>Start : </span><span>{item.startTime}</span></div>
-                <div><span>End : </span><span>{item.endTimeConverted}</span></div>
+                <div className="flex"><span>Start : </span><span>{item.startTime}</span></div>
+                <div className="flex"><span>End : </span><span>{item.endTimeConverted}</span></div>
               </div> : null }
             { item.state === constants.ballotState.Ready
               ? <div>
-                <div><span>duration</span><span className="days">{item.duration === 0? 1 : item.duration}days</span></div>
-                <Button type='primary' onClick={() => onClickUpdateProposal('change', item.id, item.duration, newMemberAddress, oldMemberAddress)}>Change</Button>
+                <div className="flex"><span>duration</span><span className="days">{item.duration === 0? 1 : item.duration}days</span></div>
+                <Button className='btn-fill-gray' type='primary' onClick={() => onClickUpdateProposal('change', item.id, item.duration, newMemberAddress, oldMemberAddress)}>Change</Button>
               </div> : null }
           </div>
         </div>
       </div>
       <div className='memoDiv'>
-        <p>MEMO</p>
+        <p className='text-bold'>MEMO</p>
         <p className="text-container">{item.memo}</p>
       </div>
       { item.state === '1'
-        ? <div className='revokeDiv'>
-          <Button onClick={() => onClickUpdateProposal('revoke', item.id, item.duration, newMemberAddress, oldMemberAddress)}>Revoke</Button>
+        ? <div className='revokeDiv flex'>
+          <Button className='btn-fill-gray' onClick={() => onClickUpdateProposal('revoke', item.id, item.duration, newMemberAddress, oldMemberAddress)}>Revoke</Button>
         </div> : null }
     </div>
   </div>

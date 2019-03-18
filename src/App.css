@@ -1,11 +1,15 @@
 * {
-  transition: 0.3s;
+  transition: all 0.3s ease-in-out;
 }
 
 html {
   font-size: 14px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.6);
+}
+
+body {
+  padding: 0 !important;
 }
 
 p {
@@ -28,6 +32,12 @@ p {
   border: #000000 solid 2px;
   background-color: #000000;
   color: #FFFFFF;
+}
+
+.btn-fill-gray {
+  border: none;
+  background-color: #eeeef0;
+  color: rgba(0,0,0,0.87);
 }
 
 .btn-grid-primary.mainNet {

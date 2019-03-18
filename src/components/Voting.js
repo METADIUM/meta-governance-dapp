@@ -146,7 +146,7 @@ class Voting extends React.Component {
   }
 
   setTopic(type, newAddr, oldAddr) {
-    if(newAddr === oldAddr) return 'MemberUpdate'
+    if(type === constants.ballotTypes.MemberChange && newAddr === oldAddr) return 'MemberUpdate'
     else return constants.ballotTypesArr[parseInt(type)]
   }
 
@@ -154,29 +154,29 @@ class Voting extends React.Component {
     const lockAmount = web3Instance.web3.utils.fromWei(this.data.ballotMemberOriginData[id].lockAmount, 'ether')
     switch(type) {
       case constants.ballotTypes.MemverAdd:
-        return <p className='description'>
+        return <p className='description flex-full'>
           New Authority Address: {newAddr}<br />
           META To be Locked: {lockAmount}META
         </p>
       case constants.ballotTypes.MemberRemoval:
-        return <p className='description'>
+        return <p className='description flex-full'>
           Address To be Removed: {oldAddr}<br />
           META Amount to be unlocked: {lockAmount}META
         </p>
       case constants.ballotTypes.MemberChange:
         if(newAddr === oldAddr) {
-          return <p className='description'>
+          return <p className='description flex-full'>
           META To be Locked: {lockAmount}META
         </p>
         } else {
-          return <p className='description'>
+          return <p className='description flex-full'>
           Old Authority Address: {oldAddr}<br />
           New Authority Address: {newAddr}<br />
           META To be Locked: {lockAmount}META
         </p>
         }
       default:
-        return <p className='description'>
+        return <p className='description flex-full'>
         New Authority Address: {newAddr}<br />
         META To be Locked: {lockAmount}META
       </p>
@@ -381,7 +381,7 @@ class Voting extends React.Component {
               <p className='stateTitle text-heavy' ref={ref => { this.proposalTitle = ref }}>Proposals</p>
               {this.state.visibleProposalItems.slice(0, this.state.proposalCount)}
               {this.state.visibleProposalItems.length > 0
-              ? <div className='moreDiv'>
+              ? <div className='moreDiv flex flex-center-vertical'>
                 <Button value='large' onClick={(e) => this.onClickReadMore('proposal')}>
                   <span>+</span>
                   <span className='text_btn'>Read More</span>

@@ -144,6 +144,8 @@
   font-size: 16px;
   border: none;
   color: #ffffff;
+} .sub-header .functionDiv button:disabled {
+  color: #ffffff !important;
 } .sub-header .functionDiv.mainNet button {
   background-color: #261BC9;
 } .sub-header .functionDiv.testNet button {
@@ -374,29 +376,21 @@
 /*----------------------------------------------------------------*/
 
 .ballotContentDiv .voteDiv .imageContent .chart .number {
-  line-height: 22px;
   margin-bottom: 4px;
-  display: flex;
   justify-content: space-between;
 }
 
 .ballotContentDiv .voteDiv .imageContent .chart .number {
   color: rgba(0,0,0,0.87);
-  font-weight: 500;
 }
 
 .ant-progress {
-  display: block !important;
   line-height: 1 !important;
   font-size: 8px !important;
 }
 
-.ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer {
-  margin: 0;
-}
-
 .ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer .ant-progress-inner {
-  background-color: #FEC3C2;
+  background-color: #FEC7E0;
 }
 
 .ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer .ant-progress-inner .ant-progress-bg {
@@ -405,15 +399,11 @@
 
 .ballotContentDiv .voteDiv .textContent {
   margin-top: 24px;
-  display: flex;
-  line-height: 22px;
 }
 
 .ballotContentDiv .voteDiv .description {
   color: rgba(0,0,0,0.6);
   min-height: 66px;
-  flex: 100;
-  margin: 0;
 }
 
 .ballotContentDiv .voteDiv .duration {
@@ -422,7 +412,6 @@
 }
 
 .ballotContentDiv .voteDiv .duration > div > div {
-  display: flex;
   justify-content: space-between;
 }
 
@@ -434,9 +423,6 @@
   height: 30px;
   width: 208px;
   margin-top: 4px;
-  border: none;
-  background-color: #EEEEF0;
-  color: rgba(0,0,0,0.87);
 }
 
 .ballotContentDiv .memoDiv {
@@ -445,7 +431,6 @@
 
 .ballotContentDiv .memoDiv p:first-child {
   color: rgba(0,0,0,0.87);
-  font-weight: 500;
   margin-bottom: 8px;
 }
 
@@ -456,16 +441,12 @@
 .ballotContentDiv .revokeDiv {
   padding: 24px 16px 24px 16px;
   border-top: #EEEEF0 solid 2px;
-  display: flex;
   justify-content: flex-end;
 }
 
 .ballotContentDiv .revokeDiv button {
   height: 30px;
   width: 208px;
-  border: none;
-  background-color: #EEEEF0;
-  color: rgba(0,0,0,0.87);
 }
 
 .moreDiv {
