@@ -20,7 +20,7 @@ const TopNav = ({ netid, nav, myBalance, myLockedBalance, onMenuClick = f => f, 
         <p className={'staked ' + netid}>Staked {myBalance} META</p>
         <p className={'meta ' + netid}>(Locked {myLockedBalance} META)</p>
       </div>
-      <Button className={"btn-grid-primary " + netid} type='primary' onClick={getStakingModal}>META Staking</Button>
+      <Button className={"btn-grid-primary " + netid} onClick={getStakingModal}>META Staking</Button>
     </div>
   </Row>
 
