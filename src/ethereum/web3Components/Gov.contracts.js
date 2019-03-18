@@ -9,18 +9,18 @@ class Gov {
     this.govInstance = new web3.eth.Contract(this.govAbi.abi, GOV_ADDRESS)
   }
 
-  async getBallotLength () {
+  getBallotLength () {
     if (!this.govInstance || !this.govInstance.methods) return
-    return await this.govInstance.methods.ballotLength().call()
+    return this.govInstance.methods.ballotLength().call()
   }
 
   /**
    *
    * @param {address} addr
    */
-  async isMember (addr) {
+  isMember (addr) {
     if (!this.govInstance || !this.govInstance.methods) return
-    return await this.govInstance.methods.isMember(addr).call()
+    return this.govInstance.methods.isMember(addr).call()
   }
 }
 export { Gov }

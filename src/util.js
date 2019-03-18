@@ -7,7 +7,6 @@ var borderColor = {
   invalid: 'red'
 }
 
-var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 var dayTimestamp = 86400
 
 /**
@@ -16,8 +15,7 @@ var dayTimestamp = 86400
  */
 function timeConverter (timestamp) {
   var a = new Date(timestamp * 1000)
-  var month = months[a.getMonth()]
-  return a.getFullYear() + '/' + +0+(a.getMonth()+1) + '/' + a.getDate() +' ' + a.getHours() + ':' + a.getMinutes() + '(UTC)'
+  return a.getFullYear() + '/' + +0 + (a.getMonth() + 1) + '/' + a.getDate() + ' ' + a.getHours() + ':' + a.getMinutes() + '(UTC)'
 }
 
 function convertDayToTimestamp (day) {
@@ -59,7 +57,7 @@ function refine (m) {
 
 function refineBallotBasic (m) {
   if (!m) return null
-  if(m.state === '2' && m.endTime * 1000 < Date.now()) m.state = '4'
+  if (m.state === '2' && m.endTime * 1000 < Date.now()) m.state = '4'
   Object.keys(m).forEach(key => {
     if (!isNaN(key)) return delete m[key]
     switch (key) {
@@ -77,11 +75,11 @@ function refineBallotBasic (m) {
 }
 
 function refineSubmitData (m) {
-  if (m === null || typeof(m) !== "object") {
-    return m;
+  if (m === null || typeof (m) !== 'object') {
+    return m
   }
-  let copy = {};
-  for(let key in m) { copy[key] = m[key] }
+  let copy = {}
+  for (let key in m) { copy[key] = m[key] }
 
   Object.keys(copy).forEach(key => {
     if (!isNaN(key)) return delete copy[key]
@@ -91,7 +89,7 @@ function refineSubmitData (m) {
       case 'lockAmount':
       case 'oldLockAmount':
       case 'newLockAmount': copy[key] = web3Instance.web3.utils.toWei(copy[key].toString(), 'ether'); break
-      case 'memo': 
+      case 'memo':
       case 'newName': copy[key] = web3Instance.web3.utils.asciiToHex(copy[key]); break
       case 'node':
       case 'newNode':
@@ -175,43 +173,6 @@ var setUsersToLocal = (obj) => save('users', obj)
 var setTopicsToLocal = (obj) => save('topics', obj)
 var setAchievementsToLocal = (obj) => save('achievements', obj)
 
-/**
- * Validators for ant design form
- */
-const validNumber = (rule, value, callback) => {
-  const v = Number(value)
-  if (value === undefined || value === '') {
-    callback('Please input ...')
-    return
-  } else if (isNaN(v)) {
-    callback('Invalid number')
-    return
-  } else if (v % 1 !== 0) {
-    callback('Only Integer')
-  }
-  callback()
-}
-const validAddress = (rule, value, callback) => {
-  if (value === undefined || value === '') {
-    callback('Please input ...')
-    return
-  } else if (value.substring(0, 2) !== '0x' || isNaN(Number(value))) {
-    callback('Invalid address')
-    return
-  }
-  callback()
-}
-const validLength = (rule, value, callback) => {
-  if (value === undefined) {
-    callback()
-    return
-  } else if (value.length > 256) {
-    callback('Longer than 256')
-    return
-  }
-  callback()
-}
-
 export {
   borderColor,
   timeConverter,
@@ -234,8 +195,5 @@ export {
   setUsersToLocal,
   setTopicsToLocal,
   setAchievementsToLocal,
-  validNumber,
-  validAddress,
-  validLength,
   splitNodeDescription
 }

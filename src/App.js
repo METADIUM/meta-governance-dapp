@@ -11,8 +11,7 @@ import { constants } from './ethereum/constants'
 import './App.css'
 
 // web3
-import getWeb3Instance from './ethereum/web3'
-import { web3Instance } from './ethereum/web3'
+import getWeb3Instance, { web3Instance } from './ethereum/web3'
 
 // Contracts
 import { contracts, initContracts } from './ethereum/web3Components/contracts'
@@ -24,6 +23,8 @@ class App extends React.Component {
     myLockedBalance: 0,
     stakingTopic: 'deposit',
     stakingAmount: '1',
+    stakingMax: null,
+    stakingMin: null,
     eventsWatch: null,
     authorityOriginData: [],
     errTitle: null,
@@ -39,15 +40,16 @@ class App extends React.Component {
     stakingInvalidErr: false,
     errModalVisible: false,
     loading: false,
-    showProposal: false
+    showProposal: false,
+    isMainNet: false
   };
 
   constructor (props) {
     super(props)
     this.updateAccountBalance = this.updateAccountBalance.bind(this)
     this.updateDefaultAccount = this.updateDefaultAccount.bind(this)
+    this.setIsMainNet = this.setIsMainNet.bind(this)
     this.onMenuClick = this.onMenuClick.bind(this)
-    this.getIsMainNet = this.getIsMainNet.bind(this)
     this.getContent = this.getContent.bind(this)
     this.getErrModal = this.getErrModal.bind(this)
     this.submitMetaStaking = this.submitMetaStaking.bind(this)
@@ -68,63 +70,78 @@ class App extends React.Component {
       this.setState({ loadWeb3: false })
     })
   }
-  
+
   async initContracts (web3Config) {
     initContracts({
       web3: web3Config.web3,
       netid: web3Config.netId
     }).then(async () => {
-      await this.updateAccountBalance();
+      await this.setIsMainNet()
+      await this.updateAccountBalance()
       window.ethereum.on('accountsChanged', async (chagedAccounts) => {
-        await this.updateDefaultAccount(chagedAccounts[0]);
+        await this.updateDefaultAccount(chagedAccounts[0])
       })
-      this.setStakingEventsWatch();
+      this.setStakingEventsWatch()
       this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
       this.setState({ contractReady: true })
     })
   }
 
-  async updateAccountBalance(){
+  async updateAccountBalance () {
     this.data.myBalance = await contracts.staking.balanceOf(web3Instance.defaultAccount)
     this.data.myLockedBalance = await contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
     this.data.myBalance = web3Instance.web3.utils.fromWei(this.data.myBalance, 'ether')
     this.data.myLockedBalance = web3Instance.web3.utils.fromWei(this.data.myLockedBalance, 'ether')
-    this.setState({stakingModalVisible: false, loading: false})
+    this.setState({ stakingModalVisible: false, loading: false })
   }
-  
-  async updateDefaultAccount(account){
-    if(web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase() ){
-      console.log("change address:",account);
-      web3Instance.defaultAccount = account;
-      await this.updateAccountBalance();
-      this.setStakingEventsWatch();
+
+  async updateDefaultAccount (account) {
+    if (web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase()) {
+      console.log('change address:', account)
+      web3Instance.defaultAccount = account
+      await this.updateAccountBalance()
+      this.setStakingEventsWatch()
       this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
-      this.setState({showProposal: false})
-    }else{
-      console.log("notChanged");
+      this.setState({ showProposal: false })
+    } else {
+      console.log('notChanged')
     }
   }
 
-  setStakingEventsWatch(){
-    if (this.data.eventsWatch ){
-      let subscription = this.data.eventsWatch;
-      subscription.unsubscribe(function(error, success){
-        if(success)
-            console.log('Successfully unsubscribed!');
-      });
+  setStakingEventsWatch () {
+    if (this.data.eventsWatch) {
+      let subscription = this.data.eventsWatch
+      subscription.unsubscribe(function (error, success) {
+        if (error) console.log('Faild to unsubscribed!')
+        else if (success) console.log('Successfully unsubscribed!')
+      })
     }
-    var filteraddress = web3Instance.web3.eth.abi.encodeParameter('address', web3Instance.defaultAccount);
+    var filteraddress = web3Instance.web3.eth.abi.encodeParameter('address', web3Instance.defaultAccount)
     this.data.eventsWatch = contracts.staking.stakingInstance.events.allEvents(
       {
         fromBlock: 'latest',
         topics: [null, filteraddress]
-      }, (error, events) => { 
-        console.log(events); 
-        if(error) console.log("error", error)
+      }, (error, events) => {
+        console.log(events)
+        if (error) console.log('error', error)
         else this.updateAccountBalance()
       }
     )
-    console.log("Successfully subscribed!");
+    console.log('Successfully subscribed!')
+  }
+
+  async setIsMainNet () {
+    const netid = constants.NETWORKS[web3Instance.netId].NAME === 'MAINNET' ? 'mainNet' : 'testNet'
+    if (netid === 'mainNet') {
+      this.data.stakingMin = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMin())
+      this.data.stakingMax = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMax())
+    } else {
+      this.data.stakingMin = constants.limitAmount.stakingMin
+      this.data.stakingMax = constants.limitAmount.stakingMax
+    }
+    console.log('stkaingMin', this.data.stakingMin)
+    console.log('stkaingMax', this.data.stakingMax)
+    this.setState({ isMainNet: netid })
   }
 
   async initAuthorityLists () {
@@ -134,7 +151,7 @@ class App extends React.Component {
     })
   }
 
-  onMenuClick({ key }) {
+  onMenuClick ({ key }) {
     this.setState({ nav: key })
   }
 
@@ -146,7 +163,7 @@ class App extends React.Component {
         contracts={contracts}
         getErrModal={this.getErrModal}
         authorityOriginData={this.data.authorityOriginData}
-        netid={this.getIsMainNet()}/>
+        netid={this.state.isMainNet} />
       case '2': return <Voting
         title='Voting'
         contracts={contracts}
@@ -157,67 +174,64 @@ class App extends React.Component {
         convertLoading={this.convertLoading}
         showProposal={this.state.showProposal}
         isMember={this.data.isMember}
-        netid={this.getIsMainNet()}/>
+        netid={this.state.isMainNet}
+        stakingMax={this.data.stakingMax}
+        stakingMin={this.data.stakingMin} />
       default:
     }
     this.setState({ selectedMenu: true })
   }
 
-  convertVotingComponent(component) {
-    switch(component) {
-      case 'voting': this.setState({showProposal: false}); break
-      case 'proposal': this.setState({showProposal: true}); break
+  convertVotingComponent (component) {
+    switch (component) {
+      case 'voting': this.setState({ showProposal: false }); break
+      case 'proposal': this.setState({ showProposal: true }); break
     }
   }
 
-  convertLoading(state) {
-    if(typeof(state) === 'boolean') {
+  convertLoading (state) {
+    if (typeof (state) === 'boolean') {
       this.setState({ loading: state })
-    } 
+    }
   }
 
-  getIsMainNet() {
-    //return constants.NETWORKS[web3Instance.netId].NAME === 'MAINNET' ? 'mainNet' : 'testNet'
-    return 'mainNet'
-  }
-
-  getErrModal(_err = 'Unknown Error', _title = 'Unknown Error', _link = false) {
-    if(_err.includes('error:')) _err = _err.split('error:')[1]
+  getErrModal (_err = 'Unknown Error', _title = 'Unknown Error', _link = false) {
+    if (_err.includes('error:')) _err = _err.split('error:')[1]
 
     this.data.errTitle = _title
     this.data.errContent = _err
-    if(_link) this.data.errLink = constants.NETWORKS[web3Instance.netId] + _link
+    if (_link) this.data.errLink = constants.NETWORKS[web3Instance.netId] + _link
     else this.data.errLink = false
-    this.setState({errModalVisible: true})
+    this.setState({ errModalVisible: true })
   }
 
-  getStakingModal() {
+  getStakingModal () {
     this.data.stakingAmount = '1'
     this.data.stakingTopic = 'deposit'
     this.setState({ stakingModalVisible: true })
   }
 
-  submitMetaStaking() {
-    if(!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
+  submitMetaStaking () {
+    if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
       this.setState({ stakingModalVisible: false })
       this.getErrModal('The staking amount format is incorrect.', 'Staking Error')
       return
     }
 
-    this.setState({loading: true})
+    this.setState({ loading: true })
     let trx = {}
-    console.log("before this.data.stakingAmount;",this.data.stakingAmount )
+    console.log('before this.data.stakingAmount;', this.data.stakingAmount)
     let amount = web3Instance.web3.utils.toWei(this.data.stakingAmount, 'ether')
-    console.log("after this.data.stakingAmount;", amount )
+    console.log('after this.data.stakingAmount;', amount)
     if (this.data.stakingTopic === 'deposit') {
-      console.log("Send Transaction for deposit");
+      console.log('Send Transaction for deposit')
       trx = contracts.staking.deposit()
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
         value: amount,
         to: trx.to,
         data: trx.data
-      },  async (err, hash) => {
+      }, async (err, hash) => {
         if (err) {
           console.log(err)
           this.getErrModal(err.message, 'Deposit Error')
@@ -244,52 +258,52 @@ class App extends React.Component {
     }
   }
 
-  handleSelectChange(topic) {
+  handleSelectChange (topic) {
     this.data.stakingTopic = topic
     this.setState({})
   }
 
-  handleInputChange(event) {
+  handleInputChange (event) {
     this.data.stakingAmount = event.target.value
-    if(/^[1-9]([0-9]*)$/.test(event.target.value)) this.setState({stakingInvalidErr: false})
-    else this.setState({stakingInvalidErr: true})
+    if (/^[1-9]([0-9]*)$/.test(event.target.value)) this.setState({ stakingInvalidErr: false })
+    else this.setState({ stakingInvalidErr: true })
   }
 
   render () {
     return (
       <Layout className='layout'>
         {this.state.contractReady && this.state.loadWeb3
-          ? <div className="flex-column">
-            <Header className={this.getIsMainNet()}>
+          ? <div className='flex-column'>
+            <Header className={this.state.isMainNet}>
               <TopNav
-                netid={this.getIsMainNet()}
+                netid={this.state.isMainNet}
                 nav={this.state.nav}
                 myBalance={this.data.myBalance}
-                myLockedBalance={this.data.myLockedBalance} 
+                myLockedBalance={this.data.myLockedBalance}
                 onMenuClick={this.onMenuClick}
-                getStakingModal={this.getStakingModal}/>
+                getStakingModal={this.getStakingModal} />
             </Header>
 
             <StakingModal
-              netid={this.getIsMainNet()}
+              netid={this.state.isMainNet}
               accountBalance={{ balance: this.data.myBalance, lockedBalance: this.data.myLockedBalance }}
               stakingModalVisible={this.state.stakingModalVisible}
               loading={this.state.loading}
               stakingAmount={this.data.stakingAmount}
               stakingTopic={this.data.stakingTopic}
               stakingInvalidErr={this.state.stakingInvalidErr}
-              hideStakingModal={() => {if(!this.state.loading) this.setState({ stakingModalVisible: false })}}
+              hideStakingModal={() => { if (!this.state.loading) this.setState({ stakingModalVisible: false }) }}
               submitMetaStaking={this.submitMetaStaking}
               handleInputChange={this.handleInputChange}
               handleSelectChange={this.handleSelectChange} />
 
             <ErrModal
-              netid={this.getIsMainNet()}
+              netid={this.state.isMainNet}
               title={this.data.errTitle}
               err={this.data.errContent}
               link={this.data.errLink}
               visible={this.state.errModalVisible}
-              coloseErrModal = {() => this.setState({ errModalVisible: !this.state.loadWeb3})} />
+              coloseErrModal={() => this.setState({ errModalVisible: !this.state.loadWeb3 })} />
 
             <Content>
               {this.state.loadWeb3
@@ -299,11 +313,10 @@ class App extends React.Component {
             </Content>
 
             <Footer>
-              <FootNav netid={this.getIsMainNet()} />
+              <FootNav netid={this.state.isMainNet} />
             </Footer>
           </div>
-          :
-          <div>
+          : <div>
             <BaseLoader />
           </div>}
       </Layout>

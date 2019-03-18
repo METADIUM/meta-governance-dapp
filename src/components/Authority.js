@@ -26,32 +26,32 @@ class Authority extends React.Component {
       this.getAuthorityList()
     }
 
-    onSearchBtnClick(str) {
+    onSearchBtnClick (str) {
       str = str.toLowerCase()
       let authorityItems = []
       this.data.authorityItems.forEach((value) => {
-        if(value.props.item.title.toLowerCase().indexOf(str) !== -1 || value.props.item.addr.toLowerCase().indexOf(str) !== -1) {
+        if (value.props.item.title.toLowerCase().indexOf(str) !== -1 || value.props.item.addr.toLowerCase().indexOf(str) !== -1) {
           authorityItems.push(value)
         }
       })
-      this.setState({visibleAuthorityItems: authorityItems})
+      this.setState({ visibleAuthorityItems: authorityItems })
     }
 
     onApplyBtnClick () {
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
     }
 
-    onReadMoreClick(index) {
-      if(!this.textContainers.get(index).className.includes('long')) this.textContainers.get(index).className = 'text_container flex-full flex-column long'
+    onReadMoreClick (index) {
+      if (!this.textContainers.get(index).className.includes('long')) this.textContainers.get(index).className = 'text_container flex-full flex-column long'
       else this.textContainers.get(index).className = 'text_container text_container flex-full flex-column'
     }
 
-    breakLine(description) {
+    breakLine (description) {
       var regex = /(<br>)/g
       return description.split(regex).map((line, index) => line.match(regex) ? <br key={'key_' + index} /> : line)
     }
 
-    getSNSList(snsList) {
+    getSNSList (snsList) {
       let sns = []
       for (var key in snsList) {
         let icon = null
@@ -72,10 +72,10 @@ class Authority extends React.Component {
       return sns
     }
 
-    async getAuthorityList() {
+    async getAuthorityList () {
       let list = new Map()
       this.props.authorityOriginData.map(async (item, index) => {
-        let isMember =  await this.props.contracts.gov.isMember(item.addr)
+        let isMember = await this.props.contracts.gov.isMember(item.addr)
         if (isMember) {
           list.set(index, <AuthorityItem
             key={item.addr}
@@ -84,7 +84,7 @@ class Authority extends React.Component {
             textContainers={this.textContainers}
             breakLine={this.breakLine}
             onReadMoreClick={this.onReadMoreClick}
-            getSNSList={this.getSNSList}/>
+            getSNSList={this.getSNSList} />
           )
         }
 
@@ -93,7 +93,7 @@ class Authority extends React.Component {
       })
     }
 
-    render() {
+    render () {
       return (
         <div className='background'>
           <SubHeader
@@ -102,7 +102,7 @@ class Authority extends React.Component {
             btnText='Apply for Authority'
             btnFunction={this.onApplyBtnClick}
             searchFunction={this.onSearchBtnClick} />
-            
+
           <div className='contentDiv container'>
             <div className='card_container'>
               {this.state.getAuthorityInfo

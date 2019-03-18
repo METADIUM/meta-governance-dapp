@@ -315,6 +315,7 @@
 
 .ballotDiv .ballotInfoDiv {
   padding: 24px 16px 24px 16px;
+  min-height: 124px;
 }
 
 .ballotDiv .ballotInfoDiv .infoLeft .topic {

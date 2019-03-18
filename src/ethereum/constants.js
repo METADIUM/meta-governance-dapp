@@ -6,7 +6,7 @@ constants.ABIsSources = {
   // contracts.json: contract address
   Registry: 'Registry.json',
   Staking: 'Staking.json',
-  EnvStorage: 'EnvStorage.json',
+  EnvStorage: 'EnvStorageImp.json',
   BallotStorage: 'BallotStorage.json',
   Gov: 'Gov.json',
   GovImp: 'GovImp.json'

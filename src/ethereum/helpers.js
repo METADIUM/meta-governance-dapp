@@ -30,7 +30,7 @@ function getBranch (netId) {
   //   default:
   //     return 'mainnet'
   // }
-  return constants.NETWORKS[netId].BRANCH;
+  return constants.NETWORKS[netId].BRANCH
 }
 
 export {

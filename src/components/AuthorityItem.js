@@ -1,7 +1,7 @@
 import React from 'react'
 import './style/style.css'
 
-const AuthorityItem = ({item, index, textContainers, breakLine = f => f, onReadMoreClick = f => f, getSNSList = f => f}) =>
+const AuthorityItem = ({ item, index, textContainers, breakLine = f => f, onReadMoreClick = f => f, getSNSList = f => f }) =>
   <div className='authorityComp'>
     <div className='authorityComp_contnet flex'>
       <div className='img_container flex flex-center-horizontal'>

@@ -3,7 +3,7 @@ import { constants } from '../ethereum/constants'
 import { Button, Progress } from 'antd'
 import './style/style.css'
 
-const VotingBallots = ({item, ballotDetails, authorityName, newMemberAddress, oldMemberAddress, setTopic=f=>f, onClickDetail=f=>f, onClickVote=f=>f, setDescription=f=>f, onClickUpdateProposal=f=>f}) =>
+const VotingBallots = ({ item, ballotDetails, authorityName, newMemberAddress, oldMemberAddress, setTopic = f => f, onClickDetail = f => f, onClickVote = f => f, setDescription = f => f, onClickUpdateProposal = f => f }) =>
   <div className={'ballotDiv ' + constants.ballotTypesArr[parseInt(item.ballotType)]}
     id={item.id}
     ref={ref => ballotDetails.set(item.id, ref)}>
@@ -24,7 +24,7 @@ const VotingBallots = ({item, ballotDetails, authorityName, newMemberAddress, ol
         <div className='imageContent flex'>
           <Button
             disabled={item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected}
-            className="text-large" id='yesVotingBtn' onClick={() => onClickVote('Y', item.id, item.endTime, this.state)} >Yes</Button>
+            className='text-large' id='yesVotingBtn' onClick={() => onClickVote('Y', item.id, item.endTime, this.state)} >Yes</Button>
           <div className='chart flex-column flex-full'>
             <div className='number flex'>
               <span className='text-bold'>{item.powerOfAccepts === 0 ? '0' : item.powerOfAccepts}%</span>
@@ -34,19 +34,19 @@ const VotingBallots = ({item, ballotDetails, authorityName, newMemberAddress, ol
           </div>
           <Button
             disabled={item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected}
-            className="text-large" id='noVotingBtn' onClick={() => onClickVote('N', item.id, item.endTime, this.state)} >No</Button>
+            className='text-large' id='noVotingBtn' onClick={() => onClickVote('N', item.id, item.endTime, this.state)} >No</Button>
         </div>
         <div className='textContent flex'>
           {setDescription(item.ballotType, newMemberAddress, oldMemberAddress, item.id)}
           <div className='duration'>
             { item.state === constants.ballotState.Invalid || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected || item.state === constants.ballotState.InProgress
               ? <div>
-                <div className="flex"><span>Start : </span><span>{item.startTime}</span></div>
-                <div className="flex"><span>End : </span><span>{item.endTimeConverted}</span></div>
+                <div className='flex'><span>Start : </span><span>{item.startTime}</span></div>
+                <div className='flex'><span>End : </span><span>{item.endTimeConverted}</span></div>
               </div> : null }
             { item.state === constants.ballotState.Ready
               ? <div>
-                <div className="flex"><span>duration</span><span className="days">{item.duration === 0? 1 : item.duration}days</span></div>
+                <div className='flex'><span>duration</span><span className='days'>{item.duration === 0 ? 1 : item.duration}days</span></div>
                 <Button className='btn-fill-gray' type='primary' onClick={() => onClickUpdateProposal('change', item.id, item.duration, newMemberAddress, oldMemberAddress)}>Change</Button>
               </div> : null }
           </div>
@@ -54,7 +54,7 @@ const VotingBallots = ({item, ballotDetails, authorityName, newMemberAddress, ol
       </div>
       <div className='memoDiv'>
         <p className='text-bold'>MEMO</p>
-        <p className="text-container">{item.memo}</p>
+        <p className='text-container'>{item.memo}</p>
       </div>
       { item.state === '1'
         ? <div className='revokeDiv flex'>

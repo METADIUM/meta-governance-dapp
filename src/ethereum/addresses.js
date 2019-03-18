@@ -1,4 +1,3 @@
-import { constants } from './constants'
 import { addressesURL, getBranch } from './helpers'
 
 let GOVERNANCE_ADDRESSES = {}
@@ -8,7 +7,10 @@ async function getContractsAddresses (netId) {
   let addr = addressesURL(branch) // ex: https://raw.githubusercontent.com/hexoul/poa-chain-spec/testnet/contracts.json
   let response
   try {
-    response = await fetch(addr)
+    await fetch(addr)
+      .then(function (result) {
+        response = result
+      })
   } catch (e) {
     return
   }
@@ -31,7 +33,7 @@ function getAddresses (netId) {
   //   case constants.NETID_TESTNET:
   //     return TESTNET_ADDRESSES
   //   default:
-      return GOVERNANCE_ADDRESSES
+  return GOVERNANCE_ADDRESSES
   // }
 }
 
