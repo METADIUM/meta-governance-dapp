@@ -1,9 +1,9 @@
 import React from 'react'
-import { Button, Affix, Menu, Modal, Slider } from 'antd'
 import './style/style.css'
 import { ProposalForm } from './ProposalForm'
-import { VotingBallots } from './VotingBallots'
-import { SubHeader } from './Nav'
+import { VotingBallots, ShowBallots } from './VotingBallots'
+import { SubHeader, SubNav } from './Nav'
+import { ChangeModal } from './Modal'
 import { BaseLoader } from './BaseLoader'
 
 import * as util from '../util'
@@ -44,6 +44,8 @@ class Voting extends React.Component {
     this.getOriginData = this.getOriginData.bind(this)
     this.getBallotOriginItem = this.getBallotOriginItem.bind(this)
     this.getBallotDetailInfo = this.getBallotDetailInfo.bind(this)
+    this.setBallotBasicOriginData = this.setBallotBasicOriginData.bind(this)
+    this.setBallotMemberOriginData = this.setBallotMemberOriginData.bind(this)
     this.setDescription = this.setDescription.bind(this)
     this.waitForReceipt = this.waitForReceipt.bind(this)
     this.onClickDetail = this.onClickDetail.bind(this)
@@ -52,13 +54,12 @@ class Voting extends React.Component {
     this.completeModal = this.completeModal.bind(this)
     this.onClickSubMenu = this.onClickSubMenu.bind(this)
     this.onClickReadMore = this.onClickReadMore.bind(this)
+    this.hideChangeModal = this.hideChangeModal.bind(this)
     this.sliderChange = this.sliderChange.bind(this)
     this.searchBallot = this.searchBallot.bind(this)
     this.convertVotingComponentOveride = this.convertVotingComponentOveride.bind(this)
 
-    this.activeTitle = null
-    this.proposalTitle = null
-    this.finalizedTitle = null
+    this.titles = {activeTitle: null, proposalTitle:null, finalizedTitle: null}
     this.ballotDetails = new Map()
   }
 
@@ -80,16 +81,8 @@ class Voting extends React.Component {
     if (!this.data.ballotCnt) return
     console.log('Ballot Count: ', this.data.ballotCnt)
     for (var i = 1; i <= this.data.ballotCnt; i++) {
-      await this.props.contracts.ballotStorage.getBallotBasic(i).then(
-        ret => {
-          ret.id = i // Add ballot id
-          this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
-        })
-      await this.props.contracts.ballotStorage.getBallotMember(i).then(
-        ret => {
-          ret.id = i // Add ballot id
-          this.data.ballotMemberOriginData[i] = ret
-        })
+      await this.setBallotBasicOriginData(i)
+      await this.setBallotMemberOriginData(i)
     }
     this.getBallotOriginItem()
   }
@@ -99,7 +92,7 @@ class Voting extends React.Component {
     let list = []
     // Use origin data in contract
 
-    this.data.ballotBasicOriginData.map((item, index) => {
+    this.data.ballotBasicOriginData.forEach((item, index) => {
       const newMemberAddress = this.data.ballotMemberOriginData[item.id].newMemberAddress
       const oldMemberAddress = this.data.ballotMemberOriginData[item.id].oldMemberAddress
 
@@ -128,9 +121,9 @@ class Voting extends React.Component {
   }
 
   getBallotDetailInfo () {
-    let activeList = []; let proposalList = []; let finalizedList = []
+    let activeList = [], proposalList = [], finalizedList = []
 
-    this.data.ballotBasicOriginItems.map(item => {
+    this.data.ballotBasicOriginItems.forEach(item => {
       switch (item.props.item.state) {
         case constants.ballotState.InProgress: activeList.push(item); break // InProgress
         case constants.ballotState.Ready: proposalList.push(item); break // Ready
@@ -143,6 +136,22 @@ class Voting extends React.Component {
     this.data.proposalItems = proposalList
     this.data.finalizedItems = finalizedList
     this.setState({ visibleActiveItems: activeList, visibleProposalItems: proposalList, visibleFinalizedItems: finalizedList, isBallotLoading: true })
+  }
+
+  async setBallotBasicOriginData(i) {
+    await this.props.contracts.ballotStorage.getBallotBasic(i).then(
+      ret => {
+        ret.id = i // Add ballot id
+        this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
+      })
+  }
+
+  async setBallotMemberOriginData(i) {
+    await this.props.contracts.ballotStorage.getBallotMember(i).then(
+      ret => {
+        ret.id = i // Add ballot id
+        this.data.ballotMemberOriginData[i] = ret
+      })
   }
 
   setTopic (type, newAddr, oldAddr) {
@@ -240,7 +249,7 @@ class Voting extends React.Component {
     })
   }
 
-  onClickUpdateProposal (topic, id, duration, newMemberAddress, oldMemberAddress) {
+  onClickUpdateProposal (topic, id, duration) {
     if (topic === 'change') {
       this.data.curBallotIdx = id
       this.setState({ ballotUpdateDuration: duration === 0 ? 1 : duration, updateModal: true })
@@ -298,9 +307,9 @@ class Voting extends React.Component {
 
   onClickSubMenu (e) {
     switch (e.key) {
-      case 'active': if (this.activeTitle) window.scrollTo(0, this.activeTitle.offsetTop - 70); break
-      case 'proposal': if (this.proposalTitle) window.scrollTo(0, this.proposalTitle.offsetTop - 70); break
-      case 'finalized': if (this.finalizedTitle) window.scrollTo(0, this.finalizedTitle.offsetTop - 70); break
+      case 'active': if (this.titles.activeTitle) window.scrollTo(0, this.titles.activeTitle.offsetTop - 70); break
+      case 'proposal': if (this.titles.proposalTitle) window.scrollTo(0, this.titles.proposalTitle.offsetTop - 70); break
+      case 'finalized': if (this.titles.finalizedTitle) window.scrollTo(0, this.titles.finalizedTitle.offsetTop - 70); break
       default: break
     }
     this.setState({ position: e.key })
@@ -310,7 +319,12 @@ class Voting extends React.Component {
     switch (state) {
       case 'proposal': this.setState({ proposalCount: this.state.proposalCount + 5 }); break
       case 'finalized': this.setState({ finalizedCount: this.state.finalizedCount + 5 }); break
+      default: break
     }
+  }
+
+  hideChangeModal() {
+    this.setState({ updateModal: false })
   }
 
   sliderChange (value) {
@@ -343,65 +357,35 @@ class Voting extends React.Component {
         {!this.props.showProposal
           ? <div className='background'>
             <SubHeader
-              netid={this.props.netid}
+              netName={web3Instance.netIdName}
               placeholder='Search by Type, Proposal, Keywords'
-              condition={this.props.isMember}
+              condition={this.props.isMember || true}
               btnText='New Proposal'
               btnIcon='+'
               loading={!this.state.isBallotLoading || this.props.loading}
               btnFunction={this.convertVotingComponentOveride}
               searchFunction={this.searchBallot} />
 
-            <Affix>
-              <div className='sub-menu flex flex-center-vertical'>
-                <Menu
-                  onClick={this.onClickSubMenu}
-                  selectedKeys={[this.state.position]}
-                  mode='horizontal'>
-                  <Menu.Item key='active'>Active</Menu.Item>
-                  <Menu.Item key='proposal'>Proposal</Menu.Item>
-                  <Menu.Item key='finalized'>Finalized</Menu.Item>
-                </Menu>
-              </div>
-            </Affix>
+            <SubNav
+              position={this.state.position}
+              onClickSubMenu={this.onClickSubMenu} />
 
-            <Modal
-              title='Voting Duration Change'
-              visible={this.state.updateModal}
-              onOk={this.completeModal}
-              onCancel={e => this.setState({ updateModal: false })} >
-              <p className='changeDay flex flex-end-vertical'>{this.state.ballotUpdateDuration}days</p>
-              <Slider marks={{ 0: '0 days', 60: '3 days', 100: '5days' }} step={20} value={this.state.ballotUpdateDuration * 20} tooltipVisible={false} onChange={this.sliderChange} />
-            </Modal>
+            <ChangeModal
+              updateModal={this.state.updateModal}
+              ballotUpdateDuration={this.state.ballotUpdateDuration}
+              completeModal={this.completeModal}
+              hideChangeModal={this.hideChangeModal}
+              sliderChange={this.sliderChange} />
 
             {!this.state.isBallotLoading || this.props.loading ? <div><BaseLoader /></div> : null}
-            <div className='contentDiv container'>
-              <p className='stateTitle text-heavy' ref={ref => { this.activeTitle = ref }}>Active</p>
-              {this.data.activeItems}
-              <p className='stateTitle text-heavy' ref={ref => { this.proposalTitle = ref }}>Proposals</p>
-              {this.state.visibleProposalItems.slice(0, this.state.proposalCount)}
-              {this.state.visibleProposalItems.length > 0
-                ? <div className='moreDiv flex flex-center-vertical'>
-                  <Button value='large' onClick={(e) => this.onClickReadMore('proposal')}>
-                    <span>+</span>
-                    <span className='text_btn'>Read More</span>
-                  </Button>
-                </div>
-                : null}
-              <p className='stateTitle text-heavy'ref={ref => { this.finalizedTitle = ref }}>Finalized</p>
-              {this.state.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
-              {this.state.visibleFinalizedItems.length > 0
-                ? <div className='moreDiv'>
-                  <Button value='large' onClick={(e) => this.onClickReadMore('finalized')}>
-                    <span>+</span>
-                    <span className='text_btn'>Read More</span>
-                  </Button>
-                </div>
-                : null}
-            </div>
+            <ShowBallots
+              titles={this.titles}
+              visibleActiveItems={this.state.visibleActiveItems}
+              visibleProposalItems={this.state.visibleProposalItems.slice(0, this.state.proposalCount)}
+              visibleFinalizedItems={this.state.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
+              onClickReadMore={this.onClickReadMore} />
           </div>
-          : <div>
-            <ProposalForm
+          : <ProposalForm
               contracts={this.props.contracts}
               getErrModal={this.props.getErrModal}
               newMemberaddr={this.data.newMemberaddr}
@@ -412,7 +396,6 @@ class Voting extends React.Component {
               waitForReceipt={this.waitForReceipt}
               stakingMax={this.props.stakingMax}
               stakingMin={this.props.stakingMin} />
-          </div>
         }
       </div>
     )

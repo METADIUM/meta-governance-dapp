@@ -3,9 +3,9 @@
 .ant-layout-header {
   padding: 0;
   z-index: 100;
-} .ant-layout-header.mainNet {
+} .ant-layout-header.MAINNET {
   background: #FFFFFF;
-} .ant-layout-header.testNet {
+} .ant-layout-header.TESTNET {
   background: #000000;
 }
 
@@ -22,9 +22,9 @@
   width: 240px;
   height: 40px;
   padding: 0 16px;
-} .ant-layout-header .header-menu.mainNet {
+} .ant-layout-header .header-menu.MAINNET {
   border-left: #eeeef0 solid 2px;
-} .ant-layout-header .header-menu.testNet {
+} .ant-layout-header .header-menu.TESTNET {
   border-left: #595959 solid 2px;
 }
 
@@ -37,17 +37,17 @@
 .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item  {
   padding: 0 12px;
   border: none;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item.mainNet {
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item.MAINNET {
   color: rgba(0, 0, 0, 0.6);
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-selected.mainNet {
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-selected.MAINNET {
   color: #261BC9;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-active.mainNet {
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-active.MAINNET {
   color: #261BC9;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item.testNet {
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item.TESTNET {
   color: #595959;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-selected.testNet {
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-selected.TESTNET {
   color: #FFFFFF;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-active.testNet {
+} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-active.TESTNET {
   color: #FFFFFF;
 }
 
@@ -64,13 +64,13 @@
 .ant-layout-header .ant-row .header-staking div p {
   line-height: 1.5;
   text-align: end;
-} .ant-layout-header .ant-row .header-staking div .staked.mainNet {
+} .ant-layout-header .ant-row .header-staking div .staked.MAINNET {
   color: rgba(0, 0, 0, 0.87);
-} .ant-layout-header .ant-row .header-staking div .staked.testNet {
+} .ant-layout-header .ant-row .header-staking div .staked.TESTNET {
   color: #FFFFFF;
-} .ant-layout-header .ant-row .header-staking div .meta.mainNet {
+} .ant-layout-header .ant-row .header-staking div .meta.MAINNET {
   font-size: 12px;
-} .ant-layout-header .ant-row .header-staking div .meta.testNet {
+} .ant-layout-header .ant-row .header-staking div .meta.TESTNET {
   font-size: 12px;
   color: #C2C4C4;
 }
@@ -122,9 +122,9 @@
   z-index: 90;
 }
 
-.sub-header .functionDiv.mainNet {
+.sub-header .functionDiv.MAINNET {
   padding: 8px 16px 16px 16px;
-} .sub-header .functionDiv.testNet {
+} .sub-header .functionDiv.TESTNET {
   padding: 16px 16px 16px 16px;
 }
 
@@ -133,10 +133,10 @@
   font-size: 16px;
   padding-left: 16px;
   padding-right: 16px;
-  border-top: #C2C4C4 solid 2px;
+  border-top-width: 2px;
   border-right: none;
-  border-bottom: #C2C4C4 solid 2px;
-  border-left: #C2C4C4 solid 2px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
 }
 
 .sub-header .functionDiv button {
@@ -146,9 +146,9 @@
   color: #ffffff;
 } .sub-header .functionDiv button:disabled {
   color: #ffffff !important;
-} .sub-header .functionDiv.mainNet button {
+} .sub-header .functionDiv.MAINNET button {
   background-color: #261BC9;
-} .sub-header .functionDiv.testNet button {
+} .sub-header .functionDiv.TESTNET button {
   background-color: #000000;
 }
 
@@ -235,10 +235,8 @@
 .authorityComp .authorityComp_contnet .text_container {
   padding-left: 24px;
   border-left: #EEEEF0 solid 2px;
-  height: 192px;
-} .authorityComp .authorityComp_contnet .text_container.long {
-  height: auto;
   min-height: 192px;
+  height: 192px;
 }
 
 .authorityComp .authorityComp_contnet .text_container .title {
@@ -263,6 +261,7 @@
 
 .authorityComp .authorityComp_contnet .text_container .more {
   line-height: 24px;
+  cursor: pointer;
   color: #261BC9;
 }
 

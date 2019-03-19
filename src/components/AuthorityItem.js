@@ -1,7 +1,14 @@
 import React from 'react'
 import './style/style.css'
 
-const AuthorityItem = ({ item, index, textContainers, breakLine = f => f, onReadMoreClick = f => f, getSNSList = f => f }) =>
+const AuthorityItem = ({
+  item,
+  index,
+  textContainers,
+  breakLine = f => f,
+  onReadMoreClick = f => f,
+  getSNSList = f => f
+}) =>
   <div className='authorityComp'>
     <div className='authorityComp_contnet flex'>
       <div className='img_container flex flex-center-horizontal'>
@@ -12,7 +19,7 @@ const AuthorityItem = ({ item, index, textContainers, breakLine = f => f, onRead
         <p className='address text-small'>Address: {item.addr}</p>
         <p className='description flex-full'>{breakLine(item.description)}</p>
         <div className='link_container flex'>
-          <a className='more' onClick={e => onReadMoreClick(index)}>+ Read More</a>
+          <span className='more' onClick={e => onReadMoreClick(index)}>+ Read More</span>
           <div className='SNSList flex-full flex'>
             {getSNSList(item.sns)}
             <a className='snsGroup' href={item.homepage}> <i className='fas fa-home fa-2x' /> </a>

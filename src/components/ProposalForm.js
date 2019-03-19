@@ -64,6 +64,7 @@ class ProposalForm extends React.Component {
         case 'oldLockAmount': this.setState({ oldLockAmountErr: !this.checkUnlockAmount(e.target.value) }); break
         case 'oldAddr': this.setState({ oldAddrErr: !this.checkAddr(e.target.value) }); break
         case 'oldNode': this.setState({ oldNodeErr: !this.checkNode(e.target.value) }); break
+        default: break
       }
     }
 
@@ -449,6 +450,7 @@ class ProposalForm extends React.Component {
         case 'replace': return this.getReplaceProposalForm()
         case 'update': return this.getUpdateProposalForm()
         case 'remove': return this.getRmoveProposalForm()
+        default: break
       }
     }
 

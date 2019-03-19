@@ -42,8 +42,9 @@ class Authority extends React.Component {
     }
 
     onReadMoreClick (index) {
-      if (!this.textContainers.get(index).className.includes('long')) this.textContainers.get(index).className = 'text_container flex-full flex-column long'
-      else this.textContainers.get(index).className = 'text_container text_container flex-full flex-column'
+      const element = this.textContainers.get(index)
+      if(element.offsetHeight === 192) element.style.height = 'auto'
+      else element.style.height = '192px'
     }
 
     breakLine (description) {
@@ -73,31 +74,31 @@ class Authority extends React.Component {
     }
 
     async getAuthorityList () {
-      let list = new Map()
-      this.props.authorityOriginData.map(async (item, index) => {
+      let list = []
+      for(let i = 0; i < Object.keys(this.props.authorityOriginData).length; i++) {
+        let item = this.props.authorityOriginData[i]
         let isMember = await this.props.contracts.gov.isMember(item.addr)
-        if (isMember) {
-          list.set(index, <AuthorityItem
+        if(isMember) {
+          list.push(<AuthorityItem
             key={item.addr}
             item={item}
-            index={index}
+            index={i}
             textContainers={this.textContainers}
             breakLine={this.breakLine}
             onReadMoreClick={this.onReadMoreClick}
             getSNSList={this.getSNSList} />
           )
         }
-
-        this.data.authorityItems = new Map([...list.entries()].sort())
-        this.setState({ getAuthorityInfo: true, visibleAuthorityItems: [...this.data.authorityItems.values()] })
-      })
+      }
+      this.data.authorityItems = list;
+      this.setState({ getAuthorityInfo: true, visibleAuthorityItems: list })
     }
 
     render () {
       return (
         <div className='background'>
           <SubHeader
-            netid={this.props.netid}
+            netName={this.props.netName}
             placeholder='Search by Authority Name, Adress'
             btnText='Apply for Authority'
             btnFunction={this.onApplyBtnClick}

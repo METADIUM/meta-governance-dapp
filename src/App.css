@@ -24,11 +24,11 @@ p {
   background: #261BC9;
 }
 
-.btn-fill-primary.mainNet {
+.btn-fill-primary.MAINNET {
   border: #261BC9 solid 2px;
   background-color: #261BC9;
   color: #FFFFFF;
-} .btn-fill-primary.testNet {
+} .btn-fill-primary.TESTNet {
   border: #000000 solid 2px;
   background-color: #000000;
   color: #FFFFFF;
@@ -40,18 +40,18 @@ p {
   color: rgba(0,0,0,0.87);
 }
 
-.btn-grid-primary.mainNet {
+.btn-grid-primary.MAINNET {
   border: #261BC9 solid 2px;
   background-color: #FFFFFF;
   color: #261BC9;
-} .btn-grid-primary.mainNet:hover {
+} .btn-grid-primary.MAINNET:hover {
   background-color:#261BC9;
   color: #FFFFFF;
-} .btn-grid-primary.testNet {
+} .btn-grid-primary.TESTNet {
   border: #FFFFFF solid 2px;
   background-color: transparent;
   color: #FFFFFF;
-} .btn-grid-primary.testNet:hover {
+} .btn-grid-primary.TESTNet:hover {
   background-color:#FFFFFF;
   color: #000000;
 }

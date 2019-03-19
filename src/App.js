@@ -40,15 +40,14 @@ class App extends React.Component {
     stakingInvalidErr: false,
     errModalVisible: false,
     loading: false,
-    showProposal: false,
-    isMainNet: false
+    showProposal: false
   };
 
   constructor (props) {
     super(props)
     this.updateAccountBalance = this.updateAccountBalance.bind(this)
     this.updateDefaultAccount = this.updateDefaultAccount.bind(this)
-    this.setIsMainNet = this.setIsMainNet.bind(this)
+    this.getStakingRange = this.getStakingRange.bind(this)
     this.onMenuClick = this.onMenuClick.bind(this)
     this.getContent = this.getContent.bind(this)
     this.getErrModal = this.getErrModal.bind(this)
@@ -76,7 +75,7 @@ class App extends React.Component {
       web3: web3Config.web3,
       netid: web3Config.netId
     }).then(async () => {
-      await this.setIsMainNet()
+      await this.getStakingRange()
       await this.updateAccountBalance()
       window.ethereum.on('accountsChanged', async (chagedAccounts) => {
         await this.updateDefaultAccount(chagedAccounts[0])
@@ -97,7 +96,6 @@ class App extends React.Component {
 
   async updateDefaultAccount (account) {
     if (web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase()) {
-      console.log('change address:', account)
       web3Instance.defaultAccount = account
       await this.updateAccountBalance()
       this.setStakingEventsWatch()
@@ -111,7 +109,7 @@ class App extends React.Component {
   setStakingEventsWatch () {
     if (this.data.eventsWatch) {
       let subscription = this.data.eventsWatch
-      subscription.unsubscribe(function (error, success) {
+      subscription.unsubscribe((error, success) => {
         if (error) console.log('Faild to unsubscribed!')
         else if (success) console.log('Successfully unsubscribed!')
       })
@@ -130,22 +128,20 @@ class App extends React.Component {
     console.log('Successfully subscribed!')
   }
 
-  async setIsMainNet () {
-    const netid = constants.NETWORKS[web3Instance.netId].NAME === 'MAINNET' ? 'mainNet' : 'testNet'
-    if (netid === 'mainNet') {
+  async getStakingRange () {
+    if (web3Instance.netIdName === 'MAINTNET' || web3Instance.netIdName === 'TESTNET') {
       this.data.stakingMin = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMin())
       this.data.stakingMax = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMax())
-    } else {
-      this.data.stakingMin = constants.limitAmount.stakingMin
-      this.data.stakingMax = constants.limitAmount.stakingMax
     }
-    console.log('stkaingMin', this.data.stakingMin)
-    console.log('stkaingMax', this.data.stakingMax)
-    this.setState({ isMainNet: netid })
   }
 
   async initAuthorityLists () {
-    this.data.authorityOriginData = await util.getAuthorityLists(constants.authorityRepo.org, constants.authorityRepo.repo, constants.authorityRepo.branch, constants.authorityRepo.source)
+    this.data.authorityOriginData = await util.getAuthorityLists(
+      constants.authorityRepo.org,
+      constants.authorityRepo.repo,
+      constants.authorityRepo.branch,
+      constants.authorityRepo.source
+    )
     Object.keys(this.data.authorityOriginData).forEach((index) => {
       this.data.authorityOriginData[index].addr = web3Instance.web3.utils.toChecksumAddress(this.data.authorityOriginData[index].addr)
     })
@@ -163,7 +159,7 @@ class App extends React.Component {
         contracts={contracts}
         getErrModal={this.getErrModal}
         authorityOriginData={this.data.authorityOriginData}
-        netid={this.state.isMainNet} />
+        netName={web3Instance.netIdName} />
       case '2': return <Voting
         title='Voting'
         contracts={contracts}
@@ -174,7 +170,6 @@ class App extends React.Component {
         convertLoading={this.convertLoading}
         showProposal={this.state.showProposal}
         isMember={this.data.isMember}
-        netid={this.state.isMainNet}
         stakingMax={this.data.stakingMax}
         stakingMin={this.data.stakingMin} />
       default:
@@ -186,6 +181,7 @@ class App extends React.Component {
     switch (component) {
       case 'voting': this.setState({ showProposal: false }); break
       case 'proposal': this.setState({ showProposal: true }); break
+      default: break;
     }
   }
 
@@ -274,9 +270,9 @@ class App extends React.Component {
       <Layout className='layout'>
         {this.state.contractReady && this.state.loadWeb3
           ? <div className='flex-column'>
-            <Header className={this.state.isMainNet}>
+            <Header className={web3Instance.netIdName}>
               <TopNav
-                netid={this.state.isMainNet}
+                netName={web3Instance.netIdName}
                 nav={this.state.nav}
                 myBalance={this.data.myBalance}
                 myLockedBalance={this.data.myLockedBalance}
@@ -285,7 +281,7 @@ class App extends React.Component {
             </Header>
 
             <StakingModal
-              netid={this.state.isMainNet}
+              netName={web3Instance.netIdName}
               accountBalance={{ balance: this.data.myBalance, lockedBalance: this.data.myLockedBalance }}
               stakingModalVisible={this.state.stakingModalVisible}
               loading={this.state.loading}
@@ -298,7 +294,7 @@ class App extends React.Component {
               handleSelectChange={this.handleSelectChange} />
 
             <ErrModal
-              netid={this.state.isMainNet}
+              netName={web3Instance.netIdName}
               title={this.data.errTitle}
               err={this.data.errContent}
               link={this.data.errLink}
@@ -313,7 +309,7 @@ class App extends React.Component {
             </Content>
 
             <Footer>
-              <FootNav netid={this.state.isMainNet} />
+              <FootNav netName={web3Instance.netIdName} />
             </Footer>
           </div>
           : <div>

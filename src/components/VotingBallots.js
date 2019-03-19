@@ -3,7 +3,18 @@ import { constants } from '../ethereum/constants'
 import { Button, Progress } from 'antd'
 import './style/style.css'
 
-const VotingBallots = ({ item, ballotDetails, authorityName, newMemberAddress, oldMemberAddress, setTopic = f => f, onClickDetail = f => f, onClickVote = f => f, setDescription = f => f, onClickUpdateProposal = f => f }) =>
+const VotingBallots = ({
+  item,
+  ballotDetails,
+  authorityName,
+  newMemberAddress,
+  oldMemberAddress,
+  setTopic = f => f,
+  onClickDetail = f => f,
+  onClickVote = f => f,
+  setDescription = f => f,
+  onClickUpdateProposal = f => f
+}) =>
   <div className={'ballotDiv ' + constants.ballotTypesArr[parseInt(item.ballotType)]}
     id={item.id}
     ref={ref => ballotDetails.set(item.id, ref)}>
@@ -63,4 +74,34 @@ const VotingBallots = ({ item, ballotDetails, authorityName, newMemberAddress, o
     </div>
   </div>
 
-export { VotingBallots }
+const ShowBallots = ({
+  titles,
+  visibleActiveItems,
+  visibleProposalItems,
+  visibleFinalizedItems,
+  onClickReadMore = f => f
+}) => 
+  <div className='contentDiv container'>
+    <p className='stateTitle text-heavy' ref={ref => { titles.activeTitle = ref }}>Active</p>
+    {visibleActiveItems}
+    <p className='stateTitle text-heavy' ref={ref => { titles.proposalTitle = ref }}>Proposals</p>
+    {visibleProposalItems}
+    {visibleProposalItems.length > 0
+      ? <div className='moreDiv flex flex-center-vertical'>
+        <Button value='large' onClick={(e) => onClickReadMore('proposal')}>
+          <span>+</span>
+          <span className='text_btn'>Read More</span>
+        </Button>
+      </div> : null}
+    <p className='stateTitle text-heavy' ref={ref => { titles.finalizedTitle = ref }}>Finalized</p>
+    {visibleFinalizedItems}
+    {visibleFinalizedItems.length > 0
+      ? <div className='moreDiv'>
+        <Button value='large' onClick={(e) => onClickReadMore('finalized')}>
+          <span>+</span>
+          <span className='text_btn'>Read More</span>
+        </Button>
+      </div> : null}
+  </div>
+
+export { VotingBallots, ShowBallots }
