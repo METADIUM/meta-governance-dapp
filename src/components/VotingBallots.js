@@ -1,6 +1,6 @@
 import React from 'react'
-import { constants } from '../ethereum/constants'
 import { Button, Progress } from 'antd'
+import { constants } from '../ethereum/constants'
 import './style/style.css'
 
 const VotingBallots = ({
@@ -79,8 +79,9 @@ const ShowBallots = ({
   visibleActiveItems,
   visibleProposalItems,
   visibleFinalizedItems,
+  netName,
   onClickReadMore = f => f
-}) => 
+}) =>
   <div className='contentDiv container'>
     <p className='stateTitle text-heavy' ref={ref => { titles.activeTitle = ref }}>Active</p>
     {visibleActiveItems}
@@ -96,8 +97,8 @@ const ShowBallots = ({
     <p className='stateTitle text-heavy' ref={ref => { titles.finalizedTitle = ref }}>Finalized</p>
     {visibleFinalizedItems}
     {visibleFinalizedItems.length > 0
-      ? <div className='moreDiv'>
-        <Button value='large' onClick={(e) => onClickReadMore('finalized')}>
+      ? <div className='moreDiv flex flex-center-vertical'>
+        <Button className={'btn-fill-white flex ' + netName} value='large' onClick={(e) => onClickReadMore('finalized')}>
           <span>+</span>
           <span className='text_btn'>Read More</span>
         </Button>

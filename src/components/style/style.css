@@ -373,8 +373,6 @@
   padding: 4px 0 2px 0px;
 }
 
-/*----------------------------------------------------------------*/
-
 .ballotContentDiv .voteDiv .imageContent .chart .number {
   margin-bottom: 4px;
   justify-content: space-between;
@@ -449,23 +447,12 @@
   width: 208px;
 }
 
-.moreDiv {
-  display: flex;
-  justify-content: center;
-}
-
 .moreDiv button {
   height: 40px;
   width: 208px;
   border-radius: 4px;
-  border:none;
-  color: #000000;
   padding: 0 20px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  display: flex;
-} .moreDiv button:hover {
-  color: #ffffff;
-  background-color: #261BC9;
 }
 
 /* proposal */
@@ -476,20 +463,13 @@
 .backBtnDiv button {
   height: 40px;
   width: 208px;
-  display: flex;
-  border: none;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-}
-
-.backBtnDiv button span {
-  color: rgba(0,0,0,0.87);
-  font-size: 16px;
 }
 
 .contentVotingDiv {
   margin: 0 16px 24px 16px;
+  border-radius: 4px;
   background-color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 
 .contentVotingDiv .proposalHead {
@@ -497,7 +477,6 @@
 }
 
 .contentVotingDiv .proposalHead .title {
-  display: flex;
   align-items: baseline;
   margin-bottom: 8px;
 }
@@ -505,21 +484,16 @@
 .contentVotingDiv .proposalHead .title p:first-child {
   font-size: 30px;
   color: rgba(0,0,0,0.87);
-  margin: 0;
   line-height: 38px;
-  font-weight: 600;
-  flex: 100;
 }
 
 .contentVotingDiv .proposalHead .title p:last-child {
-  margin: 0;
   color:#FC0F1B;
 }
 
 .contentVotingDiv .subtitle {
   color: rgba(0,0,0,0.6);
   margin-top: 16px;
-  margin-bottom: 0;
 }
 
 .contentVotingDiv .required {
@@ -539,27 +513,10 @@
 .contentVotingDiv .ant-form-item {
   margin-top: 8px;
   margin-bottom: 0px;
-  line-height: 1.5;
-}
-
-.contentVotingDiv .ant-form-item p {
-  display: none;
 }
 
 .contentVotingDiv .ant-form-item .ant-input-search-button {
   width: 208px !important;
-}
-
-span.errInput input{
-  border-color:#FC0F1B;
-} span.errInput input:focus{
-  border-color: #261BC9;
-}
-
-input.errInput {
-  border-color:#FC0F1B;
-} input.errInput:focus{
-  border-color: #261BC9;
 }
 
 .contentVotingDiv .proposalBody .helpDescription {
@@ -584,37 +541,19 @@ input.errInput {
 }
 
 .contentVotingDiv .proposalBody button[type="submit"] {
-  margin: 0;
-  color: #ffffff;
-  background-color: #261BC9;
-  border: none;
   border-radius: 4px;
   width: 208px;
   height: 40px;
-  font-size: 16px;
-} .contentVotingDiv .proposalBody button[type="submit"]:disabled {
-  color: rgba(0,0,0,0.87);
-  background-color: #EEEEF0;
 }
 
 .contentVotingDiv .proposalBody .submitDiv {
   margin-top: 24px;
-  display: flex;
   justify-content: flex-end;
-}
-
-.contentVotingDiv .proposalBody .divider {
-  display: flex;
-}
-
-.contentVotingDiv .proposalBody .divider > div {
-  flex:100;
 }
 
 .contentVotingDiv .proposalBody .divider > div:first-child {
   margin-right: 32px;
 }
-
 
 .loading {
 	display: -ms-flexbox;

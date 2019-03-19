@@ -43,7 +43,7 @@ class Authority extends React.Component {
 
     onReadMoreClick (index) {
       const element = this.textContainers.get(index)
-      if(element.offsetHeight === 192) element.style.height = 'auto'
+      if (element.offsetHeight === 192) element.style.height = 'auto'
       else element.style.height = '192px'
     }
 
@@ -75,10 +75,10 @@ class Authority extends React.Component {
 
     async getAuthorityList () {
       let list = []
-      for(let i = 0; i < Object.keys(this.props.authorityOriginData).length; i++) {
+      for (let i = 0; i < Object.keys(this.props.authorityOriginData).length; i++) {
         let item = this.props.authorityOriginData[i]
         let isMember = await this.props.contracts.gov.isMember(item.addr)
-        if(isMember) {
+        if (isMember) {
           list.push(<AuthorityItem
             key={item.addr}
             item={item}
@@ -90,7 +90,7 @@ class Authority extends React.Component {
           )
         }
       }
-      this.data.authorityItems = list;
+      this.data.authorityItems = list
       this.setState({ getAuthorityInfo: true, visibleAuthorityItems: list })
     }
 

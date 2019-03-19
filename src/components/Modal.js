@@ -46,7 +46,7 @@ const StakingModal = ({
       value={stakingAmount}
       className={stakingInvalidErr ? 'errInput' : ''}
       disabled={loading}
-      />
+    />
     <p className={stakingInvalidErr ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
     <div className='text-container'>
       <p className='staked'>staked { accountBalance.balance } META </p>
@@ -61,7 +61,7 @@ const ErrModal = ({ netName, title, err, link, visible, coloseErrModal = f => f 
     visible={visible}
     onCancel={coloseErrModal}
     footer={link
-      ? [<a key='link' href={link} rel="noopener noreferrer" target='_blank' className='ant-btn'>Checking on the Explore</a>,
+      ? [<a key='link' href={link} rel='noopener noreferrer' target='_blank' className='ant-btn'>Checking on the Explore</a>,
         <Button type='primary' key='ok' className={'btn-fill-primary ' + netName} onClick={coloseErrModal}>Okay</Button>]
       : [<Button type='primary' key='ok' className={'btn-fill-primary ' + netName} onClick={coloseErrModal}>Okay</Button>]}>
     <p className='text-bold'>Please revises the following information!</p>
@@ -70,7 +70,7 @@ const ErrModal = ({ netName, title, err, link, visible, coloseErrModal = f => f 
     </div>
   </Modal>
 
-const ChangeModal =({
+const ChangeModal = ({
   updateModal,
   ballotUpdateDuration,
   completeModal = f => f,

@@ -129,7 +129,7 @@ class App extends React.Component {
   }
 
   async getStakingRange () {
-    if (web3Instance.netIdName === 'MAINTNET' || web3Instance.netIdName === 'TESTNET') {
+    if (web3Instance.netName === 'MAINTNET' || web3Instance.netName === 'TESTNET') {
       this.data.stakingMin = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMin())
       this.data.stakingMax = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMax())
     }
@@ -148,30 +148,38 @@ class App extends React.Component {
   }
 
   onMenuClick ({ key }) {
-    this.setState({ nav: key })
+    if (this.state.showProposal && this.state.nav === '2' && key === '2') {
+      this.convertVotingComponent('voting')
+    } else {
+      this.setState({ nav: key })
+    }
   }
 
   getContent () {
     if (!this.state.loadWeb3) return
     switch (this.state.nav) {
-      case '1': return <Authority
-        title='Authority'
-        contracts={contracts}
-        getErrModal={this.getErrModal}
-        authorityOriginData={this.data.authorityOriginData}
-        netName={web3Instance.netIdName} />
-      case '2': return <Voting
-        title='Voting'
-        contracts={contracts}
-        getErrModal={this.getErrModal}
-        authorityOriginData={this.data.authorityOriginData}
-        convertVotingComponent={this.convertVotingComponent}
-        loading={this.state.loading}
-        convertLoading={this.convertLoading}
-        showProposal={this.state.showProposal}
-        isMember={this.data.isMember}
-        stakingMax={this.data.stakingMax}
-        stakingMin={this.data.stakingMin} />
+      case '1':
+        return <Authority
+          title='Authority'
+          contracts={contracts}
+          getErrModal={this.getErrModal}
+          authorityOriginData={this.data.authorityOriginData}
+          netName={web3Instance.netName}
+        />
+      case '2':
+        return <Voting
+          title='Voting'
+          contracts={contracts}
+          getErrModal={this.getErrModal}
+          authorityOriginData={this.data.authorityOriginData}
+          convertVotingComponent={this.convertVotingComponent}
+          loading={this.state.loading}
+          convertLoading={this.convertLoading}
+          showProposal={this.state.showProposal}
+          isMember={this.data.isMember}
+          stakingMax={this.data.stakingMax}
+          stakingMin={this.data.stakingMin}
+        />
       default:
     }
     this.setState({ selectedMenu: true })
@@ -181,7 +189,7 @@ class App extends React.Component {
     switch (component) {
       case 'voting': this.setState({ showProposal: false }); break
       case 'proposal': this.setState({ showProposal: true }); break
-      default: break;
+      default: break
     }
   }
 
@@ -270,9 +278,9 @@ class App extends React.Component {
       <Layout className='layout'>
         {this.state.contractReady && this.state.loadWeb3
           ? <div className='flex-column'>
-            <Header className={web3Instance.netIdName}>
+            <Header className={web3Instance.netName}>
               <TopNav
-                netName={web3Instance.netIdName}
+                netName={web3Instance.netName}
                 nav={this.state.nav}
                 myBalance={this.data.myBalance}
                 myLockedBalance={this.data.myLockedBalance}
@@ -281,7 +289,7 @@ class App extends React.Component {
             </Header>
 
             <StakingModal
-              netName={web3Instance.netIdName}
+              netName={web3Instance.netName}
               accountBalance={{ balance: this.data.myBalance, lockedBalance: this.data.myLockedBalance }}
               stakingModalVisible={this.state.stakingModalVisible}
               loading={this.state.loading}
@@ -294,7 +302,7 @@ class App extends React.Component {
               handleSelectChange={this.handleSelectChange} />
 
             <ErrModal
-              netName={web3Instance.netIdName}
+              netName={web3Instance.netName}
               title={this.data.errTitle}
               err={this.data.errContent}
               link={this.data.errLink}
@@ -309,7 +317,7 @@ class App extends React.Component {
             </Content>
 
             <Footer>
-              <FootNav netName={web3Instance.netIdName} />
+              <FootNav netName={web3Instance.netName} />
             </Footer>
           </div>
           : <div>

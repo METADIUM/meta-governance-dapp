@@ -28,16 +28,32 @@ p {
   border: #261BC9 solid 2px;
   background-color: #261BC9;
   color: #FFFFFF;
-} .btn-fill-primary.TESTNet {
+} .btn-fill-primary.TESTNET {
   border: #000000 solid 2px;
   background-color: #000000;
   color: #FFFFFF;
+} .btn-fill-primary:disabled {
+  border: none;
+  color: rgba(0,0,0,0.87);
+  background-color: #EEEEF0;
 }
 
 .btn-fill-gray {
   border: none;
   background-color: #eeeef0;
   color: rgba(0,0,0,0.87);
+}
+
+.btn-fill-white {
+  border: none;
+  background-color: #ffffff;
+  color: rgba(0,0,0,0.87);
+} .btn-fill-white.MAINNET:hover {
+  color: #ffffff;
+  background-color: #261BC9;
+} .btn-fill-white.TESTNET:hover {
+  color: #ffffff;
+  background-color: #000000;
 }
 
 .btn-grid-primary.MAINNET {
@@ -47,11 +63,11 @@ p {
 } .btn-grid-primary.MAINNET:hover {
   background-color:#261BC9;
   color: #FFFFFF;
-} .btn-grid-primary.TESTNet {
+} .btn-grid-primary.TESTNET {
   border: #FFFFFF solid 2px;
   background-color: transparent;
   color: #FFFFFF;
-} .btn-grid-primary.TESTNet:hover {
+} .btn-grid-primary.TESTNET:hover {
   background-color:#FFFFFF;
   color: #000000;
 }
@@ -166,4 +182,16 @@ p {
 
 .ant-btn-loading span i {
   display: none;
+}
+
+span.errInput input{
+  border-color:#FC0F1B;
+} span.errInput input:focus{
+  border-color: #261BC9;
+}
+
+input.errInput {
+  border-color:#FC0F1B;
+} input.errInput:focus{
+  border-color: #261BC9;
 }

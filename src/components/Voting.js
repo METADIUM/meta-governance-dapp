@@ -59,7 +59,7 @@ class Voting extends React.Component {
     this.searchBallot = this.searchBallot.bind(this)
     this.convertVotingComponentOveride = this.convertVotingComponentOveride.bind(this)
 
-    this.titles = {activeTitle: null, proposalTitle:null, finalizedTitle: null}
+    this.titles = { activeTitle: null, proposalTitle: null, finalizedTitle: null }
     this.ballotDetails = new Map()
   }
 
@@ -121,7 +121,7 @@ class Voting extends React.Component {
   }
 
   getBallotDetailInfo () {
-    let activeList = [], proposalList = [], finalizedList = []
+    let activeList = []; let proposalList = []; let finalizedList = []
 
     this.data.ballotBasicOriginItems.forEach(item => {
       switch (item.props.item.state) {
@@ -138,7 +138,7 @@ class Voting extends React.Component {
     this.setState({ visibleActiveItems: activeList, visibleProposalItems: proposalList, visibleFinalizedItems: finalizedList, isBallotLoading: true })
   }
 
-  async setBallotBasicOriginData(i) {
+  async setBallotBasicOriginData (i) {
     await this.props.contracts.ballotStorage.getBallotBasic(i).then(
       ret => {
         ret.id = i // Add ballot id
@@ -146,7 +146,7 @@ class Voting extends React.Component {
       })
   }
 
-  async setBallotMemberOriginData(i) {
+  async setBallotMemberOriginData (i) {
     await this.props.contracts.ballotStorage.getBallotMember(i).then(
       ret => {
         ret.id = i // Add ballot id
@@ -323,7 +323,7 @@ class Voting extends React.Component {
     }
   }
 
-  hideChangeModal() {
+  hideChangeModal () {
     this.setState({ updateModal: false })
   }
 
@@ -357,7 +357,7 @@ class Voting extends React.Component {
         {!this.props.showProposal
           ? <div className='background'>
             <SubHeader
-              netName={web3Instance.netIdName}
+              netName={web3Instance.netName}
               placeholder='Search by Type, Proposal, Keywords'
               condition={this.props.isMember || true}
               btnText='New Proposal'
@@ -383,19 +383,20 @@ class Voting extends React.Component {
               visibleActiveItems={this.state.visibleActiveItems}
               visibleProposalItems={this.state.visibleProposalItems.slice(0, this.state.proposalCount)}
               visibleFinalizedItems={this.state.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
+              netName={web3Instance.netName}
               onClickReadMore={this.onClickReadMore} />
           </div>
           : <ProposalForm
-              contracts={this.props.contracts}
-              getErrModal={this.props.getErrModal}
-              newMemberaddr={this.data.newMemberaddr}
-              oldMemberaddr={this.data.oldMemberaddr}
-              convertComponent={this.reloadVoting.bind(this)}
-              buttonLoading={this.props.buttonLoading}
-              convertButtonLoading={this.props.convertLoading}
-              waitForReceipt={this.waitForReceipt}
-              stakingMax={this.props.stakingMax}
-              stakingMin={this.props.stakingMin} />
+            contracts={this.props.contracts}
+            getErrModal={this.props.getErrModal}
+            newMemberaddr={this.data.existBallotNewMember}
+            oldMemberaddr={this.data.existBallotOldMemberaddr}
+            convertComponent={this.reloadVoting}
+            loading={this.props.loading}
+            convertLoading={this.props.convertLoading}
+            waitForReceipt={this.waitForReceipt}
+            stakingMax={this.props.stakingMax}
+            stakingMin={this.props.stakingMin} />
         }
       </div>
     )

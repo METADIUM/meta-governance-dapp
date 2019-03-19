@@ -58,7 +58,7 @@ const SubHeader = ({
     </div>
   </div>
 
-const SubNav = ({position, onClickSubMenu = f => f}) =>
+const SubNav = ({ position, onClickSubMenu = f => f }) =>
   <Affix>
     <div className='sub-menu flex flex-center-vertical'>
       <Menu
