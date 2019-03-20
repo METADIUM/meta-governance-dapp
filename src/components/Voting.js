@@ -209,8 +209,15 @@ class Voting extends React.Component {
     })
   }
 
-  onClickDetail = (id) => {
-    this.ballotDetails.get(id).style.height = this.ballotDetails.get(id).style.height === 'auto' ? '124px' : 'auto'
+  onClickDetail = (e, id) => {
+    const element = this.ballotDetails.get(id)
+    if(element.style.height === 'auto') {
+      e.target.style.transform = "rotate(0deg)"
+      element.style.height = '124px'
+    } else {
+      e.target.style.transform = "rotate(180deg)"
+      element.style.height = 'auto'
+    }
   }
 
   onClickVote (value, id, endTime, state) {
