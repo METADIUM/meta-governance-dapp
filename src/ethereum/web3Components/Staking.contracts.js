@@ -9,19 +9,19 @@ class Staking {
     this.stakingInstance = new web3.eth.Contract(this.stakingAbi.abi, STAKING_ADDRESS)
   }
 
-  async lockedBalanceOf (address) {
+  lockedBalanceOf (address) {
     if (!this.stakingInstance || !this.stakingInstance.methods) return
-    return await this.stakingInstance.methods.lockedBalanceOf(address).call()
+    return this.stakingInstance.methods.lockedBalanceOf(address).call()
   }
 
-  async balanceOf (address) {
+  balanceOf (address) {
     if (!this.stakingInstance || !this.stakingInstance.methods) return
-    return await this.stakingInstance.methods.balanceOf(address).call()
+    return this.stakingInstance.methods.balanceOf(address).call()
   }
 
-  async availableBalanceOf (address) {
+  availableBalanceOf (address) {
     if (!this.stakingInstance || !this.stakingInstance.methods) return
-    return await this.stakingInstance.methods.availableBalanceOf(address).call()
+    return this.stakingInstance.methods.availableBalanceOf(address).call()
   }
 
   deposit () {

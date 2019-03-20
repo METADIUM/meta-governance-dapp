@@ -30,7 +30,7 @@ let getWeb3Instance = () => {
       }
 
       let errorMsg = null
-      let netIdName
+      let netName
       let netId
       let network
       let defaultAccount = null
@@ -40,12 +40,12 @@ let getWeb3Instance = () => {
         network = await web3.eth.net.getNetworkType()
         console.log('netId: ', netId, ', network: ', network)
         if (!(netId in constants.NETWORKS) || network !== 'private') {
-          netIdName = 'ERROR'
+          netName = 'ERROR'
           errorMsg = 'This is an unknown network.'
           console.log('This is an unknown network.')
         } else {
-          netIdName = constants.NETWORKS[netId].NAME
-          console.log(`This is ${netIdName}`)
+          netName = constants.NETWORKS[netId].NAME
+          console.log(`This is ${netName}`)
         }
         const accounts = await web3.eth.getAccounts()
         defaultAccount = accounts[0] || null
@@ -54,11 +54,11 @@ let getWeb3Instance = () => {
         console.log('No web3 instance injected, using Local web3.')
         console.error('Metamask not found')
 
-        netId = constants.NETID_TESTNET
+        netId = constants.NET_ID
         const network = constants.NETWORKS[netId]
 
         web3 = new Web3(new Web3.providers.HttpProvider(network.RPC))
-        netIdName = network.NAME
+        netName = network.NAME
       }
 
       if (errorMsg !== null) {
@@ -67,7 +67,7 @@ let getWeb3Instance = () => {
       }
       web3Instance = {
         web3: web3,
-        netIdName,
+        netName,
         netId,
         defaultAccount
       }

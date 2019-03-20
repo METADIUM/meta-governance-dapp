@@ -6,17 +6,19 @@ constants.ABIsSources = {
   // contracts.json: contract address
   Registry: 'Registry.json',
   Staking: 'Staking.json',
-  EnvStorage: 'EnvStorage.json',
+  EnvStorage: 'EnvStorageImp.json',
   BallotStorage: 'BallotStorage.json',
   Gov: 'Gov.json',
   GovImp: 'GovImp.json'
 }
-constants.NETID_TESTNET = '101'
+constants.NET_ID = '12'
+constants.branchName = 'mainnet'
+
 constants.NETWORKS = {
-  '101': {
+  '12': {
     NAME: 'TESTNET',
     RPC: 'https://api.metadium.com/dev',
-    BRANCH: 'master',
+    BRANCH: 'testnet',
     NETWORK: 'private',
     TESTNET: true,
     explorerUrl: 'https://testnetexplorer.metadium.com/txs/'
@@ -24,18 +26,17 @@ constants.NETWORKS = {
   '11': {
     NAME: 'MAINNET',
     RPC: 'https://api.metadium.com/prod',
-    BRANCH: 'master',
+    BRANCH: 'mainnet',
     NETWORK: 'private',
-    TESTNET: true,
+    TESTNET: false,
     explorerUrl: 'https://explorer.metadium.com/txs/'
   }
 }
-constants.branchName = 'testnet'
 
 constants.authorityRepo = {
   org: 'blueisle',
   repo: 'meta-authorities',
-  branch: 'master',
+  branch: 'mainnet',
   source: 'authorities.json'
 }
 
