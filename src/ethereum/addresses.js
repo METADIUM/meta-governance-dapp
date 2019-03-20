@@ -7,7 +7,7 @@ async function getContractsAddresses (netId) {
   let addr = addressesURL(branch) // ex: https://raw.githubusercontent.com/hexoul/poa-chain-spec/testnet/contracts.json
   let response
   try {
-    await fetch(addr)
+    await window.fetch(addr)
       .then(function (result) {
         response = result
       })
@@ -18,14 +18,6 @@ async function getContractsAddresses (netId) {
   let contracts = await response.json()
   console.log('contracts', contracts)
   GOVERNANCE_ADDRESSES = contracts
-  // switch (branch) {
-  //   case 'testnet':
-  //     TESTNET_ADDRESSES = contracts
-  //     break
-  //   default:
-  //     TESTNET_ADDRESSES = contracts
-  //     break
-  // }
 }
 
 function getAddresses (netId) {

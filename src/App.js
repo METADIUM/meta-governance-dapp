@@ -60,7 +60,6 @@ class App extends React.Component {
 
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
-      console.log(web3Config)
       this.initContracts(web3Config)
       await this.initAuthorityLists()
       this.setState({ loadWeb3: true })
@@ -73,7 +72,7 @@ class App extends React.Component {
   async initContracts (web3Config) {
     initContracts({
       web3: web3Config.web3,
-      netid: web3Config.netId
+      netId: web3Config.netId
     }).then(async () => {
       await this.getStakingRange()
       await this.updateAccountBalance()
@@ -101,17 +100,14 @@ class App extends React.Component {
       this.setStakingEventsWatch()
       this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
       this.setState({ showProposal: false })
-    } else {
-      console.log('notChanged')
     }
   }
 
   setStakingEventsWatch () {
     if (this.data.eventsWatch) {
-      let subscription = this.data.eventsWatch
-      subscription.unsubscribe((error, success) => {
+      this.data.eventsWatch.unsubscribe((error, success) => {
         if (error) console.log('Faild to unsubscribed!')
-        else if (success) console.log('Successfully unsubscribed!')
+        // else if (success) console.log('Successfully unsubscribed!')
       })
     }
     var filteraddress = web3Instance.web3.eth.abi.encodeParameter('address', web3Instance.defaultAccount)
@@ -120,16 +116,15 @@ class App extends React.Component {
         fromBlock: 'latest',
         topics: [null, filteraddress]
       }, (error, events) => {
-        console.log(events)
+        // console.log(events)
         if (error) console.log('error', error)
         else this.updateAccountBalance()
       }
     )
-    console.log('Successfully subscribed!')
   }
 
   async getStakingRange () {
-    if (web3Instance.netName === 'MAINTNET' || web3Instance.netName === 'TESTNET') {
+    if (web3Instance.netName in ['MAINTNET', 'TESTNET']) {
       this.data.stakingMin = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMin())
       this.data.stakingMax = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMax())
     }
