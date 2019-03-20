@@ -22,12 +22,6 @@ function getABI (branch, contract) {
 }
 
 function getBranch (netId) {
-  // switch (netId) {
-  //   case constants.NETID_TESTNET:
-  //     return 'mainnet'
-  //   default:
-  //     return 'mainnet'
-  // }
   return constants.NETWORKS[netId].BRANCH
 }
 

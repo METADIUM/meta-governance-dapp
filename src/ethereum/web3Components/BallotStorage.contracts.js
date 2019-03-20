@@ -2,10 +2,10 @@ import { getAddresses } from '../addresses'
 import { getBranch, getABI } from '../helpers'
 
 class BallotStorage {
-  async init ({ web3, netid }) {
-    this.addresses = getAddresses(netid)
+  async init ({ web3, netId }) {
+    this.addresses = getAddresses(netId)
     const { BALLOT_STORAGE_ADDRESS } = this.addresses
-    this.ballotStorageAbi = await getABI(getBranch(netid), 'BallotStorage')
+    this.ballotStorageAbi = await getABI(getBranch(netId), 'BallotStorage')
     this.ballotStorageInstance = new web3.eth.Contract(this.ballotStorageAbi.abi, BALLOT_STORAGE_ADDRESS)
   }
 

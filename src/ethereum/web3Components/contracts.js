@@ -17,13 +17,13 @@ const contracts = {
 }
 
 async function initContracts (arg) {
-  const { web3, netid } = arg
+  const { web3, netId } = arg
   if (!web3 || !web3.eth) {
-    console.log('Not exist web3')
+    console.log('web3 NOT FOUND')
     return
   }
 
-  return getContractsAddresses(netid).then(() => Promise.all(Object.values(contracts).map(async (contract) => { await contract.init(arg) })))
+  return getContractsAddresses(netId).then(() => Promise.all(Object.values(contracts).map(async (contract) => { await contract.init(arg) })))
 }
 
 export {
