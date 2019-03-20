@@ -79,7 +79,6 @@ class Voting extends React.Component {
 
   async getOriginData () {
     if (!this.data.ballotCnt) return
-    console.log('Ballot Count: ', this.data.ballotCnt)
     for (var i = 1; i <= this.data.ballotCnt; i++) {
       await this.setBallotBasicOriginData(i)
       await this.setBallotMemberOriginData(i)

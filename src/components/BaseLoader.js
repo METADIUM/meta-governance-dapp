@@ -1,7 +1,8 @@
 import React from 'react'
+import {Icon} from 'antd'
 import './style/style.css'
 
-export const BaseLoader = () => {
+const BaseLoader = () => {
   return (
     <div className='loading-container '>
       <div className='loading'>
@@ -15,3 +16,11 @@ export const BaseLoader = () => {
     </div>
   )
 }
+
+const MiniLoader = () =>
+ <div className='mini-loader flex flex-center-vertical'>
+   <Icon type="loading" />
+ </div>
+
+
+export { BaseLoader, MiniLoader }

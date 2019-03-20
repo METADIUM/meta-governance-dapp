@@ -40,11 +40,6 @@ constants.authorityRepo = {
   source: 'authorities.json'
 }
 
-constants.limitAmount = {
-  stakingMin: 1,
-  stakingMax: 8
-}
-
 /**
  * BallotEnums
  */

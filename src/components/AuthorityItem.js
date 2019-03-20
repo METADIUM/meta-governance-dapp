@@ -19,7 +19,7 @@ const AuthorityItem = ({
         <p className='address text-small'>Address: {item.addr}</p>
         <p className='description flex-full'>{breakLine(item.description)}</p>
         <div className='link_container flex'>
-          <span className='more' onClick={e => onReadMoreClick(index)}>+ Read More</span>
+          <span className='more' onClick={e => onReadMoreClick(e, index)}>+ Read More</span>
           <div className='SNSList flex-full flex'>
             {getSNSList(item.sns)}
             <a className='snsGroup' href={item.homepage}> <i className='fas fa-home fa-2x' /> </a>

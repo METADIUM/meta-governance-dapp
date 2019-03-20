@@ -1,6 +1,7 @@
 import React from 'react'
 import { SubHeader } from './Nav'
 import { AuthorityItem } from './AuthorityItem'
+import { MiniLoader } from './BaseLoader';
 import './style/style.css'
 
 class Authority extends React.Component {
@@ -41,10 +42,16 @@ class Authority extends React.Component {
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
     }
 
-    onReadMoreClick (index) {
+    onReadMoreClick (e, index) {
       const element = this.textContainers.get(index)
-      if (element.offsetHeight === 192) element.style.height = 'auto'
-      else element.style.height = '192px'
+      if (element.offsetHeight === 192) {
+        e.target.innerHTML = '- Read Less'
+        element.style.height = 'auto'
+      }
+      else {
+        e.target.innerHTML = '+ Read More'
+        element.style.height = '192px'
+      }
     }
 
     breakLine (description) {
@@ -108,7 +115,7 @@ class Authority extends React.Component {
             <div className='card_container'>
               {this.state.getAuthorityInfo
                 ? this.state.visibleAuthorityItems
-                : <div>loading</div>
+                : <MiniLoader/>
               }
             </div>
           </div>
