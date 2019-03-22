@@ -22,12 +22,7 @@ function getABI (branch, contract) {
 }
 
 function getBranch (netId) {
-  switch (netId) {
-    case constants.NETID_TESTNET:
-      return 'testnet'
-    default:
-      return 'testnet'
-  }
+  return constants.NETWORKS[netId].BRANCH
 }
 
 export {

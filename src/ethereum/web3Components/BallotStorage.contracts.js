@@ -2,31 +2,31 @@ import { getAddresses } from '../addresses'
 import { getBranch, getABI } from '../helpers'
 
 class BallotStorage {
-  async init ({ web3, netid }) {
-    this.addresses = getAddresses(netid)
+  async init ({ web3, netId }) {
+    this.addresses = getAddresses(netId)
     const { BALLOT_STORAGE_ADDRESS } = this.addresses
-    this.ballotStorageAbi = await getABI(getBranch(netid), 'BallotStorage')
+    this.ballotStorageAbi = await getABI(getBranch(netId), 'BallotStorage')
     this.ballotStorageInstance = new web3.eth.Contract(this.ballotStorageAbi.abi, BALLOT_STORAGE_ADDRESS)
   }
 
-  async getBallotBasic (id) {
+  getBallotBasic (id) {
     if (!this.ballotStorageInstance || !this.ballotStorageInstance.methods) return
-    return await this.ballotStorageInstance.methods.getBallotBasic(id).call()
+    return this.ballotStorageInstance.methods.getBallotBasic(id).call()
   }
 
-  async getBallotMember (id) {
+  getBallotMember (id) {
     if (!this.ballotStorageInstance || !this.ballotStorageInstance.methods) return
-    return await this.ballotStorageInstance.methods.getBallotMember(id).call()
+    return this.ballotStorageInstance.methods.getBallotMember(id).call()
   }
 
-  async getMinVotingDuration () {
+  getMinVotingDuration () {
     if (!this.ballotStorageInstance || !this.ballotStorageInstance.methods) return
-    return await this.ballotStorageInstance.methods.getMinVotingDuration().call()
+    return this.ballotStorageInstance.methods.getMinVotingDuration().call()
   }
 
-  async getMaxVotingDuration () {
+  getMaxVotingDuration () {
     if (!this.ballotStorageInstance || !this.ballotStorageInstance.methods) return
-    return await this.ballotStorageInstance.methods.getMaxVotingDuration().call()
+    return this.ballotStorageInstance.methods.getMaxVotingDuration().call()
   }
 
   /**
