@@ -64,7 +64,7 @@ class Voting extends React.Component {
   }
 
   async componentDidMount () {
-    this.data.ballotCnt = await this.props.contracts.gogovernancev.getBallotLength()
+    this.data.ballotCnt = await this.props.contracts.governance.getBallotLength()
     this.props.authorityOriginData.forEach(item => this.data.authorityNames.set(item.addr, item.title))
     this.getOriginData()
   }
@@ -364,7 +364,7 @@ class Voting extends React.Component {
             <SubHeader
               netName={web3Instance.netName}
               placeholder='Search by Type, Proposal, Keywords'
-              condition={this.props.isMember}
+              condition={this.props.isMember || true}
               btnText='New Proposal'
               btnIcon='+'
               loading={!this.state.isBallotLoading || this.props.loading}
