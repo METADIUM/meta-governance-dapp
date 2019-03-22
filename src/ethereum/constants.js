@@ -1,37 +1,7 @@
-let constants = {}
+import { constants } from 'meta-web3'
+
 constants.organization = 'METADIUM'
 constants.repoName = 'governance-spec'
-constants.addressesSourceFile = 'contracts.json'
-constants.ABIsSources = {
-  // contracts.json: contract address
-  Registry: 'Registry.json',
-  Staking: 'Staking.json',
-  EnvStorage: 'EnvStorageImp.json',
-  BallotStorage: 'BallotStorage.json',
-  Gov: 'Gov.json',
-  GovImp: 'GovImp.json'
-}
-constants.NET_ID = '11'
-constants.branchName = 'mainnet'
-
-constants.NETWORKS = {
-  '12': {
-    NAME: 'TESTNET',
-    RPC: 'https://api.metadium.com/dev',
-    BRANCH: 'testnet',
-    NETWORK: 'private',
-    TESTNET: true,
-    explorerUrl: 'https://testnetexplorer.metadium.com/txs/'
-  },
-  '11': {
-    NAME: 'MAINNET',
-    RPC: 'https://api.metadium.com/prod',
-    BRANCH: 'mainnet',
-    NETWORK: 'private',
-    TESTNET: false,
-    explorerUrl: 'https://explorer.metadium.com/txs/'
-  }
-}
 
 constants.authorityRepo = {
   org: 'METADIUM',
@@ -39,6 +9,9 @@ constants.authorityRepo = {
   branch: 'master',
   source: 'authorities.json'
 }
+
+constants.NET_ID = '11'
+constants.branchName = 'mainnet'
 
 /**
  * BallotEnums
