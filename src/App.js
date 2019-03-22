@@ -49,6 +49,7 @@ class App extends React.Component {
     this.updateDefaultAccount = this.updateDefaultAccount.bind(this)
     this.getStakingRange = this.getStakingRange.bind(this)
     this.onMenuClick = this.onMenuClick.bind(this)
+    this.onClickFootIcon = this.onClickFootIcon.bind(this)
     this.getContent = this.getContent.bind(this)
     this.getErrModal = this.getErrModal.bind(this)
     this.submitMetaStaking = this.submitMetaStaking.bind(this)
@@ -147,6 +148,22 @@ class App extends React.Component {
       this.convertVotingComponent('voting')
     } else {
       this.setState({ nav: key })
+    }
+  }
+
+  onClickFootIcon (e) {
+    switch(e.target.alt) {
+      case 'metadium':
+        window.open('https://metadium.com/',  '_blank')
+        break
+      case 'explorer':
+        if(web3Instance.netName === 'TESTNET') window.open('https://testnetexplorer.metadium.com/',  '_blank')
+        else window.open('https://explorer.metadium.com/',  '_blank')
+        break
+      case 'github':
+        window.open('https://github.com/METADIUM/meta-governance-dapp',  '_blank')
+        break
+      default:
     }
   }
 
@@ -312,7 +329,9 @@ class App extends React.Component {
             </Content>
 
             <Footer>
-              <FootNav netName={web3Instance.netName} />
+              <FootNav
+                netName={web3Instance.netName}
+                onClickFootIcon={this.onClickFootIcon} />
             </Footer>
           </div>
           : <div>

@@ -1,6 +1,6 @@
 let constants = {}
-constants.organization = 'blueisle'
-constants.repoName = 'governanace-spec'
+constants.organization = 'METADIUM'
+constants.repoName = 'governance-spec'
 constants.addressesSourceFile = 'contracts.json'
 constants.ABIsSources = {
   // contracts.json: contract address
@@ -11,7 +11,7 @@ constants.ABIsSources = {
   Gov: 'Gov.json',
   GovImp: 'GovImp.json'
 }
-constants.NET_ID = '12'
+constants.NET_ID = '11'
 constants.branchName = 'mainnet'
 
 constants.NETWORKS = {
@@ -34,9 +34,9 @@ constants.NETWORKS = {
 }
 
 constants.authorityRepo = {
-  org: 'blueisle',
+  org: 'METADIUM',
   repo: 'meta-authorities',
-  branch: 'mainnet',
+  branch: 'master',
   source: 'authorities.json'
 }
 

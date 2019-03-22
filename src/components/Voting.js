@@ -21,8 +21,11 @@ class Voting extends React.Component {
     existBallotNewMember: [],
     existBallotOldMemberaddr: [],
     activeItems: [],
+    visibleActiveItems: [],
     proposalItems: [],
+    visibleProposalItems: [],
     finalizedItems: [],
+    visibleFinalizedItems: [],
     authorityNames: new Map()
   }
   state = {
@@ -32,10 +35,7 @@ class Voting extends React.Component {
     position: 'active',
     updateModal: false,
     proposalCount: 5,
-    finalizedCount: 5,
-    visibleActiveItems: [],
-    visibleProposalItems: [],
-    visibleFinalizedItems: []
+    finalizedCount: 5
   }
 
   constructor (props) {
@@ -65,7 +65,7 @@ class Voting extends React.Component {
 
   async componentDidMount () {
     this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
-    this.props.authorityOriginData.map(item => this.data.authorityNames.set(item.addr, item.title))
+    this.props.authorityOriginData.forEach(item => this.data.authorityNames.set(item.addr, item.title))
     this.getOriginData()
   }
 
@@ -131,10 +131,10 @@ class Voting extends React.Component {
         default: break
       }
     })
-    this.data.activeItems = activeList
-    this.data.proposalItems = proposalList
-    this.data.finalizedItems = finalizedList
-    this.setState({ visibleActiveItems: activeList, visibleProposalItems: proposalList, visibleFinalizedItems: finalizedList, isBallotLoading: true })
+    this.data.activeItems = this.data.visibleActiveItems = activeList
+    this.data.proposalItems = this.data.visibleProposalItems = proposalList
+    this.data.finalizedItems = this.data.visibleFinalizedItems = finalizedList
+    this.setState({ isBallotLoading: true })
   }
 
   async setBallotBasicOriginData (i) {
@@ -339,11 +339,10 @@ class Voting extends React.Component {
 
   searchBallot (str) {
     str = str.toLowerCase()
-    this.setState({
-      visibleActiveItems: this.filteringBallot(this.data.activeItems, str),
-      visibleProposalItems: this.filteringBallot(this.data.proposalItems, str),
-      visibleFinalizedItems: this.filteringBallot(this.data.finalizedItems, str)
-    })
+    this.data.visibleActiveItems = this.filteringBallot(this.data.activeItems, str)
+    this.data.visibleProposalItems = this.filteringBallot(this.data.proposalItems, str)
+    this.data.visibleFinalizedItems = this.filteringBallot(this.data.finalizedItems, str)
+    this.setState({ isBallotLoading: true })
   }
 
   filteringBallot (ballots, str) {
@@ -365,7 +364,7 @@ class Voting extends React.Component {
             <SubHeader
               netName={web3Instance.netName}
               placeholder='Search by Type, Proposal, Keywords'
-              condition={this.props.isMember || true}
+              condition={this.props.isMember}
               btnText='New Proposal'
               btnIcon='+'
               loading={!this.state.isBallotLoading || this.props.loading}
@@ -386,9 +385,9 @@ class Voting extends React.Component {
             {!this.state.isBallotLoading || this.props.loading ? <div><BaseLoader /></div> : null}
             <ShowBallots
               titles={this.titles}
-              visibleActiveItems={this.state.visibleActiveItems}
-              visibleProposalItems={this.state.visibleProposalItems.slice(0, this.state.proposalCount)}
-              visibleFinalizedItems={this.state.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
+              visibleActiveItems={this.data.visibleActiveItems}
+              visibleProposalItems={this.data.visibleProposalItems.slice(0, this.state.proposalCount)}
+              visibleFinalizedItems={this.data.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
               netName={web3Instance.netName}
               onClickReadMore={this.onClickReadMore} />
           </div>

@@ -6,11 +6,11 @@ import './style/style.css'
 
 class Authority extends React.Component {
     data = {
-      authorityItems: new Map()
+      authorityItems: [],
+      visibleAuthorityItems: []
     }
 
     state = {
-      visibleAuthorityItems: [],
       getAuthorityInfo: false
     }
 
@@ -35,7 +35,8 @@ class Authority extends React.Component {
           authorityItems.push(value)
         }
       })
-      this.setState({ visibleAuthorityItems: authorityItems })
+      this.data.visibleAuthorityItems = authorityItems
+      this.setState({ getAuthorityInfo: true })
     }
 
     onApplyBtnClick () {
@@ -45,12 +46,12 @@ class Authority extends React.Component {
     onReadMoreClick (e, index) {
       const element = this.textContainers.get(index)
       if (element.offsetHeight === 192) {
-        e.target.innerHTML = '- Read Less'
         element.style.height = 'auto'
+        if(element.offsetHeight !== 192) e.target.innerHTML = '- Read Less'
       }
       else {
-        e.target.innerHTML = '+ Read More'
         element.style.height = '192px'
+        e.target.innerHTML = '+ Read More'
       }
     }
 
@@ -98,7 +99,8 @@ class Authority extends React.Component {
         }
       }
       this.data.authorityItems = list
-      this.setState({ getAuthorityInfo: true, visibleAuthorityItems: list })
+      this.data.visibleAuthorityItems = list
+      this.setState({ getAuthorityInfo: true })
     }
 
     render () {
@@ -114,7 +116,7 @@ class Authority extends React.Component {
           <div className='contentDiv container'>
             <div className='card_container'>
               {this.state.getAuthorityInfo
-                ? this.state.visibleAuthorityItems
+                ? this.data.visibleAuthorityItems
                 : <MiniLoader/>
               }
             </div>
