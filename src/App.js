@@ -125,7 +125,7 @@ class App extends React.Component {
   }
 
   async getStakingRange () {
-    if (web3Instance.netName in ['MAINTNET', 'TESTNET']) {
+    if (['MAINNET', 'TESTNET'].includes(web3Instance.netName)) {
       this.data.stakingMin = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMin())
       this.data.stakingMax = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMax())
     }
