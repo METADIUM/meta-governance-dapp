@@ -1,6 +1,6 @@
 import Web3 from 'web3'
 
-import { constants } from './constants'
+import { constants } from 'meta-web3'
 
 var web3Instance
 
@@ -11,7 +11,7 @@ let getWeb3Instance = () => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener('load', async () => {
       // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-      let web3, netName, netId, network, defaultAccount
+      let web3, netName, netId, branch, network, defaultAccount
 
       if (window.ethereum) {
         web3 = new Web3(window.ethereum)
@@ -31,9 +31,11 @@ let getWeb3Instance = () => {
         network = await web3.eth.net.getNetworkType()
         if (!(netId in constants.NETWORKS) || network !== 'private') {
           netName = 'ERROR'
+          branch = 'ERROR'
           reject(new Error('This is an unknown network.'))
         } else {
           netName = constants.NETWORKS[netId].NAME
+          branch = constants.NETWORKS[netId].BRANCH
         }
         const accounts = await web3.eth.getAccounts()
         defaultAccount = accounts[0]
@@ -47,12 +49,14 @@ let getWeb3Instance = () => {
 
         web3 = new Web3(new Web3.providers.HttpProvider(network.RPC))
         netName = network.NAME
+        branch = network.BRANCH
       }
 
       web3Instance = {
         web3: web3,
         netName: netName,
         netId: netId,
+        branch: branch,
         defaultAccount: defaultAccount
       }
 
