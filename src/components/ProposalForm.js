@@ -113,7 +113,7 @@ class ProposalForm extends React.Component {
           return
         }
         if (this.data.selectedVoteTopic === 'add') {
-          trx = this.props.contracts.govImp.addProposalToAddMember(
+          trx = this.props.contracts.governance.addProposalToAddMember(
             formData.newAddr,
             formData.newName,
             formData.newNode.node,
@@ -122,7 +122,7 @@ class ProposalForm extends React.Component {
             formData.memo
           )
         } else if (this.data.selectedVoteTopic === 'replace') {
-          trx = this.props.contracts.govImp.addProposalToChangeMember(
+          trx = this.props.contracts.governance.addProposalToChangeMember(
             [formData.oldAddr, formData.newAddr],
             formData.newName,
             formData.newNode.node,
@@ -131,14 +131,14 @@ class ProposalForm extends React.Component {
             formData.memo
           )
         } else if (this.data.selectedVoteTopic === 'remove') {
-          trx = this.props.contracts.govImp.addProposalToRemoveMember(
+          trx = this.props.contracts.governance.addProposalToRemoveMember(
             formData.oldAddr,
             formData.oldLockAmount,
             formData.memo
           )
         } else if (this.data.selectedVoteTopic === 'update') {
           let myLockBalance = await this.props.contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
-          trx = this.props.contracts.govImp.addProposalToChangeMember(
+          trx = this.props.contracts.governance.addProposalToChangeMember(
             [web3Instance.defaultAccount, web3Instance.defaultAccount],
             formData.newNode.node,
             formData.newNode.ip,
@@ -175,7 +175,7 @@ class ProposalForm extends React.Component {
     }
 
     async handleProposalError (formData) {
-      if (!await this.props.contracts.gov.isMember(web3Instance.defaultAccount)) {
+      if (!await this.props.contracts.governance.isMember(web3Instance.defaultAccount)) {
         this.props.getErrModal('You are not member', 'Proposal Submit Error')
         return true
       }
@@ -184,7 +184,7 @@ class ProposalForm extends React.Component {
         const newMemberBalance = Number(await this.props.contracts.staking.availableBalanceOf(formData.newAddr))
         const newLockedAmount = Number(formData.newLockAmount)
 
-        if (await this.props.contracts.gov.isMember(formData.newAddr)) {
+        if (await this.props.contracts.governance.isMember(formData.newAddr)) {
           this.props.getErrModal('Existing Member Address (New)', 'Proposal Submit Error')
           return true
         } else if (this.props.newMemberaddr.some((item) => item === formData.newAddr)) {
@@ -199,10 +199,10 @@ class ProposalForm extends React.Component {
         const newMemberBalance = Number(await this.props.contracts.staking.availableBalanceOf(formData.newAddr))
         const newLockedAmount = Number(formData.newLockAmount)
 
-        if (await this.props.contracts.gov.isMember(formData.newAddr)) {
+        if (await this.props.contracts.governance.isMember(formData.newAddr)) {
           this.props.getErrModal('Existing Member Address (New)', 'Proposal Submit Error')
           return true
-        } else if (!await this.props.contracts.gov.isMember(formData.oldAddr)) {
+        } else if (!await this.props.contracts.ggovernanceov.isMember(formData.oldAddr)) {
           this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
           return true
         } else if (this.props.newMemberaddr.some((item) => item === formData.newAddr)) {
@@ -222,7 +222,7 @@ class ProposalForm extends React.Component {
         const oldMemberBalance = Number(await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr))
         const oldLockedAmount = Number(formData.oldLockAmount)
 
-        if (!await this.props.contracts.gov.isMember(formData.oldAddr)) {
+        if (!await this.props.contracts.ggovernanceov.isMember(formData.oldAddr)) {
           this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
           return true
         } else if (this.props.oldMemberaddr.some((item) => item === formData.oldAddr)) {
@@ -244,7 +244,7 @@ class ProposalForm extends React.Component {
       } else if (!web3Instance.web3.utils.checkAddressChecksum(value)) {
         value = web3Instance.web3.utils.toChecksumAddress(value)
       }
-      if (!await this.props.contracts.gov.isMember(value)) {
+      if (!await this.props.contracts.gogovernancev.isMember(value)) {
         this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
         this.setState({ showLockAmount: '' })
         return

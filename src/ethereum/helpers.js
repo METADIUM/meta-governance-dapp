@@ -3,6 +3,7 @@ import { constants } from './constants'
 const fetch = require('node-fetch')
 
 function addressesURL (branch) {
+  console.log("hello")
   const URL = `https://raw.githubusercontent.com/${constants.organization}/${constants.repoName}/${branch}/${
     constants.addressesSourceFile
   }`
@@ -22,7 +23,7 @@ function getABI (branch, contract) {
 }
 
 function getBranch (netId) {
-  return constants.NETWORKS[netId].BRANCH
+  return constants.NETWORK[netId].BRANCH
 }
 
 export {

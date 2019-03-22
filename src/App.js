@@ -14,7 +14,7 @@ import './App.css'
 import getWeb3Instance, { web3Instance } from './ethereum/web3'
 
 // Contracts
-import { contracts, initContracts } from './ethereum/web3Components/contracts'
+import { contracts, initContracts } from 'meta-web3'
 
 const { Header, Content, Footer } = Layout
 class App extends React.Component {
@@ -73,7 +73,7 @@ class App extends React.Component {
   async initContracts (web3Config) {
     initContracts({
       web3: web3Config.web3,
-      netId: web3Config.netId
+      branch: web3Config.branch
     }).then(async () => {
       await this.getStakingRange()
       await this.updateAccountBalance()
@@ -81,7 +81,7 @@ class App extends React.Component {
         await this.updateDefaultAccount(chagedAccounts[0])
       })
       this.setStakingEventsWatch()
-      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
+      this.data.isMember = await contracts.governance.isMember(web3Instance.defaultAccount)
       this.setState({ contractReady: true })
     })
   }
@@ -99,7 +99,7 @@ class App extends React.Component {
       web3Instance.defaultAccount = account
       await this.updateAccountBalance()
       this.setStakingEventsWatch()
-      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
+      this.data.isMember = await contracts.governance.isMember(web3Instance.defaultAccount)
       this.setState({ showProposal: false })
     }
   }
@@ -153,16 +153,9 @@ class App extends React.Component {
 
   onClickFootIcon (e) {
     switch(e.target.alt) {
-      case 'metadium':
-        window.open('https://metadium.com/',  '_blank')
-        break
-      case 'explorer':
-        if(web3Instance.netName === 'TESTNET') window.open('https://testnetexplorer.metadium.com/',  '_blank')
-        else window.open('https://explorer.metadium.com/',  '_blank')
-        break
-      case 'github':
-        window.open('https://github.com/METADIUM/meta-governance-dapp',  '_blank')
-        break
+      case 'metadium': window.open('https://metadium.com/',  '_blank'); break
+      case 'explorer': window.open(constants.NETWORK[web3Instance.netId].EXPLORER); break
+      case 'github': window.open('https://github.com/METADIUM/meta-governance-dapp',  '_blank'); break
       default:
     }
   }
@@ -216,7 +209,7 @@ class App extends React.Component {
 
     this.data.errTitle = _title
     this.data.errContent = _err
-    if (_link) this.data.errLink = constants.NETWORKS[web3Instance.netId] + _link
+    if (_link) this.data.errLink = constants.NETWORK[web3Instance.netId] + _link
     else this.data.errLink = false
     this.setState({ errModalVisible: true })
   }

@@ -85,7 +85,7 @@ class Authority extends React.Component {
       let list = []
       for (let i = 0; i < Object.keys(this.props.authorityOriginData).length; i++) {
         let item = this.props.authorityOriginData[i]
-        let isMember = await this.props.contracts.gov.isMember(item.addr)
+        let isMember = await this.props.contracts.governance.isMember(item.addr)
         if (isMember) {
           list.push(<AuthorityItem
             key={item.addr}

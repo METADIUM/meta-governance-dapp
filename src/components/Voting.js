@@ -64,14 +64,14 @@ class Voting extends React.Component {
   }
 
   async componentDidMount () {
-    this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
+    this.data.ballotCnt = await this.props.contracts.gogovernancev.getBallotLength()
     this.props.authorityOriginData.forEach(item => this.data.authorityNames.set(item.addr, item.title))
     this.getOriginData()
   }
 
   async reloadVoting (component) {
     if (component) this.props.convertVotingComponent(component)
-    this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
+    this.data.ballotCnt = await this.props.contracts.ggovernanceov.getBallotLength()
     this.data.ballotBasicOriginData = []
     await this.getOriginData()
     this.props.convertLoading(false)
@@ -234,7 +234,7 @@ class Voting extends React.Component {
     }
 
     this.props.convertLoading(true)
-    let { to, data } = this.props.contracts.govImp.vote(id, value === 'Y')
+    let { to, data } = this.props.contracts.governance.vote(id, value === 'Y')
     web3Instance.web3.eth.sendTransaction({
       from: web3Instance.defaultAccount,
       to: to,

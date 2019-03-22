@@ -29,13 +29,13 @@ let getWeb3Instance = () => {
       if (web3) {
         netId = await web3.eth.net.getId()
         network = await web3.eth.net.getNetworkType()
-        if (!(netId in constants.NETWORKS) || network !== 'private') {
+        if (!(netId in constants.NETWORK) || network !== 'private') {
           netName = 'ERROR'
           branch = 'ERROR'
           reject(new Error('This is an unknown network.'))
         } else {
-          netName = constants.NETWORKS[netId].NAME
-          branch = constants.NETWORKS[netId].BRANCH
+          netName = constants.NETWORK[netId].NAME
+          branch = constants.NETWORK[netId].BRANCH
         }
         const accounts = await web3.eth.getAccounts()
         defaultAccount = accounts[0]
@@ -45,7 +45,7 @@ let getWeb3Instance = () => {
         console.error('Metamask not found')
 
         netId = constants.NET_ID
-        const network = constants.NETWORKS[netId]
+        const network = constants.NETWORK[netId]
 
         web3 = new Web3(new Web3.providers.HttpProvider(network.RPC))
         netName = network.NAME
