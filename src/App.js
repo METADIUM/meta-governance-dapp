@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layout } from 'antd'
 import { TopNav, FootNav } from './components/Nav'
-import { StakingModal, ErrModal } from './components/Modal'
+import { StakingModal, ErrModal, AccessFailedModal } from './components/Modal'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
 import { BaseLoader } from './components/BaseLoader'
@@ -30,10 +30,12 @@ class App extends React.Component {
     errTitle: null,
     errContent: null,
     errLink: null,
+    errAccessFail: null,
     isMember: false
   }
   state = {
     loadWeb3: false,
+    AccessFailedModal: null,
     nav: '1',
     contractReady: false,
     stakingModalVisible: false,
@@ -66,7 +68,7 @@ class App extends React.Component {
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
-      this.setState({ loadWeb3: false })
+      this.setState({ loadWeb3: false, AccessFailedModal: error.message })
     })
   }
 
@@ -288,6 +290,10 @@ class App extends React.Component {
   render () {
     return (
       <Layout className='layout'>
+        <AccessFailedModal
+          visible={this.state.AccessFailedModal !== null}
+          message={this.state.AccessFailedModal}/>
+
         {this.state.contractReady && this.state.loadWeb3
           ? <div className='flex-column'>
             <Header className={web3Instance.netName}>

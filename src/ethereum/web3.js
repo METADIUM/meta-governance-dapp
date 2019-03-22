@@ -34,6 +34,7 @@ let getWeb3Instance = () => {
           reject(new Error('This is an unknown network.'))
         } else {
           netName = constants.NETWORKS[netId].NAME
+          if(netName === 'TESTNET') reject(new Error('Please access to the main net')) 
         }
         const accounts = await web3.eth.getAccounts()
         defaultAccount = accounts[0]
