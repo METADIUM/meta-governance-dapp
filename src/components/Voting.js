@@ -1,5 +1,5 @@
 import React from 'react'
-import './style/style.css'
+
 import { ProposalForm } from './ProposalForm'
 import { VotingBallots, ShowBallots } from './VotingBallots'
 import { SubHeader, SubNav } from './Nav'
@@ -7,8 +7,9 @@ import { ChangeModal } from './Modal'
 import { BaseLoader } from './BaseLoader'
 
 import * as util from '../util'
-import { web3Instance } from '../ethereum/web3'
-import { constants } from '../ethereum/constants'
+import { web3Instance } from '../web3'
+import { constants } from '../constants'
+import './style/style.css'
 
 class Voting extends React.Component {
   data = {
@@ -213,7 +214,7 @@ class Voting extends React.Component {
     const element = this.ballotDetails.get(id)
     if(element.style.height === 'auto') {
       e.target.style.transform = "rotate(0deg)"
-      element.style.height = '124px'
+      element.style.height = constants.ballotDetailHeightToPixel
     } else {
       e.target.style.transform = "rotate(180deg)"
       element.style.height = 'auto'

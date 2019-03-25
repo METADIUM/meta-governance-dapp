@@ -13,6 +13,9 @@ const constants = {
 
   /* BallotEnums */
 
+  ballotDetailHeight: 124,
+  ballotDetailHeightToPixel: '124px',
+
   ballotState: {
     Invalid: '0',
     Ready: '1',

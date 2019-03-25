@@ -1,8 +1,9 @@
 import React from 'react'
+
 import { SubHeader } from './Nav'
 import { AuthorityItem } from './AuthorityItem'
 import { MiniLoader } from './BaseLoader';
-import { constants } from '../ethereum/constants'
+import { constants } from '../constants'
 import './style/style.css'
 
 class Authority extends React.Component {

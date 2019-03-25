@@ -1,5 +1,6 @@
 import React from 'react'
 import { Layout } from 'antd'
+
 import { TopNav, FootNav } from './components/Nav'
 import { StakingModal, ErrModal } from './components/Modal'
 import { Voting } from './components/Voting'
@@ -7,11 +8,11 @@ import { Authority } from './components/Authority'
 import { BaseLoader } from './components/BaseLoader'
 
 import * as util from './util'
-import { constants } from './ethereum/constants'
+import { constants } from './constants'
 import './App.css'
 
 // web3
-import getWeb3Instance, { web3Instance } from './ethereum/web3'
+import getWeb3Instance, { web3Instance } from './web3'
 
 // Contracts
 import { contracts, initContractsByNames, constants as metaWeb3Constants } from 'meta-web3'

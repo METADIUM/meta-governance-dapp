@@ -1,10 +1,10 @@
 import React from 'react'
 import { Button, Select, Icon } from 'antd'
-import { AddProposalForm, ReplaceProposalForm, RmoveProposalForm, UpdateProposalForm } from './Forms'
-import './style/style.css'
 
-import { web3Instance } from '../ethereum/web3'
+import { AddProposalForm, ReplaceProposalForm, RmoveProposalForm, UpdateProposalForm } from './Forms'
+import { web3Instance } from '../web3'
 import * as util from '../util'
+import './style/style.css'
 
 class ProposalForm extends React.Component {
     data = {

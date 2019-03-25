@@ -1,5 +1,6 @@
 import React from 'react'
 import {Icon} from 'antd'
+
 import './style/style.css'
 
 const BaseLoader = () => {

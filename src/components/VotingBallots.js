@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Progress } from 'antd'
-import { constants } from '../ethereum/constants'
+
+import { constants } from '../constants'
 import './style/style.css'
 
 const VotingBallots = ({
