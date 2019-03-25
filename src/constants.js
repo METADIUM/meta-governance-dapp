@@ -7,12 +7,10 @@ const constants = {
   },
 
   /* AuthorityEnums */
-
   authorityHeight: 192,
   authorityHeightToPixel: '192px',
 
   /* BallotEnums */
-
   ballotDetailHeight: 124,
   ballotDetailHeightToPixel: '124px',
 

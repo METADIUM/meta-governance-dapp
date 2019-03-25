@@ -42,6 +42,7 @@ class Authority extends React.Component {
     }
 
     onApplyBtnClick () {
+      // TODO: load URL from authorities.json
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
     }
 
@@ -74,12 +75,11 @@ class Authority extends React.Component {
           case 'linkedin': icon = 'fab fa-linkedin fa-2x'; break
           default: break
         }
-        sns.push(<a key={key} className='snsGroup' href={snsList[key]}> <i className={icon} /> </a>)
+        sns.push(<a key={key} className='snsGroup' href={snsList[key]}><i className={icon} /></a>)
       }
 
       /* Reversed. */
-      sns.reverse()
-      return sns
+      return sns.reverse()
     }
 
     async getAuthorityList () {
@@ -112,14 +112,12 @@ class Authority extends React.Component {
             placeholder='Search by Authority Name, Adress'
             btnText='Apply for Authority'
             btnFunction={this.onApplyBtnClick}
-            searchFunction={this.onSearchBtnClick} />
+            searchFunction={this.onSearchBtnClick}
+          />
 
           <div className='contentDiv container'>
             <div className='card_container'>
-              {this.state.getAuthorityInfo
-                ? this.data.visibleAuthorityItems
-                : <MiniLoader />
-              }
+              {this.state.getAuthorityInfo ? this.data.visibleAuthorityItems : <MiniLoader />}
             </div>
           </div>
         </div>

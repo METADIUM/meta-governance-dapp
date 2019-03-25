@@ -292,7 +292,8 @@ class App extends React.Component {
                 myBalance={this.data.myBalance}
                 myLockedBalance={this.data.myLockedBalance}
                 onMenuClick={this.onMenuClick}
-                getStakingModal={this.getStakingModal} />
+                getStakingModal={this.getStakingModal}
+              />
             </Header>
 
             <StakingModal
@@ -306,7 +307,8 @@ class App extends React.Component {
               hideStakingModal={() => { if (!this.state.loading) this.setState({ stakingModalVisible: false }) }}
               submitMetaStaking={this.submitMetaStaking}
               handleInputChange={this.handleInputChange}
-              handleSelectChange={this.handleSelectChange} />
+              handleSelectChange={this.handleSelectChange}
+            />
 
             <ErrModal
               netName={web3Instance.netName}
@@ -326,12 +328,14 @@ class App extends React.Component {
             <Footer>
               <FootNav
                 netName={web3Instance.netName}
-                onClickFootIcon={this.onClickFootIcon} />
+                onClickFootIcon={this.onClickFootIcon}
+              />
             </Footer>
           </div>
           : <div>
             <BaseLoader />
-          </div>}
+          </div>
+        }
       </Layout>
     )
   }

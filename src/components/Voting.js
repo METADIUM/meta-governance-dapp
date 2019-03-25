@@ -21,14 +21,16 @@ class Voting extends React.Component {
     ballotBasicOriginItems: [],
     existBallotNewMember: [],
     existBallotOldMemberaddr: [],
+    authorityNames: new Map(),
+
     activeItems: [],
-    visibleActiveItems: [],
     proposalItems: [],
-    visibleProposalItems: [],
     finalizedItems: [],
-    visibleFinalizedItems: [],
-    authorityNames: new Map()
+    visibleActiveItems: [],
+    visibleProposalItems: [],
+    visibleFinalizedItems: []
   }
+
   state = {
     isBallotLoading: false,
     ballotUpdateDuration: 2,
@@ -113,7 +115,8 @@ class Voting extends React.Component {
           onClickDetail={this.onClickDetail}
           onClickVote={this.onClickVote}
           setDescription={this.setDescription}
-          onClickUpdateProposal={this.onClickUpdateProposal} />
+          onClickUpdateProposal={this.onClickUpdateProposal}
+        />
       )
     })
     this.data.ballotBasicOriginItems = list
@@ -121,7 +124,7 @@ class Voting extends React.Component {
   }
 
   getBallotDetailInfo () {
-    let activeList = []; let proposalList = []; let finalizedList = []
+    let activeList = [], proposalList = [], finalizedList = []
 
     this.data.ballotBasicOriginItems.forEach(item => {
       switch (item.props.item.state) {
@@ -193,17 +196,15 @@ class Voting extends React.Component {
   }
 
   waitForReceipt = (hash, cb) => {
-    console.log('Start waitForReceipt: ', hash)
+    // console.log('Start waitForReceipt: ', hash)
     web3Instance.web3.eth.getTransactionReceipt(hash, (err, receipt) => {
-      console.log('getTransactionReceipt: ', receipt)
+      // console.log('getTransactionReceipt: ', receipt)
       if (err) console.log('err: ', err)
 
       if (receipt === undefined || receipt === null) {
-        console.log('Try again in 1 second')
         // Try again in 1 second
         window.setTimeout(() => { this.waitForReceipt(hash, cb) }, 1000)
       } else {
-        console.log('receipt : ', receipt)
         // Transaction went through
         if (cb) cb(receipt)
       }
@@ -246,9 +247,9 @@ class Voting extends React.Component {
         this.props.getErrModal(err.message, err.name)
         this.props.convertLoading(false)
       } else {
-        console.log('hash: ', hash)
+        // console.log('hash: ', hash)
         this.waitForReceipt(hash, (receipt) => {
-          console.log('Updated :', receipt)
+          // console.log('Updated :', receipt)
           if (receipt.status) this.reloadVoting(false)
           else this.props.getErrModal("You don't have voting authority", 'Voting Error', receipt.transactionHash)
         })
@@ -290,7 +291,6 @@ class Voting extends React.Component {
     let trx = await this.props.contracts.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.state.ballotUpdateDuration))
 
     // Using updateMemo
-    // trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.state.ballotUpdateMemo))
     web3Instance.web3.eth.sendTransaction({
       from: web3Instance.defaultAccount,
       to: trx.to,
@@ -361,7 +361,8 @@ class Voting extends React.Component {
     return (
       <div>
         {!this.props.showProposal
-          ? <div className='background'>
+          ?
+          <div className='background'>
             <SubHeader
               netName={web3Instance.netName}
               placeholder='Search by Type, Proposal, Keywords'
@@ -370,29 +371,34 @@ class Voting extends React.Component {
               btnIcon='+'
               loading={!this.state.isBallotLoading || this.props.loading}
               btnFunction={this.convertVotingComponentOveride}
-              searchFunction={this.searchBallot} />
+              searchFunction={this.searchBallot}
+            />
 
             <SubNav
               position={this.state.position}
-              onClickSubMenu={this.onClickSubMenu} />
+              onClickSubMenu={this.onClickSubMenu}
+            />
 
             <ChangeModal
               updateModal={this.state.updateModal}
               ballotUpdateDuration={this.state.ballotUpdateDuration}
               completeModal={this.completeModal}
               hideChangeModal={this.hideChangeModal}
-              sliderChange={this.sliderChange} />
+              sliderChange={this.sliderChange}
+            />
 
-            {!this.state.isBallotLoading || this.props.loading ? <div><BaseLoader /></div> : null}
+            {(!this.state.isBallotLoading || this.props.loading) && <div><BaseLoader /></div>}
             <ShowBallots
               titles={this.titles}
               visibleActiveItems={this.data.visibleActiveItems}
               visibleProposalItems={this.data.visibleProposalItems.slice(0, this.state.proposalCount)}
               visibleFinalizedItems={this.data.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
               netName={web3Instance.netName}
-              onClickReadMore={this.onClickReadMore} />
+              onClickReadMore={this.onClickReadMore}
+            />
           </div>
-          : <ProposalForm
+          :
+          <ProposalForm
             contracts={this.props.contracts}
             getErrModal={this.props.getErrModal}
             newMemberaddr={this.data.existBallotNewMember}
@@ -402,7 +408,8 @@ class Voting extends React.Component {
             convertLoading={this.props.convertLoading}
             waitForReceipt={this.waitForReceipt}
             stakingMax={this.props.stakingMax}
-            stakingMin={this.props.stakingMin} />
+            stakingMin={this.props.stakingMin}
+          />
         }
       </div>
     )
