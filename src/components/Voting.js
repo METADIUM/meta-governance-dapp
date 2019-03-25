@@ -71,7 +71,7 @@ class Voting extends React.Component {
 
   async reloadVoting (component) {
     if (component) this.props.convertVotingComponent(component)
-    this.data.ballotCnt = await this.props.contracts.ggovernanceov.getBallotLength()
+    this.data.ballotCnt = await this.props.contracts.governance.getBallotLength()
     this.data.ballotBasicOriginData = []
     await this.getOriginData()
     this.props.convertLoading(false)

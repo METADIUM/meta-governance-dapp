@@ -2,6 +2,7 @@ import React from 'react'
 import { SubHeader } from './Nav'
 import { AuthorityItem } from './AuthorityItem'
 import { MiniLoader } from './BaseLoader';
+import { constants } from '../ethereum/constants'
 import './style/style.css'
 
 class Authority extends React.Component {
@@ -45,12 +46,12 @@ class Authority extends React.Component {
 
     onReadMoreClick (e, index) {
       const element = this.textContainers.get(index)
-      if (element.offsetHeight === 192) {
+      if (element.offsetHeight === constants.authorityHeight) {
         element.style.height = 'auto'
-        if(element.offsetHeight !== 192) e.target.innerHTML = '- Read Less'
+        if(element.offsetHeight !== constants.authorityHeight) e.target.innerHTML = '- Read Less'
       }
       else {
-        element.style.height = '192px'
+        element.style.height = constants.authorityHeightToPixel
         e.target.innerHTML = '+ Read More'
       }
     }

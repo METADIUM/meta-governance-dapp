@@ -6,8 +6,10 @@ const constants = {
     source: 'authorities.json'
   },
 
-  NET_ID: '11',
-  branchName: 'mainnet',
+  /* AuthorityEnums */
+
+  authorityHeight: 192,
+  authorityHeightToPixel: '192px',
 
   /* BallotEnums */
 

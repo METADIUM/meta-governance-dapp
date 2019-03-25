@@ -1,5 +1,3 @@
-import { constants } from './constants'
-
 import Web3 from 'web3'
 import { constants as metaWeb3Constants } from 'meta-web3'
 
@@ -45,9 +43,11 @@ let getWeb3Instance = () => {
         console.log('No web3 instance injected, using Local web3.')
         console.error('Metamask not found')
 
-        netId = constants.NET_ID
+        Object.keys(metaWeb3Constants.NETWORK).some(key => {
+          if (!metaWeb3Constants.NETWORK[key].TESTNET) netId = key
+          return !metaWeb3Constants.NETWORK[key].TESTNET
+        })
         const network = metaWeb3Constants.NETWORK[netId]
-
         web3 = new Web3(new Web3.providers.HttpProvider(network.RPC))
         netName = network.NAME
         branch = network.BRANCH
