@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Modal, Input, Select, Icon, Slider } from 'antd'
+
 import './style/style.css'
 
 const Option = Select.Option

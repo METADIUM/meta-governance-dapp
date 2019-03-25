@@ -1,4 +1,4 @@
 build/
 node_modules/
-src/ethereum/web3-config.json
+src/web3-config.json
 package-lock.json

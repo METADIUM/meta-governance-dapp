@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Progress } from 'antd'
-import { constants } from '../ethereum/constants'
+
+import { constants } from '../constants'
 import './style/style.css'
 
 const VotingBallots = ({
@@ -26,7 +27,7 @@ const VotingBallots = ({
       </div>
       <div className='infoRight flex-column'>
         {item.state === constants.ballotState.Ready || item.state === constants.ballotState.Accepted || item.state === constants.ballotState.Rejected
-          ? <Button className='btn-img text-exlarge' type='primary' id='ballotDetailBtn' onClick={e => onClickDetail(item.id)} icon='down' /> : null}
+          ? <Button className='btn-img text-exlarge' type='primary' id='ballotDetailBtn' onClick={e => onClickDetail(e, item.id)} icon='down' /> : null}
         <p className='status text-small'>Status : {constants.ballotStateArr[parseInt(item.state)]}</p>
       </div>
     </div>

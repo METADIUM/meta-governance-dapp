@@ -624,6 +624,7 @@
 .hidden {
   display: none
 }
+
 @keyframes fadeOut {
   0% {
     opacity: .2
@@ -636,4 +637,10 @@
     opacity: .2;
     transform: scale(0.3)
   }
+}
+
+.mini-loader {
+  margin-top: 48px;
+  font-size: 30px;
+  line-height: 38px;
 }

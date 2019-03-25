@@ -1,15 +1,18 @@
 import React from 'react'
+
 import { SubHeader } from './Nav'
 import { AuthorityItem } from './AuthorityItem'
+import { MiniLoader } from './BaseLoader'
+import { constants } from '../constants'
 import './style/style.css'
 
 class Authority extends React.Component {
     data = {
-      authorityItems: new Map()
+      authorityItems: [],
+      visibleAuthorityItems: []
     }
 
     state = {
-      visibleAuthorityItems: [],
       getAuthorityInfo: false
     }
 
@@ -34,17 +37,23 @@ class Authority extends React.Component {
           authorityItems.push(value)
         }
       })
-      this.setState({ visibleAuthorityItems: authorityItems })
+      this.data.visibleAuthorityItems = authorityItems
+      this.setState({ getAuthorityInfo: true })
     }
 
     onApplyBtnClick () {
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
     }
 
-    onReadMoreClick (index) {
+    onReadMoreClick (e, index) {
       const element = this.textContainers.get(index)
-      if (element.offsetHeight === 192) element.style.height = 'auto'
-      else element.style.height = '192px'
+      if (element.offsetHeight === constants.authorityHeight) {
+        element.style.height = 'auto'
+        if (element.offsetHeight !== constants.authorityHeight) e.target.innerHTML = '- Read Less'
+      } else {
+        element.style.height = constants.authorityHeightToPixel
+        e.target.innerHTML = '+ Read More'
+      }
     }
 
     breakLine (description) {
@@ -77,7 +86,7 @@ class Authority extends React.Component {
       let list = []
       for (let i = 0; i < Object.keys(this.props.authorityOriginData).length; i++) {
         let item = this.props.authorityOriginData[i]
-        let isMember = await this.props.contracts.gov.isMember(item.addr)
+        let isMember = await this.props.contracts.governance.isMember(item.addr)
         if (isMember) {
           list.push(<AuthorityItem
             key={item.addr}
@@ -91,7 +100,8 @@ class Authority extends React.Component {
         }
       }
       this.data.authorityItems = list
-      this.setState({ getAuthorityInfo: true, visibleAuthorityItems: list })
+      this.data.visibleAuthorityItems = list
+      this.setState({ getAuthorityInfo: true })
     }
 
     render () {
@@ -107,8 +117,8 @@ class Authority extends React.Component {
           <div className='contentDiv container'>
             <div className='card_container'>
               {this.state.getAuthorityInfo
-                ? this.state.visibleAuthorityItems
-                : <div>loading</div>
+                ? this.data.visibleAuthorityItems
+                : <MiniLoader />
               }
             </div>
           </div>

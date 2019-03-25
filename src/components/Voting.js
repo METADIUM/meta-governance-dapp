@@ -1,5 +1,5 @@
 import React from 'react'
-import './style/style.css'
+
 import { ProposalForm } from './ProposalForm'
 import { VotingBallots, ShowBallots } from './VotingBallots'
 import { SubHeader, SubNav } from './Nav'
@@ -7,8 +7,9 @@ import { ChangeModal } from './Modal'
 import { BaseLoader } from './BaseLoader'
 
 import * as util from '../util'
-import { web3Instance } from '../ethereum/web3'
-import { constants } from '../ethereum/constants'
+import { web3Instance } from '../web3'
+import { constants } from '../constants'
+import './style/style.css'
 
 class Voting extends React.Component {
   data = {
@@ -21,8 +22,11 @@ class Voting extends React.Component {
     existBallotNewMember: [],
     existBallotOldMemberaddr: [],
     activeItems: [],
+    visibleActiveItems: [],
     proposalItems: [],
+    visibleProposalItems: [],
     finalizedItems: [],
+    visibleFinalizedItems: [],
     authorityNames: new Map()
   }
   state = {
@@ -32,10 +36,7 @@ class Voting extends React.Component {
     position: 'active',
     updateModal: false,
     proposalCount: 5,
-    finalizedCount: 5,
-    visibleActiveItems: [],
-    visibleProposalItems: [],
-    visibleFinalizedItems: []
+    finalizedCount: 5
   }
 
   constructor (props) {
@@ -64,14 +65,14 @@ class Voting extends React.Component {
   }
 
   async componentDidMount () {
-    this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
-    this.props.authorityOriginData.map(item => this.data.authorityNames.set(item.addr, item.title))
+    this.data.ballotCnt = await this.props.contracts.governance.getBallotLength()
+    this.props.authorityOriginData.forEach(item => this.data.authorityNames.set(item.addr, item.title))
     this.getOriginData()
   }
 
   async reloadVoting (component) {
     if (component) this.props.convertVotingComponent(component)
-    this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
+    this.data.ballotCnt = await this.props.contracts.governance.getBallotLength()
     this.data.ballotBasicOriginData = []
     await this.getOriginData()
     this.props.convertLoading(false)
@@ -79,7 +80,6 @@ class Voting extends React.Component {
 
   async getOriginData () {
     if (!this.data.ballotCnt) return
-    console.log('Ballot Count: ', this.data.ballotCnt)
     for (var i = 1; i <= this.data.ballotCnt; i++) {
       await this.setBallotBasicOriginData(i)
       await this.setBallotMemberOriginData(i)
@@ -132,10 +132,10 @@ class Voting extends React.Component {
         default: break
       }
     })
-    this.data.activeItems = activeList
-    this.data.proposalItems = proposalList
-    this.data.finalizedItems = finalizedList
-    this.setState({ visibleActiveItems: activeList, visibleProposalItems: proposalList, visibleFinalizedItems: finalizedList, isBallotLoading: true })
+    this.data.activeItems = this.data.visibleActiveItems = activeList
+    this.data.proposalItems = this.data.visibleProposalItems = proposalList
+    this.data.finalizedItems = this.data.visibleFinalizedItems = finalizedList
+    this.setState({ isBallotLoading: true })
   }
 
   async setBallotBasicOriginData (i) {
@@ -210,8 +210,15 @@ class Voting extends React.Component {
     })
   }
 
-  onClickDetail = (id) => {
-    this.ballotDetails.get(id).style.height = this.ballotDetails.get(id).style.height === 'auto' ? '124px' : 'auto'
+  onClickDetail = (e, id) => {
+    const element = this.ballotDetails.get(id)
+    if (element.style.height === 'auto') {
+      e.target.style.transform = 'rotate(0deg)'
+      element.style.height = constants.ballotDetailHeightToPixel
+    } else {
+      e.target.style.transform = 'rotate(180deg)'
+      element.style.height = 'auto'
+    }
   }
 
   onClickVote (value, id, endTime, state) {
@@ -228,7 +235,7 @@ class Voting extends React.Component {
     }
 
     this.props.convertLoading(true)
-    let { to, data } = this.props.contracts.govImp.vote(id, value === 'Y')
+    let { to, data } = this.props.contracts.governance.vote(id, value === 'Y')
     web3Instance.web3.eth.sendTransaction({
       from: web3Instance.defaultAccount,
       to: to,
@@ -333,11 +340,10 @@ class Voting extends React.Component {
 
   searchBallot (str) {
     str = str.toLowerCase()
-    this.setState({
-      visibleActiveItems: this.filteringBallot(this.data.activeItems, str),
-      visibleProposalItems: this.filteringBallot(this.data.proposalItems, str),
-      visibleFinalizedItems: this.filteringBallot(this.data.finalizedItems, str)
-    })
+    this.data.visibleActiveItems = this.filteringBallot(this.data.activeItems, str)
+    this.data.visibleProposalItems = this.filteringBallot(this.data.proposalItems, str)
+    this.data.visibleFinalizedItems = this.filteringBallot(this.data.finalizedItems, str)
+    this.setState({ isBallotLoading: true })
   }
 
   filteringBallot (ballots, str) {
@@ -380,9 +386,9 @@ class Voting extends React.Component {
             {!this.state.isBallotLoading || this.props.loading ? <div><BaseLoader /></div> : null}
             <ShowBallots
               titles={this.titles}
-              visibleActiveItems={this.state.visibleActiveItems}
-              visibleProposalItems={this.state.visibleProposalItems.slice(0, this.state.proposalCount)}
-              visibleFinalizedItems={this.state.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
+              visibleActiveItems={this.data.visibleActiveItems}
+              visibleProposalItems={this.data.visibleProposalItems.slice(0, this.state.proposalCount)}
+              visibleFinalizedItems={this.data.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
               netName={web3Instance.netName}
               onClickReadMore={this.onClickReadMore} />
           </div>

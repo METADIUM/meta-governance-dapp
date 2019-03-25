@@ -1,5 +1,6 @@
 import React from 'react'
 import { Layout } from 'antd'
+
 import { TopNav, FootNav } from './components/Nav'
 import { StakingModal, ErrModal } from './components/Modal'
 import { Voting } from './components/Voting'
@@ -7,14 +8,14 @@ import { Authority } from './components/Authority'
 import { BaseLoader } from './components/BaseLoader'
 
 import * as util from './util'
-import { constants } from './ethereum/constants'
+import { constants } from './constants'
 import './App.css'
 
 // web3
-import getWeb3Instance, { web3Instance } from './ethereum/web3'
+import getWeb3Instance, { web3Instance } from './web3'
 
 // Contracts
-import { contracts, initContracts } from './ethereum/web3Components/contracts'
+import { contracts, initContractsByNames, constants as metaWeb3Constants } from 'meta-web3'
 
 const { Header, Content, Footer } = Layout
 class App extends React.Component {
@@ -49,6 +50,7 @@ class App extends React.Component {
     this.updateDefaultAccount = this.updateDefaultAccount.bind(this)
     this.getStakingRange = this.getStakingRange.bind(this)
     this.onMenuClick = this.onMenuClick.bind(this)
+    this.onClickFootIcon = this.onClickFootIcon.bind(this)
     this.getContent = this.getContent.bind(this)
     this.getErrModal = this.getErrModal.bind(this)
     this.submitMetaStaking = this.submitMetaStaking.bind(this)
@@ -61,7 +63,6 @@ class App extends React.Component {
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       this.initContracts(web3Config)
-      await this.initAuthorityLists()
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
@@ -70,17 +71,19 @@ class App extends React.Component {
   }
 
   async initContracts (web3Config) {
-    initContracts({
+    initContractsByNames({
       web3: web3Config.web3,
-      netId: web3Config.netId
+      branch: web3Config.branch,
+      names: web3Config.names
     }).then(async () => {
       await this.getStakingRange()
+      await this.initAuthorityLists()
       await this.updateAccountBalance()
       window.ethereum.on('accountsChanged', async (chagedAccounts) => {
         await this.updateDefaultAccount(chagedAccounts[0])
       })
       this.setStakingEventsWatch()
-      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
+      this.data.isMember = await contracts.governance.isMember(web3Instance.defaultAccount)
       this.setState({ contractReady: true })
     })
   }
@@ -98,7 +101,7 @@ class App extends React.Component {
       web3Instance.defaultAccount = account
       await this.updateAccountBalance()
       this.setStakingEventsWatch()
-      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
+      this.data.isMember = await contracts.governance.isMember(web3Instance.defaultAccount)
       this.setState({ showProposal: false })
     }
   }
@@ -124,7 +127,7 @@ class App extends React.Component {
   }
 
   async getStakingRange () {
-    if (web3Instance.netName in ['MAINTNET', 'TESTNET']) {
+    if (['MAINNET', 'TESTNET'].includes(web3Instance.netName)) {
       this.data.stakingMin = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMin())
       this.data.stakingMax = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMax())
     }
@@ -147,6 +150,15 @@ class App extends React.Component {
       this.convertVotingComponent('voting')
     } else {
       this.setState({ nav: key })
+    }
+  }
+
+  onClickFootIcon (e) {
+    switch (e.target.alt) {
+      case 'metadium': window.open('https://metadium.com/', '_blank'); break
+      case 'explorer': window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER); break
+      case 'github': window.open('https://github.com/METADIUM/meta-governance-dapp', '_blank'); break
+      default:
     }
   }
 
@@ -199,7 +211,7 @@ class App extends React.Component {
 
     this.data.errTitle = _title
     this.data.errContent = _err
-    if (_link) this.data.errLink = constants.NETWORKS[web3Instance.netId] + _link
+    if (_link) this.data.errLink = metaWeb3Constants.NETWORK[web3Instance.netId] + _link
     else this.data.errLink = false
     this.setState({ errModalVisible: true })
   }
@@ -312,7 +324,9 @@ class App extends React.Component {
             </Content>
 
             <Footer>
-              <FootNav netName={web3Instance.netName} />
+              <FootNav
+                netName={web3Instance.netName}
+                onClickFootIcon={this.onClickFootIcon} />
             </Footer>
           </div>
           : <div>

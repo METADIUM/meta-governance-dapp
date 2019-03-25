@@ -1,4 +1,4 @@
-import { web3Instance } from './ethereum/web3'
+import { web3Instance } from './web3'
 
 const fetch = require('node-fetch')
 

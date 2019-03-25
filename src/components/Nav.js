@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Row, Menu, Input, Affix } from 'antd'
+
 import './style/style.css'
 
 const TopNav = ({
@@ -72,13 +73,13 @@ const SubNav = ({ position, onClickSubMenu = f => f }) =>
     </div>
   </Affix>
 
-const FootNav = ({ netName }) =>
+const FootNav = ({ netName, onClickFootIcon }) =>
   <Row className='container flex'>
     <p>Copyright © Since 2018 Metadium Technology, Inc. All rights reserved</p>
     <div className='flex flex-full'>
-      <Button className='btn-img'><img src='/img/metadium_footer.png' alt='' /></Button>
-      <Button className='btn-img'><img src={`/img/explorer_footer_${netName}.png`} alt='' /></Button>
-      <Button className='btn-img'><img src='/img/github_footer.png' alt='' /></Button>
+      <Button className='btn-img' onClick={onClickFootIcon}><img src='/img/metadium_footer.png' alt='metadium' key='metadium' /></Button>
+      <Button className='btn-img' onClick={onClickFootIcon}><img src={`/img/explorer_footer_${netName}.png`} alt='explorer' key='explorer' /></Button>
+      <Button className='btn-img' onClick={onClickFootIcon}><img src='/img/github_footer.png' alt='github' key='github' /></Button>
     </div>
   </Row>
 
