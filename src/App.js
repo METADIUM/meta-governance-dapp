@@ -62,7 +62,6 @@ class App extends React.Component {
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       this.initContracts(web3Config)
-      await this.initAuthorityLists()
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
@@ -77,6 +76,7 @@ class App extends React.Component {
       names: web3Config.names
     }).then(async () => {
       await this.getStakingRange()
+      await this.initAuthorityLists()
       await this.updateAccountBalance()
       window.ethereum.on('accountsChanged', async (chagedAccounts) => {
         await this.updateDefaultAccount(chagedAccounts[0])
