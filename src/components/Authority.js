@@ -2,7 +2,7 @@ import React from 'react'
 
 import { SubHeader } from './Nav'
 import { AuthorityItem } from './AuthorityItem'
-import { MiniLoader } from './BaseLoader';
+import { MiniLoader } from './BaseLoader'
 import { constants } from '../constants'
 import './style/style.css'
 
@@ -49,9 +49,8 @@ class Authority extends React.Component {
       const element = this.textContainers.get(index)
       if (element.offsetHeight === constants.authorityHeight) {
         element.style.height = 'auto'
-        if(element.offsetHeight !== constants.authorityHeight) e.target.innerHTML = '- Read Less'
-      }
-      else {
+        if (element.offsetHeight !== constants.authorityHeight) e.target.innerHTML = '- Read Less'
+      } else {
         element.style.height = constants.authorityHeightToPixel
         e.target.innerHTML = '+ Read More'
       }
@@ -119,7 +118,7 @@ class Authority extends React.Component {
             <div className='card_container'>
               {this.state.getAuthorityInfo
                 ? this.data.visibleAuthorityItems
-                : <MiniLoader/>
+                : <MiniLoader />
               }
             </div>
           </div>

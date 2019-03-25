@@ -154,10 +154,10 @@ class App extends React.Component {
   }
 
   onClickFootIcon (e) {
-    switch(e.target.alt) {
-      case 'metadium': window.open('https://metadium.com/',  '_blank'); break
+    switch (e.target.alt) {
+      case 'metadium': window.open('https://metadium.com/', '_blank'); break
       case 'explorer': window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER); break
-      case 'github': window.open('https://github.com/METADIUM/meta-governance-dapp',  '_blank'); break
+      case 'github': window.open('https://github.com/METADIUM/meta-governance-dapp', '_blank'); break
       default:
     }
   }
