@@ -14,7 +14,7 @@ import './App.css'
 import getWeb3Instance, { web3Instance } from './ethereum/web3'
 
 // Contracts
-import { contracts, initContracts } from 'meta-web3'
+import { contracts, initContractsByNames, constants as metaWeb3Constants } from 'meta-web3'
 
 const { Header, Content, Footer } = Layout
 class App extends React.Component {
@@ -71,9 +71,10 @@ class App extends React.Component {
   }
 
   async initContracts (web3Config) {
-    initContracts({
+    initContractsByNames({
       web3: web3Config.web3,
-      branch: web3Config.branch
+      branch: web3Config.branch,
+      names: web3Config.names
     }).then(async () => {
       await this.getStakingRange()
       await this.updateAccountBalance()
@@ -126,7 +127,6 @@ class App extends React.Component {
 
   async getStakingRange () {
     if (['MAINNET', 'TESTNET'].includes(web3Instance.netName)) {
-      console.log("hello")
       this.data.stakingMin = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMin())
       this.data.stakingMax = web3Instance.web3.utils.fromWei(await contracts.envStorage.getStakingMax())
     }
@@ -155,7 +155,7 @@ class App extends React.Component {
   onClickFootIcon (e) {
     switch(e.target.alt) {
       case 'metadium': window.open('https://metadium.com/',  '_blank'); break
-      case 'explorer': window.open(constants.NETWORK[web3Instance.netId].EXPLORER); break
+      case 'explorer': window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER); break
       case 'github': window.open('https://github.com/METADIUM/meta-governance-dapp',  '_blank'); break
       default:
     }
@@ -210,7 +210,7 @@ class App extends React.Component {
 
     this.data.errTitle = _title
     this.data.errContent = _err
-    if (_link) this.data.errLink = constants.NETWORK[web3Instance.netId] + _link
+    if (_link) this.data.errLink = metaWeb3Constants.NETWORK[web3Instance.netId] + _link
     else this.data.errLink = false
     this.setState({ errModalVisible: true })
   }

@@ -1,12 +1,9 @@
-import { constants } from 'meta-web3'
-
-//constants.organization = 'METADIUM'
-//constants.repoName = 'governance-spec'
+let constants = {}
 
 constants.authorityRepo = {
-  org: 'blueisle',
+  org: 'METADIUM',
   repo: 'meta-authorities',
-  branch: 'testnet',
+  branch: 'master',
   source: 'authorities.json'
 }
 

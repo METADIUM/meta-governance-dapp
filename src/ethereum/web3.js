@@ -1,6 +1,7 @@
-import Web3 from 'web3'
+import { constants } from './constants'
 
-import { constants } from 'meta-web3'
+import Web3 from 'web3'
+import { constants as metaWeb3Constants } from 'meta-web3'
 
 var web3Instance
 
@@ -29,13 +30,13 @@ let getWeb3Instance = () => {
       if (web3) {
         netId = await web3.eth.net.getId()
         network = await web3.eth.net.getNetworkType()
-        if (!(netId in constants.NETWORK) || network !== 'private') {
+        if (!(netId in metaWeb3Constants.NETWORK) || network !== 'private') {
           netName = 'ERROR'
           branch = 'ERROR'
           reject(new Error('This is an unknown network.'))
         } else {
-          netName = constants.NETWORK[netId].NAME
-          branch = constants.NETWORK[netId].BRANCH
+          netName = metaWeb3Constants.NETWORK[netId].NAME
+          branch = metaWeb3Constants.NETWORK[netId].BRANCH
         }
         const accounts = await web3.eth.getAccounts()
         defaultAccount = accounts[0]
@@ -45,7 +46,7 @@ let getWeb3Instance = () => {
         console.error('Metamask not found')
 
         netId = constants.NET_ID
-        const network = constants.NETWORK[netId]
+        const network = metaWeb3Constants.NETWORK[netId]
 
         web3 = new Web3(new Web3.providers.HttpProvider(network.RPC))
         netName = network.NAME
@@ -57,7 +58,8 @@ let getWeb3Instance = () => {
         netName: netName,
         netId: netId,
         branch: branch,
-        defaultAccount: defaultAccount
+        defaultAccount: defaultAccount,
+        names: ['identity', 'ballotStorage', 'envStorage', 'governance', 'staking']
       }
 
       resolve(web3Instance)
