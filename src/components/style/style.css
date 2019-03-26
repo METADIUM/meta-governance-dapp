@@ -235,8 +235,6 @@
 .authorityComp .authorityComp_contnet .text_container {
   padding-left: 24px;
   border-left: #EEEEF0 solid 2px;
-  min-height: 192px;
-  height: 192px;
 }
 
 .authorityComp .authorityComp_contnet .text_container .title {
@@ -251,6 +249,8 @@
 
 .authorityComp .authorityComp_contnet .text_container .description {
   margin: 12px 0 0 0;
+  height: 88px;
+  min-height: 88px;
   overflow: hidden;
 }
 

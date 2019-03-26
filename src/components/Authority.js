@@ -21,8 +21,12 @@ class Authority extends React.Component {
       this.onSearchBtnClick = this.onSearchBtnClick.bind(this)
       this.onReadMoreClick = this.onReadMoreClick.bind(this)
       this.getAuthorityList = this.getAuthorityList.bind(this)
+      this.initAuthorityHeight = this.initAuthorityHeight.bind(this)
 
-      this.textContainers = new Map()
+      this.descriptions = []
+      this.readMoreBtns = []
+
+      window.addEventListener("resize", this.initAuthorityHeight)
     }
 
     componentDidMount () {
@@ -46,14 +50,15 @@ class Authority extends React.Component {
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
     }
 
-    onReadMoreClick (e, index) {
-      const element = this.textContainers.get(index)
-      if (element.offsetHeight === constants.authorityHeight) {
+    onReadMoreClick (index) {
+      const element = this.descriptions[index]
+      const btn = this.readMoreBtns[index]
+      if (element.offsetHeight === constants.authoritieDescriptionHeight) {
         element.style.height = 'auto'
-        if (element.offsetHeight !== constants.authorityHeight) e.target.innerHTML = '- Read Less'
+        btn.innerHTML = '- Read Less'
       } else {
-        element.style.height = constants.authorityHeightToPixel
-        e.target.innerHTML = '+ Read More'
+        element.style.height = constants.authoritieDescriptionHeightToPixel
+        btn.innerHTML = '+ Read More'
       }
     }
 
@@ -89,10 +94,11 @@ class Authority extends React.Component {
         let isMember = await this.props.contracts.governance.isMember(item.addr)
         if (isMember) {
           list.push(<AuthorityItem
-            key={item.addr}
+            key={i}
             item={item}
             index={i}
-            textContainers={this.textContainers}
+            descriptions={this.descriptions}
+            readMoreBtns={this.readMoreBtns}
             breakLine={this.breakLine}
             onReadMoreClick={this.onReadMoreClick}
             getSNSList={this.getSNSList} />
@@ -101,7 +107,23 @@ class Authority extends React.Component {
       }
       this.data.authorityItems = list
       this.data.visibleAuthorityItems = list
-      this.setState({ getAuthorityInfo: true })
+      await this.setState({ getAuthorityInfo: true })
+      this.initAuthorityHeight()
+    }
+
+    initAuthorityHeight() {
+      let index, description, readMoreBtn
+      for(let i = 0; i < this.data.visibleAuthorityItems.length; i++) {
+        index = this.data.visibleAuthorityItems[i].key
+        description = this.descriptions[index]
+        readMoreBtn = this.readMoreBtns[index]
+
+        if(description.scrollHeight > constants.authoritieDescriptionHeight) {
+          readMoreBtn.style.display = 'block'
+        } else {
+          readMoreBtn.style.display = 'none'
+        }
+      }
     }
 
     render () {
