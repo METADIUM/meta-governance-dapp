@@ -343,7 +343,7 @@ class Voting extends React.Component {
     this.data.visibleActiveItems = this.filteringBallot(this.data.activeItems, str)
     this.data.visibleProposalItems = this.filteringBallot(this.data.proposalItems, str)
     this.data.visibleFinalizedItems = this.filteringBallot(this.data.finalizedItems, str)
-    this.setState({ isBallotLoading: true })
+    this.setState({ isBallotLoading: true, proposalCount: 5, finalizedCount: 5 })
   }
 
   filteringBallot (ballots, str) {
@@ -392,7 +392,9 @@ class Voting extends React.Component {
               titles={this.titles}
               visibleActiveItems={this.data.visibleActiveItems}
               visibleProposalItems={this.data.visibleProposalItems.slice(0, this.state.proposalCount)}
+              totalProposalItemLength={this.data.visibleProposalItems.length}
               visibleFinalizedItems={this.data.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
+              totalFinalizedItemLength={this.data.visibleFinalizedItems.length}
               netName={web3Instance.netName}
               onClickReadMore={this.onClickReadMore}
             />
