@@ -62,19 +62,22 @@ class Voting extends React.Component {
     this.searchBallot = this.searchBallot.bind(this)
     this.convertVotingComponentOveride = this.convertVotingComponentOveride.bind(this)
 
+    this.ballotStorage = this.props.contracts.ballotStorage
+    this.governance = this.props.contracts.governance
+
     this.titles = { activeTitle: null, proposalTitle: null, finalizedTitle: null }
     this.ballotDetails = new Map()
   }
 
   async componentDidMount () {
-    this.data.ballotCnt = await this.props.contracts.governance.getBallotLength()
+    this.data.ballotCnt = await this.governance.getBallotLength()
     this.props.authorityOriginData.forEach(item => this.data.authorityNames.set(item.addr, item.title))
     this.getOriginData()
   }
 
   async reloadVoting (component) {
     if (component) this.props.convertVotingComponent(component)
-    this.data.ballotCnt = await this.props.contracts.governance.getBallotLength()
+    this.data.ballotCnt = await this.governance.getBallotLength()
     this.data.ballotBasicOriginData = []
     await this.getOriginData()
     this.props.convertLoading(false)
@@ -135,14 +138,17 @@ class Voting extends React.Component {
         default: break
       }
     })
-    this.data.activeItems = this.data.visibleActiveItems = activeList
-    this.data.proposalItems = this.data.visibleProposalItems = proposalList
-    this.data.finalizedItems = this.data.visibleFinalizedItems = finalizedList
+    this.data.activeItems = activeList
+    this.data.visibleActiveItems = activeList
+    this.data.proposalItems = proposalList
+    this.data.visibleProposalItems = proposalList
+    this.data.finalizedItems  = finalizedList
+    this.data.visibleFinalizedItems = finalizedList
     this.setState({ isBallotLoading: true })
   }
 
   async setBallotBasicOriginData (i) {
-    await this.props.contracts.ballotStorage.getBallotBasic(i).then(
+    await this.ballotStorage.getBallotBasic(i).then(
       ret => {
         ret.id = i // Add ballot id
         this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
@@ -150,7 +156,7 @@ class Voting extends React.Component {
   }
 
   async setBallotMemberOriginData (i) {
-    await this.props.contracts.ballotStorage.getBallotMember(i).then(
+    await this.ballotStorage.getBallotMember(i).then(
       ret => {
         ret.id = i // Add ballot id
         this.data.ballotMemberOriginData[i] = ret
@@ -236,7 +242,7 @@ class Voting extends React.Component {
     }
 
     this.props.convertLoading(true)
-    let { to, data } = this.props.contracts.governance.vote(id, value === 'Y')
+    let { to, data } = this.governance.vote(id, value === 'Y')
     web3Instance.web3.eth.sendTransaction({
       from: web3Instance.defaultAccount,
       to: to,
@@ -265,7 +271,7 @@ class Voting extends React.Component {
     }
 
     this.props.convertLoading(true)
-    let trx = this.props.contracts.ballotStorage.cancelBallot(id)
+    let trx = this.ballotStorage.cancelBallot(id)
     web3Instance.web3.eth.sendTransaction({
       from: web3Instance.defaultAccount,
       to: trx.to,
@@ -288,7 +294,7 @@ class Voting extends React.Component {
 
   async completeModal (e) {
     this.props.convertLoading(true)
-    let trx = await this.props.contracts.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.state.ballotUpdateDuration))
+    let trx = await this.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.state.ballotUpdateDuration))
 
     // Using updateMemo
     web3Instance.web3.eth.sendTransaction({
