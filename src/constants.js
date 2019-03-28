@@ -32,7 +32,10 @@ const constants = {
   },
 
   ballotStateArr: ['Invalid', 'Ready', 'InProgress', 'Accepted', 'Rejected', 'Canceled'],
-  ballotTypesArr: ['Invalid', 'MemberAdd', 'MemberRemoval', 'MemberChange', 'GovernanceChange', 'EnvValChange']
+  ballotTypesArr: ['Invalid', 'MemberAdd', 'MemberRemoval', 'MemberChange', 'GovernanceChange', 'EnvValChange'],
+
+  /* Debug */
+  debugMode: true
 }
 
 export { constants }

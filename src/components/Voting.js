@@ -348,7 +348,7 @@ class Voting extends React.Component {
             <SubHeader
               netName={web3Instance.netName}
               placeholder='Search by Type, Proposal, Keywords'
-              condition={this.props.isMember || true}
+              condition={this.props.isMember || constants.debugMode}
               btnText='New Proposal'
               btnIcon='+'
               loading={!this.state.isBallotLoading || this.props.loading}
@@ -369,7 +369,7 @@ class Voting extends React.Component {
               sliderChange={this.sliderChange}
             />
 
-            {(!this.state.isBallotLoading || this.props.loading) && <div><BaseLoader /></div>}
+            {(!this.state.isBallotLoading || this.props.loading) && <BaseLoader />}
             <ShowBallots
               titles={this.titles}
               visibleActiveItems={this.data.visibleActiveItems}
