@@ -19,9 +19,9 @@ const AuthorityItem = ({
       <div className='text_container flex-full flex-column'>
         <p className='title text-exlarge text-heavy'>{item.title}</p>
         <p className='address text-small'>Address: {item.addr}</p>
-        <p className='description flex-full' ref={ref => descriptions[index] = ref}>{breakLine(item.description)}</p>
+        <p className='description flex-full' ref={ref => { descriptions[index] = ref }}>{breakLine(item.description)}</p>
         <div className='link_container flex'>
-          <span className='more' onClick={e => onReadMoreClick(index)} ref={ref => readMoreBtns[index] = ref}>+ Read More</span>
+          <span className='more' onClick={e => onReadMoreClick(index)} ref={ref => { readMoreBtns[index] = ref }}>+ Read More</span>
           <div className='SNSList flex-full flex'>
             {getSNSList(item.sns)}
             <a className='snsGroup' href={item.homepage}> <i className='fas fa-home fa-2x' /> </a>

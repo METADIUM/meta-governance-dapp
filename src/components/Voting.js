@@ -128,7 +128,7 @@ class Voting extends React.Component {
   }
 
   getBallotDetailInfo () {
-    let activeList = [], proposalList = [], finalizedList = []
+    let activeList = []; let proposalList = []; let finalizedList = []
 
     this.data.ballotBasicOriginItems.forEach(item => {
       switch (item.props.item.state) {
@@ -143,7 +143,7 @@ class Voting extends React.Component {
     this.data.visibleActiveItems = activeList
     this.data.proposalItems = proposalList
     this.data.visibleProposalItems = proposalList
-    this.data.finalizedItems  = finalizedList
+    this.data.finalizedItems = finalizedList
     this.data.visibleFinalizedItems = finalizedList
     this.setState({ isBallotLoading: true })
   }
@@ -266,7 +266,7 @@ class Voting extends React.Component {
     this.setState({ updateModal: false })
   }
 
-  sendTransaction(to, data, type) {
+  sendTransaction (to, data, type) {
     web3Instance.web3.eth.sendTransaction({
       from: web3Instance.defaultAccount,
       to: to,
@@ -281,10 +281,12 @@ class Voting extends React.Component {
         this.waitForReceipt(hash, (receipt) => {
           // console.log('Updated :', receipt)
           if (receipt.status) this.reloadVoting(false)
-          else this.props.getErrModal(
-            "You don't have " + type.toLowerCase + " authority",
-            type + ' Error',
-            receipt.transactionHash)
+          else {
+            this.props.getErrModal(
+              "You don't have " + type.toLowerCase + ' authority',
+              type + ' Error',
+              receipt.transactionHash)
+          }
         })
       }
     })
@@ -343,8 +345,7 @@ class Voting extends React.Component {
     return (
       <div>
         {!this.props.showProposal
-          ?
-          <div className='background'>
+          ? <div className='background'>
             <SubHeader
               netName={web3Instance.netName}
               placeholder='Search by Type, Proposal, Keywords'
@@ -381,8 +382,7 @@ class Voting extends React.Component {
               onClickReadMore={this.onClickReadMore}
             />
           </div>
-          :
-          <ProposalForm
+          : <ProposalForm
             contracts={this.props.contracts}
             getErrModal={this.props.getErrModal}
             newMemberaddr={this.data.existBallotNewMember}

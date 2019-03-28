@@ -26,14 +26,14 @@ class Authority extends React.Component {
       this.descriptions = []
       this.readMoreBtns = []
 
-      window.addEventListener("resize", this.initAuthorityHeight)
+      window.addEventListener('resize', this.initAuthorityHeight)
     }
 
     componentDidMount () {
       this.getAuthorityList()
     }
 
-    componentDidUpdate() {
+    componentDidUpdate () {
       this.initAuthorityHeight()
     }
 
@@ -41,7 +41,7 @@ class Authority extends React.Component {
       str = str.toLowerCase()
       let authorityItems = []
       this.data.authorityItems.forEach((value) => {
-        if([value.props.item.title, value.props.item.addr].some( elem => elem.toLowerCase().indexOf(str) !== -1)) {
+        if ([value.props.item.title, value.props.item.addr].some(elem => elem.toLowerCase().indexOf(str) !== -1)) {
           authorityItems.push(value)
         }
       })
@@ -114,14 +114,14 @@ class Authority extends React.Component {
       await this.setState({ getAuthorityInfo: true })
     }
 
-    initAuthorityHeight() {
+    initAuthorityHeight () {
       let index, description, readMoreBtn
-      for(let i = 0; i < this.data.visibleAuthorityItems.length; i++) {
+      for (let i = 0; i < this.data.visibleAuthorityItems.length; i++) {
         index = this.data.visibleAuthorityItems[i].key
         description = this.descriptions[index]
         readMoreBtn = this.readMoreBtns[index]
 
-        if(description.scrollHeight > constants.authoritieDescriptionHeight) {
+        if (description.scrollHeight > constants.authoritieDescriptionHeight) {
           readMoreBtn.style.display = 'block'
         } else {
           readMoreBtn.style.display = 'none'
