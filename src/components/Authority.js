@@ -88,7 +88,7 @@ class Authority extends React.Component {
       }
 
       /* Reversed. */
-      return sns.reverse()
+      return sns
     }
 
     async getAuthorityList () {
