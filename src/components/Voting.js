@@ -327,7 +327,11 @@ class Voting extends React.Component {
   filteringBallot (ballots, str) {
     return ballots.filter(value => {
       let topic = this.setTopic(value.props.item.ballotType, value.props.newMemberAddress, value.props.oldMemberAddress)
-      return topic.toLowerCase().indexOf(str) !== -1 || value.props.authorityName.toLowerCase().indexOf(str) !== -1 || value.props.item.creator.toLowerCase().indexOf(str) !== -1 || value.props.newMemberAddress.toLowerCase().indexOf(str) !== -1 || value.props.oldMemberAddress.toLowerCase().indexOf(str) !== -1
+      return [topic,
+        value.props.authorityName,
+        value.props.item.creator,
+        value.props.newMemberAddress,
+        value.props.oldMemberAddress].some(elem => elem.toLowerCase().indexOf(str) !== -1)
     })
   }
 

@@ -37,7 +37,7 @@ class Authority extends React.Component {
       str = str.toLowerCase()
       let authorityItems = []
       this.data.authorityItems.forEach((value) => {
-        if (value.props.item.title.toLowerCase().indexOf(str) !== -1 || value.props.item.addr.toLowerCase().indexOf(str) !== -1) {
+        if([value.props.item.title, value.props.item.addr].some( elem => elem.toLowerCase().indexOf(str) !== -1)) {
           authorityItems.push(value)
         }
       })
