@@ -74,20 +74,8 @@ class Authority extends React.Component {
     getSNSList (snsList) {
       let sns = []
       for (var key in snsList) {
-        let icon = null
-        switch (key) {
-          case 'twitter': icon = 'fab fa-twitter fa-2x'; break
-          case 'medium': icon = 'fab fa-medium fa-2x'; break
-          case 'facebook': icon = 'fab fa-facebook fa-2x'; break
-          case 'instagram': icon = 'fab fa-instagram fa-2x'; break
-          case 'telegram': icon = 'fab fa-telegram fa-2x'; break
-          case 'linkedin': icon = 'fab fa-linkedin fa-2x'; break
-          default: break
-        }
-        sns.push(<a key={key} className='snsGroup' href={snsList[key]}><i className={icon} /></a>)
+        sns.push(<a key={key} className='snsGroup' href={snsList[key]}><i className={`fab fa-${key} fa-2x`} /></a>)
       }
-
-      /* Reversed. */
       return sns
     }
 
