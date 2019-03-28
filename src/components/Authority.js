@@ -33,6 +33,10 @@ class Authority extends React.Component {
       this.getAuthorityList()
     }
 
+    componentDidUpdate() {
+      this.initAuthorityHeight()
+    }
+
     onSearchBtnClick (str) {
       str = str.toLowerCase()
       let authorityItems = []
@@ -108,7 +112,6 @@ class Authority extends React.Component {
       this.data.authorityItems = list
       this.data.visibleAuthorityItems = list
       await this.setState({ getAuthorityInfo: true })
-      this.initAuthorityHeight()
     }
 
     initAuthorityHeight() {
