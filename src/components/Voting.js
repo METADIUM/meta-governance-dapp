@@ -55,6 +55,7 @@ class Voting extends React.Component {
     this.onClickVote = this.onClickVote.bind(this)
     this.onClickUpdateProposal = this.onClickUpdateProposal.bind(this)
     this.completeModal = this.completeModal.bind(this)
+    this.sendTransaction = this.sendTransaction.bind(this)
     this.onClickSubMenu = this.onClickSubMenu.bind(this)
     this.onClickReadMore = this.onClickReadMore.bind(this)
     this.hideChangeModal = this.hideChangeModal.bind(this)
@@ -243,6 +244,29 @@ class Voting extends React.Component {
 
     this.props.convertLoading(true)
     let { to, data } = this.governance.vote(id, value === 'Y')
+    this.sendTransaction(to, data, 'Voting')
+  }
+
+  onClickUpdateProposal (topic, id, duration) {
+    if (topic === 'change') {
+      this.data.curBallotIdx = id
+      this.setState({ ballotUpdateDuration: duration === 0 ? 1 : duration, updateModal: true })
+      return
+    }
+
+    this.props.convertLoading(true)
+    let trx = this.ballotStorage.cancelBallot(id)
+    this.sendTransaction(trx.to, trx.data, 'Revoke')
+  }
+
+  async completeModal (e) {
+    this.props.convertLoading(true)
+    let trx = await this.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.state.ballotUpdateDuration))
+    this.sendTransaction(trx.to, trx.data, 'Change')
+    this.setState({ updateModal: false })
+  }
+
+  sendTransaction(to, data, type) {
     web3Instance.web3.eth.sendTransaction({
       from: web3Instance.defaultAccount,
       to: to,
@@ -257,65 +281,13 @@ class Voting extends React.Component {
         this.waitForReceipt(hash, (receipt) => {
           // console.log('Updated :', receipt)
           if (receipt.status) this.reloadVoting(false)
-          else this.props.getErrModal("You don't have voting authority", 'Voting Error', receipt.transactionHash)
+          else this.props.getErrModal(
+            "You don't have " + type.toLowerCase + " authority",
+            type + ' Error',
+            receipt.transactionHash)
         })
       }
     })
-  }
-
-  onClickUpdateProposal (topic, id, duration) {
-    if (topic === 'change') {
-      this.data.curBallotIdx = id
-      this.setState({ ballotUpdateDuration: duration === 0 ? 1 : duration, updateModal: true })
-      return
-    }
-
-    this.props.convertLoading(true)
-    let trx = this.ballotStorage.cancelBallot(id)
-    web3Instance.web3.eth.sendTransaction({
-      from: web3Instance.defaultAccount,
-      to: trx.to,
-      data: trx.data
-    }, (err, hash) => {
-      if (err) {
-        console.log(err)
-        this.props.getErrModal(err.message, err.name)
-        this.props.convertLoading(false)
-      } else {
-        console.log('hash:', hash)
-        this.waitForReceipt(hash, (receipt) => {
-          console.log('Updated :', receipt)
-          if (receipt.status) this.reloadVoting(false)
-          else this.props.getErrModal("You don't have revoke authority", 'Voting Error', receipt.transactionHash)
-        })
-      }
-    })
-  }
-
-  async completeModal (e) {
-    this.props.convertLoading(true)
-    let trx = await this.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.state.ballotUpdateDuration))
-
-    // Using updateMemo
-    web3Instance.web3.eth.sendTransaction({
-      from: web3Instance.defaultAccount,
-      to: trx.to,
-      data: trx.data
-    }, (err, hash) => {
-      if (err) {
-        console.log(err)
-        this.props.getErrModal(err.message, err.name)
-        this.props.convertLoading(false)
-      } else {
-        console.log('hash:', hash)
-        this.waitForReceipt(hash, (receipt) => {
-          console.log('Updated :', receipt)
-          if (receipt.status) this.reloadVoting(false)
-          else this.props.getErrModal("You don't have change authority", 'Change Error', receipt.transactionHash)
-        })
-      }
-    })
-    this.setState({ updateModal: false })
   }
 
   onClickSubMenu (e) {
