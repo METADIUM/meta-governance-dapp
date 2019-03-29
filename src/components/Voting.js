@@ -145,6 +145,7 @@ class Voting extends React.Component {
     this.data.visibleProposalItems = proposalList
     this.data.finalizedItems = finalizedList
     this.data.visibleFinalizedItems = finalizedList
+
     this.setState({ isBallotLoading: true })
   }
 

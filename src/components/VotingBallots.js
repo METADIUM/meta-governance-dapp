@@ -2,6 +2,8 @@ import React from 'react'
 import { Button, Progress } from 'antd'
 
 import { constants } from '../constants'
+import { shouldPass } from '../util'
+
 import './style/style.css'
 
 const bs = constants.ballotState
@@ -12,11 +14,11 @@ const VotingBallots = ({
   authorityName,
   newMemberAddress,
   oldMemberAddress,
-  setTopic = f => f,
-  onClickDetail = f => f,
-  onClickVote = f => f,
-  setDescription = f => f,
-  onClickUpdateProposal = f => f
+  setTopic = shouldPass(),
+  onClickDetail = shouldPass(),
+  onClickVote = shouldPass(),
+  setDescription = shouldPass(),
+  onClickUpdateProposal = shouldPass()
 }) =>
   <div
     className={'ballotDiv ' + constants.ballotTypesArr[parseInt(item.ballotType)]}
@@ -30,7 +32,6 @@ const VotingBallots = ({
         <p className='addr text-small'>Proposal Address: {item.creator}</p>
       </div>
       <div className='infoRight flex-column'>
-        {console.log(bs.InProgress)}
         {bs.InProgress !== item.state &&
           <Button
             className='btn-img text-exlarge'
@@ -119,7 +120,7 @@ const ShowBallots = ({
   visibleFinalizedItems,
   totalFinalizedItemLength,
   netName,
-  onClickReadMore = f => f
+  onClickReadMore = shouldPass()
 }) =>
   <div className='contentDiv container'>
     <p className='stateTitle text-heavy' ref={ref => { titles.activeTitle = ref }}>Active</p>

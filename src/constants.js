@@ -5,15 +5,12 @@ const constants = {
     branch: 'master',
     source: 'authorities.json'
   },
-
   /* AuthorityEnums */
   authoritieDescriptionHeight: 88,
   authoritieDescriptionHeightToPixel: '88px',
-
   /* BallotEnums */
   ballotDetailHeight: 124,
   ballotDetailHeightToPixel: '124px',
-
   ballotState: {
     Invalid: '0',
     Ready: '1',
@@ -30,10 +27,8 @@ const constants = {
     GovernanceChange: '4',
     EnvValChange: '5'
   },
-
   ballotStateArr: ['Invalid', 'Ready', 'InProgress', 'Accepted', 'Rejected', 'Canceled'],
   ballotTypesArr: ['Invalid', 'MemberAdd', 'MemberRemoval', 'MemberChange', 'GovernanceChange', 'EnvValChange'],
-
   /* Debug */
   debugMode: true
 }

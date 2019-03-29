@@ -156,22 +156,11 @@ function splitNodeDescription (str) {
   ip = web3Instance.web3.utils.asciiToHex(splitedStr[0])
   splitedStr = splitedStr[1].split('?')
   port = parseInt(splitedStr[0])
-
   return { node, ip, port }
 }
 
-/**
- * Serialize / Deserialize object at local storage
- */
-var save = (key, obj) => window.localStorage.setItem(key, JSON.stringify(obj))
-var load = (key) => JSON.parse(window.localStorage.getItem(key))
-
-var getUsersFromLocal = () => load('users')
-var getTopicsFromLocal = () => load('topics')
-var getAchievementsFromLocal = () => load('achievements')
-var setUsersToLocal = (obj) => save('users', obj)
-var setTopicsToLocal = (obj) => save('topics', obj)
-var setAchievementsToLocal = (obj) => save('achievements', obj)
+// eslint-disable-next-line
+const shouldPass = () => { throw 'Function should be passed' }
 
 export {
   borderColor,
@@ -187,13 +176,6 @@ export {
   isValidLength,
   getAuthorityLists,
   validate,
-  save,
-  load,
-  getUsersFromLocal,
-  getTopicsFromLocal,
-  getAchievementsFromLocal,
-  setUsersToLocal,
-  setTopicsToLocal,
-  setAchievementsToLocal,
-  splitNodeDescription
+  splitNodeDescription,
+  shouldPass
 }

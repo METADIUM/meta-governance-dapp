@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { shouldPass } from '../util'
+
 import './style/style.css'
 
 const AuthorityItem = ({
@@ -7,9 +9,9 @@ const AuthorityItem = ({
   index,
   descriptions,
   readMoreBtns,
-  breakLine = f => f,
-  onReadMoreClick = f => f,
-  getSNSList = f => f
+  breakLine = shouldPass(),
+  onReadMoreClick = shouldPass(),
+  getSNSList = shouldPass()
 }) =>
   <div className='authorityComp'>
     <div className='authorityComp_contnet flex'>
