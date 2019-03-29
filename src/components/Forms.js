@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Input, Form, Icon } from 'antd'
 
 import './style/style.css'
+import { shouldPass } from '../util'
 
 const { TextArea } = Input
 
@@ -13,8 +14,8 @@ const AddProposalForm = ({
   newLockAmountErr,
   newNodeErr,
   newNameErr,
-  handleSubmit = f => f,
-  handleChange = f => f
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass()
 }) =>
   <div className='proposalBody'>
     <Form onSubmit={handleSubmit}>
@@ -111,8 +112,8 @@ const ReplaceProposalForm = ({
   newNodeErr,
   newLockAmountErr,
   oldNodeErr,
-  handleSubmit = f => f,
-  handleChange = f => f
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass()
 }) =>
   <div className='proposalBody'>
     <Form onSubmit={handleSubmit}>
@@ -226,9 +227,9 @@ const RmoveProposalForm = ({
   stakingMin,
   oldAddrErr,
   oldLockAmountErr,
-  handleSubmit = f => f,
-  handleChange = f => f,
-  getLockAmount = f => f
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+  getLockAmount = shouldPass()
 }) =>
   <div className='proposalBody'>
     <Form onSubmit={handleSubmit}>
@@ -303,8 +304,8 @@ const UpdateProposalForm = ({
   loading,
   newNameErr,
   newNodeErr,
-  handleSubmit = f => f,
-  handleChange = f => f
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass()
 }) =>
   <div className='proposalBody'>
     <Form onSubmit={handleSubmit}>

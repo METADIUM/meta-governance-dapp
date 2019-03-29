@@ -105,15 +105,17 @@ class Authority extends React.Component {
   }
 
   initAuthorityHeight () {
-    let index, description, readMoreBtn
     for (let i = 0; i < this.data.visibleAuthorityItems.length; i++) {
-      index = this.data.visibleAuthorityItems[i].key
-      description = this.descriptions[index]
-      readMoreBtn = this.readMoreBtns[index]
+      let index = this.data.visibleAuthorityItems[i].key
+      let description = this.descriptions[index]
+      let readMoreBtn = this.readMoreBtns[index]
 
-      readMoreBtn.style.display = 'none'
-      if (description.scrollHeight > constants.authoritieDescriptionHeight) {
+      if (!readMoreBtn || !readMoreBtn.style) {
+        // Cannot modify style
+      } else if (description.scrollHeight > constants.authoritieDescriptionHeight) {
         readMoreBtn.style.display = 'block'
+      } else {
+        readMoreBtn.style.display = 'none'
       }
     }
   }
