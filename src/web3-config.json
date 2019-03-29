@@ -1,8 +1,5 @@
 {
     "netid": "testnet",
-    "url_p": "http://13.124.111.52:8545",
-    "url": "https://api-dev.metadium.com/test",
-    "addr": "0xA408FCD6B7f3847686Cb5f41e52A7f4E084FD3cc",
-    "privkey": "",
-    "identity": ""
+    "url": "https://api.metadium.com/dev",
+    "addr": ""
 }
