@@ -115,7 +115,9 @@ const ShowBallots = ({
   titles,
   visibleActiveItems,
   visibleProposalItems,
+  totalProposalItemLength,
   visibleFinalizedItems,
+  totalFinalizedItemLength,
   netName,
   onClickReadMore = f => f
 }) =>
@@ -124,9 +126,9 @@ const ShowBallots = ({
     {visibleActiveItems}
     <p className='stateTitle text-heavy' ref={ref => { titles.proposalTitle = ref }}>Proposals</p>
     {visibleProposalItems}
-    {visibleProposalItems.length > 0 &&
+    {visibleProposalItems.length > 0 && visibleProposalItems.length < totalProposalItemLength &&
       <div className='moreDiv flex flex-center-vertical'>
-        <Button value='large' onClick={(e) => onClickReadMore('proposal')}>
+        <Button className={'btn-fill-white flex ' + netName} onClick={(e) => onClickReadMore('proposal')}>
           <span>+</span>
           <span className='text_btn'>Read More</span>
         </Button>
@@ -134,9 +136,9 @@ const ShowBallots = ({
     }
     <p className='stateTitle text-heavy' ref={ref => { titles.finalizedTitle = ref }}>Finalized</p>
     {visibleFinalizedItems}
-    {visibleFinalizedItems.length > 0 &&
+    {visibleFinalizedItems.length > 0 && visibleFinalizedItems.length < totalFinalizedItemLength &&
       <div className='moreDiv flex flex-center-vertical'>
-        <Button className={'btn-fill-white flex ' + netName} value='large' onClick={(e) => onClickReadMore('finalized')}>
+        <Button className={'btn-fill-white flex ' + netName} onClick={(e) => onClickReadMore('finalized')}>
           <span>+</span>
           <span className='text_btn'>Read More</span>
         </Button>

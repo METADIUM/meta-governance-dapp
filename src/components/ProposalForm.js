@@ -33,6 +33,9 @@ class ProposalForm extends React.Component {
       this.handleSubmit = this.handleSubmit.bind(this)
       this.handleProposalError = this.handleProposalError.bind(this)
       this.getLockAmount = this.getLockAmount.bind(this)
+
+      this.governance = this.props.contracts.governance
+      this.staking = this.props.contracts.staking
     }
 
     async onSelectChange (value) {
@@ -113,7 +116,7 @@ class ProposalForm extends React.Component {
           return
         }
         if (this.data.selectedVoteTopic === 'add') {
-          trx = this.props.contracts.governance.addProposalToAddMember(
+          trx = this.governance.addProposalToAddMember(
             formData.newAddr,
             formData.newName,
             formData.newNode.node,
@@ -122,7 +125,7 @@ class ProposalForm extends React.Component {
             formData.memo
           )
         } else if (this.data.selectedVoteTopic === 'replace') {
-          trx = this.props.contracts.governance.addProposalToChangeMember(
+          trx = this.governance.addProposalToChangeMember(
             [formData.oldAddr, formData.newAddr],
             formData.newName,
             formData.newNode.node,
@@ -131,14 +134,14 @@ class ProposalForm extends React.Component {
             formData.memo
           )
         } else if (this.data.selectedVoteTopic === 'remove') {
-          trx = this.props.contracts.governance.addProposalToRemoveMember(
+          trx = this.governance.addProposalToRemoveMember(
             formData.oldAddr,
             formData.oldLockAmount,
             formData.memo
           )
         } else if (this.data.selectedVoteTopic === 'update') {
-          let myLockBalance = await this.props.contracts.staking.lockedBalanceOf(web3Instance.defaultAccount)
-          trx = this.props.contracts.governance.addProposalToChangeMember(
+          let myLockBalance = await this.staking.lockedBalanceOf(web3Instance.defaultAccount)
+          trx = this.governance.addProposalToChangeMember(
             [web3Instance.defaultAccount, web3Instance.defaultAccount],
             formData.newNode.node,
             formData.newNode.ip,
@@ -175,16 +178,16 @@ class ProposalForm extends React.Component {
     }
 
     async handleProposalError (formData) {
-      if (!await this.props.contracts.governance.isMember(web3Instance.defaultAccount)) {
+      if (!await this.governance.isMember(web3Instance.defaultAccount)) {
         this.props.getErrModal('You are not member', 'Proposal Submit Error')
         return true
       }
 
       if (this.data.selectedVoteTopic === 'add') {
-        const newMemberBalance = Number(await this.props.contracts.staking.availableBalanceOf(formData.newAddr))
+        const newMemberBalance = Number(await this.staking.availableBalanceOf(formData.newAddr))
         const newLockedAmount = Number(formData.newLockAmount)
 
-        if (await this.props.contracts.governance.isMember(formData.newAddr)) {
+        if (await this.governance.isMember(formData.newAddr)) {
           this.props.getErrModal('Existing Member Address (New)', 'Proposal Submit Error')
           return true
         } else if (this.props.newMemberaddr.some((item) => item === formData.newAddr)) {
@@ -195,14 +198,14 @@ class ProposalForm extends React.Component {
           return true
         }
       } else if (this.data.selectedVoteTopic === 'replace') {
-        const oldMemberLockedBalance = await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr)
-        const newMemberBalance = Number(await this.props.contracts.staking.availableBalanceOf(formData.newAddr))
+        const oldMemberLockedBalance = await this.staking.lockedBalanceOf(formData.oldAddr)
+        const newMemberBalance = Number(await this.staking.availableBalanceOf(formData.newAddr))
         const newLockedAmount = Number(formData.newLockAmount)
 
-        if (await this.props.contracts.governance.isMember(formData.newAddr)) {
+        if (await this.governance.isMember(formData.newAddr)) {
           this.props.getErrModal('Existing Member Address (New)', 'Proposal Submit Error')
           return true
-        } else if (!await this.props.contracts.governance.isMember(formData.oldAddr)) {
+        } else if (!await this.governance.isMember(formData.oldAddr)) {
           this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
           return true
         } else if (this.props.newMemberaddr.some((item) => item === formData.newAddr)) {
@@ -219,10 +222,10 @@ class ProposalForm extends React.Component {
           return true
         }
       } else if (this.data.selectedVoteTopic === 'remove') {
-        const oldMemberBalance = Number(await this.props.contracts.staking.lockedBalanceOf(formData.oldAddr))
+        const oldMemberBalance = Number(await this.staking.lockedBalanceOf(formData.oldAddr))
         const oldLockedAmount = Number(formData.oldLockAmount)
 
-        if (!await this.props.contracts.governance.isMember(formData.oldAddr)) {
+        if (!await this.governance.isMember(formData.oldAddr)) {
           this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
           return true
         } else if (this.props.oldMemberaddr.some((item) => item === formData.oldAddr)) {
@@ -244,14 +247,14 @@ class ProposalForm extends React.Component {
       } else if (!web3Instance.web3.utils.checkAddressChecksum(value)) {
         value = web3Instance.web3.utils.toChecksumAddress(value)
       }
-      if (!await this.props.contracts.gogovernancev.isMember(value)) {
+      if (!await this.governance.isMember(value)) {
         this.props.getErrModal('Non-existing Member Address (Old)', 'Proposal Submit Error')
         this.setState({ showLockAmount: '' })
         return
       }
 
       try {
-        let lockedBalance = await this.props.contracts.staking.lockedBalanceOf(value)
+        let lockedBalance = await this.staking.lockedBalanceOf(value)
         lockedBalance = web3Instance.web3.utils.fromWei(lockedBalance)
         this.setState({ showLockAmount: lockedBalance })
       } catch (err) {

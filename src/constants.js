@@ -7,8 +7,8 @@ const constants = {
   },
 
   /* AuthorityEnums */
-  authorityHeight: 192,
-  authorityHeightToPixel: '192px',
+  authoritieDescriptionHeight: 88,
+  authoritieDescriptionHeightToPixel: '88px',
 
   /* BallotEnums */
   ballotDetailHeight: 124,
@@ -32,7 +32,10 @@ const constants = {
   },
 
   ballotStateArr: ['Invalid', 'Ready', 'InProgress', 'Accepted', 'Rejected', 'Canceled'],
-  ballotTypesArr: ['Invalid', 'MemberAdd', 'MemberRemoval', 'MemberChange', 'GovernanceChange', 'EnvValChange']
+  ballotTypesArr: ['Invalid', 'MemberAdd', 'MemberRemoval', 'MemberChange', 'GovernanceChange', 'EnvValChange'],
+
+  /* Debug */
+  debugMode: true
 }
 
 export { constants }
