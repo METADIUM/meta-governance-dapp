@@ -18,7 +18,6 @@ class ProposalForm extends React.Component {
       newAddrErr: false,
       newNodeErr: false,
       newNameErr: false,
-      oldLockAmountErr: false,
       oldAddrErr: false,
       oldNodeErr: false,
       showLockAmount: ''
@@ -50,7 +49,6 @@ class ProposalForm extends React.Component {
         newAddrErr: false,
         newNodeErr: false,
         newNameErr: false,
-        oldLockAmountErr: false,
         oldAddrErr: false,
         oldNodeErr: false })
       this.resetForm()
@@ -71,13 +69,20 @@ class ProposalForm extends React.Component {
 
     /* Type casting and save form data. */
     handleChange (e) {
+      const originStr = this.data.formData[e.target.name]
       this.data.formData[e.target.name] = e.target.value
       switch (e.target.name) {
-        case 'newLockAmount': this.setState({ newLockAmountErr: !this.checkLockAmount(e.target.value) }); break
+        case 'newLockAmount':
+          if(!/^([0-9]*)$/.test(e.target.value)) this.data.formData[e.target.name] = originStr
+          this.setState({ newLockAmountErr: !this.checkLockAmount(this.data.formData[e.target.name]) })
+          break
         case 'newAddr': this.setState({ newAddrErr: !this.checkAddr(e.target.value) }); break
         case 'newNode': this.setState({ newNodeErr: !this.checkNode(e.target.value) }); break
         case 'newName': this.setState({ newNameErr: !this.checkName(e.target.value) }); break
-        case 'oldLockAmount': this.setState({ oldLockAmountErr: !this.checkUnlockAmount(e.target.value) }); break
+        case 'oldLockAmount':
+          if(!/^([0-9]*)$/.test(e.target.value)) this.data.formData[e.target.name] = originStr
+          this.setState({})
+          break
         case 'oldAddr': this.setState({ oldAddrErr: !this.checkAddr(e.target.value) }); break
         case 'oldNode': this.setState({ oldNodeErr: !this.checkNode(e.target.value) }); break
         default: break
@@ -85,11 +90,7 @@ class ProposalForm extends React.Component {
     }
 
     checkLockAmount (amount) {
-      return (/^[1-9]\d*$/.test(amount) && Number(amount) <= this.props.stakingMax && Number(amount) >= this.props.stakingMin)
-    }
-
-    checkUnlockAmount (amount) {
-      return /^[1-9]\d*$/.test(amount)
+      return (Number(amount) <= this.props.stakingMax && Number(amount) >= this.props.stakingMin)
     }
 
     checkAddr (addr) {
@@ -274,6 +275,7 @@ class ProposalForm extends React.Component {
             stakingMin={this.props.stakingMin}
             newAddrErr={this.state.newAddrErr}
             newLockAmountErr={this.state.newLockAmountErr}
+            newLockAmount={this.data.formData.newLockAmount}
             newNodeErr={this.state.newNodeErr}
             newNameErr={this.state.newNameErr}
             handleSubmit={this.handleSubmit}
@@ -289,6 +291,7 @@ class ProposalForm extends React.Component {
             newNameErr={this.state.newNameErr}
             newNodeErr={this.state.newNodeErr}
             newLockAmountErr={this.state.newLockAmountErr}
+            newLockAmount={this.data.formData.newLockAmount}
             oldNodeErr={this.state.oldNodeErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
@@ -300,7 +303,7 @@ class ProposalForm extends React.Component {
             showLockAmount={this.state.showLockAmount}
             stakingMin={this.props.stakingMin}
             oldAddrErr={this.state.oldAddrErr}
-            oldLockAmountErr={this.state.oldLockAmountErr}
+            oldLockAmount={this.data.formData.oldLockAmount}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
             getLockAmount={this.getLockAmount}

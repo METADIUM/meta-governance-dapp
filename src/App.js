@@ -23,7 +23,7 @@ class App extends React.Component {
     myBalance: 0,
     myLockedBalance: 0,
     stakingTopic: 'deposit',
-    stakingAmount: '1',
+    stakingAmount: '',
     stakingMax: null,
     stakingMin: null,
     eventsWatch: null,
@@ -38,7 +38,6 @@ class App extends React.Component {
     nav: '1',
     contractReady: false,
     stakingModalVisible: false,
-    stakingInvalidErr: false,
     errModalVisible: false,
     loading: false,
     showProposal: false
@@ -217,7 +216,7 @@ class App extends React.Component {
   }
 
   getStakingModal () {
-    this.data.stakingAmount = '1'
+    this.data.stakingAmount = ''
     this.data.stakingTopic = 'deposit'
     this.setState({ stakingModalVisible: true })
   }
@@ -275,9 +274,9 @@ class App extends React.Component {
   }
 
   handleInputChange (event) {
-    this.data.stakingAmount = event.target.value
-    if (/^[1-9]([0-9]*)$/.test(event.target.value)) this.setState({ stakingInvalidErr: false })
-    else this.setState({ stakingInvalidErr: true })
+    let value = event.target.value
+    if(/^([0-9]*)$/.test(value)) this.data.stakingAmount = value
+    this.setState({})
   }
 
   render () {
@@ -303,7 +302,6 @@ class App extends React.Component {
               loading={this.state.loading}
               stakingAmount={this.data.stakingAmount}
               stakingTopic={this.data.stakingTopic}
-              stakingInvalidErr={this.state.stakingInvalidErr}
               hideStakingModal={() => { if (!this.state.loading) this.setState({ stakingModalVisible: false }) }}
               submitMetaStaking={this.submitMetaStaking}
               handleInputChange={this.handleInputChange}

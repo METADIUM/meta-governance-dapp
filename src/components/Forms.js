@@ -11,6 +11,7 @@ const AddProposalForm = ({
   stakingMin,
   newAddrErr,
   newLockAmountErr,
+  newLockAmount,
   newNodeErr,
   newNameErr,
   handleSubmit = f => f,
@@ -45,10 +46,9 @@ const AddProposalForm = ({
           <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
           <Form.Item>
             <Input
-              type='number'
               addonAfter='META'
               name='newLockAmount'
-              defaultValue={stakingMin}
+              value={newLockAmount ? newLockAmount : stakingMin}
               onChange={handleChange}
               className={newLockAmountErr ? 'errInput' : ''}
               disabled={loading}
@@ -110,6 +110,7 @@ const ReplaceProposalForm = ({
   newNameErr,
   newNodeErr,
   newLockAmountErr,
+  newLockAmount,
   oldNodeErr,
   handleSubmit = f => f,
   handleChange = f => f
@@ -153,10 +154,9 @@ const ReplaceProposalForm = ({
           <p className='subtitle'>Replace META Amount <span className='required'>*</span></p>
           <Form.Item>
             <Input
-              type='number'
               addonAfter='META'
               name='newLockAmount'
-              defaultValue={stakingMin}
+              value={newLockAmount ? newLockAmount : stakingMin}
               onChange={handleChange}
               className={newLockAmountErr ? 'errInput' : ''}
               disabled={loading}
@@ -225,7 +225,7 @@ const RmoveProposalForm = ({
   showLockAmount,
   stakingMin,
   oldAddrErr,
-  oldLockAmountErr,
+  oldLockAmount,
   handleSubmit = f => f,
   handleChange = f => f,
   getLockAmount = f => f
@@ -260,15 +260,12 @@ const RmoveProposalForm = ({
           <p className='subtitle'>META Amount to be unlocked <span className='required'>*</span></p>
           <Form.Item>
             <Input
-              type='number'
               addonAfter='META'
               name='oldLockAmount'
-              defaultValue={stakingMin}
+              value={oldLockAmount ? oldLockAmount : stakingMin}
               onChange={handleChange}
-              className={oldLockAmountErr ? 'errInput' : ''}
               disabled={loading}
             />
-            <p className={oldLockAmountErr ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
           </Form.Item>
         </div>
       </div>
@@ -288,7 +285,7 @@ const RmoveProposalForm = ({
           <Button
             className={'submit_Btn btn-fill-primary text-large ' + netName}
             htmlType='submit'
-            disabled={oldLockAmountErr || oldAddrErr}
+            disabled={oldAddrErr}
             loading={loading}
           >
             Submit
