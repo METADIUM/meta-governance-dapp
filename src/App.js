@@ -156,7 +156,7 @@ class App extends React.Component {
     switch (e.target.alt) {
       case 'metadium': window.open('https://metadium.com/', '_blank'); break
       case 'explorer': window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER); break
-      case 'github': window.open('https://github.com/METADIUM/meta-governance-dapp', '_blank'); break
+      case 'github': window.open('https://github.com/METADIUM/', '_blank'); break
       default:
     }
   }
@@ -223,7 +223,6 @@ class App extends React.Component {
 
   submitMetaStaking () {
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
-      this.setState({ stakingModalVisible: false })
       this.getErrModal('The staking amount format is incorrect.', 'Staking Error')
       return
     }
