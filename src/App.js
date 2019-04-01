@@ -1,23 +1,20 @@
 import React from 'react'
 import { Layout } from 'antd'
+import { contracts, initContractsByNames, constants as metaWeb3Constants } from 'meta-web3'
 
 import { TopNav, FootNav } from './components/Nav'
 import { StakingModal, ErrModal } from './components/Modal'
 import { Voting } from './components/Voting'
 import { Authority } from './components/Authority'
 import { BaseLoader } from './components/BaseLoader'
-
-import * as util from './util'
+import getWeb3Instance, { web3Instance } from './web3'
 import { constants } from './constants'
+import * as util from './util'
+
 import './App.css'
 
-// web3
-import getWeb3Instance, { web3Instance } from './web3'
-
-// Contracts
-import { contracts, initContractsByNames, constants as metaWeb3Constants } from 'meta-web3'
-
 const { Header, Content, Footer } = Layout
+
 class App extends React.Component {
   data = {
     myBalance: 0,
@@ -33,6 +30,7 @@ class App extends React.Component {
     errLink: null,
     isMember: false
   }
+
   state = {
     loadWeb3: false,
     nav: '1',
@@ -63,7 +61,7 @@ class App extends React.Component {
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       this.initContracts(web3Config)
-      console.log('debuhMode: ', constants.debugMode)
+      console.log('debugMode: ', constants.debugMode)
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
@@ -225,17 +223,17 @@ class App extends React.Component {
 
   submitMetaStaking () {
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
-      this.setState({errStakging: true})
+      this.setState({ errStakging: true })
       return
     }
 
     this.setState({ loading: true })
     let trx = {}
-    //console.log('before this.data.stakingAmount;', this.data.stakingAmount)
+    // console.log('before this.data.stakingAmount;', this.data.stakingAmount)
     let amount = web3Instance.web3.utils.toWei(this.data.stakingAmount, 'ether')
-    //console.log('after this.data.stakingAmount;', amount)
+    // console.log('after this.data.stakingAmount;', amount)
     if (this.data.stakingTopic === 'deposit') {
-      //console.log('Send Transaction for deposit')
+      // console.log('Send Transaction for deposit')
       trx = contracts.staking.deposit()
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
@@ -276,9 +274,9 @@ class App extends React.Component {
 
   handleInputChange (event) {
     let value = event.target.value
-    if(/^([0-9]*)$/.test(value)) {
+    if (/^([0-9]*)$/.test(value)) {
       this.data.stakingAmount = value
-      this.setState({errStakging: false})
+      this.setState({ errStakging: false })
     }
   }
 

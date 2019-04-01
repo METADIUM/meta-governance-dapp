@@ -128,7 +128,9 @@ class Voting extends React.Component {
   }
 
   getBallotDetailInfo () {
-    let activeList = [], proposalList = [], finalizedList = []
+    let activeList = []
+    let proposalList = []
+    let finalizedList = []
 
     this.data.ballotBasicOriginItems.forEach(item => {
       switch (item.props.item.state) {
@@ -139,6 +141,7 @@ class Voting extends React.Component {
         default: break
       }
     })
+
     this.data.activeItems = activeList
     this.data.visibleActiveItems = activeList
     this.data.proposalItems = proposalList

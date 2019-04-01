@@ -2,10 +2,12 @@ import React from 'react'
 import { Button, Select, Icon } from 'antd'
 
 import { AddProposalForm, ReplaceProposalForm, RmoveProposalForm, UpdateProposalForm } from './Forms'
+
 import { web3Instance } from '../web3'
+import { constants } from '../constants'
 import * as util from '../util'
+
 import './style/style.css'
-import { constants } from '../constants';
 
 class ProposalForm extends React.Component {
   data = {
@@ -48,10 +50,9 @@ class ProposalForm extends React.Component {
     this.resetForm()
     Object.keys(this.state)
       .filter(key => key.indexOf('Err') > 0)
-      .forEach(key => this.state[key] = false)
+      .forEach(key => { this.state[key] = false })
     this.setState(this.state)
   }
-
 
   resetForm () {
     if (window.document.forms[0]) {
@@ -71,15 +72,15 @@ class ProposalForm extends React.Component {
     this.data.formData[e.target.name] = e.target.value
     switch (e.target.name) {
       case 'newLockAmount':
-        if(!/^([0-9]*)$/.test(e.target.value)) this.data.formData[e.target.name] = originStr
+        if (!/^([0-9]*)$/.test(e.target.value)) this.data.formData[e.target.name] = originStr
         else this.setState({ newLockAmountErr: !this.checkLockAmount(e.target.value) })
         break
       case 'newAddr': this.setState({ newAddrErr: !this.checkAddr(e.target.value) }); break
       case 'newNode': this.setState({ newNodeErr: !this.checkNode(e.target.value) }); break
       case 'newName': this.setState({ newNameErr: !this.checkName(e.target.value) }); break
       case 'oldLockAmount':
-        if(!/^([0-9]*)$/.test(e.target.value)) this.data.formData[e.target.name] = originStr
-        this.setState({oldLockAmountErr: e.target.value === ''})
+        if (!/^([0-9]*)$/.test(e.target.value)) this.data.formData[e.target.name] = originStr
+        this.setState({ oldLockAmountErr: e.target.value === '' })
         break
       case 'oldAddr': this.setState({ oldAddrErr: !this.checkAddr(e.target.value) }); break
       case 'oldNode': this.setState({ oldNodeErr: !this.checkNode(e.target.value) }); break
