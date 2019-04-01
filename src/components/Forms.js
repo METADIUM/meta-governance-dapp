@@ -49,7 +49,8 @@ const AddProposalForm = ({
             <Input
               addonAfter='META'
               name='newLockAmount'
-              value={newLockAmount ? newLockAmount : stakingMin}
+              defaultValue={stakingMin}
+              value={newLockAmount ? newLockAmount : ''}
               onChange={handleChange}
               className={newLockAmountErr ? 'errInput' : ''}
               disabled={loading}
@@ -157,7 +158,8 @@ const ReplaceProposalForm = ({
             <Input
               addonAfter='META'
               name='newLockAmount'
-              value={newLockAmount ? newLockAmount : stakingMin}
+              defaultValue={stakingMin}
+              value={newLockAmount ? newLockAmount : ''}
               onChange={handleChange}
               className={newLockAmountErr ? 'errInput' : ''}
               disabled={loading}
@@ -226,6 +228,7 @@ const RmoveProposalForm = ({
   showLockAmount,
   stakingMin,
   oldAddrErr,
+  oldLockAmountErr,
   oldLockAmount,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
@@ -263,10 +266,13 @@ const RmoveProposalForm = ({
             <Input
               addonAfter='META'
               name='oldLockAmount'
-              value={oldLockAmount ? oldLockAmount : stakingMin}
+              defaultValue={stakingMin}
+              value={oldLockAmount ? oldLockAmount : ''}
               onChange={handleChange}
+              className={oldLockAmountErr ? 'errInput' : ''}
               disabled={loading}
             />
+            <p className={oldLockAmountErr ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
           </Form.Item>
         </div>
       </div>

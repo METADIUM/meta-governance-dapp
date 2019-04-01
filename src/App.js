@@ -39,6 +39,7 @@ class App extends React.Component {
     contractReady: false,
     stakingModalVisible: false,
     errModalVisible: false,
+    errStakging: false,
     loading: false,
     showProposal: false
   };
@@ -223,17 +224,17 @@ class App extends React.Component {
 
   submitMetaStaking () {
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
-      this.getErrModal('The staking amount format is incorrect.', 'Staking Error')
+      this.setState({errStakging: true})
       return
     }
 
     this.setState({ loading: true })
     let trx = {}
-    console.log('before this.data.stakingAmount;', this.data.stakingAmount)
+    //console.log('before this.data.stakingAmount;', this.data.stakingAmount)
     let amount = web3Instance.web3.utils.toWei(this.data.stakingAmount, 'ether')
-    console.log('after this.data.stakingAmount;', amount)
+    //console.log('after this.data.stakingAmount;', amount)
     if (this.data.stakingTopic === 'deposit') {
-      console.log('Send Transaction for deposit')
+      //console.log('Send Transaction for deposit')
       trx = contracts.staking.deposit()
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
@@ -274,8 +275,10 @@ class App extends React.Component {
 
   handleInputChange (event) {
     let value = event.target.value
-    if(/^([0-9]*)$/.test(value)) this.data.stakingAmount = value
-    this.setState({})
+    if(/^([0-9]*)$/.test(value)) {
+      this.data.stakingAmount = value
+      this.setState({errStakging: false})
+    }
   }
 
   render () {
@@ -300,6 +303,7 @@ class App extends React.Component {
               stakingModalVisible={this.state.stakingModalVisible}
               loading={this.state.loading}
               stakingAmount={this.data.stakingAmount}
+              errStakging={this.state.errStakging}
               stakingTopic={this.data.stakingTopic}
               hideStakingModal={() => { if (!this.state.loading) this.setState({ stakingModalVisible: false }) }}
               submitMetaStaking={this.submitMetaStaking}

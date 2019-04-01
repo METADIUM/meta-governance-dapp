@@ -11,6 +11,7 @@ const StakingModal = ({
   stakingModalVisible,
   loading,
   stakingAmount,
+  errStakging,
   stakingTopic,
   hideStakingModal = f => f,
   submitMetaStaking = f => f,
@@ -43,8 +44,10 @@ const StakingModal = ({
       placeholder='META Amount'
       addonAfter='META'
       value={stakingAmount}
+      className={errStakging ? 'errInput' : ''}
       disabled={loading}
     />
+    <p className={errStakging ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
     <div className='text-container'>
       <p className='staked'>staked { accountBalance.balance } META </p>
       <p className='locked text-small'>(Locked { accountBalance.lockedBalance } META)</p>

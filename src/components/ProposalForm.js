@@ -5,6 +5,7 @@ import { AddProposalForm, ReplaceProposalForm, RmoveProposalForm, UpdateProposal
 import { web3Instance } from '../web3'
 import * as util from '../util'
 import './style/style.css'
+import { constants } from '../constants';
 
 class ProposalForm extends React.Component {
   data = {
@@ -15,13 +16,13 @@ class ProposalForm extends React.Component {
   state = {
     selectedChange: false,
     submitForm: false,
-    newLockAmountErr: true,
-    newAddrErr: true,
-    newNodeErr: true,
-    newNameErr: true,
-    oldLockAmountErr: true,
-    oldAddrErr: true,
-    oldNodeErr: true,
+    newLockAmountErr: false,
+    newAddrErr: false,
+    newNodeErr: false,
+    newNameErr: false,
+    oldLockAmountErr: false,
+    oldAddrErr: false,
+    oldNodeErr: false,
     showLockAmount: ''
   }
 
@@ -47,7 +48,7 @@ class ProposalForm extends React.Component {
     this.resetForm()
     Object.keys(this.state)
       .filter(key => key.indexOf('Err') > 0)
-      .forEach(key => this.state[key] = true)
+      .forEach(key => this.state[key] = false)
     this.setState(this.state)
   }
 
@@ -71,14 +72,14 @@ class ProposalForm extends React.Component {
     switch (e.target.name) {
       case 'newLockAmount':
         if(!/^([0-9]*)$/.test(e.target.value)) this.data.formData[e.target.name] = originStr
-        this.setState({ newLockAmountErr: !this.checkLockAmount(this.data.formData[e.target.name]) })
+        else this.setState({ newLockAmountErr: !this.checkLockAmount(e.target.value) })
         break
       case 'newAddr': this.setState({ newAddrErr: !this.checkAddr(e.target.value) }); break
       case 'newNode': this.setState({ newNodeErr: !this.checkNode(e.target.value) }); break
       case 'newName': this.setState({ newNameErr: !this.checkName(e.target.value) }); break
       case 'oldLockAmount':
         if(!/^([0-9]*)$/.test(e.target.value)) this.data.formData[e.target.name] = originStr
-        this.setState({})
+        this.setState({oldLockAmountErr: e.target.value === ''})
         break
       case 'oldAddr': this.setState({ oldAddrErr: !this.checkAddr(e.target.value) }); break
       case 'oldNode': this.setState({ oldNodeErr: !this.checkNode(e.target.value) }); break
@@ -88,10 +89,6 @@ class ProposalForm extends React.Component {
 
   checkLockAmount (amount) {
     return (Number(amount) <= this.props.stakingMax && Number(amount) >= this.props.stakingMin)
-  }
-
-  checkUnlockAmount (amount) {
-    return /^[1-9]\d*$/.test(amount)
   }
 
   checkAddr (addr) {
@@ -180,7 +177,7 @@ class ProposalForm extends React.Component {
   }
 
   async handleProposalError (formData) {
-    if (!(await this.governance.isMember(web3Instance.defaultAccount))) {
+    if (!(await this.governance.isMember(web3Instance.defaultAccount)) && !constants.debugMode) {
       return this.props.getErrModal('You are not member', 'Proposal Submit Error')
     }
 
@@ -266,6 +263,7 @@ class ProposalForm extends React.Component {
           stakingMin={this.props.stakingMin}
           newAddrErr={this.state.newAddrErr}
           newLockAmountErr={this.state.newLockAmountErr}
+          newLockAmount={this.data.formData.newLockAmount}
           newNodeErr={this.state.newNodeErr}
           newNameErr={this.state.newNameErr}
           handleSubmit={this.handleSubmit}
@@ -281,6 +279,7 @@ class ProposalForm extends React.Component {
           newNameErr={this.state.newNameErr}
           newNodeErr={this.state.newNodeErr}
           newLockAmountErr={this.state.newLockAmountErr}
+          newLockAmount={this.data.formData.newLockAmount}
           oldNodeErr={this.state.oldNodeErr}
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
@@ -293,6 +292,7 @@ class ProposalForm extends React.Component {
           stakingMin={this.props.stakingMin}
           oldAddrErr={this.state.oldAddrErr}
           oldLockAmountErr={this.state.oldLockAmountErr}
+          oldLockAmount={this.data.formData.oldLockAmount}
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
           getLockAmount={this.getLockAmount}
