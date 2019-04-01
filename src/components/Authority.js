@@ -20,8 +20,6 @@ class Authority extends React.Component {
     super(props)
     this.searchAuthority = this.searchAuthority.bind(this)
     this.onReadMoreClick = this.onReadMoreClick.bind(this)
-    this.getAuthorityList = this.getAuthorityList.bind(this)
-    this.initAuthorityHeight = this.initAuthorityHeight.bind(this)
 
     this.descriptions = []
     this.readMoreBtns = []

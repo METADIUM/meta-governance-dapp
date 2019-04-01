@@ -44,12 +44,7 @@ class App extends React.Component {
 
   constructor (props) {
     super(props)
-    this.updateAccountBalance = this.updateAccountBalance.bind(this)
-    this.updateDefaultAccount = this.updateDefaultAccount.bind(this)
-    this.getStakingRange = this.getStakingRange.bind(this)
     this.onMenuClick = this.onMenuClick.bind(this)
-    this.onClickFootIcon = this.onClickFootIcon.bind(this)
-    this.getContent = this.getContent.bind(this)
     this.getErrModal = this.getErrModal.bind(this)
     this.submitMetaStaking = this.submitMetaStaking.bind(this)
     this.convertVotingComponent = this.convertVotingComponent.bind(this)

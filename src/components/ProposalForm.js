@@ -31,11 +31,8 @@ class ProposalForm extends React.Component {
   constructor (props) {
     super(props)
     this.onSelectChange = this.onSelectChange.bind(this)
-    this.resetForm = this.resetForm.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.checkLockAmount = this.checkLockAmount.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleProposalError = this.handleProposalError.bind(this)
     this.getLockAmount = this.getLockAmount.bind(this)
     this.governance = this.props.contracts.governance
     this.staking = this.props.contracts.staking
