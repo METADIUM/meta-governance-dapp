@@ -63,6 +63,7 @@ class App extends React.Component {
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       this.initContracts(web3Config)
+      console.log('debuhMode: ', constants.debugMode)
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)

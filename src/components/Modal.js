@@ -49,7 +49,7 @@ const StakingModal = ({
     />
     <p className={errStakging ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
     <div className='text-container'>
-      <p className='staked'>staked { accountBalance.balance } META </p>
+      <p className='staked'>Staked { accountBalance.balance } META </p>
       <p className='locked text-small'>(Locked { accountBalance.lockedBalance } META)</p>
     </div>
   </Modal>
