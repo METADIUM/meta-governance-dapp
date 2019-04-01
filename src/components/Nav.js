@@ -49,7 +49,7 @@ const SubHeader = ({
       <Input.Search
         className='flex-full'
         placeholder={placeholder}
-        onSearch={searchFunction}
+        onChange={searchFunction}
         enterButton
       />
       <Button className='apply_proposal_Btn flex' disabled={!condition} onClick={e => btnFunction()} loading={loading}>

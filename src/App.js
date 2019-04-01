@@ -23,7 +23,7 @@ class App extends React.Component {
     myBalance: 0,
     myLockedBalance: 0,
     stakingTopic: 'deposit',
-    stakingAmount: '1',
+    stakingAmount: '',
     stakingMax: null,
     stakingMin: null,
     eventsWatch: null,
@@ -38,8 +38,8 @@ class App extends React.Component {
     nav: '1',
     contractReady: false,
     stakingModalVisible: false,
-    stakingInvalidErr: false,
     errModalVisible: false,
+    errStakging: false,
     loading: false,
     showProposal: false
   };
@@ -63,6 +63,7 @@ class App extends React.Component {
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       this.initContracts(web3Config)
+      console.log('debuhMode: ', constants.debugMode)
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
@@ -157,7 +158,7 @@ class App extends React.Component {
     switch (e.target.alt) {
       case 'metadium': window.open('https://metadium.com/', '_blank'); break
       case 'explorer': window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER); break
-      case 'github': window.open('https://github.com/METADIUM/meta-governance-dapp', '_blank'); break
+      case 'github': window.open('https://github.com/METADIUM/', '_blank'); break
       default:
     }
   }
@@ -217,25 +218,24 @@ class App extends React.Component {
   }
 
   getStakingModal () {
-    this.data.stakingAmount = '1'
+    this.data.stakingAmount = ''
     this.data.stakingTopic = 'deposit'
     this.setState({ stakingModalVisible: true })
   }
 
   submitMetaStaking () {
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
-      this.setState({ stakingModalVisible: false })
-      this.getErrModal('The staking amount format is incorrect.', 'Staking Error')
+      this.setState({errStakging: true})
       return
     }
 
     this.setState({ loading: true })
     let trx = {}
-    console.log('before this.data.stakingAmount;', this.data.stakingAmount)
+    //console.log('before this.data.stakingAmount;', this.data.stakingAmount)
     let amount = web3Instance.web3.utils.toWei(this.data.stakingAmount, 'ether')
-    console.log('after this.data.stakingAmount;', amount)
+    //console.log('after this.data.stakingAmount;', amount)
     if (this.data.stakingTopic === 'deposit') {
-      console.log('Send Transaction for deposit')
+      //console.log('Send Transaction for deposit')
       trx = contracts.staking.deposit()
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
@@ -275,9 +275,11 @@ class App extends React.Component {
   }
 
   handleInputChange (event) {
-    this.data.stakingAmount = event.target.value
-    if (/^[1-9]([0-9]*)$/.test(event.target.value)) this.setState({ stakingInvalidErr: false })
-    else this.setState({ stakingInvalidErr: true })
+    let value = event.target.value
+    if(/^([0-9]*)$/.test(value)) {
+      this.data.stakingAmount = value
+      this.setState({errStakging: false})
+    }
   }
 
   render () {
@@ -302,8 +304,8 @@ class App extends React.Component {
               stakingModalVisible={this.state.stakingModalVisible}
               loading={this.state.loading}
               stakingAmount={this.data.stakingAmount}
+              errStakging={this.state.errStakging}
               stakingTopic={this.data.stakingTopic}
-              stakingInvalidErr={this.state.stakingInvalidErr}
               hideStakingModal={() => { if (!this.state.loading) this.setState({ stakingModalVisible: false }) }}
               submitMetaStaking={this.submitMetaStaking}
               handleInputChange={this.handleInputChange}

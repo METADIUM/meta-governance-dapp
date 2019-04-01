@@ -128,7 +128,7 @@ class Voting extends React.Component {
   }
 
   getBallotDetailInfo () {
-    let activeList = []; let proposalList = []; let finalizedList = []
+    let activeList = [], proposalList = [], finalizedList = []
 
     this.data.ballotBasicOriginItems.forEach(item => {
       switch (item.props.item.state) {
@@ -319,8 +319,8 @@ class Voting extends React.Component {
     this.setState({ ballotUpdateDuration: value / 20 })
   }
 
-  searchBallot (str) {
-    str = str.toLowerCase()
+  searchBallot (e) {
+    const str = e.target.value.toLowerCase()
     this.data.visibleActiveItems = this.filteringBallot(this.data.activeItems, str)
     this.data.visibleProposalItems = this.filteringBallot(this.data.proposalItems, str)
     this.data.visibleFinalizedItems = this.filteringBallot(this.data.finalizedItems, str)

@@ -18,7 +18,7 @@ class Authority extends React.Component {
 
   constructor (props) {
     super(props)
-    this.onSearchBtnClick = this.onSearchBtnClick.bind(this)
+    this.searchAuthority = this.searchAuthority.bind(this)
     this.onReadMoreClick = this.onReadMoreClick.bind(this)
     this.getAuthorityList = this.getAuthorityList.bind(this)
     this.initAuthorityHeight = this.initAuthorityHeight.bind(this)
@@ -37,8 +37,8 @@ class Authority extends React.Component {
     this.initAuthorityHeight()
   }
 
-  onSearchBtnClick (str) {
-    str = str.toLowerCase()
+  searchAuthority (e) {
+    const str = e.target.value.toLowerCase()
     let authorityItems = []
     this.data.authorityItems.forEach((value) => {
       if ([value.props.item.title, value.props.item.addr].some(elem => elem.toLowerCase().indexOf(str) !== -1)) {
@@ -128,7 +128,7 @@ class Authority extends React.Component {
           placeholder='Search by Authority Name, Adress'
           btnText='Apply for Authority'
           btnFunction={this.onApplyBtnClick}
-          searchFunction={this.onSearchBtnClick}
+          searchFunction={this.searchAuthority}
         />
 
         <div className='contentDiv container'>
