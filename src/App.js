@@ -44,14 +44,6 @@ class App extends React.Component {
 
   constructor (props) {
     super(props)
-    this.onMenuClick = this.onMenuClick.bind(this)
-    this.getErrModal = this.getErrModal.bind(this)
-    this.submitMetaStaking = this.submitMetaStaking.bind(this)
-    this.convertVotingComponent = this.convertVotingComponent.bind(this)
-    this.convertLoading = this.convertLoading.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.getStakingModal = this.getStakingModal.bind(this)
 
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
@@ -139,7 +131,7 @@ class App extends React.Component {
     })
   }
 
-  onMenuClick ({ key }) {
+  onMenuClick = ({ key }) => {
     if (this.state.showProposal && this.state.nav === '2' && key === '2') {
       this.convertVotingComponent('voting')
     } else {
@@ -147,7 +139,7 @@ class App extends React.Component {
     }
   }
 
-  onClickFootIcon (e) {
+  onClickFootIcon = (e) => {
     switch (e.target.alt) {
       case 'metadium': window.open('https://metadium.com/', '_blank'); break
       case 'explorer': window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER); break
@@ -186,7 +178,7 @@ class App extends React.Component {
     this.setState({ selectedMenu: true })
   }
 
-  convertVotingComponent (component) {
+  convertVotingComponent = (component) => {
     switch (component) {
       case 'voting': this.setState({ showProposal: false }); break
       case 'proposal': this.setState({ showProposal: true }); break
@@ -194,13 +186,13 @@ class App extends React.Component {
     }
   }
 
-  convertLoading (state) {
+  convertLoading = (state) => {
     if (typeof (state) === 'boolean') {
       this.setState({ loading: state })
     }
   }
 
-  getErrModal (_err = 'Unknown Error', _title = 'Unknown Error', _link = false) {
+  getErrModal = (_err = 'Unknown Error', _title = 'Unknown Error', _link = false) => {
     if (_err.includes('error:')) _err = _err.split('error:')[1]
 
     this.data.errTitle = _title
@@ -210,13 +202,13 @@ class App extends React.Component {
     this.setState({ errModalVisible: true })
   }
 
-  getStakingModal () {
+  getStakingModal = () => {
     this.data.stakingAmount = ''
     this.data.stakingTopic = 'deposit'
     this.setState({ stakingModalVisible: true })
   }
 
-  submitMetaStaking () {
+  submitMetaStaking = () => {
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
       this.setState({ errStakging: true })
       return
@@ -262,12 +254,12 @@ class App extends React.Component {
     }
   }
 
-  handleSelectChange (topic) {
+  handleSelectChange = (topic) => {
     this.data.stakingTopic = topic
     this.setState({})
   }
 
-  handleInputChange (event) {
+  handleInputChange = (event) => {
     let value = event.target.value
     if (/^([0-9]*)$/.test(value)) {
       this.data.stakingAmount = value
