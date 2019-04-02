@@ -1,10 +1,6 @@
 import React from 'react'
 
-import { ProposalForm } from './ProposalForm'
-import { VotingBallots, ShowBallots } from './VotingBallots'
-import { SubHeader, SubNav } from './Nav'
-import { ChangeModal } from './Modal'
-import { BaseLoader } from './BaseLoader'
+import { ProposalForm, VotingBallots, ShowBallots, SubHeader, SubNav, ChangeModal, BaseLoader } from './'
 
 import * as util from '../util'
 import { web3Instance } from '../web3'

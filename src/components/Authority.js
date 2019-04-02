@@ -1,8 +1,6 @@
 import React from 'react'
 
-import { SubHeader } from './Nav'
-import { AuthorityItem } from './AuthorityItem'
-import { MiniLoader } from './BaseLoader'
+import { SubHeader, AuthorityItem, MiniLoader} from './'
 import { constants } from '../constants'
 import './style/style.css'
 
