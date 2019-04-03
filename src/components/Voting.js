@@ -1,10 +1,6 @@
 import React from 'react'
 
-import { ProposalForm } from './ProposalForm'
-import { VotingBallots, ShowBallots } from './VotingBallots'
-import { SubHeader, SubNav } from './Nav'
-import { ChangeModal } from './Modal'
-import { BaseLoader } from './BaseLoader'
+import { ProposalForm, VotingBallots, ShowBallots, SubHeader, SubNav, ChangeModal, BaseLoader } from './'
 
 import * as util from '../util'
 import { web3Instance } from '../web3'
@@ -43,25 +39,7 @@ class Voting extends React.Component {
 
   constructor (props) {
     super(props)
-    this.reloadVoting = this.reloadVoting.bind(this)
-    this.getOriginData = this.getOriginData.bind(this)
-    this.getBallotOriginItem = this.getBallotOriginItem.bind(this)
-    this.getBallotDetailInfo = this.getBallotDetailInfo.bind(this)
-    this.setBallotBasicOriginData = this.setBallotBasicOriginData.bind(this)
-    this.setBallotMemberOriginData = this.setBallotMemberOriginData.bind(this)
-    this.setDescription = this.setDescription.bind(this)
     this.waitForReceipt = this.waitForReceipt.bind(this)
-    this.onClickDetail = this.onClickDetail.bind(this)
-    this.onClickVote = this.onClickVote.bind(this)
-    this.onClickUpdateProposal = this.onClickUpdateProposal.bind(this)
-    this.completeModal = this.completeModal.bind(this)
-    this.sendTransaction = this.sendTransaction.bind(this)
-    this.onClickSubMenu = this.onClickSubMenu.bind(this)
-    this.onClickReadMore = this.onClickReadMore.bind(this)
-    this.hideChangeModal = this.hideChangeModal.bind(this)
-    this.sliderChange = this.sliderChange.bind(this)
-    this.searchBallot = this.searchBallot.bind(this)
-    this.convertVotingComponentOveride = this.convertVotingComponentOveride.bind(this)
 
     this.ballotStorage = this.props.contracts.ballotStorage
     this.governance = this.props.contracts.governance
@@ -76,7 +54,7 @@ class Voting extends React.Component {
     this.getOriginData()
   }
 
-  async reloadVoting (component) {
+  reloadVoting = async (component) => {
     if (component) this.props.convertVotingComponent(component)
     this.data.ballotCnt = await this.governance.getBallotLength()
     this.data.ballotBasicOriginData = []
@@ -168,12 +146,12 @@ class Voting extends React.Component {
       })
   }
 
-  setTopic (type, newAddr, oldAddr) {
+  setTopic = (type, newAddr, oldAddr) => {
     if (type === constants.ballotTypes.MemberChange && newAddr === oldAddr) return 'MemberUpdate'
     else return constants.ballotTypesArr[parseInt(type)]
   }
 
-  setDescription (type, newAddr, oldAddr, id) {
+  setDescription = (type, newAddr, oldAddr, id) => {
     const lockAmount = web3Instance.web3.utils.fromWei(this.data.ballotMemberOriginData[id].lockAmount, 'ether')
     switch (type) {
       case constants.ballotTypes.MemverAdd:
@@ -233,7 +211,7 @@ class Voting extends React.Component {
     }
   }
 
-  onClickVote (value, id, endTime, state) {
+  onClickVote = (value, id, endTime, state) => {
     if (!web3Instance.web3) {
       this.props.getErrModal('web3 is not exist', 'Voting Error')
       return
@@ -251,7 +229,7 @@ class Voting extends React.Component {
     this.sendTransaction(to, data, 'Voting')
   }
 
-  onClickUpdateProposal (topic, id, duration) {
+  onClickUpdateProposal = (topic, id, duration) => {
     if (topic === 'change') {
       this.data.curBallotIdx = id
       this.setState({ ballotUpdateDuration: duration === 0 ? 1 : duration, updateModal: true })
@@ -263,7 +241,7 @@ class Voting extends React.Component {
     this.sendTransaction(trx.to, trx.data, 'Revoke')
   }
 
-  async completeModal (e) {
+  completeModal = async (e) => {
     this.props.convertLoading(true)
     let trx = await this.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.state.ballotUpdateDuration))
     this.sendTransaction(trx.to, trx.data, 'Change')
@@ -296,7 +274,7 @@ class Voting extends React.Component {
     })
   }
 
-  onClickSubMenu (e) {
+  onClickSubMenu = (e) => {
     switch (e.key) {
       case 'active': if (this.titles.activeTitle) window.scrollTo(0, this.titles.activeTitle.offsetTop - 70); break
       case 'proposal': if (this.titles.proposalTitle) window.scrollTo(0, this.titles.proposalTitle.offsetTop - 70); break
@@ -306,7 +284,7 @@ class Voting extends React.Component {
     this.setState({ position: e.key })
   }
 
-  onClickReadMore (state) {
+  onClickReadMore = (state) => {
     switch (state) {
       case 'proposal': this.setState({ proposalCount: this.state.proposalCount + 5 }); break
       case 'finalized': this.setState({ finalizedCount: this.state.finalizedCount + 5 }); break
@@ -314,15 +292,15 @@ class Voting extends React.Component {
     }
   }
 
-  hideChangeModal () {
+  hideChangeModal = () => {
     this.setState({ updateModal: false })
   }
 
-  sliderChange (value) {
+  sliderChange = (value) => {
     this.setState({ ballotUpdateDuration: value / 20 })
   }
 
-  searchBallot (e) {
+  searchBallot = (e) => {
     const str = e.target.value.toLowerCase()
     this.data.visibleActiveItems = this.filteringBallot(this.data.activeItems, str)
     this.data.visibleProposalItems = this.filteringBallot(this.data.proposalItems, str)
@@ -341,7 +319,7 @@ class Voting extends React.Component {
     })
   }
 
-  convertVotingComponentOveride () {
+  convertVotingComponentOveride = () => {
     this.props.convertVotingComponent('proposal')
   }
 

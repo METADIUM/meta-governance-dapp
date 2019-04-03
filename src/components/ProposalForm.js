@@ -30,18 +30,11 @@ class ProposalForm extends React.Component {
 
   constructor (props) {
     super(props)
-    this.onSelectChange = this.onSelectChange.bind(this)
-    this.resetForm = this.resetForm.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.checkLockAmount = this.checkLockAmount.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleProposalError = this.handleProposalError.bind(this)
-    this.getLockAmount = this.getLockAmount.bind(this)
     this.governance = this.props.contracts.governance
     this.staking = this.props.contracts.staking
   }
 
-  async onSelectChange (value) {
+  onSelectChange = async (value) => {
     this.data.selectedVoteTopic = value
     this.data.formData = {
       newLockAmount: this.props.stakingMin,
@@ -67,7 +60,7 @@ class ProposalForm extends React.Component {
     }
   }
 
-  handleChange (e) {
+  handleChange = (e) => {
     const originStr = this.data.formData[e.target.name]
     this.data.formData[e.target.name] = e.target.value
     switch (e.target.name) {
@@ -105,7 +98,7 @@ class ProposalForm extends React.Component {
   }
 
   /* Submit form data. */
-  async handleSubmit (e) {
+  handleSubmit = async (e) => {
     this.props.convertLoading(true)
     try {
       e.preventDefault()
@@ -230,7 +223,7 @@ class ProposalForm extends React.Component {
     return false
   }
 
-  async getLockAmount (value) {
+  getLockAmount = async (value) => {
     if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
       this.props.getErrModal('Invalid Adress', 'Proposal Submit Error')
       this.setState({ showLockAmount: '' })

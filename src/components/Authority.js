@@ -1,8 +1,6 @@
 import React from 'react'
 
-import { SubHeader } from './Nav'
-import { AuthorityItem } from './AuthorityItem'
-import { MiniLoader } from './BaseLoader'
+import { SubHeader, AuthorityItem, MiniLoader} from './'
 import { constants } from '../constants'
 import './style/style.css'
 
@@ -18,10 +16,6 @@ class Authority extends React.Component {
 
   constructor (props) {
     super(props)
-    this.searchAuthority = this.searchAuthority.bind(this)
-    this.onReadMoreClick = this.onReadMoreClick.bind(this)
-    this.getAuthorityList = this.getAuthorityList.bind(this)
-    this.initAuthorityHeight = this.initAuthorityHeight.bind(this)
 
     this.descriptions = []
     this.readMoreBtns = []
@@ -37,7 +31,7 @@ class Authority extends React.Component {
     this.initAuthorityHeight()
   }
 
-  searchAuthority (e) {
+  searchAuthority = (e) => {
     const str = e.target.value.toLowerCase()
     let authorityItems = []
     this.data.authorityItems.forEach((value) => {
@@ -49,12 +43,12 @@ class Authority extends React.Component {
     this.setState({ getAuthorityInfo: true })
   }
 
-  onApplyBtnClick () {
+  onApplyBtnClick = () => {
     // TODO: load URL from authorities.json
     window.open('https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930', '_blank')
   }
 
-  onReadMoreClick (index) {
+  onReadMoreClick = (index) => {
     const element = this.descriptions[index]
     const btn = this.readMoreBtns[index]
     if (element.offsetHeight === constants.authoritieDescriptionHeight) {
@@ -104,7 +98,7 @@ class Authority extends React.Component {
     this.setState({ getAuthorityInfo: true })
   }
 
-  initAuthorityHeight () {
+  initAuthorityHeight = () => {
     for (let i = 0; i < this.data.visibleAuthorityItems.length; i++) {
       let index = this.data.visibleAuthorityItems[i].key
       let description = this.descriptions[index]
