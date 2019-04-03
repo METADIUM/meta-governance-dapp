@@ -114,6 +114,27 @@
   margin-right: 8px;
 }
 
+/* accessFail Modal */
+
+.accessFail .ant-modal-body {
+  height: 208px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.accessFail .ant-modal-body i {
+  font-size: 68px;
+  font-weight: 100;
+  color: #FC0F1B;
+}
+
+.accessFail .ant-modal-body p {
+  margin-top: 24px;
+}
+
 /* sub header */
 
 .sub-header {
@@ -584,7 +605,7 @@
   align-items: center;
 	left: 0;
 	right: 0;
-	top: 52px;
+	top: 0px;
 	bottom: 0;
   z-index: 80;
 	background-color: rgba(38,27,201,0.7)
