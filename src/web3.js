@@ -35,7 +35,7 @@ let getWeb3Instance = () => {
         } else {
           netName = metaWeb3Constants.NETWORK[netId].NAME
           branch = metaWeb3Constants.NETWORK[netId].BRANCH
-          if(branch !== 'mainnet') reject(new Error('Please access to the mainnet in MetaMask'))
+          if (branch !== 'mainnet') reject(new Error('Please access to the mainnet in MetaMask'))
         }
         const accounts = await web3.eth.getAccounts()
         defaultAccount = accounts[0]

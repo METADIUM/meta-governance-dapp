@@ -76,11 +76,11 @@ const AccessFailedModal = ({
 }) =>
   <Modal
     className='accessFail'
-    title="Access Failed"
+    title='Access Failed'
     visible={visible}
     footer={null}>
-     <Icon type="close-circle" />
-     <p className='text-bold'>{message}</p>
+    <Icon type='close-circle' />
+    <p className='text-bold'>{message}</p>
   </Modal>
 
 const ChangeModal = ({
