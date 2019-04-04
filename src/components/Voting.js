@@ -1,14 +1,11 @@
 import React from 'react'
-import './style/style.css'
-import { ProposalForm } from './ProposalForm'
-import { VotingBallots, ShowBallots } from './VotingBallots'
-import { SubHeader, SubNav } from './Nav'
-import { ChangeModal } from './Modal'
-import { BaseLoader } from './BaseLoader'
+
+import { ProposalForm, VotingBallots, ShowBallots, SubHeader, SubNav, ChangeModal, BaseLoader } from './'
 
 import * as util from '../util'
-import { web3Instance } from '../ethereum/web3'
-import { constants } from '../ethereum/constants'
+import { web3Instance } from '../web3'
+import { constants } from '../constants'
+import './style/style.css'
 
 class Voting extends React.Component {
   data = {
@@ -20,14 +17,16 @@ class Voting extends React.Component {
     ballotBasicOriginItems: [],
     existBallotNewMember: [],
     existBallotOldMemberaddr: [],
+    authorityNames: new Map(),
+
     activeItems: [],
-    visibleActiveItems: [],
     proposalItems: [],
-    visibleProposalItems: [],
     finalizedItems: [],
-    visibleFinalizedItems: [],
-    authorityNames: new Map()
+    visibleActiveItems: [],
+    visibleProposalItems: [],
+    visibleFinalizedItems: []
   }
+
   state = {
     isBallotLoading: false,
     ballotUpdateDuration: 2,
@@ -40,38 +39,24 @@ class Voting extends React.Component {
 
   constructor (props) {
     super(props)
-    this.reloadVoting = this.reloadVoting.bind(this)
-    this.getOriginData = this.getOriginData.bind(this)
-    this.getBallotOriginItem = this.getBallotOriginItem.bind(this)
-    this.getBallotDetailInfo = this.getBallotDetailInfo.bind(this)
-    this.setBallotBasicOriginData = this.setBallotBasicOriginData.bind(this)
-    this.setBallotMemberOriginData = this.setBallotMemberOriginData.bind(this)
-    this.setDescription = this.setDescription.bind(this)
     this.waitForReceipt = this.waitForReceipt.bind(this)
-    this.onClickDetail = this.onClickDetail.bind(this)
-    this.onClickVote = this.onClickVote.bind(this)
-    this.onClickUpdateProposal = this.onClickUpdateProposal.bind(this)
-    this.completeModal = this.completeModal.bind(this)
-    this.onClickSubMenu = this.onClickSubMenu.bind(this)
-    this.onClickReadMore = this.onClickReadMore.bind(this)
-    this.hideChangeModal = this.hideChangeModal.bind(this)
-    this.sliderChange = this.sliderChange.bind(this)
-    this.searchBallot = this.searchBallot.bind(this)
-    this.convertVotingComponentOveride = this.convertVotingComponentOveride.bind(this)
+
+    this.ballotStorage = this.props.contracts.ballotStorage
+    this.governance = this.props.contracts.governance
 
     this.titles = { activeTitle: null, proposalTitle: null, finalizedTitle: null }
     this.ballotDetails = new Map()
   }
 
   async componentDidMount () {
-    this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
+    this.data.ballotCnt = await this.governance.getBallotLength()
     this.props.authorityOriginData.forEach(item => this.data.authorityNames.set(item.addr, item.title))
     this.getOriginData()
   }
 
-  async reloadVoting (component) {
+  reloadVoting = async (component) => {
     if (component) this.props.convertVotingComponent(component)
-    this.data.ballotCnt = await this.props.contracts.gov.getBallotLength()
+    this.data.ballotCnt = await this.governance.getBallotLength()
     this.data.ballotBasicOriginData = []
     await this.getOriginData()
     this.props.convertLoading(false)
@@ -112,7 +97,8 @@ class Voting extends React.Component {
           onClickDetail={this.onClickDetail}
           onClickVote={this.onClickVote}
           setDescription={this.setDescription}
-          onClickUpdateProposal={this.onClickUpdateProposal} />
+          onClickUpdateProposal={this.onClickUpdateProposal}
+        />
       )
     })
     this.data.ballotBasicOriginItems = list
@@ -120,7 +106,9 @@ class Voting extends React.Component {
   }
 
   getBallotDetailInfo () {
-    let activeList = []; let proposalList = []; let finalizedList = []
+    let activeList = []
+    let proposalList = []
+    let finalizedList = []
 
     this.data.ballotBasicOriginItems.forEach(item => {
       switch (item.props.item.state) {
@@ -131,14 +119,19 @@ class Voting extends React.Component {
         default: break
       }
     })
-    this.data.activeItems = this.data.visibleActiveItems = activeList
-    this.data.proposalItems = this.data.visibleProposalItems = proposalList
-    this.data.finalizedItems = this.data.visibleFinalizedItems = finalizedList
+
+    this.data.activeItems = activeList
+    this.data.visibleActiveItems = activeList
+    this.data.proposalItems = proposalList
+    this.data.visibleProposalItems = proposalList
+    this.data.finalizedItems = finalizedList
+    this.data.visibleFinalizedItems = finalizedList
+
     this.setState({ isBallotLoading: true })
   }
 
   async setBallotBasicOriginData (i) {
-    await this.props.contracts.ballotStorage.getBallotBasic(i).then(
+    await this.ballotStorage.getBallotBasic(i).then(
       ret => {
         ret.id = i // Add ballot id
         this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
@@ -146,19 +139,19 @@ class Voting extends React.Component {
   }
 
   async setBallotMemberOriginData (i) {
-    await this.props.contracts.ballotStorage.getBallotMember(i).then(
+    await this.ballotStorage.getBallotMember(i).then(
       ret => {
         ret.id = i // Add ballot id
         this.data.ballotMemberOriginData[i] = ret
       })
   }
 
-  setTopic (type, newAddr, oldAddr) {
+  setTopic = (type, newAddr, oldAddr) => {
     if (type === constants.ballotTypes.MemberChange && newAddr === oldAddr) return 'MemberUpdate'
     else return constants.ballotTypesArr[parseInt(type)]
   }
 
-  setDescription (type, newAddr, oldAddr, id) {
+  setDescription = (type, newAddr, oldAddr, id) => {
     const lockAmount = web3Instance.web3.utils.fromWei(this.data.ballotMemberOriginData[id].lockAmount, 'ether')
     switch (type) {
       case constants.ballotTypes.MemverAdd:
@@ -192,17 +185,15 @@ class Voting extends React.Component {
   }
 
   waitForReceipt = (hash, cb) => {
-    console.log('Start waitForReceipt: ', hash)
+    // console.log('Start waitForReceipt: ', hash)
     web3Instance.web3.eth.getTransactionReceipt(hash, (err, receipt) => {
-      console.log('getTransactionReceipt: ', receipt)
+      // console.log('getTransactionReceipt: ', receipt)
       if (err) console.log('err: ', err)
 
       if (receipt === undefined || receipt === null) {
-        console.log('Try again in 1 second')
         // Try again in 1 second
         window.setTimeout(() => { this.waitForReceipt(hash, cb) }, 1000)
       } else {
-        console.log('receipt : ', receipt)
         // Transaction went through
         if (cb) cb(receipt)
       }
@@ -211,16 +202,16 @@ class Voting extends React.Component {
 
   onClickDetail = (e, id) => {
     const element = this.ballotDetails.get(id)
-    if(element.style.height === 'auto') {
-      e.target.style.transform = "rotate(0deg)"
-      element.style.height = '124px'
+    if (element.style.height === 'auto') {
+      e.target.style.transform = 'rotate(0deg)'
+      element.style.height = constants.ballotDetailHeightToPixel
     } else {
-      e.target.style.transform = "rotate(180deg)"
+      e.target.style.transform = 'rotate(180deg)'
       element.style.height = 'auto'
     }
   }
 
-  onClickVote (value, id, endTime, state) {
+  onClickVote = (value, id, endTime, state) => {
     if (!web3Instance.web3) {
       this.props.getErrModal('web3 is not exist', 'Voting Error')
       return
@@ -234,7 +225,30 @@ class Voting extends React.Component {
     }
 
     this.props.convertLoading(true)
-    let { to, data } = this.props.contracts.govImp.vote(id, value === 'Y')
+    let { to, data } = this.governance.vote(id, value === 'Y')
+    this.sendTransaction(to, data, 'Voting')
+  }
+
+  onClickUpdateProposal = (topic, id, duration) => {
+    if (topic === 'change') {
+      this.data.curBallotIdx = id
+      this.setState({ ballotUpdateDuration: duration === 0 ? 1 : duration, updateModal: true })
+      return
+    }
+
+    this.props.convertLoading(true)
+    let trx = this.ballotStorage.cancelBallot(id)
+    this.sendTransaction(trx.to, trx.data, 'Revoke')
+  }
+
+  completeModal = async (e) => {
+    this.props.convertLoading(true)
+    let trx = await this.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.state.ballotUpdateDuration))
+    this.sendTransaction(trx.to, trx.data, 'Change')
+    this.setState({ updateModal: false })
+  }
+
+  sendTransaction (to, data, type) {
     web3Instance.web3.eth.sendTransaction({
       from: web3Instance.defaultAccount,
       to: to,
@@ -245,73 +259,22 @@ class Voting extends React.Component {
         this.props.getErrModal(err.message, err.name)
         this.props.convertLoading(false)
       } else {
-        console.log('hash: ', hash)
+        // console.log('hash: ', hash)
         this.waitForReceipt(hash, (receipt) => {
-          console.log('Updated :', receipt)
+          // console.log('Updated :', receipt)
           if (receipt.status) this.reloadVoting(false)
-          else this.props.getErrModal("You don't have voting authority", 'Voting Error', receipt.transactionHash)
+          else {
+            this.props.getErrModal(
+              "You don't have " + type.toLowerCase + ' authority',
+              type + ' Error',
+              receipt.transactionHash)
+          }
         })
       }
     })
   }
 
-  onClickUpdateProposal (topic, id, duration) {
-    if (topic === 'change') {
-      this.data.curBallotIdx = id
-      this.setState({ ballotUpdateDuration: duration === 0 ? 1 : duration, updateModal: true })
-      return
-    }
-
-    this.props.convertLoading(true)
-    let trx = this.props.contracts.ballotStorage.cancelBallot(id)
-    web3Instance.web3.eth.sendTransaction({
-      from: web3Instance.defaultAccount,
-      to: trx.to,
-      data: trx.data
-    }, (err, hash) => {
-      if (err) {
-        console.log(err)
-        this.props.getErrModal(err.message, err.name)
-        this.props.convertLoading(false)
-      } else {
-        console.log('hash:', hash)
-        this.waitForReceipt(hash, (receipt) => {
-          console.log('Updated :', receipt)
-          if (receipt.status) this.reloadVoting(false)
-          else this.props.getErrModal("You don't have revoke authority", 'Voting Error', receipt.transactionHash)
-        })
-      }
-    })
-  }
-
-  async completeModal (e) {
-    this.props.convertLoading(true)
-    let trx = await this.props.contracts.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.state.ballotUpdateDuration))
-
-    // Using updateMemo
-    // trx = this.props.contracts.ballotStorage.updateBallotMemo(id, web3Instance.web3.utils.asciiToHex(this.state.ballotUpdateMemo))
-    web3Instance.web3.eth.sendTransaction({
-      from: web3Instance.defaultAccount,
-      to: trx.to,
-      data: trx.data
-    }, (err, hash) => {
-      if (err) {
-        console.log(err)
-        this.props.getErrModal(err.message, err.name)
-        this.props.convertLoading(false)
-      } else {
-        console.log('hash:', hash)
-        this.waitForReceipt(hash, (receipt) => {
-          console.log('Updated :', receipt)
-          if (receipt.status) this.reloadVoting(false)
-          else this.props.getErrModal("You don't have change authority", 'Change Error', receipt.transactionHash)
-        })
-      }
-    })
-    this.setState({ updateModal: false })
-  }
-
-  onClickSubMenu (e) {
+  onClickSubMenu = (e) => {
     switch (e.key) {
       case 'active': if (this.titles.activeTitle) window.scrollTo(0, this.titles.activeTitle.offsetTop - 70); break
       case 'proposal': if (this.titles.proposalTitle) window.scrollTo(0, this.titles.proposalTitle.offsetTop - 70); break
@@ -321,7 +284,7 @@ class Voting extends React.Component {
     this.setState({ position: e.key })
   }
 
-  onClickReadMore (state) {
+  onClickReadMore = (state) => {
     switch (state) {
       case 'proposal': this.setState({ proposalCount: this.state.proposalCount + 5 }); break
       case 'finalized': this.setState({ finalizedCount: this.state.finalizedCount + 5 }); break
@@ -329,30 +292,34 @@ class Voting extends React.Component {
     }
   }
 
-  hideChangeModal () {
+  hideChangeModal = () => {
     this.setState({ updateModal: false })
   }
 
-  sliderChange (value) {
+  sliderChange = (value) => {
     this.setState({ ballotUpdateDuration: value / 20 })
   }
 
-  searchBallot (str) {
-    str = str.toLowerCase()
+  searchBallot = (e) => {
+    const str = e.target.value.toLowerCase()
     this.data.visibleActiveItems = this.filteringBallot(this.data.activeItems, str)
     this.data.visibleProposalItems = this.filteringBallot(this.data.proposalItems, str)
     this.data.visibleFinalizedItems = this.filteringBallot(this.data.finalizedItems, str)
-    this.setState({ isBallotLoading: true })
+    this.setState({ isBallotLoading: true, proposalCount: 5, finalizedCount: 5 })
   }
 
   filteringBallot (ballots, str) {
     return ballots.filter(value => {
       let topic = this.setTopic(value.props.item.ballotType, value.props.newMemberAddress, value.props.oldMemberAddress)
-      return topic.toLowerCase().indexOf(str) !== -1 || value.props.authorityName.toLowerCase().indexOf(str) !== -1 || value.props.item.creator.toLowerCase().indexOf(str) !== -1 || value.props.newMemberAddress.toLowerCase().indexOf(str) !== -1 || value.props.oldMemberAddress.toLowerCase().indexOf(str) !== -1
+      return [topic,
+        value.props.authorityName,
+        value.props.item.creator,
+        value.props.newMemberAddress,
+        value.props.oldMemberAddress].some(elem => elem.toLowerCase().indexOf(str) !== -1)
     })
   }
 
-  convertVotingComponentOveride () {
+  convertVotingComponentOveride = () => {
     this.props.convertVotingComponent('proposal')
   }
 
@@ -364,32 +331,38 @@ class Voting extends React.Component {
             <SubHeader
               netName={web3Instance.netName}
               placeholder='Search by Type, Proposal, Keywords'
-              condition={this.props.isMember}
+              condition={this.props.isMember || constants.debugMode}
               btnText='New Proposal'
               btnIcon='+'
               loading={!this.state.isBallotLoading || this.props.loading}
               btnFunction={this.convertVotingComponentOveride}
-              searchFunction={this.searchBallot} />
+              searchFunction={this.searchBallot}
+            />
 
             <SubNav
               position={this.state.position}
-              onClickSubMenu={this.onClickSubMenu} />
+              onClickSubMenu={this.onClickSubMenu}
+            />
 
             <ChangeModal
               updateModal={this.state.updateModal}
               ballotUpdateDuration={this.state.ballotUpdateDuration}
               completeModal={this.completeModal}
               hideChangeModal={this.hideChangeModal}
-              sliderChange={this.sliderChange} />
+              sliderChange={this.sliderChange}
+            />
 
-            {!this.state.isBallotLoading || this.props.loading ? <div><BaseLoader /></div> : null}
+            {(!this.state.isBallotLoading || this.props.loading) && <BaseLoader />}
             <ShowBallots
               titles={this.titles}
               visibleActiveItems={this.data.visibleActiveItems}
               visibleProposalItems={this.data.visibleProposalItems.slice(0, this.state.proposalCount)}
+              totalProposalItemLength={this.data.visibleProposalItems.length}
               visibleFinalizedItems={this.data.visibleFinalizedItems.slice(0, this.state.finalizedCount)}
+              totalFinalizedItemLength={this.data.visibleFinalizedItems.length}
               netName={web3Instance.netName}
-              onClickReadMore={this.onClickReadMore} />
+              onClickReadMore={this.onClickReadMore}
+            />
           </div>
           : <ProposalForm
             contracts={this.props.contracts}
@@ -401,7 +374,8 @@ class Voting extends React.Component {
             convertLoading={this.props.convertLoading}
             waitForReceipt={this.waitForReceipt}
             stakingMax={this.props.stakingMax}
-            stakingMin={this.props.stakingMin} />
+            stakingMin={this.props.stakingMin}
+          />
         }
       </div>
     )

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Modal, Input, Select, Icon, Slider } from 'antd'
+
 import './style/style.css'
 
 const Option = Select.Option
@@ -10,8 +11,8 @@ const StakingModal = ({
   stakingModalVisible,
   loading,
   stakingAmount,
+  errStakging,
   stakingTopic,
-  stakingInvalidErr,
   hideStakingModal = f => f,
   submitMetaStaking = f => f,
   handleInputChange = f => f,
@@ -40,16 +41,15 @@ const StakingModal = ({
     </Select>
     <Input
       onChange={handleInputChange}
-      type='number'
       placeholder='META Amount'
       addonAfter='META'
       value={stakingAmount}
-      className={stakingInvalidErr ? 'errInput' : ''}
+      className={errStakging ? 'errInput' : ''}
       disabled={loading}
     />
-    <p className={stakingInvalidErr ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
+    <p className={errStakging ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
     <div className='text-container'>
-      <p className='staked'>staked { accountBalance.balance } META </p>
+      <p className='staked'>Staked { accountBalance.balance } META </p>
       <p className='locked text-small'>(Locked { accountBalance.lockedBalance } META)</p>
     </div>
   </Modal>
@@ -76,11 +76,11 @@ const AccessFailedModal = ({
 }) =>
   <Modal
     className='accessFail'
-    title="Access Failed"
+    title='Access Failed'
     visible={visible}
     footer={null}>
-     <Icon type="close-circle" />
-     <p className='text-bold'>{message}</p>
+    <Icon type='close-circle' />
+    <p className='text-bold'>{message}</p>
   </Modal>
 
 const ChangeModal = ({

@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button, Input, Form, Icon } from 'antd'
+
 import './style/style.css'
+import { shouldPass } from '../util'
 
 const { TextArea } = Input
 
@@ -10,10 +12,11 @@ const AddProposalForm = ({
   stakingMin,
   newAddrErr,
   newLockAmountErr,
+  newLockAmount,
   newNodeErr,
   newNameErr,
-  handleSubmit = f => f,
-  handleChange = f => f
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass()
 }) =>
   <div className='proposalBody'>
     <Form onSubmit={handleSubmit}>
@@ -44,10 +47,10 @@ const AddProposalForm = ({
           <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
           <Form.Item>
             <Input
-              type='number'
               addonAfter='META'
               name='newLockAmount'
               defaultValue={stakingMin}
+              value={newLockAmount || ''}
               onChange={handleChange}
               className={newLockAmountErr ? 'errInput' : ''}
               disabled={loading}
@@ -109,9 +112,10 @@ const ReplaceProposalForm = ({
   newNameErr,
   newNodeErr,
   newLockAmountErr,
+  newLockAmount,
   oldNodeErr,
-  handleSubmit = f => f,
-  handleChange = f => f
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass()
 }) =>
   <div className='proposalBody'>
     <Form onSubmit={handleSubmit}>
@@ -152,10 +156,10 @@ const ReplaceProposalForm = ({
           <p className='subtitle'>Replace META Amount <span className='required'>*</span></p>
           <Form.Item>
             <Input
-              type='number'
               addonAfter='META'
               name='newLockAmount'
               defaultValue={stakingMin}
+              value={newLockAmount || ''}
               onChange={handleChange}
               className={newLockAmountErr ? 'errInput' : ''}
               disabled={loading}
@@ -225,9 +229,10 @@ const RmoveProposalForm = ({
   stakingMin,
   oldAddrErr,
   oldLockAmountErr,
-  handleSubmit = f => f,
-  handleChange = f => f,
-  getLockAmount = f => f
+  oldLockAmount,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+  getLockAmount = shouldPass()
 }) =>
   <div className='proposalBody'>
     <Form onSubmit={handleSubmit}>
@@ -259,10 +264,10 @@ const RmoveProposalForm = ({
           <p className='subtitle'>META Amount to be unlocked <span className='required'>*</span></p>
           <Form.Item>
             <Input
-              type='number'
               addonAfter='META'
               name='oldLockAmount'
               defaultValue={stakingMin}
+              value={oldLockAmount || ''}
               onChange={handleChange}
               className={oldLockAmountErr ? 'errInput' : ''}
               disabled={loading}
@@ -287,7 +292,7 @@ const RmoveProposalForm = ({
           <Button
             className={'submit_Btn btn-fill-primary text-large ' + netName}
             htmlType='submit'
-            disabled={oldLockAmountErr || oldAddrErr}
+            disabled={oldAddrErr}
             loading={loading}
           >
             Submit
@@ -302,8 +307,8 @@ const UpdateProposalForm = ({
   loading,
   newNameErr,
   newNodeErr,
-  handleSubmit = f => f,
-  handleChange = f => f
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass()
 }) =>
   <div className='proposalBody'>
     <Form onSubmit={handleSubmit}>

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Row, Menu, Input, Affix } from 'antd'
+
 import './style/style.css'
 
 const TopNav = ({
@@ -48,7 +49,7 @@ const SubHeader = ({
       <Input.Search
         className='flex-full'
         placeholder={placeholder}
-        onSearch={searchFunction}
+        onChange={searchFunction}
         enterButton
       />
       <Button className='apply_proposal_Btn flex' disabled={!condition} onClick={e => btnFunction()} loading={loading}>
@@ -74,7 +75,7 @@ const SubNav = ({ position, onClickSubMenu = f => f }) =>
 
 const FootNav = ({ netName, onClickFootIcon }) =>
   <Row className='container flex'>
-    <p>Copyright © Since 2018 Metadium Technology, Inc. All rights reserved</p>
+    <p>Copyright © Since 2019 Metadium Technology, Inc. All rights reserved</p>
     <div className='flex flex-full'>
       <Button className='btn-img' onClick={onClickFootIcon}><img src='/img/metadium_footer.png' alt='metadium' key='metadium' /></Button>
       <Button className='btn-img' onClick={onClickFootIcon}><img src={`/img/explorer_footer_${netName}.png`} alt='explorer' key='explorer' /></Button>

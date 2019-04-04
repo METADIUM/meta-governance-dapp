@@ -1,28 +1,22 @@
 import React from 'react'
 import { Layout } from 'antd'
-import { TopNav, FootNav } from './components/Nav'
-import { StakingModal, ErrModal, AccessFailedModal } from './components/Modal'
-import { Voting } from './components/Voting'
-import { Authority } from './components/Authority'
-import { BaseLoader } from './components/BaseLoader'
+import { contracts, initContractsByNames, constants as metaWeb3Constants } from 'meta-web3'
 
+import { TopNav, FootNav, StakingModal, ErrModal, AccessFailedModal, Voting, Authority, BaseLoader } from './components'
+import getWeb3Instance, { web3Instance } from './web3'
+import { constants } from './constants'
 import * as util from './util'
-import { constants } from './ethereum/constants'
+
 import './App.css'
 
-// web3
-import getWeb3Instance, { web3Instance } from './ethereum/web3'
-
-// Contracts
-import { contracts, initContracts } from './ethereum/web3Components/contracts'
-
 const { Header, Content, Footer } = Layout
+
 class App extends React.Component {
   data = {
     myBalance: 0,
     myLockedBalance: 0,
     stakingTopic: 'deposit',
-    stakingAmount: '1',
+    stakingAmount: '',
     stakingMax: null,
     stakingMin: null,
     eventsWatch: null,
@@ -33,57 +27,47 @@ class App extends React.Component {
     errAccessFail: null,
     isMember: false
   }
+
   state = {
     loadWeb3: false,
-    AccessFailedModal: null,
+    accessFailMsg: null,
     nav: '1',
     contractReady: false,
     stakingModalVisible: false,
-    stakingInvalidErr: false,
     errModalVisible: false,
+    errStakging: false,
     loading: false,
     showProposal: false
   };
 
   constructor (props) {
     super(props)
-    this.updateAccountBalance = this.updateAccountBalance.bind(this)
-    this.updateDefaultAccount = this.updateDefaultAccount.bind(this)
-    this.getStakingRange = this.getStakingRange.bind(this)
-    this.onMenuClick = this.onMenuClick.bind(this)
-    this.onClickFootIcon = this.onClickFootIcon.bind(this)
-    this.getContent = this.getContent.bind(this)
-    this.getErrModal = this.getErrModal.bind(this)
-    this.submitMetaStaking = this.submitMetaStaking.bind(this)
-    this.convertVotingComponent = this.convertVotingComponent.bind(this)
-    this.convertLoading = this.convertLoading.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.getStakingModal = this.getStakingModal.bind(this)
 
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
       this.initContracts(web3Config)
-      await this.initAuthorityLists()
+      console.log('debugMode: ', constants.debugMode)
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
-      this.setState({ loadWeb3: false, AccessFailedModal: error.message })
+      this.setState({ loadWeb3: false, accessFailMsg: error.message })
     })
   }
 
   async initContracts (web3Config) {
-    initContracts({
+    initContractsByNames({
       web3: web3Config.web3,
-      netId: web3Config.netId
+      branch: web3Config.branch,
+      names: web3Config.names
     }).then(async () => {
       await this.getStakingRange()
+      await this.initAuthorityLists()
       await this.updateAccountBalance()
       window.ethereum.on('accountsChanged', async (chagedAccounts) => {
         await this.updateDefaultAccount(chagedAccounts[0])
       })
       this.setStakingEventsWatch()
-      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
+      this.data.isMember = await contracts.governance.isMember(web3Instance.defaultAccount)
       this.setState({ contractReady: true })
     })
   }
@@ -101,7 +85,7 @@ class App extends React.Component {
       web3Instance.defaultAccount = account
       await this.updateAccountBalance()
       this.setStakingEventsWatch()
-      this.data.isMember = await contracts.gov.isMember(web3Instance.defaultAccount)
+      this.data.isMember = await contracts.governance.isMember(web3Instance.defaultAccount)
       this.setState({ showProposal: false })
     }
   }
@@ -145,7 +129,7 @@ class App extends React.Component {
     })
   }
 
-  onMenuClick ({ key }) {
+  onMenuClick = ({ key }) => {
     if (this.state.showProposal && this.state.nav === '2' && key === '2') {
       this.convertVotingComponent('voting')
     } else {
@@ -153,18 +137,11 @@ class App extends React.Component {
     }
   }
 
-  onClickFootIcon (e) {
-    switch(e.target.alt) {
-      case 'metadium':
-        window.open('https://metadium.com/',  '_blank')
-        break
-      case 'explorer':
-        if(web3Instance.netName === 'TESTNET') window.open('https://testnetexplorer.metadium.com/',  '_blank')
-        else window.open('https://explorer.metadium.com/',  '_blank')
-        break
-      case 'github':
-        window.open('https://github.com/METADIUM/meta-governance-dapp',  '_blank')
-        break
+  onClickFootIcon = (e) => {
+    switch (e.target.alt) {
+      case 'metadium': window.open('https://metadium.com/', '_blank'); break
+      case 'explorer': window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER); break
+      case 'github': window.open('https://github.com/METADIUM/', '_blank'); break
       default:
     }
   }
@@ -199,7 +176,7 @@ class App extends React.Component {
     this.setState({ selectedMenu: true })
   }
 
-  convertVotingComponent (component) {
+  convertVotingComponent = (component) => {
     switch (component) {
       case 'voting': this.setState({ showProposal: false }); break
       case 'proposal': this.setState({ showProposal: true }); break
@@ -207,42 +184,41 @@ class App extends React.Component {
     }
   }
 
-  convertLoading (state) {
+  convertLoading = (state) => {
     if (typeof (state) === 'boolean') {
       this.setState({ loading: state })
     }
   }
 
-  getErrModal (_err = 'Unknown Error', _title = 'Unknown Error', _link = false) {
+  getErrModal = (_err = 'Unknown Error', _title = 'Unknown Error', _link = false) => {
     if (_err.includes('error:')) _err = _err.split('error:')[1]
 
     this.data.errTitle = _title
     this.data.errContent = _err
-    if (_link) this.data.errLink = constants.NETWORKS[web3Instance.netId] + _link
+    if (_link) this.data.errLink = metaWeb3Constants.NETWORK[web3Instance.netId] + _link
     else this.data.errLink = false
     this.setState({ errModalVisible: true })
   }
 
-  getStakingModal () {
-    this.data.stakingAmount = '1'
+  getStakingModal = () => {
+    this.data.stakingAmount = ''
     this.data.stakingTopic = 'deposit'
     this.setState({ stakingModalVisible: true })
   }
 
-  submitMetaStaking () {
+  submitMetaStaking = () => {
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
-      this.setState({ stakingModalVisible: false })
-      this.getErrModal('The staking amount format is incorrect.', 'Staking Error')
+      this.setState({ errStakging: true })
       return
     }
 
     this.setState({ loading: true })
     let trx = {}
-    console.log('before this.data.stakingAmount;', this.data.stakingAmount)
+    // console.log('before this.data.stakingAmount;', this.data.stakingAmount)
     let amount = web3Instance.web3.utils.toWei(this.data.stakingAmount, 'ether')
-    console.log('after this.data.stakingAmount;', amount)
+    // console.log('after this.data.stakingAmount;', amount)
     if (this.data.stakingTopic === 'deposit') {
-      console.log('Send Transaction for deposit')
+      // console.log('Send Transaction for deposit')
       trx = contracts.staking.deposit()
       web3Instance.web3.eth.sendTransaction({
         from: web3Instance.defaultAccount,
@@ -276,23 +252,26 @@ class App extends React.Component {
     }
   }
 
-  handleSelectChange (topic) {
+  handleSelectChange = (topic) => {
     this.data.stakingTopic = topic
     this.setState({})
   }
 
-  handleInputChange (event) {
-    this.data.stakingAmount = event.target.value
-    if (/^[1-9]([0-9]*)$/.test(event.target.value)) this.setState({ stakingInvalidErr: false })
-    else this.setState({ stakingInvalidErr: true })
+  handleInputChange = (event) => {
+    let value = event.target.value
+    if (/^([0-9]*)$/.test(value)) {
+      this.data.stakingAmount = value
+      this.setState({ errStakging: false })
+    }
   }
 
   render () {
     return (
       <Layout className='layout'>
         <AccessFailedModal
-          visible={this.state.AccessFailedModal !== null}
-          message={this.state.AccessFailedModal}/>
+          visible={!!this.state.accessFailMsg}
+          message={this.state.accessFailMsg}
+        />
 
         {this.state.contractReady && this.state.loadWeb3
           ? <div className='flex-column'>
@@ -303,7 +282,8 @@ class App extends React.Component {
                 myBalance={this.data.myBalance}
                 myLockedBalance={this.data.myLockedBalance}
                 onMenuClick={this.onMenuClick}
-                getStakingModal={this.getStakingModal} />
+                getStakingModal={this.getStakingModal}
+              />
             </Header>
 
             <StakingModal
@@ -312,12 +292,13 @@ class App extends React.Component {
               stakingModalVisible={this.state.stakingModalVisible}
               loading={this.state.loading}
               stakingAmount={this.data.stakingAmount}
+              errStakging={this.state.errStakging}
               stakingTopic={this.data.stakingTopic}
-              stakingInvalidErr={this.state.stakingInvalidErr}
               hideStakingModal={() => { if (!this.state.loading) this.setState({ stakingModalVisible: false }) }}
               submitMetaStaking={this.submitMetaStaking}
               handleInputChange={this.handleInputChange}
-              handleSelectChange={this.handleSelectChange} />
+              handleSelectChange={this.handleSelectChange}
+            />
 
             <ErrModal
               netName={web3Instance.netName}
@@ -337,12 +318,14 @@ class App extends React.Component {
             <Footer>
               <FootNav
                 netName={web3Instance.netName}
-                onClickFootIcon={this.onClickFootIcon} />
+                onClickFootIcon={this.onClickFootIcon}
+              />
             </Footer>
           </div>
           : <div>
             <BaseLoader />
-          </div>}
+          </div>
+        }
       </Layout>
     )
   }

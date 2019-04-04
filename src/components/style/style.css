@@ -114,12 +114,34 @@
   margin-right: 8px;
 }
 
+/* accessFail Modal */
+
+.accessFail .ant-modal-body {
+  height: 208px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.accessFail .ant-modal-body i {
+  font-size: 68px;
+  font-weight: 100;
+  color: #FC0F1B;
+}
+
+.accessFail .ant-modal-body p {
+  margin-top: 24px;
+}
+
 /* sub header */
 
 .sub-header {
   background-color: #ffffff;
   position: relative;
   z-index: 90;
+  box-shadow: 0 1px 10px rgba(151,164,175,.1);
 }
 
 .sub-header .functionDiv.MAINNET {
@@ -235,8 +257,6 @@
 .authorityComp .authorityComp_contnet .text_container {
   padding-left: 24px;
   border-left: #EEEEF0 solid 2px;
-  min-height: 192px;
-  height: 192px;
 }
 
 .authorityComp .authorityComp_contnet .text_container .title {
@@ -251,6 +271,8 @@
 
 .authorityComp .authorityComp_contnet .text_container .description {
   margin: 12px 0 0 0;
+  height: 88px;
+  min-height: 88px;
   overflow: hidden;
 }
 
@@ -583,7 +605,7 @@
   align-items: center;
 	left: 0;
 	right: 0;
-	top: 52px;
+	top: 0px;
 	bottom: 0;
   z-index: 80;
 	background-color: rgba(38,27,201,0.7)

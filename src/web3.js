@@ -1,6 +1,5 @@
 import Web3 from 'web3'
-
-import { constants } from './constants'
+import { constants as metaWeb3Constants } from 'meta-web3'
 
 var web3Instance
 
@@ -11,7 +10,7 @@ let getWeb3Instance = () => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener('load', async () => {
       // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-      let web3, netName, netId, network, defaultAccount
+      let web3, netName, netId, branch, network, defaultAccount
 
       if (window.ethereum) {
         web3 = new Web3(window.ethereum)
@@ -29,12 +28,15 @@ let getWeb3Instance = () => {
       if (web3) {
         netId = await web3.eth.net.getId()
         network = await web3.eth.net.getNetworkType()
-        if (!(netId in constants.NETWORKS) || network !== 'private') {
+        let errMsg = 'Unknown network. Please access to METADIUM mainnet'
+        if (!(netId in metaWeb3Constants.NETWORK) || network !== 'private') {
           netName = 'ERROR'
-          reject(new Error('This is an unknown network in MetaMask.'))
+          branch = 'ERROR'
+          reject(new Error(errMsg))
         } else {
-          netName = constants.NETWORKS[netId].NAME
-          if(netName === 'TESTNET') reject(new Error('Please access to the mainnet in MetaMask')) 
+          netName = metaWeb3Constants.NETWORK[netId].NAME
+          branch = metaWeb3Constants.NETWORK[netId].BRANCH
+          if (branch !== 'mainnet') reject(new Error(errMsg))
         }
         const accounts = await web3.eth.getAccounts()
         defaultAccount = accounts[0]
@@ -43,18 +45,23 @@ let getWeb3Instance = () => {
         console.log('No web3 instance injected, using Local web3.')
         console.error('Metamask not found')
 
-        netId = constants.NET_ID
-        const network = constants.NETWORKS[netId]
-
+        Object.keys(metaWeb3Constants.NETWORK).some(key => {
+          if (!metaWeb3Constants.NETWORK[key].TESTNET) netId = key
+          return !metaWeb3Constants.NETWORK[key].TESTNET
+        })
+        const network = metaWeb3Constants.NETWORK[netId]
         web3 = new Web3(new Web3.providers.HttpProvider(network.RPC))
         netName = network.NAME
+        branch = network.BRANCH
       }
 
       web3Instance = {
         web3: web3,
         netName: netName,
         netId: netId,
-        defaultAccount: defaultAccount
+        branch: branch,
+        defaultAccount: defaultAccount,
+        names: ['identity', 'ballotStorage', 'envStorage', 'governance', 'staking']
       }
 
       resolve(web3Instance)
