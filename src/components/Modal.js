@@ -70,6 +70,19 @@ const ErrModal = ({ netName, title, err, link, visible, coloseErrModal = f => f 
     </div>
   </Modal>
 
+const AccessFailedModal = ({
+  visible,
+  message
+}) =>
+  <Modal
+    className='accessFail'
+    title='Access Failed'
+    visible={visible}
+    footer={null}>
+    <Icon type='close-circle' />
+    <p className='text-bold'>{message}</p>
+  </Modal>
+
 const ChangeModal = ({
   updateModal,
   ballotUpdateDuration,
@@ -92,4 +105,4 @@ const ChangeModal = ({
     />
   </Modal>
 
-export { StakingModal, ErrModal, ChangeModal }
+export { StakingModal, ErrModal, AccessFailedModal, ChangeModal }

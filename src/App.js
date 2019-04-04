@@ -2,7 +2,7 @@ import React from 'react'
 import { Layout } from 'antd'
 import { contracts, initContractsByNames, constants as metaWeb3Constants } from 'meta-web3'
 
-import { TopNav, FootNav, StakingModal, ErrModal, Voting, Authority, BaseLoader } from './components'
+import { TopNav, FootNav, StakingModal, ErrModal, AccessFailedModal, Voting, Authority, BaseLoader } from './components'
 import getWeb3Instance, { web3Instance } from './web3'
 import { constants } from './constants'
 import * as util from './util'
@@ -24,6 +24,7 @@ class App extends React.Component {
     errTitle: null,
     errContent: null,
     errLink: null,
+    errAccessFail: null,
     isMember: false
   }
 
@@ -48,7 +49,7 @@ class App extends React.Component {
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
-      this.setState({ loadWeb3: false })
+      this.setState({ loadWeb3: false, AccessFailedModal: error.message })
     })
   }
 
@@ -266,6 +267,11 @@ class App extends React.Component {
   render () {
     return (
       <Layout className='layout'>
+        <AccessFailedModal
+          visible={this.state.AccessFailedModal !== null}
+          message={this.state.AccessFailedModal}
+        />
+
         {this.state.contractReady && this.state.loadWeb3
           ? <div className='flex-column'>
             <Header className={web3Instance.netName}>
