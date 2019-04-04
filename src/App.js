@@ -49,7 +49,7 @@ class App extends React.Component {
       this.setState({ loadWeb3: true })
     }, async error => {
       console.log('getWeb3 error: ', error)
-      this.setState({ loadWeb3: false, AccessFailedModal: error.message })
+      this.setState({ loadWeb3: false, accessFailMsg: error.message })
     })
   }
 
@@ -268,8 +268,8 @@ class App extends React.Component {
     return (
       <Layout className='layout'>
         <AccessFailedModal
-          visible={this.state.AccessFailedModal !== null}
-          message={this.state.AccessFailedModal}
+          visible={!!this.state.accessFailMsg}
+          message={this.state.accessFailMsg}
         />
 
         {this.state.contractReady && this.state.loadWeb3
