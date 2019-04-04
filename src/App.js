@@ -30,6 +30,7 @@ class App extends React.Component {
 
   state = {
     loadWeb3: false,
+    accessFailMsg: null,
     nav: '1',
     contractReady: false,
     stakingModalVisible: false,

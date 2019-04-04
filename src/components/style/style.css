@@ -666,3 +666,21 @@
   font-size: 30px;
   line-height: 38px;
 }
+
+.accessFail .ant-modal-body {
+  height: 208px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.accessFail .ant-modal-body i {
+  font-size: 68px;
+  color: #FC0F1B;
+}
+
+.accessFail .ant-modal-body p {
+  margin-top: 24px;
+}
