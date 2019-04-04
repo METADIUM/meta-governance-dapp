@@ -101,7 +101,7 @@ class Voting extends React.Component {
         />
       )
     })
-    this.data.ballotBasicOriginItems = list
+    this.data.ballotBasicOriginItems = list.reverse()
     this.getBallotDetailInfo()
   }
 
