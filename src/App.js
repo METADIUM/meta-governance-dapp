@@ -129,7 +129,8 @@ class App extends React.Component {
   }
 
   async refreshContractData(forced=false) {
-    if(util.getUpdateTimeFromLocal.value + 300000 > Date.now() || !forced) return
+    const updateTime = forced ? 0 : util.getUpdateTimeFromLocal.value
+    if(updateTime + 300000 > Date.now()) return
     await this.getAuthorityData()
     await this.getBallotData()
     await this.modifyBallotData()
