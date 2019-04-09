@@ -45,6 +45,8 @@ class App extends React.Component {
 
   constructor (props) {
     super(props)
+    this.initContractData = this.initContractData.bind(this)
+    this.refreshContractData = this.refreshContractData.bind(this)
 
     /* Get web3 instance. */
     getWeb3Instance().then(async web3Config => {
@@ -64,7 +66,6 @@ class App extends React.Component {
       names: web3Config.names
     }).then(async () => {
       await this.getStakingRange()
-      //localStorage.clear();
       await this.initContractData()
       await this.updateAccountBalance()
       window.ethereum.on('accountsChanged', async (chagedAccounts) => {
@@ -121,34 +122,23 @@ class App extends React.Component {
     }
   }
 
-  /* new initContaractData Area */
-
   async initContractData() {
-    console.log('getAuthorityData start')
     await this.getAuthorityData()
-    console.log('initBallotData start')
     await this.initBallotData()
-    console.log('init end')
     util.setUpdateTimeToLocal(new Date())
   }
 
   async refreshContractData() {
-    if(util.getUpdateTimeFromLocal.value + 300000 > Date.now()) return
-    console.log('getAuthorityData start')
+    if(util.getUpdateTimeFromLocal.value + 300000 > Date.now() && !constants.debugMode) return
     await this.getAuthorityData()
-    console.log('getBallotData start')
     await this.getBallotData()
-    console.log('modifyBallotData start')
     await this.modifyBallotData()
-    console.log('refresh end')
+    util.setUpdateTimeToLocal(new Date())
   }
 
   async getAuthorityData() {
     const modifiedBlock = await contracts.governance.govInstance.methods.modifiedBlock().call() // need to edit contract
-    console.log('modimodifiedBlock in contract: ', modifiedBlock)
-    console.log('modimodifiedBlock in local: ', util.getModifiedFromLocal())
     if(modifiedBlock === util.getModifiedFromLocal() && util.getAuthorityFromLocal()) {
-      console.log('authorityOriginData in local: ', util.getAuthorityFromLocal())
       this.data.authorityOriginData = util.getAuthorityFromLocal()
       return
     }
@@ -176,6 +166,7 @@ class App extends React.Component {
       await this.getBallotBasicOriginData(ballotId)
       await this.getBallotMemberOriginData(ballotId)
     }
+    this.data.voteLength -= 1
   }
 
   async initAuthorityData() {
@@ -205,8 +196,6 @@ class App extends React.Component {
   async initBallotData() {
     let ballotBasicFinalizedData = util.getBallotBasicFromLocal() ? util.getBallotBasicFromLocal() : {}
     let ballotMemberFinalizedData = util.getBallotMemberFromLocal() ? util.getBallotMemberFromLocal() : {}
-    console.log('ballotBasicFinalizedData in local: ', ballotBasicFinalizedData)
-    console.log('ballotMemberFinalizedData in local: ', ballotMemberFinalizedData)
     let localDataUpdate = false
 
     this.data.voteLength = contracts.governance.govInstance.voteLength
@@ -255,8 +244,6 @@ class App extends React.Component {
         if(isUpdate) ballotMemberFinalizedData[i] = ret
       })
   }
-  
-  /*-----------------------------*/
 
   onMenuClick = ({ key }) => {
     if (this.state.showProposal && this.state.nav === '2' && key === '2') {
@@ -292,6 +279,8 @@ class App extends React.Component {
           title='Voting'
           contracts={contracts}
           getErrModal={this.getErrModal}
+          initContractData={this.initContractData}
+          refreshContractData={this.refreshContractData}
           authorityOriginData={this.data.authorityOriginData}
           ballotMemberOriginData={this.data.ballotMemberOriginData}
           ballotBasicOriginData={this.data.ballotBasicOriginData}
