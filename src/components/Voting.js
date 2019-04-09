@@ -50,7 +50,7 @@ class Voting extends React.Component {
 
   async componentDidMount () {
     this.data.ballotCnt = await this.governance.getBallotLength()
-    this.props.authorityOriginData.forEach(item => this.data.authorityNames.set(item.addr, item.title))
+    Object.values(this.props.authorityOriginData).forEach(item => this.data.authorityNames.set(item.addr, item.title))
     this.getOriginData()
   }
 
@@ -72,11 +72,11 @@ class Voting extends React.Component {
   }
 
   async getBallotOriginItem () {
-    if (!this.data.ballotBasicOriginData || !this.data.ballotMemberOriginData) return
+    if (!this.props.ballotBasicOriginData || !this.props.ballotMemberOriginData) return
     let list = []
     // Use origin data in contract
 
-    this.data.ballotBasicOriginData.forEach((item, index) => {
+    Object.values(this.props.ballotBasicOriginData).forEach((item, index) => {
       const newMemberAddress = this.data.ballotMemberOriginData[item.id].newMemberAddress
       const oldMemberAddress = this.data.ballotMemberOriginData[item.id].oldMemberAddress
 

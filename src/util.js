@@ -162,6 +162,23 @@ function splitNodeDescription (str) {
 // eslint-disable-next-line
 const shouldPass = () => { throw 'Function should be passed' }
 
+// Serialize / Deserialize object at local storage
+var save = (key, obj) => window.localStorage.setItem(key, JSON.stringify(obj))
+var load = (key) => JSON.parse(window.localStorage.getItem(key))
+
+var getBallotBasicFromLocal = () => load('ballotBasic')
+var getBallotMemberFromLocal = () => load('ballotMember')
+var getUpdateTimeFromLocal = () => load('updateTime')
+var getAuthorityFromLocal = () => load('authority')
+var getModifiedFromLocal = () => load('modified')
+var getBallotCountFromLocal = () => load('ballotCount')
+var setBallotBasicToLocal = (obj) => save('ballotBasic', obj)
+var setBallotMemberToLocal = (obj) => save('ballotMember', obj)
+var setAuthorityToLocal = (obj) => save('authority', obj)
+var setUpdateTimeToLocal = (obj) => save('updateTime', obj)
+var setModifiedToLocal = (obj) => save('modified', obj)
+var setBallotCountToLocal = (obj) => save('ballotCount', obj)
+
 export {
   borderColor,
   timeConverter,
@@ -177,5 +194,19 @@ export {
   getAuthorityLists,
   validate,
   splitNodeDescription,
-  shouldPass
+  shouldPass,
+  save,
+  load,
+  getBallotBasicFromLocal,
+  getBallotMemberFromLocal,
+  getUpdateTimeFromLocal,
+  getAuthorityFromLocal,
+  getModifiedFromLocal,
+  getBallotCountFromLocal,
+  setBallotBasicToLocal,
+  setBallotMemberToLocal,
+  setAuthorityToLocal,
+  setUpdateTimeToLocal,
+  setModifiedToLocal,
+  setBallotCountToLocal
 }

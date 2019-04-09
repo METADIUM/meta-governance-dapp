@@ -20,6 +20,9 @@ class App extends React.Component {
     stakingMax: null,
     stakingMin: null,
     eventsWatch: null,
+    ballotMemberOriginData: {},
+    ballotBasicOriginData: {},
+    voteLength: 0,
     authorityOriginData: [],
     errTitle: null,
     errContent: null,
@@ -61,7 +64,8 @@ class App extends React.Component {
       names: web3Config.names
     }).then(async () => {
       await this.getStakingRange()
-      await this.initAuthorityLists()
+      //localStorage.clear();
+      await this.initContractData()
       await this.updateAccountBalance()
       window.ethereum.on('accountsChanged', async (chagedAccounts) => {
         await this.updateDefaultAccount(chagedAccounts[0])
@@ -117,17 +121,142 @@ class App extends React.Component {
     }
   }
 
-  async initAuthorityLists () {
-    this.data.authorityOriginData = await util.getAuthorityLists(
+  /* new initContaractData Area */
+
+  async initContractData() {
+    console.log('getAuthorityData start')
+    await this.getAuthorityData()
+    console.log('initBallotData start')
+    await this.initBallotData()
+    console.log('init end')
+    util.setUpdateTimeToLocal(new Date())
+  }
+
+  async refreshContractData() {
+    if(util.getUpdateTimeFromLocal.value + 300000 > Date.now()) return
+    console.log('getAuthorityData start')
+    await this.getAuthorityData()
+    console.log('getBallotData start')
+    await this.getBallotData()
+    console.log('modifyBallotData start')
+    await this.modifyBallotData()
+    console.log('refresh end')
+  }
+
+  async getAuthorityData() {
+    const modifiedBlock = await contracts.governance.govInstance.methods.modifiedBlock().call() // need to edit contract
+    console.log('modimodifiedBlock in contract: ', modifiedBlock)
+    console.log('modimodifiedBlock in local: ', util.getModifiedFromLocal())
+    if(modifiedBlock === util.getModifiedFromLocal() && util.getAuthorityFromLocal()) {
+      console.log('authorityOriginData in local: ', util.getAuthorityFromLocal())
+      this.data.authorityOriginData = util.getAuthorityFromLocal()
+      return
+    }
+    await this.initAuthorityData()
+    util.setModifiedToLocal(modifiedBlock)
+  }
+
+  async getBallotData() {
+    const ballotCnt = await contracts.governance.getBallotLength()
+    let localBallotCnt = Object.keys(this.data.ballotBasicOriginData).length
+    if(!ballotCnt || ballotCnt === localBallotCnt) return
+
+    for(localBallotCnt += 1; localBallotCnt <= ballotCnt; localBallotCnt++) {
+      await this.getBallotBasicOriginData(localBallotCnt)
+      await this.getBallotMemberOriginData(localBallotCnt)
+    }
+  }
+
+  async modifyBallotData() {
+    let voteLength = await contracts.governance.govInstance.methods.voteLength.call() // need to edit contract
+    if(!voteLength || voteLength === this.data.voteLength) return
+
+    for(this.data.voteLength += 1; this.data.voteLength <= voteLength; this.data.voteLength++) {
+      const ballotId = await contracts.ballotStorage.ballotStorageInstance.methods.getVote(this.data.voteLength).call() // need to edit contract
+      await this.getBallotBasicOriginData(ballotId)
+      await this.getBallotMemberOriginData(ballotId)
+    }
+  }
+
+  async initAuthorityData() {
+    let authorityOriginData = await util.getAuthorityLists(
       constants.authorityRepo.org,
       constants.authorityRepo.repo,
       constants.authorityRepo.branch,
       constants.authorityRepo.source
     )
-    Object.keys(this.data.authorityOriginData).forEach((index) => {
-      this.data.authorityOriginData[index].addr = web3Instance.web3.utils.toChecksumAddress(this.data.authorityOriginData[index].addr)
-    })
+    this.data.authorityOriginData = await this.refineAuthority(authorityOriginData)
+    util.setAuthorityToLocal(this.data.authorityOriginData)
   }
+
+  async refineAuthority (authorityList) {
+    let memberAuthority = {}
+    let index = 0
+    for (let i = 0; i < Object.keys(authorityList).length; i++) {
+      if(await contracts.governance.isMember(authorityList[i].addr)) {
+        memberAuthority[index] = authorityList[i]
+        memberAuthority[index].addr = web3Instance.web3.utils.toChecksumAddress(memberAuthority[index].addr)
+        index++
+      }
+    }
+    return memberAuthority
+  }
+
+  async initBallotData() {
+    let ballotBasicFinalizedData = util.getBallotBasicFromLocal() ? util.getBallotBasicFromLocal() : {}
+    let ballotMemberFinalizedData = util.getBallotMemberFromLocal() ? util.getBallotMemberFromLocal() : {}
+    console.log('ballotBasicFinalizedData in local: ', ballotBasicFinalizedData)
+    console.log('ballotMemberFinalizedData in local: ', ballotMemberFinalizedData)
+    let localDataUpdate = false
+
+    this.data.voteLength = contracts.governance.govInstance.voteLength
+    const ballotCnt = await contracts.governance.getBallotLength()
+    if(!ballotCnt) return
+    for(var i = 1; i <= ballotCnt; i++) {
+      let isUpdate
+      if(i in ballotBasicFinalizedData) {
+        this.data.ballotBasicOriginData[i] = (ballotBasicFinalizedData[i])
+        this.data.ballotMemberOriginData[i] = ballotMemberFinalizedData[i]
+      } else {
+        isUpdate = await this.getBallotBasicOriginData(i, ballotBasicFinalizedData)
+        await this.getBallotMemberOriginData(i, isUpdate, ballotMemberFinalizedData)
+        if(isUpdate) localDataUpdate = true
+      }
+    }
+
+    if(localDataUpdate) {
+      util.setBallotBasicToLocal(ballotBasicFinalizedData)
+      util.setBallotMemberToLocal(ballotMemberFinalizedData)
+    }
+  }
+
+  async getBallotBasicOriginData (i, ballotBasicFinalizedData = false) {
+    let isUpdate = false
+    await contracts.ballotStorage.getBallotBasic(i).then(
+      ret => {
+        ret.id = i // Add ballot id
+        util.refineBallotBasic(ret)
+        this.data.ballotBasicOriginData[i] = ret
+        if(!ballotBasicFinalizedData) return
+        if(ret.state === constants.ballotState.Accepted || ret.state === constants.ballotState.Rejected) {
+          ballotBasicFinalizedData[i] = ret
+          isUpdate = true
+        }
+      }
+    )
+    return isUpdate
+  }
+
+  async getBallotMemberOriginData (i, isUpdate = false, ballotMemberFinalizedData) {
+    await contracts.ballotStorage.getBallotMember(i).then(
+      ret => {
+        ret.id = i // Add ballot id
+        this.data.ballotMemberOriginData[i] = ret
+        if(isUpdate) ballotMemberFinalizedData[i] = ret
+      })
+  }
+  
+  /*-----------------------------*/
 
   onMenuClick = ({ key }) => {
     if (this.state.showProposal && this.state.nav === '2' && key === '2') {
@@ -148,6 +277,7 @@ class App extends React.Component {
 
   getContent () {
     if (!this.state.loadWeb3) return
+    this.refreshContractData()
     switch (this.state.nav) {
       case '1':
         return <Authority
@@ -163,6 +293,8 @@ class App extends React.Component {
           contracts={contracts}
           getErrModal={this.getErrModal}
           authorityOriginData={this.data.authorityOriginData}
+          ballotMemberOriginData={this.data.ballotMemberOriginData}
+          ballotBasicOriginData={this.data.ballotBasicOriginData}
           convertVotingComponent={this.convertVotingComponent}
           loading={this.state.loading}
           convertLoading={this.convertLoading}
