@@ -128,8 +128,8 @@ class App extends React.Component {
     util.setUpdateTimeToLocal(new Date())
   }
 
-  async refreshContractData() {
-    if(util.getUpdateTimeFromLocal.value + 300000 > Date.now() && !constants.debugMode) return
+  async refreshContractData(forced=false) {
+    if(util.getUpdateTimeFromLocal.value + 300000 > Date.now() || !forced) return
     await this.getAuthorityData()
     await this.getBallotData()
     await this.modifyBallotData()

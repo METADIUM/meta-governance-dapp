@@ -53,7 +53,7 @@ class Voting extends React.Component {
   reloadVoting = async (component, init=false) => {
     if (component) this.props.convertVotingComponent(component)
     if(init) await this.props.initContractData()
-    else await this.props.refreshContractData()
+    else await this.props.refreshContractData(true)
     this.getBallotOriginItem()
     this.props.convertLoading(false)
   }
