@@ -171,13 +171,11 @@ var getBallotMemberFromLocal = () => load('ballotMember')
 var getUpdateTimeFromLocal = () => load('updateTime')
 var getAuthorityFromLocal = () => load('authority')
 var getModifiedFromLocal = () => load('modified')
-var getBallotCountFromLocal = () => load('ballotCount')
 var setBallotBasicToLocal = (obj) => save('ballotBasic', obj)
 var setBallotMemberToLocal = (obj) => save('ballotMember', obj)
 var setAuthorityToLocal = (obj) => save('authority', obj)
 var setUpdateTimeToLocal = (obj) => save('updateTime', obj)
 var setModifiedToLocal = (obj) => save('modified', obj)
-var setBallotCountToLocal = (obj) => save('ballotCount', obj)
 
 export {
   borderColor,
@@ -202,11 +200,9 @@ export {
   getUpdateTimeFromLocal,
   getAuthorityFromLocal,
   getModifiedFromLocal,
-  getBallotCountFromLocal,
   setBallotBasicToLocal,
   setBallotMemberToLocal,
   setAuthorityToLocal,
   setUpdateTimeToLocal,
-  setModifiedToLocal,
-  setBallotCountToLocal
+  setModifiedToLocal
 }
