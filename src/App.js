@@ -337,42 +337,22 @@ class App extends React.Component {
 
     this.setState({ loading: true })
     let trx = {}
-    // console.log('before this.data.stakingAmount;', this.data.stakingAmount)
-    let amount = web3Instance.web3.utils.toWei(this.data.stakingAmount, 'ether')
-    // console.log('after this.data.stakingAmount;', amount)
-    if (this.data.stakingTopic === 'deposit') {
-      // console.log('Send Transaction for deposit')
-      trx = contracts.staking.deposit()
-      web3Instance.web3.eth.sendTransaction({
-        from: web3Instance.defaultAccount,
-        value: amount,
-        to: trx.to,
-        data: trx.data
-      }, async (err, hash) => {
-        if (err) {
-          console.log(err)
-          this.getErrModal(err.message, 'Deposit Error')
-          this.setState({ stakingModalVisible: false, loading: false })
-        } else {
-          console.log('hash: ', hash)
-        }
-      })
-    } else {
-      trx = contracts.staking.withdraw(amount)
-      web3Instance.web3.eth.sendTransaction({
-        from: web3Instance.defaultAccount,
-        to: trx.to,
-        data: trx.data
-      }, async (err, hash) => {
-        if (err) {
-          console.log(err)
-          this.getErrModal(err.message, 'Withdraw Error')
-          this.setState({ stakingModalVisible: false, loading: false })
-        } else {
-          console.log('hash: ', hash)
-        }
-      })
-    }
+    if (this.data.stakingTopic === 'deposit') trx = contracts.staking.deposit(this.data.stakingAmount)
+    else trx = contracts.staking.withdraw(this.data.stakingAmount)
+    this.sendStakingTransaction(trx)
+  }
+
+  sendStakingTransaction(trx) {
+    trx.from = web3Instance.defaultAccount
+    web3Instance.web3.eth.sendTransaction(trx, async (err, hash) => {
+      if (err) {
+        console.log(err)
+        this.getErrModal(err.message, 'Staking Error')
+        this.setState({ stakingModalVisible: false, loading: false })
+      } else {
+        console.log('hash: ', hash)
+      }
+    })
   }
 
   handleSelectChange = (topic) => {
