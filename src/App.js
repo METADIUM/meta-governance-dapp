@@ -122,25 +122,25 @@ class App extends React.Component {
     }
   }
 
-  async initContractData() {
+  async initContractData () {
     await this.getAuthorityData()
     await this.initBallotData()
     util.setUpdatedTimeToLocal(new Date())
   }
 
-  async refreshContractData(forced=false) {
+  async refreshContractData (forced = false) {
     const updatedTime = forced ? 0 : util.getUpdatedTimeFromLocal.value
-    if(updatedTime + constants.expirationTime > Date.now()) return
+    if (updatedTime + constants.expirationTime > Date.now()) return
     Promise.all([
       this.getAuthorityData(),
       this.getBallotData(),
-      this.modifyBallotData(),
+      this.modifyBallotData()
     ]).then(() => util.setUpdatedTimeToLocal(new Date()))
   }
 
-  async getAuthorityData() {
+  async getAuthorityData () {
     const modifiedBlock = await contracts.governance.govInstance.methods.modifiedBlock().call() // need to edit contract
-    if(modifiedBlock === util.getModifiedFromLocal() && util.getAuthorityFromLocal()) {
+    if (modifiedBlock === util.getModifiedFromLocal() && util.getAuthorityFromLocal()) {
       this.data.authorityOriginData = util.getAuthorityFromLocal()
       return
     }
@@ -148,22 +148,22 @@ class App extends React.Component {
     util.setModifiedToLocal(modifiedBlock)
   }
 
-  async getBallotData() {
+  async getBallotData () {
     const ballotCnt = await contracts.governance.getBallotLength()
     let localBallotCnt = Object.keys(this.data.ballotBasicOriginData).length
-    if(!ballotCnt || ballotCnt === localBallotCnt) return
+    if (!ballotCnt || ballotCnt === localBallotCnt) return
 
-    for(localBallotCnt += 1; localBallotCnt <= ballotCnt; localBallotCnt++) {
+    for (localBallotCnt += 1; localBallotCnt <= ballotCnt; localBallotCnt++) {
       await this.getBallotBasicOriginData(localBallotCnt)
       await this.getBallotMemberOriginData(localBallotCnt)
     }
   }
 
-  async modifyBallotData() {
+  async modifyBallotData () {
     let voteLength = await contracts.governance.govInstance.methods.voteLength.call() // need to edit contract
-    if(!voteLength || voteLength === this.data.voteLength) return
+    if (!voteLength || voteLength === this.data.voteLength) return
 
-    for(this.data.voteLength += 1; this.data.voteLength <= voteLength; this.data.voteLength++) {
+    for (this.data.voteLength += 1; this.data.voteLength <= voteLength; this.data.voteLength++) {
       const ballotId = (await contracts.ballotStorage.ballotStorageInstance.methods.getVote(this.data.voteLength).call()).ballotId // need to edit contract
       await this.getBallotBasicOriginData(ballotId)
       await this.getBallotMemberOriginData(ballotId)
@@ -171,7 +171,7 @@ class App extends React.Component {
     this.data.voteLength -= 1
   }
 
-  async initAuthorityData() {
+  async initAuthorityData () {
     let authorityOriginData = await util.getAuthorityLists(
       constants.authorityRepo.org,
       constants.authorityRepo.repo,
@@ -186,7 +186,7 @@ class App extends React.Component {
     let memberAuthority = {}
     let index = 0
     for (let i = 0; i < Object.keys(authorityList).length; i++) {
-      if(await contracts.governance.isMember(authorityList[i].addr)) {
+      if (await contracts.governance.isMember(authorityList[i].addr)) {
         memberAuthority[index] = authorityList[i]
         memberAuthority[index].addr = web3Instance.web3.utils.toChecksumAddress(memberAuthority[index].addr)
         index++
@@ -195,27 +195,27 @@ class App extends React.Component {
     return memberAuthority
   }
 
-  async initBallotData() {
+  async initBallotData () {
     let ballotBasicFinalizedData = util.getBallotBasicFromLocal() ? util.getBallotBasicFromLocal() : {}
     let ballotMemberFinalizedData = util.getBallotMemberFromLocal() ? util.getBallotMemberFromLocal() : {}
     let localDataUpdate = false
 
     this.data.voteLength = contracts.governance.govInstance.voteLength
     const ballotCnt = await contracts.governance.getBallotLength()
-    if(!ballotCnt) return
-    for(var i = 1; i <= ballotCnt; i++) {
+    if (!ballotCnt) return
+    for (var i = 1; i <= ballotCnt; i++) {
       let isUpdate
-      if(i in ballotBasicFinalizedData) {
+      if (i in ballotBasicFinalizedData) {
         this.data.ballotBasicOriginData[i] = (ballotBasicFinalizedData[i])
         this.data.ballotMemberOriginData[i] = ballotMemberFinalizedData[i]
       } else {
         isUpdate = await this.getBallotBasicOriginData(i, ballotBasicFinalizedData)
         await this.getBallotMemberOriginData(i, isUpdate, ballotMemberFinalizedData)
-        if(isUpdate) localDataUpdate = true
+        if (isUpdate) localDataUpdate = true
       }
     }
 
-    if(localDataUpdate) {
+    if (localDataUpdate) {
       util.setBallotBasicToLocal(ballotBasicFinalizedData)
       util.setBallotMemberToLocal(ballotMemberFinalizedData)
     }
@@ -228,8 +228,8 @@ class App extends React.Component {
         ret.id = i // Add ballot id
         util.refineBallotBasic(ret)
         this.data.ballotBasicOriginData[i] = ret
-        if(!ballotBasicFinalizedData) return
-        if(ret.state === constants.ballotState.Accepted || ret.state === constants.ballotState.Rejected) {
+        if (!ballotBasicFinalizedData) return
+        if (ret.state === constants.ballotState.Accepted || ret.state === constants.ballotState.Rejected) {
           ballotBasicFinalizedData[i] = ret
           isUpdate = true
         }
@@ -243,7 +243,7 @@ class App extends React.Component {
       ret => {
         ret.id = i // Add ballot id
         this.data.ballotMemberOriginData[i] = ret
-        if(isUpdate) ballotMemberFinalizedData[i] = ret
+        if (isUpdate) ballotMemberFinalizedData[i] = ret
       })
   }
 
