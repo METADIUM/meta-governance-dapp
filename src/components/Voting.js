@@ -196,8 +196,8 @@ class Voting extends React.Component {
     }
 
     this.props.convertLoading(true)
-    let { to, data } = this.governance.vote(id, value === 'Y')
-    this.sendTransaction(to, data, 'Voting')
+    let trx = this.governance.vote(id, value === 'Y')
+    this.sendTransaction(trx, 'Voting')
   }
 
   onClickUpdateProposal = (topic, id, duration) => {
@@ -209,22 +209,19 @@ class Voting extends React.Component {
 
     this.props.convertLoading(true)
     let trx = this.ballotStorage.cancelBallot(id)
-    this.sendTransaction(trx.to, trx.data, 'Revoke', true)
+    this.sendTransaction(trx, 'Revoke', true)
   }
 
   completeModal = async (e) => {
     this.props.convertLoading(true)
     let trx = await this.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.state.ballotUpdateDuration))
-    this.sendTransaction(trx.to, trx.data, 'Change', true)
+    this.sendTransaction(trx, 'Change', true)
     this.setState({ updateModal: false })
   }
 
-  sendTransaction (to, data, type, init = false) {
-    web3Instance.web3.eth.sendTransaction({
-      from: web3Instance.defaultAccount,
-      to: to,
-      data: data
-    }, (err, hash) => {
+  sendTransaction (trx, type, init = false) {
+    trx.from = web3Instance.defaultAccount
+    web3Instance.web3.eth.sendTransaction(trx, (err, hash) => {
       if (err) {
         console.log(err)
         this.props.getErrModal(err.message, err.name)
