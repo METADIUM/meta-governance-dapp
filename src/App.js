@@ -130,7 +130,7 @@ class App extends React.Component {
 
   async refreshContractData(forced=false) {
     const updateTime = forced ? 0 : util.getUpdateTimeFromLocal.value
-    if(updateTime + 300000 > Date.now()) return
+    if(updateTime + constants.expirationTime > Date.now()) return
     await this.getAuthorityData()
     await this.getBallotData()
     await this.modifyBallotData()
@@ -163,7 +163,7 @@ class App extends React.Component {
     if(!voteLength || voteLength === this.data.voteLength) return
 
     for(this.data.voteLength += 1; this.data.voteLength <= voteLength; this.data.voteLength++) {
-      const ballotId = await contracts.ballotStorage.ballotStorageInstance.methods.getVote(this.data.voteLength).call() // need to edit contract
+      const ballotId = (await contracts.ballotStorage.ballotStorageInstance.methods.getVote(this.data.voteLength).call()).ballotId // need to edit contract
       await this.getBallotBasicOriginData(ballotId)
       await this.getBallotMemberOriginData(ballotId)
     }

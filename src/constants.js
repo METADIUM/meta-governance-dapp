@@ -5,6 +5,8 @@ const constants = {
     branch: 'master',
     source: 'authorities.json'
   },
+  /* ControlEnums */
+  expirationTime: 300000,
   /* AuthorityEnums */
   authoritieDescriptionHeight: 88,
   authoritieDescriptionHeightToPixel: '88px',
