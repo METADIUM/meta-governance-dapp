@@ -125,16 +125,17 @@ class App extends React.Component {
   async initContractData() {
     await this.getAuthorityData()
     await this.initBallotData()
-    util.setUpdateTimeToLocal(new Date())
+    util.setUpdatedTimeToLocal(new Date())
   }
 
   async refreshContractData(forced=false) {
-    const updateTime = forced ? 0 : util.getUpdateTimeFromLocal.value
-    if(updateTime + constants.expirationTime > Date.now()) return
-    await this.getAuthorityData()
-    await this.getBallotData()
-    await this.modifyBallotData()
-    util.setUpdateTimeToLocal(new Date())
+    const updatedTime = forced ? 0 : util.getUpdatedTimeFromLocal.value
+    if(updatedTime + constants.expirationTime > Date.now()) return
+    Promise.all([
+      this.getAuthorityData(),
+      this.getBallotData(),
+      this.modifyBallotData(),
+    ]).then(() => util.setUpdatedTimeToLocal(new Date()))
   }
 
   async getAuthorityData() {

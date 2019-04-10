@@ -168,13 +168,13 @@ var load = (key) => JSON.parse(window.localStorage.getItem(key))
 
 var getBallotBasicFromLocal = () => load('ballotBasic')
 var getBallotMemberFromLocal = () => load('ballotMember')
-var getUpdateTimeFromLocal = () => load('updateTime')
+var getUpdatedTimeFromLocal = () => load('updatedTime')
 var getAuthorityFromLocal = () => load('authority')
 var getModifiedFromLocal = () => load('modified')
 var setBallotBasicToLocal = (obj) => save('ballotBasic', obj)
 var setBallotMemberToLocal = (obj) => save('ballotMember', obj)
 var setAuthorityToLocal = (obj) => save('authority', obj)
-var setUpdateTimeToLocal = (obj) => save('updateTime', obj)
+var setUpdatedTimeToLocal = (obj) => save('updatedTime', obj)
 var setModifiedToLocal = (obj) => save('modified', obj)
 
 export {
@@ -197,12 +197,12 @@ export {
   load,
   getBallotBasicFromLocal,
   getBallotMemberFromLocal,
-  getUpdateTimeFromLocal,
+  getUpdatedTimeFromLocal,
   getAuthorityFromLocal,
   getModifiedFromLocal,
   setBallotBasicToLocal,
   setBallotMemberToLocal,
   setAuthorityToLocal,
-  setUpdateTimeToLocal,
+  setUpdatedTimeToLocal,
   setModifiedToLocal
 }
