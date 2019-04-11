@@ -76,23 +76,18 @@ class Authority extends React.Component {
 
   async getAuthorityList () {
     let list = []
-    for (let i = 0; i < Object.keys(this.props.authorityOriginData).length; i++) {
-      let item = this.props.authorityOriginData[i]
-      let isMember = await this.props.contracts.governance.isMember(item.addr)
-      if (isMember) {
-        list.push(<AuthorityItem
-          key={i}
-          item={item}
-          index={i}
-          descriptions={this.descriptions}
-          readMoreBtns={this.readMoreBtns}
-          breakLine={this.breakLine}
-          onReadMoreClick={this.onReadMoreClick}
-          getSNSList={this.getSNSList}
-        />
-        )
-      }
-    }
+    Object.keys(this.props.authorityOriginData).forEach(key => list.push(
+      <AuthorityItem
+        key={key}
+        item={this.props.authorityOriginData[key]}
+        index={key}
+        descriptions={this.descriptions}
+        readMoreBtns={this.readMoreBtns}
+        breakLine={this.breakLine}
+        onReadMoreClick={this.onReadMoreClick}
+        getSNSList={this.getSNSList}
+      />
+    ))
     this.data.authorityItems = list
     this.data.visibleAuthorityItems = list
     this.setState({ getAuthorityInfo: true })

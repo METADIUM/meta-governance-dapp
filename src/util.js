@@ -162,6 +162,21 @@ function splitNodeDescription (str) {
 // eslint-disable-next-line
 const shouldPass = () => { throw 'Function should be passed' }
 
+// Serialize / Deserialize object at local storage
+var save = (key, obj) => window.localStorage.setItem(key, JSON.stringify(obj))
+var load = (key) => JSON.parse(window.localStorage.getItem(key))
+
+var getBallotBasicFromLocal = () => load('ballotBasic')
+var getBallotMemberFromLocal = () => load('ballotMember')
+var getUpdatedTimeFromLocal = () => load('updatedTime')
+var getAuthorityFromLocal = () => load('authority')
+var getModifiedFromLocal = () => load('modified')
+var setBallotBasicToLocal = (obj) => save('ballotBasic', obj)
+var setBallotMemberToLocal = (obj) => save('ballotMember', obj)
+var setAuthorityToLocal = (obj) => save('authority', obj)
+var setUpdatedTimeToLocal = (obj) => save('updatedTime', obj)
+var setModifiedToLocal = (obj) => save('modified', obj)
+
 export {
   borderColor,
   timeConverter,
@@ -177,5 +192,17 @@ export {
   getAuthorityLists,
   validate,
   splitNodeDescription,
-  shouldPass
+  shouldPass,
+  save,
+  load,
+  getBallotBasicFromLocal,
+  getBallotMemberFromLocal,
+  getUpdatedTimeFromLocal,
+  getAuthorityFromLocal,
+  getModifiedFromLocal,
+  setBallotBasicToLocal,
+  setBallotMemberToLocal,
+  setAuthorityToLocal,
+  setUpdatedTimeToLocal,
+  setModifiedToLocal
 }

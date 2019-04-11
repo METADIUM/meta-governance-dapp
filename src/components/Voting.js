@@ -10,10 +10,7 @@ import './style/style.css'
 class Voting extends React.Component {
   data = {
     // Mapped with ballotBasicOriginData
-    ballotCnt: 0,
     curBallotIdx: 0,
-    ballotMemberOriginData: {},
-    ballotBasicOriginData: [],
     ballotBasicOriginItems: [],
     existBallotNewMember: [],
     existBallotOldMemberaddr: [],
@@ -49,36 +46,26 @@ class Voting extends React.Component {
   }
 
   async componentDidMount () {
-    this.data.ballotCnt = await this.governance.getBallotLength()
-    this.props.authorityOriginData.forEach(item => this.data.authorityNames.set(item.addr, item.title))
-    this.getOriginData()
-  }
-
-  reloadVoting = async (component) => {
-    if (component) this.props.convertVotingComponent(component)
-    this.data.ballotCnt = await this.governance.getBallotLength()
-    this.data.ballotBasicOriginData = []
-    await this.getOriginData()
-    this.props.convertLoading(false)
-  }
-
-  async getOriginData () {
-    if (!this.data.ballotCnt) return
-    for (var i = 1; i <= this.data.ballotCnt; i++) {
-      await this.setBallotBasicOriginData(i)
-      await this.setBallotMemberOriginData(i)
-    }
+    Object.values(this.props.authorityOriginData).forEach(item => this.data.authorityNames.set(item.addr, item.title))
     this.getBallotOriginItem()
   }
 
-  async getBallotOriginItem () {
-    if (!this.data.ballotBasicOriginData || !this.data.ballotMemberOriginData) return
+  reloadVoting = async (component, init = false) => {
+    if (component) this.props.convertVotingComponent(component)
+    if (init) await this.props.initContractData()
+    else await this.props.refreshContractData(true)
+    this.getBallotOriginItem()
+    this.props.convertLoading(false)
+  }
+
+  getBallotOriginItem () {
+    if (!this.props.ballotBasicOriginData || !this.props.ballotMemberOriginData) return
     let list = []
     // Use origin data in contract
 
-    this.data.ballotBasicOriginData.forEach((item, index) => {
-      const newMemberAddress = this.data.ballotMemberOriginData[item.id].newMemberAddress
-      const oldMemberAddress = this.data.ballotMemberOriginData[item.id].oldMemberAddress
+    Object.values(this.props.ballotBasicOriginData).forEach((item, index) => {
+      const newMemberAddress = this.props.ballotMemberOriginData[item.id].newMemberAddress
+      const oldMemberAddress = this.props.ballotMemberOriginData[item.id].oldMemberAddress
 
       if (item.state === constants.ballotState.Ready || item.state === constants.ballotState.InProgress) {
         this.data.existBallotNewMember.push(newMemberAddress)
@@ -130,29 +117,13 @@ class Voting extends React.Component {
     this.setState({ isBallotLoading: true })
   }
 
-  async setBallotBasicOriginData (i) {
-    await this.ballotStorage.getBallotBasic(i).then(
-      ret => {
-        ret.id = i // Add ballot id
-        this.data.ballotBasicOriginData = [...this.data.ballotBasicOriginData, util.refineBallotBasic(ret)]
-      })
-  }
-
-  async setBallotMemberOriginData (i) {
-    await this.ballotStorage.getBallotMember(i).then(
-      ret => {
-        ret.id = i // Add ballot id
-        this.data.ballotMemberOriginData[i] = ret
-      })
-  }
-
   setTopic = (type, newAddr, oldAddr) => {
     if (type === constants.ballotTypes.MemberChange && newAddr === oldAddr) return 'MemberUpdate'
     else return constants.ballotTypesArr[parseInt(type)]
   }
 
   setDescription = (type, newAddr, oldAddr, id) => {
-    const lockAmount = web3Instance.web3.utils.fromWei(this.data.ballotMemberOriginData[id].lockAmount, 'ether')
+    const lockAmount = web3Instance.web3.utils.fromWei(this.props.ballotMemberOriginData[id].lockAmount, 'ether')
     switch (type) {
       case constants.ballotTypes.MemverAdd:
         return <p className='description flex-full'>
@@ -225,8 +196,8 @@ class Voting extends React.Component {
     }
 
     this.props.convertLoading(true)
-    let { to, data } = this.governance.vote(id, value === 'Y')
-    this.sendTransaction(to, data, 'Voting')
+    let trx = this.governance.vote(id, value === 'Y')
+    this.sendTransaction(trx, 'Voting')
   }
 
   onClickUpdateProposal = (topic, id, duration) => {
@@ -238,22 +209,19 @@ class Voting extends React.Component {
 
     this.props.convertLoading(true)
     let trx = this.ballotStorage.cancelBallot(id)
-    this.sendTransaction(trx.to, trx.data, 'Revoke')
+    this.sendTransaction(trx, 'Revoke', true)
   }
 
   completeModal = async (e) => {
     this.props.convertLoading(true)
     let trx = await this.ballotStorage.updateBallotDuration(this.data.curBallotIdx, util.convertDayToTimestamp(this.state.ballotUpdateDuration))
-    this.sendTransaction(trx.to, trx.data, 'Change')
+    this.sendTransaction(trx, 'Change', true)
     this.setState({ updateModal: false })
   }
 
-  sendTransaction (to, data, type) {
-    web3Instance.web3.eth.sendTransaction({
-      from: web3Instance.defaultAccount,
-      to: to,
-      data: data
-    }, (err, hash) => {
+  sendTransaction (trx, type, init = false) {
+    trx.from = web3Instance.defaultAccount
+    web3Instance.web3.eth.sendTransaction(trx, (err, hash) => {
       if (err) {
         console.log(err)
         this.props.getErrModal(err.message, err.name)
@@ -262,7 +230,7 @@ class Voting extends React.Component {
         // console.log('hash: ', hash)
         this.waitForReceipt(hash, (receipt) => {
           // console.log('Updated :', receipt)
-          if (receipt.status) this.reloadVoting(false)
+          if (receipt.status) this.reloadVoting(false, init)
           else {
             this.props.getErrModal(
               "You don't have " + type.toLowerCase + ' authority',
