@@ -28,7 +28,7 @@ let getWeb3Instance = () => {
       if (web3) {
         netId = await web3.eth.net.getId()
         network = await web3.eth.net.getNetworkType()
-        let errMsg = 'Unknown network. Please access to METADIUM testnet'
+        let errMsg = 'Unknown network. Please access to METADIUM mainnet'
         if (!(netId in metaWeb3Constants.NETWORK) || network !== 'private') {
           netName = 'ERROR'
           branch = 'ERROR'
@@ -36,7 +36,7 @@ let getWeb3Instance = () => {
         } else {
           netName = metaWeb3Constants.NETWORK[netId].NAME
           branch = metaWeb3Constants.NETWORK[netId].BRANCH
-          if (branch !== 'testnet') reject(new Error(errMsg))
+          if (branch !== 'mainnet') reject(new Error(errMsg))
         }
         const accounts = await web3.eth.getAccounts()
         defaultAccount = accounts[0]

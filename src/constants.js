@@ -2,7 +2,7 @@ const constants = {
   authorityRepo: {
     org: 'METADIUM',
     repo: 'meta-authorities',
-    branch: 'testnet',
+    branch: 'mainnet',
     source: 'authorities.json'
   },
   /* ControlEnums */
