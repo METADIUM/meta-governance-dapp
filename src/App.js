@@ -342,7 +342,7 @@ class App extends React.Component {
     this.sendStakingTransaction(trx)
   }
 
-  sendStakingTransaction(trx) {
+  sendStakingTransaction (trx) {
     trx.from = web3Instance.defaultAccount
     web3Instance.web3.eth.sendTransaction(trx, async (err, hash) => {
       if (err) {
