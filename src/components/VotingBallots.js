@@ -129,7 +129,7 @@ const ShowBallots = ({
     {visibleProposalItems}
     {visibleProposalItems.length > 0 && visibleProposalItems.length < totalProposalItemLength &&
       <div className='moreDiv flex flex-center-vertical'>
-        <Button className={'btn-fill-white flex ' + netName} onClick={(e) => onClickReadMore('proposal')}>
+        <Button className={'btn-fill-white flex flex-center-horizontal ' + netName} onClick={(e) => onClickReadMore('proposal')}>
           <span>+</span>
           <span className='text_btn'>Read More</span>
         </Button>
@@ -139,7 +139,7 @@ const ShowBallots = ({
     {visibleFinalizedItems}
     {visibleFinalizedItems.length > 0 && visibleFinalizedItems.length < totalFinalizedItemLength &&
       <div className='moreDiv flex flex-center-vertical'>
-        <Button className={'btn-fill-white flex ' + netName} onClick={(e) => onClickReadMore('finalized')}>
+        <Button className={'btn-fill-white flex flex-center-horizontal ' + netName} onClick={(e) => onClickReadMore('finalized')}>
           <span>+</span>
           <span className='text_btn'>Read More</span>
         </Button>
