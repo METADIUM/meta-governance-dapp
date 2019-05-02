@@ -52,7 +52,7 @@ const SubHeader = ({
         onChange={searchFunction}
         enterButton
       />
-      <Button className='apply_proposal_Btn flex' disabled={!condition} onClick={e => btnFunction()} loading={loading}>
+      <Button className='apply_proposal_Btn flex flex-center-horizontal' disabled={!condition} onClick={e => btnFunction()} loading={loading}>
         <span>{btnIcon}</span>
         <span className='text_btn'>{btnText}</span>
       </Button>

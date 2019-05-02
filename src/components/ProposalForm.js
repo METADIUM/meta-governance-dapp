@@ -310,7 +310,7 @@ class ProposalForm extends React.Component {
         <div className='contentDiv container'>
           <div className='backBtnDiv'>
             <Button
-              className={'btn-fill-white flex text-large ' + web3Instance.netName}
+              className={'btn-fill-white flex flex-center-horizontal text-large ' + web3Instance.netName}
               onClick={e => this.props.convertComponent('voting')}
               loading={this.props.buttonLoading}
             >

@@ -200,16 +200,15 @@ class App extends React.Component {
     let ballotMemberFinalizedData = util.getBallotMemberFromLocal() ? util.getBallotMemberFromLocal() : {}
     let localDataUpdated = false
 
-    this.data.voteLength = contracts.governance.govInstance.voteLength
+    this.data.voteLength = await contracts.governance.getVoteLength()
     const ballotCnt = await contracts.governance.getBallotLength()
     if (!ballotCnt) return
     for (var i = 1; i <= ballotCnt; i++) {
       if (i in ballotBasicFinalizedData) {
-        this.data.ballotBasicOriginData[i] = (ballotBasicFinalizedData[i])
+        this.data.ballotBasicOriginData[i] = ballotBasicFinalizedData[i]
         this.data.ballotMemberOriginData[i] = ballotMemberFinalizedData[i]
       } else {
-        let isUpdated
-        isUpdated = await this.getBallotBasicOriginData(i, ballotBasicFinalizedData)
+        let isUpdated = await this.getBallotBasicOriginData(i, ballotBasicFinalizedData)
         await this.getBallotMemberOriginData(i, isUpdated, ballotMemberFinalizedData)
         if (isUpdated) localDataUpdated = true
       }
@@ -342,7 +341,7 @@ class App extends React.Component {
     this.sendStakingTransaction(trx)
   }
 
-  sendStakingTransaction(trx) {
+  sendStakingTransaction (trx) {
     trx.from = web3Instance.defaultAccount
     web3Instance.web3.eth.sendTransaction(trx, async (err, hash) => {
       if (err) {

@@ -166,16 +166,16 @@ const shouldPass = () => { throw 'Function should be passed' }
 var save = (key, obj) => window.localStorage.setItem(key, JSON.stringify(obj))
 var load = (key) => JSON.parse(window.localStorage.getItem(key))
 
-var getBallotBasicFromLocal = () => load('ballotBasic')
-var getBallotMemberFromLocal = () => load('ballotMember')
-var getUpdatedTimeFromLocal = () => load('updatedTime')
-var getAuthorityFromLocal = () => load('authority')
-var getModifiedFromLocal = () => load('modified')
-var setBallotBasicToLocal = (obj) => save('ballotBasic', obj)
-var setBallotMemberToLocal = (obj) => save('ballotMember', obj)
-var setAuthorityToLocal = (obj) => save('authority', obj)
-var setUpdatedTimeToLocal = (obj) => save('updatedTime', obj)
-var setModifiedToLocal = (obj) => save('modified', obj)
+var getBallotBasicFromLocal = () => load('metaBallotBasic')
+var getBallotMemberFromLocal = () => load('metaBallotMember')
+var getUpdatedTimeFromLocal = () => load('metaUpdatedTime')
+var getAuthorityFromLocal = () => load('metaAuthority')
+var getModifiedFromLocal = () => load('metaModifiedBlock')
+var setBallotBasicToLocal = (obj) => save('metaBallotBasic', obj)
+var setBallotMemberToLocal = (obj) => save('metaBallotMember', obj)
+var setAuthorityToLocal = (obj) => save('metaAuthority', obj)
+var setUpdatedTimeToLocal = (obj) => save('metaUpdatedTime', obj)
+var setModifiedToLocal = (obj) => save('metaModifiedBlock', obj)
 
 export {
   borderColor,
