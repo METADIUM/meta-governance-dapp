@@ -1,10 +1,10 @@
-import React from 'react'
-import { Button, Input, Form, Icon } from 'antd'
+import React from "react";
+import { Button, Input, Form, Icon } from "antd";
 
-import './style/style.css'
-import { shouldPass } from '../util'
+import "./style/style.css";
+import { shouldPass } from "../util";
 
-const { TextArea } = Input
+const { TextArea } = Input;
 
 const AddProposalForm = ({
   netName,
@@ -16,84 +16,103 @@ const AddProposalForm = ({
   newNodeErr,
   newNameErr,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass()
-}) =>
-  <div className='proposalBody'>
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
     <Form onSubmit={handleSubmit}>
-      <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
+      <p className="subtitle">
+        New Authority Address <span className="required">*</span>
+      </p>
       <Form.Item>
         <Input
-          name='newAddr'
+          name="newAddr"
           onChange={handleChange}
-          className={newAddrErr ? 'errInput' : ''}
+          className={newAddrErr ? "errInput" : ""}
           disabled={loading}
         />
-        <p className={newAddrErr ? 'errHint' : 'errHint-hide'}>Invalid Address</p>
+        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
       </Form.Item>
-      <div className='divider flex'>
-        <div className='flex-full'>
-          <p className='subtitle'>Node Name <span className='required'>*</span></p>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Node Name <span className="required">*</span>
+          </p>
           <Form.Item>
             <Input
-              name='newName'
+              name="newName"
               onChange={handleChange}
-              className={newNameErr ? 'errInput' : ''}
+              className={newNameErr ? "errInput" : ""}
               disabled={loading}
             />
-            <p className={newNameErr ? 'errHint' : 'errHint-hide'}>Invalid Name</p>
+            <p className={newNameErr ? "errHint" : "errHint-hide"}>
+              Invalid Name
+            </p>
           </Form.Item>
         </div>
-        <div className='flex-full'>
-          <p className='subtitle'>META Amount to be locked <span className='required'>*</span></p>
+        <div className="flex-full">
+          <p className="subtitle">
+            META Amount to be locked <span className="required">*</span>
+          </p>
           <Form.Item>
             <Input
-              addonAfter='META'
-              name='newLockAmount'
+              addonAfter="META"
+              name="newLockAmount"
               defaultValue={stakingMin}
-              value={newLockAmount || ''}
+              value={newLockAmount || ""}
               onChange={handleChange}
-              className={newLockAmountErr ? 'errInput' : ''}
+              className={newLockAmountErr ? "errInput" : ""}
               disabled={loading}
             />
-            <p className={newLockAmountErr ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
+            <p className={newLockAmountErr ? "errHint" : "errHint-hide"}>
+              Invalid Amount
+            </p>
           </Form.Item>
         </div>
       </div>
-      <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
+      <p className="subtitle">
+        New Authority Node Description <span className="required">*</span>
+      </p>
       <Form.Item>
         <Input
-          name='newNode'
+          name="newNode"
           onChange={handleChange}
-          className={newNodeErr ? 'errInput' : ''}
+          className={newNodeErr ? "errInput" : ""}
           disabled={loading}
-          placeholder='6f8a80d1....66ad92a0@10.3.58.6:30303'
+          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
         />
-        <p className={newNodeErr ? 'errHint' : 'errHint-hide'}>Invalid Node</p>
+        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
       </Form.Item>
-      <div className='helpDescription'>
-        <Icon type='question-circle' />
+      <div className="helpDescription">
+        <Icon type="question-circle" />
         <p>
-          The hexadecimal node ID is encoded in the username portion of the URL, separated from the host by an @ sign. The hostname can only be given as an IP address, DNS domain names are not allowed. The port in the host name section is the TCP listening port.
+          The hexadecimal node ID is encoded in the username portion of the URL,
+          separated from the host by an @ sign. The hostname can only be given
+          as an IP address, DNS domain names are not allowed. The port in the
+          host name section is the TCP listening port.
         </p>
       </div>
-      <p className='subtitle'>Description</p>
+      <p className="subtitle">Description</p>
       <Form.Item>
         <TextArea
           rows={4}
-          placeholder='Max. 256 bytes'
-          autosize={{ minRows: 4, maxRows: 4 }}
-          name='memo'
+          placeholder="Max. 256 bytes"
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          name="memo"
           onChange={handleChange}
           disabled={loading}
         />
       </Form.Item>
       <Form.Item>
-        <div className='submitDiv flex'>
+        <div className="submitDiv flex">
           <Button
-            name='submit'
-            className={'submit_Btn btn-fill-primary text-large ' + netName}
-            htmlType='submit'
-            disabled={newLockAmountErr || newAddrErr || newNodeErr || newNameErr}
+            name="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            htmlType="submit"
+            disabled={
+              newLockAmountErr || newAddrErr || newNodeErr || newNameErr
+            }
             loading={loading}
           >
             Submit
@@ -102,6 +121,7 @@ const AddProposalForm = ({
       </Form.Item>
     </Form>
   </div>
+);
 
 const ReplaceProposalForm = ({
   netName,
@@ -115,104 +135,134 @@ const ReplaceProposalForm = ({
   newLockAmount,
   oldNodeErr,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass()
-}) =>
-  <div className='proposalBody'>
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
     <Form onSubmit={handleSubmit}>
-      <p className='subtitle'>Old Authority Address <span className='required'>*</span></p>
+      <p className="subtitle">
+        Old Authority Address <span className="required">*</span>
+      </p>
       <Form.Item>
         <Input
-          name='oldAddr'
+          name="oldAddr"
           onChange={handleChange}
-          className={oldAddrErr ? 'errInput' : ''}
+          className={oldAddrErr ? "errInput" : ""}
           disabled={loading}
         />
-        <p className={oldAddrErr ? 'errHint' : 'errHint-hide'}>Invalid Address</p>
+        <p className={oldAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
       </Form.Item>
-      <p className='subtitle'>New Authority Address <span className='required'>*</span></p>
+      <p className="subtitle">
+        New Authority Address <span className="required">*</span>
+      </p>
       <Form.Item>
         <Input
-          name='newAddr'
+          name="newAddr"
           onChange={handleChange}
-          className={newAddrErr ? 'errInput' : ''}
+          className={newAddrErr ? "errInput" : ""}
           disabled={loading}
         />
-        <p className={newAddrErr ? 'errHint' : 'errHint-hide'}>Invalid Address</p>
+        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
       </Form.Item>
-      <div className='divider flex'>
-        <div className='flex-full'>
-          <p className='subtitle'>Node Name <span className='required'>*</span></p>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Node Name <span className="required">*</span>
+          </p>
           <Form.Item>
             <Input
-              name='newName'
+              name="newName"
               onChange={handleChange}
-              className={newNameErr ? 'errInput' : ''}
+              className={newNameErr ? "errInput" : ""}
               disabled={loading}
             />
-            <p className={newNameErr ? 'errHint' : 'errHint-hide'}>Invalid Name</p>
+            <p className={newNameErr ? "errHint" : "errHint-hide"}>
+              Invalid Name
+            </p>
           </Form.Item>
         </div>
-        <div className='flex-full'>
-          <p className='subtitle'>Replace META Amount <span className='required'>*</span></p>
+        <div className="flex-full">
+          <p className="subtitle">
+            Replace META Amount <span className="required">*</span>
+          </p>
           <Form.Item>
             <Input
-              addonAfter='META'
-              name='newLockAmount'
+              addonAfter="META"
+              name="newLockAmount"
               defaultValue={stakingMin}
-              value={newLockAmount || ''}
+              value={newLockAmount || ""}
               onChange={handleChange}
-              className={newLockAmountErr ? 'errInput' : ''}
+              className={newLockAmountErr ? "errInput" : ""}
               disabled={loading}
             />
-            <p className={newLockAmountErr ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
+            <p className={newLockAmountErr ? "errHint" : "errHint-hide"}>
+              Invalid Amount
+            </p>
           </Form.Item>
         </div>
       </div>
-      <p className='subtitle'>New Authority Node Description <span className='required'>*</span></p>
+      <p className="subtitle">
+        New Authority Node Description <span className="required">*</span>
+      </p>
       <Form.Item>
         <Input
-          name='newNode'
+          name="newNode"
           onChange={handleChange}
-          className={newNodeErr ? 'errInput' : ''}
+          className={newNodeErr ? "errInput" : ""}
           disabled={loading}
-          placeholder='6f8a80d1....66ad92a0@10.3.58.6:30303'
+          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
         />
-        <p className={newNodeErr ? 'errHint' : 'errHint-hide'}>Invalid Node</p>
+        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
       </Form.Item>
-      <div className='helpDescription'>
-        <Icon type='question-circle' />
+      <div className="helpDescription">
+        <Icon type="question-circle" />
         <p>
-          The hexadecimal node ID is encoded in the username portion of the URL, separated from the host by an @ sign. The hostname can only be given as an IP address, DNS domain names are not allowed. The port in the host name section is the TCP listening port.
+          The hexadecimal node ID is encoded in the username portion of the URL,
+          separated from the host by an @ sign. The hostname can only be given
+          as an IP address, DNS domain names are not allowed. The port in the
+          host name section is the TCP listening port.
         </p>
       </div>
-      <p className='subtitle'>Old Authority Node Description <span className='required'>*</span></p>
+      <p className="subtitle">
+        Old Authority Node Description <span className="required">*</span>
+      </p>
       <Form.Item>
         <Input
-          name='oldNode'
+          name="oldNode"
           onChange={handleChange}
-          className={oldNodeErr ? 'errInput' : ''}
+          className={oldNodeErr ? "errInput" : ""}
           disabled={loading}
-          placeholder='6f8a80d1....66ad92a0@10.3.58.6:30303'
+          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
         />
-        <p className={oldNodeErr ? 'errHint' : 'errHint-hide'}>Invalid Node</p>
+        <p className={oldNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
       </Form.Item>
-      <p className='subtitle'>Description </p>
+      <p className="subtitle">Description </p>
       <Form.Item>
         <TextArea
           rows={4}
-          placeholder='Max. 256 bytes'
-          autosize={{ minRows: 4, maxRows: 4 }}
-          name='memo'
+          placeholder="Max. 256 bytes"
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          name="memo"
           onChange={handleChange}
           disabled={loading}
         />
       </Form.Item>
       <Form.Item>
-        <div className='submitDiv flex'>
+        <div className="submitDiv flex">
           <Button
-            className={'submit_Btn btn-fill-primary text-large ' + netName}
-            htmlType='submit'
-            disabled={newLockAmountErr || newAddrErr || newNodeErr || newNameErr || oldAddrErr || oldNodeErr}
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            htmlType="submit"
+            disabled={
+              newLockAmountErr ||
+              newAddrErr ||
+              newNodeErr ||
+              newNameErr ||
+              oldAddrErr ||
+              oldNodeErr
+            }
             loading={loading}
           >
             Submit
@@ -221,6 +271,7 @@ const ReplaceProposalForm = ({
       </Form.Item>
     </Form>
   </div>
+);
 
 const RmoveProposalForm = ({
   netName,
@@ -232,66 +283,79 @@ const RmoveProposalForm = ({
   oldLockAmount,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
-  getLockAmount = shouldPass()
-}) =>
-  <div className='proposalBody'>
+  getLockAmount = shouldPass(),
+}) => (
+  <div className="proposalBody">
     <Form onSubmit={handleSubmit}>
-      <p className='subtitle'>Address to be removed <span className='required'>*</span></p>
+      <p className="subtitle">
+        Address to be removed <span className="required">*</span>
+      </p>
       <Form.Item>
         <Input.Search
-          name='oldAddr'
+          name="oldAddr"
           onChange={handleChange}
-          className={oldAddrErr ? 'errInput' : ''}
+          className={oldAddrErr ? "errInput" : ""}
           disabled={loading}
-          enterButton={<span><Icon type='search' /><span> Check Balance</span></span>}
-          onSearch={value => getLockAmount(value)}
+          enterButton={
+            <span>
+              <Icon type="search" />
+              <span> Check Balance</span>
+            </span>
+          }
+          onSearch={(value) => getLockAmount(value)}
         />
-        <p className={oldAddrErr ? 'errHint' : 'errHint-hide'}>Invalid Address</p>
+        <p className={oldAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
       </Form.Item>
-      <div className='divider flex'>
-        <div className='flex-full'>
-          <p className='subtitle'>Locked META Amount</p>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">Locked META Amount</p>
           <Form.Item>
             <Input
-              name='showLockAmount'
+              name="showLockAmount"
               value={showLockAmount}
-              addonAfter='META'
+              addonAfter="META"
               disabled
             />
           </Form.Item>
         </div>
-        <div className='flex-full'>
-          <p className='subtitle'>META Amount to be unlocked <span className='required'>*</span></p>
+        <div className="flex-full">
+          <p className="subtitle">
+            META Amount to be unlocked <span className="required">*</span>
+          </p>
           <Form.Item>
             <Input
-              addonAfter='META'
-              name='oldLockAmount'
+              addonAfter="META"
+              name="oldLockAmount"
               defaultValue={stakingMin}
-              value={oldLockAmount || ''}
+              value={oldLockAmount || ""}
               onChange={handleChange}
-              className={oldLockAmountErr ? 'errInput' : ''}
+              className={oldLockAmountErr ? "errInput" : ""}
               disabled={loading}
             />
-            <p className={oldLockAmountErr ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
+            <p className={oldLockAmountErr ? "errHint" : "errHint-hide"}>
+              Invalid Amount
+            </p>
           </Form.Item>
         </div>
       </div>
-      <p className='subtitle'>Description</p>
+      <p className="subtitle">Description</p>
       <Form.Item>
         <TextArea
           rows={4}
-          placeholder='Max. 256 bytes'
-          autosize={{ minRows: 4, maxRows: 4 }}
-          name='memo'
+          placeholder="Max. 256 bytes"
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          name="memo"
           onChange={handleChange}
           disabled={loading}
         />
       </Form.Item>
       <Form.Item>
-        <div className='submitDiv flex'>
+        <div className="submitDiv flex">
           <Button
-            className={'submit_Btn btn-fill-primary text-large ' + netName}
-            htmlType='submit'
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            htmlType="submit"
             disabled={oldAddrErr}
             loading={loading}
           >
@@ -301,6 +365,7 @@ const RmoveProposalForm = ({
       </Form.Item>
     </Form>
   </div>
+);
 
 const UpdateProposalForm = ({
   netName,
@@ -308,54 +373,61 @@ const UpdateProposalForm = ({
   newNameErr,
   newNodeErr,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass()
-}) =>
-  <div className='proposalBody'>
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
     <Form onSubmit={handleSubmit}>
-      <p className='subtitle'>New Node Name <span className='required'>*</span></p>
+      <p className="subtitle">
+        New Node Name <span className="required">*</span>
+      </p>
       <Form.Item>
         <Input
-          name='newName'
+          name="newName"
           onChange={handleChange}
-          className={newNameErr ? 'errInput' : ''}
+          className={newNameErr ? "errInput" : ""}
           disabled={loading}
         />
-        <p className={newNameErr ? 'errHint' : 'errHint-hide'}>Invalid Name</p>
+        <p className={newNameErr ? "errHint" : "errHint-hide"}>Invalid Name</p>
       </Form.Item>
-      <p className='subtitle'>New Node Description <span className='required'>*</span></p>
+      <p className="subtitle">
+        New Node Description <span className="required">*</span>
+      </p>
       <Form.Item>
         <Input
-          type='primary'
-          name='newNode'
+          type="primary"
+          name="newNode"
           onChange={handleChange}
-          className={newNodeErr ? 'errInput' : ''}
+          className={newNodeErr ? "errInput" : ""}
           disabled={loading}
-          placeholder='6f8a80d1....66ad92a0@10.3.58.6:30303'
+          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
         />
-        <p className={newNodeErr ? 'errHint' : 'errHint-hide'}>Invalid Node</p>
+        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
       </Form.Item>
-      <div className='helpDescription'>
-        <Icon type='question-circle' />
+      <div className="helpDescription">
+        <Icon type="question-circle" />
         <p>
-          The hexadecimal node ID is encoded in the username portion of the URL, separated from the host by an @ sign. The hostname can only be given as an IP address, DNS domain names are not allowed. The port in the host name section is the TCP listening port.
+          The hexadecimal node ID is encoded in the username portion of the URL,
+          separated from the host by an @ sign. The hostname can only be given
+          as an IP address, DNS domain names are not allowed. The port in the
+          host name section is the TCP listening port.
         </p>
       </div>
-      <p className='subtitle'>Description</p>
+      <p className="subtitle">Description</p>
       <Form.Item>
         <TextArea
           rows={4}
-          placeholder='Max. 256 bytes'
-          autosize={{ minRows: 4, maxRows: 4 }}
-          name='memo'
+          placeholder="Max. 256 bytes"
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          name="memo"
           onChange={handleChange}
           disabled={loading}
         />
       </Form.Item>
       <Form.Item>
-        <div className='submitDiv flex'>
+        <div className="submitDiv flex">
           <Button
-            className={'submit_Btn btn-fill-primary text-large ' + netName}
-            htmlType='submit'
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            htmlType="submit"
             disabled={newNodeErr || newNameErr}
             loading={loading}
           >
@@ -365,10 +437,11 @@ const UpdateProposalForm = ({
       </Form.Item>
     </Form>
   </div>
+);
 
 export {
   AddProposalForm,
   ReplaceProposalForm,
   RmoveProposalForm,
-  UpdateProposalForm
-}
+  UpdateProposalForm,
+};
