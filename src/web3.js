@@ -40,13 +40,14 @@ let getWeb3Instance = () => {
       if (web3) {
         netId = await web3.eth.net.getId();
         network = await web3.eth.net.getNetworkType();
-        let errMsg = "Unknown network. Please access to METADIUM mainnet";
+        const buildNetworkType = process.env.REACT_APP_NETWORK_TYPE;
+        let errMsg = `Unknown network. Please access to METADIUM ${buildNetworkType}`;
         // * 220428 refactoring if statement
         // 조건문 사용 시 참이 되는 값으로 비교해야 파악하기 쉬움
         if (netId in metaWeb3Constants.NETWORK && network === "private") {
           netName = metaWeb3Constants.NETWORK[netId].NAME;
           branch = metaWeb3Constants.NETWORK[netId].BRANCH;
-          if (branch !== "mainnet") {
+          if (branch !== buildNetworkType) {
             reject(new Error(errMsg));
             // * 220428 add return
             // web3 의 network 가 metadium mainnet 이 아닌 경우 아래 코드를 불필요하게 실행시킬 필요가 없음

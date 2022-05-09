@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start": "PORT=3005 react-app-rewired start",
+    "start:production": "NODE_ENV=production PORT=3005 react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "standard --parser babel-eslint",
     "fix": "standard --parser babel-eslint --fix",
