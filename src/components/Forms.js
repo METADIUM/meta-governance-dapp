@@ -439,9 +439,62 @@ const UpdateProposalForm = ({
   </div>
 );
 
+const ChangeOfGovernanceContractAddress = ({
+  netName,
+  loading,
+  newGovAddrErr,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form onSubmit={handleSubmit}>
+      <p className="subtitle">
+        New Governance Address <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          type="primary"
+          name="newGovAddr"
+          className={newGovAddrErr ? "errInput" : ""}
+          disabled={loading}
+          onChange={handleChange}
+        />
+        <p className={newGovAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
+      </Form.Item>
+      <p className="subtitle">Description</p>
+      <Form.Item>
+        <TextArea
+          name="memo"
+          placeholder="Max. 256 bytes"
+          rows={4}
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          maxLength={256}
+          disabled={loading}
+          onChange={handleChange}
+        />
+      </Form.Item>
+      <Form.Item>
+        <div className="submitDiv flex">
+          <Button
+            htmlType="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            loading={loading}
+            disabled={newGovAddrErr}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
+    </Form>
+  </div>
+);
+
 export {
   AddProposalForm,
   ReplaceProposalForm,
   RmoveProposalForm,
   UpdateProposalForm,
+  ChangeOfGovernanceContractAddress,
 };
