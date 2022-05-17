@@ -313,6 +313,8 @@ class App extends React.Component {
       ret.id = i; // Add ballot id
       util.refineBallotBasic(ret);
       this.data.ballotBasicOriginData[i] = ret;
+      // * 220517 remove code
+      // if문 결과가 무조건 true로 나오기 때문에 조건문이 필요 없음
       if (!ballotBasicFinalizedData) return;
       if (
         ret.state === constants.ballotState.Accepted ||
