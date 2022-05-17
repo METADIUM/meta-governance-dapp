@@ -75,6 +75,9 @@ class App extends React.Component {
     );
   }
 
+  // * 220512
+  // web3.names 와 동일한 이름을 갖는 meta-web3 의 contract init 메소드를 호출해 contract 객체를 만듦
+  // meta-web3 의 constants.js 와 branch 를 참고하여 git repository 에 있는 abi, contract 를 세팅
   async initContracts(web3Config) {
     initContractsByNames({
       web3: web3Config.web3,
@@ -183,6 +186,9 @@ class App extends React.Component {
     ]).then(() => util.setUpdatedTimeToLocal(new Date()));
   }
 
+  // * 220512
+  // contract method 로 가져온 block height 와 local storage 에 저장한 block height 를 비교
+  // 값이 같으면 local storage 에 저장된 authority list 를 가져오고, 값이 다르면 authority list 를 새로 가져옴
   async getAuthorityData() {
     const modifiedBlock = await contracts.governance.getModifiedBlock();
     if (
@@ -225,6 +231,8 @@ class App extends React.Component {
     this.data.voteLength -= 1;
   }
 
+  // * 220512
+  // meta-authorities repository 에서 branch 에 맞는 authority list 를 가져오고 local storage 에 세팅
   async initAuthorityData() {
     let authorityOriginData = await util.getAuthorityLists(
       constants.authorityRepo.org,
@@ -238,6 +246,8 @@ class App extends React.Component {
     util.setAuthorityToLocal(this.data.authorityOriginData);
   }
 
+  // * 220512
+  // authority list 중 member 인 authority 만 return
   async refineAuthority(authorityList) {
     let memberAuthority = {};
     let index = 0;
@@ -253,6 +263,11 @@ class App extends React.Component {
     return memberAuthority;
   }
 
+  // * 220512
+  // local storage 에서 voting list (ballotBasic) 와 voting member list (ballotMember) 를 가져오고 contract method 로 투표 횟수 (voteLength) 와 투표 항목 갯수 (ballotCnt) 를 가져옴
+  // ballotCnt 만큼 for 문 돌면서 for 문의 index 가 가져온 voting list index 에 있으면 index 에 매칭되는 voting 항목을 data value 에 저장
+  // voting list 에 없는 index 인 경우 해당 index 로 voting 항목과 voting member list 를 가져옴
+  // voting 항목의 변경이 있으면 local storage 에 다시 세팅 (state accepted, rejected 인 항목만)
   async initBallotData() {
     let ballotBasicFinalizedData = util.getBallotBasicFromLocal()
       ? util.getBallotBasicFromLocal()
@@ -289,7 +304,10 @@ class App extends React.Component {
     }
   }
 
-  async getBallotBasicOriginData(i, ballotBasicFinalizedData = false) {
+  // * 220512
+  // index (id) 값으로 contract method 를 호출해 voting item을 가져옴
+  // voting item state 가 accepted, rejected 일 때만 localStorage 에 저장
+  async getBallotBasicOriginData(i, ballotBasicFinalizedData = {}) {
     let isUpdated = false;
     await contracts.ballotStorage.getBallotBasic(i).then((ret) => {
       ret.id = i; // Add ballot id
@@ -307,6 +325,10 @@ class App extends React.Component {
     return isUpdated;
   }
 
+  // * 220517
+  // index (id) 값으로 contract method 를 호출해 voting member list 를 가져옴
+  // voting list 를 가져온 이후 실행되는 함수
+  // voting item 이 isUpdated 됐으면 함께 localStorage 에 저장
   async getBallotMemberOriginData(
     i,
     isUpdated = false,
