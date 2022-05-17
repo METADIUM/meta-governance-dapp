@@ -3,7 +3,8 @@ import { Button, Select, Icon } from "antd";
 
 import {
   AddProposalForm,
-  ChangeOfGovernanceContractAddress,
+  ChangeOfGovernanceContractAddressForm,
+  GasPriceForm,
   ReplaceProposalForm,
   RmoveProposalForm,
   UpdateProposalForm,
@@ -34,6 +35,8 @@ class ProposalForm extends React.Component {
     showLockAmount: "",
     // Change Of Governance Contract Address
     newGovAddrErr: false,
+    // Gas Price
+    gasPriceErr: false,
   };
 
   constructor(props) {
@@ -109,6 +112,10 @@ class ProposalForm extends React.Component {
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
         break;
+      // Gas Price
+      case "gasPrice":
+        this.setState({ gasPriceErr: !this.checkPrice(e.target.value) });
+        break;
       default:
         break;
     }
@@ -133,6 +140,10 @@ class ProposalForm extends React.Component {
 
   checkName(name) {
     return /^[A-Za-z0-9+]{1,64}$/.test(name);
+  }
+
+  checkPrice(price) {
+    return /^[0-9]*$/.test(price);
   }
 
   /* Submit form data. */
@@ -181,13 +192,23 @@ class ProposalForm extends React.Component {
           [formData.newNode.port, myLockBalance],
           formData.memo
         );
-        // * 220512 TODO add voting duration
+        // * 220512 add voting - change of governance contract address
         // contract 단에서 voting duration 이 추가되면 추가해야 함
       } else if (
         this.data.selectedVoteTopic === "ChangeOfGovernanceContractAddress"
       ) {
         trx = this.governance.addProposalToChangeGov(
           formData.newGovAddr,
+          formData.memo
+        );
+        // * 220517 add voting - gas price
+        // envName, envType 맞는지 확인 필요
+        // contract 단에서 voting duration 이 추가되면 추가해야 함
+      } else if (this.data.selectedVoteTopic === "GasPrice") {
+        trx = this.governance.addProposalToChangeEnv(
+          web3Instance.web3.utils.asciiToHex("GasPrice"), // envName
+          "2", // envType (uint)
+          formData.gasPrice,
           formData.memo
         );
       } else return;
@@ -432,10 +453,20 @@ class ProposalForm extends React.Component {
         );
       case "ChangeOfGovernanceContractAddress":
         return (
-          <ChangeOfGovernanceContractAddress
+          <ChangeOfGovernanceContractAddressForm
             netName={web3Instance.netName}
             loading={this.props.loading}
             newGovAddrErr={this.state.newGovAddrErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "GasPrice":
+        return (
+          <GasPriceForm
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            gasPriceErr={this.state.gasPriceErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />
@@ -485,6 +516,7 @@ class ProposalForm extends React.Component {
                 <Select.Option value="ChangeOfGovernanceContractAddress">
                   Change Of Governance Contract Address
                 </Select.Option>
+                <Select.Option value="GasPrice">Gas Price</Select.Option>
               </Select>
             </div>
             {this.data.selectedVoteTopic !== "" && (
