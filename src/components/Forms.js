@@ -439,7 +439,7 @@ const UpdateProposalForm = ({
   </div>
 );
 
-const ChangeOfGovernanceContractAddress = ({
+const ChangeOfGovernanceContractAddressForm = ({
   netName,
   loading,
   newGovAddrErr,
@@ -491,10 +491,67 @@ const ChangeOfGovernanceContractAddress = ({
   </div>
 );
 
+const GasPriceForm = ({
+  netName,
+  loading,
+  gasPriceErr,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form onSubmit={handleSubmit}>
+      <p className="subtitle">
+        Gas Price <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          addonAfter="GWei"
+          name="gasPrice"
+          className={gasPriceErr ? "errInput" : ""}
+          disabled={loading}
+          onChange={handleChange}
+        />
+        <p className={gasPriceErr ? "errHint" : "errHint-hide"}>
+          Invalid Price
+        </p>
+      </Form.Item>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>The default gas price is 800Wei.</p>
+      </div>
+      <p className="subtitle">Description</p>
+      <Form.Item>
+        <TextArea
+          name="memo"
+          placeholder="Max. 256 bytes"
+          rows={4}
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          maxLength={256}
+          disabled={loading}
+          onChange={handleChange}
+        />
+      </Form.Item>
+      <Form.Item>
+        <div className="submitDiv flex">
+          <Button
+            htmlType="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            loading={loading}
+            disabled={gasPriceErr}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
+    </Form>
+  </div>
+);
+
 export {
   AddProposalForm,
   ReplaceProposalForm,
   RmoveProposalForm,
   UpdateProposalForm,
-  ChangeOfGovernanceContractAddress,
+  ChangeOfGovernanceContractAddressForm,
+  GasPriceForm,
 };
