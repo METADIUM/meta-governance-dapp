@@ -58,7 +58,7 @@ const VotingBallots = ({
             disabled={![bs.Ready, bs.InProgress].includes(item.state)}
             className="text-large"
             id="yesVotingBtn"
-            onClick={() => onClickVote("Y", item.id, item.endTime, this.state)}
+            onClick={() => onClickVote("Y", item.id, item.endTime, item.state)}
           >
             Yes
           </Button>
@@ -81,7 +81,7 @@ const VotingBallots = ({
             disabled={![bs.Ready, bs.InProgress].includes(item.state)}
             className="text-large"
             id="noVotingBtn"
-            onClick={() => onClickVote("N", item.id, item.endTime, this.state)}
+            onClick={() => onClickVote("N", item.id, item.endTime, item.state)}
           >
             No
           </Button>
