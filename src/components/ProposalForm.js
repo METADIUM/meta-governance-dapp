@@ -146,7 +146,7 @@ class ProposalForm extends React.Component {
     return /^[0-9]*$/.test(price);
   }
 
-  /* Submit form data. */
+  // Submit form data
   handleSubmit = async (e) => {
     this.props.convertLoading(true);
     try {
@@ -192,8 +192,7 @@ class ProposalForm extends React.Component {
           [formData.newNode.port, myLockBalance],
           formData.memo
         );
-        // * 220512 add voting - change of governance contract address
-        // contract 단에서 voting duration 이 추가되면 추가해야 함
+        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
       } else if (
         this.data.selectedVoteTopic === "ChangeOfGovernanceContractAddress"
       ) {
@@ -201,9 +200,8 @@ class ProposalForm extends React.Component {
           formData.newGovAddr,
           formData.memo
         );
-        // * 220517 add voting - gas price
-        // envName, envType 맞는지 확인 필요
-        // contract 단에서 voting duration 이 추가되면 추가해야 함
+        // TODO envName, envType 맞는지 확인 필요
+        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
       } else if (this.data.selectedVoteTopic === "GasPrice") {
         trx = this.governance.addProposalToChangeEnv(
           web3Instance.web3.utils.asciiToHex("GasPrice"), // envName
