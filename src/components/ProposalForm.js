@@ -157,7 +157,7 @@ class ProposalForm extends React.Component {
         this.props.convertLoading(false);
         return;
       }
-      if (this.data.selectedVoteTopic === "add") {
+      if (this.data.selectedVoteTopic === "AddAuthorityMember") {
         trx = this.governance.addProposalToAddMember(
           formData.newAddr,
           formData.newName,
@@ -166,7 +166,7 @@ class ProposalForm extends React.Component {
           [formData.newNode.port, formData.newLockAmount],
           formData.memo
         );
-      } else if (this.data.selectedVoteTopic === "replace") {
+      } else if (this.data.selectedVoteTopic === "ReplaceAuthorityMember") {
         trx = this.governance.addProposalToChangeMember(
           [formData.oldAddr, formData.newAddr],
           formData.newName,
@@ -175,13 +175,13 @@ class ProposalForm extends React.Component {
           [formData.newNode.port, formData.newLockAmount],
           formData.memo
         );
-      } else if (this.data.selectedVoteTopic === "remove") {
+      } else if (this.data.selectedVoteTopic === "RemoveAuthorityMember") {
         trx = this.governance.addProposalToRemoveMember(
           formData.oldAddr,
           formData.oldLockAmount,
           formData.memo
         );
-      } else if (this.data.selectedVoteTopic === "update") {
+      } else if (this.data.selectedVoteTopic === "UpdateAuthority") {
         let myLockBalance = await this.staking.lockedBalanceOf(
           web3Instance.defaultAccount
         );
@@ -256,7 +256,7 @@ class ProposalForm extends React.Component {
       );
     }
 
-    if (this.data.selectedVoteTopic === "add") {
+    if (this.data.selectedVoteTopic === "AddAuthorityMember") {
       const newMemberBalance = Number(
         await this.staking.availableBalanceOf(formData.newAddr)
       );
@@ -280,7 +280,7 @@ class ProposalForm extends React.Component {
           "Proposal Submit Error"
         );
       }
-    } else if (this.data.selectedVoteTopic === "replace") {
+    } else if (this.data.selectedVoteTopic === "ReplaceAuthorityMember") {
       const oldMemberLockedBalance = await this.staking.lockedBalanceOf(
         formData.oldAddr
       );
@@ -331,7 +331,7 @@ class ProposalForm extends React.Component {
           "Proposal Submit Error"
         );
       }
-    } else if (this.data.selectedVoteTopic === "remove") {
+    } else if (this.data.selectedVoteTopic === "RemoveAuthorityMember") {
       const oldMemberBalance = Number(
         await this.staking.lockedBalanceOf(formData.oldAddr)
       );
@@ -391,7 +391,7 @@ class ProposalForm extends React.Component {
 
   getProposalForm() {
     switch (this.data.selectedVoteTopic) {
-      case "add":
+      case "AddAuthorityMember":
         return (
           <AddProposalForm
             netName={web3Instance.netName}
@@ -406,7 +406,7 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
-      case "replace":
+      case "ReplaceAuthorityMember":
         return (
           <ReplaceProposalForm
             netName={web3Instance.netName}
@@ -423,7 +423,7 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
-      case "remove":
+      case "RemoveAuthorityMember":
         return (
           <RmoveProposalForm
             netName={web3Instance.netName}
@@ -438,7 +438,7 @@ class ProposalForm extends React.Component {
             getLockAmount={this.getLockAmount}
           />
         );
-      case "update":
+      case "UpdateAuthority":
         return (
           <UpdateProposalForm
             netName={web3Instance.netName}
@@ -507,14 +507,38 @@ class ProposalForm extends React.Component {
                 onChange={this.onSelectChange}
                 disabled={this.props.buttonLoading}
               >
-                <Select.Option value="add">Add Authority</Select.Option>
-                <Select.Option value="replace">Replace Authority</Select.Option>
-                <Select.Option value="remove">Remove Authority</Select.Option>
-                <Select.Option value="update">Update Authority</Select.Option>
+                <Select.Option value="AddAuthorityMember">
+                  Add Authority Member
+                </Select.Option>
+                <Select.Option value="ReplaceAuthorityMember">
+                  Replace Authority Member
+                </Select.Option>
+                <Select.Option value="RemoveAuthorityMember">
+                  Remove Authority Member
+                </Select.Option>
+                <Select.Option value="UpdateAuthority">
+                  Update Authority
+                </Select.Option>
                 <Select.Option value="ChangeOfGovernanceContractAddress">
                   Change Of Governance Contract Address
                 </Select.Option>
+                <Select.Option value="VotingDurationSetting">
+                  Voting Duration Setting
+                </Select.Option>
+                <Select.Option value="AuthorityMemberStakingAmount">
+                  Authority Member Staking Amount
+                </Select.Option>
+                <Select.Option value="BlockCreationTime">
+                  Block Creation Time
+                </Select.Option>
+                <Select.Option value="BlockRewardAmount">
+                  Block Reward Amount
+                </Select.Option>
+                <Select.Option value="BlockRewardDistibutionMethod">
+                  Block Reward Distribution Method
+                </Select.Option>
                 <Select.Option value="GasPrice">Gas Price</Select.Option>
+                <Select.Option value="GasLimit">Gas Limit</Select.Option>
               </Select>
             </div>
             {this.data.selectedVoteTopic !== "" && (
