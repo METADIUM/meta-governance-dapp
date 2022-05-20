@@ -4,6 +4,7 @@ import { Button, Select, Icon } from "antd";
 import {
   AddProposalForm,
   ChangeOfGovernanceContractAddressForm,
+  // ! legacy code -> remove <Gas Price>
   GasPriceForm,
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
@@ -114,6 +115,7 @@ class ProposalForm extends React.Component {
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
         break;
+      // ! legacy code -> remove <Gas Price>
       // Gas Price
       case "gasPrice":
         this.setState({ gasPriceErr: !this.checkPrice(e.target.value) });
@@ -204,6 +206,7 @@ class ProposalForm extends React.Component {
           formData.newGovAddr,
           formData.memo
         );
+        // ! legacy code -> remove <Gas Price>
         // TODO envName, envType 맞는지 확인 필요
         // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
       } else if (this.data.selectedVoteTopic === "GasPrice") {
@@ -466,6 +469,7 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
+      // ! legacy code -> remove <Gas Price>
       case "GasPrice":
         return (
           <GasPriceForm

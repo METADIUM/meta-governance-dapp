@@ -493,6 +493,7 @@ const ChangeOfGovernanceContractAddressForm = ({
   </div>
 );
 
+// ! legacy code -> remove <Gas Price>
 const GasPriceForm = ({
   netName,
   loading,
@@ -557,5 +558,6 @@ export {
   // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
   ChangeOfGovernanceContractAddressForm,
+  // ! legacy code -> remove <Gas Price>
   GasPriceForm,
 };
