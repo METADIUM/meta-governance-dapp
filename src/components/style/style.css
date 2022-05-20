@@ -533,6 +533,7 @@
 .contentVotingDiv .subtitle {
   color: rgba(0,0,0,0.6);
   margin-top: 16px;
+  line-height: 1.5;
 }
 
 .contentVotingDiv .required {

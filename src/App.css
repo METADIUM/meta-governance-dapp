@@ -90,6 +90,10 @@ p {
   height: 100%;
 }
 
+.bor-box {
+  border:1px solid #d9d9d9;
+}
+
 .errHint {
   display: block !important;
   line-height: 1.5;
@@ -164,6 +168,19 @@ p {
   font-size: 12px;
 }
 
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.pd-rl-24 {
+  padding-right: 24px;
+  padding-left: 24px;
+}
+.pd-tb-24 {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
 /* total */
 
 .layout {
@@ -194,4 +211,8 @@ input.errInput {
   border-color:#FC0F1B;
 } input.errInput:focus{
   border-color: #261BC9;
+}
+
+.ant-form-item-control {
+  line-height: 32px;
 }

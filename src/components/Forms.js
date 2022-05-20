@@ -290,7 +290,10 @@ const RmoveProposalForm = ({
       <p className="subtitle">
         Address to be removed <span className="required">*</span>
       </p>
-      <Form.Item>
+      <Form.Item className="bor-box pd-rl-24 pd-tb-24">
+        <p className="subtitle mt-0">Voting Address</p>
+        <Input></Input>
+        <p className="subtitle">Staking Address</p>
         <Input.Search
           name="oldAddr"
           onChange={handleChange}
@@ -315,7 +318,7 @@ const RmoveProposalForm = ({
             <Input
               name="showLockAmount"
               value={showLockAmount}
-              addonAfter="META"
+              addonAfter="WEMIX"
               disabled
             />
           </Form.Item>
@@ -326,7 +329,7 @@ const RmoveProposalForm = ({
           </p>
           <Form.Item>
             <Input
-              addonAfter="META"
+              addonAfter="WEMIX"
               name="oldLockAmount"
               defaultValue={stakingMin}
               value={oldLockAmount || ""}
