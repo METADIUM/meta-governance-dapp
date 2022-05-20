@@ -545,6 +545,14 @@ class ProposalForm extends React.Component {
               <div>{this.getProposalForm()}</div>
             )}
           </div>
+          {/* reference memo */}
+          <div className="contentRefDiv">
+            <p>[Reference]</p>
+            <ol>
+              <li>Even within the voting duration, if more than 50% of opinions are expressed for or against, voting ends and follow-up work is carried out.</li>
+              <li>Basically, only one voting is conducted at a time, so if there is already voting in progress, you cannot start a new voting.</li>
+            </ol>
+          </div>
         </div>
       </div>
     );

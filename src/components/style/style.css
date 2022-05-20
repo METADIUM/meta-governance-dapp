@@ -488,12 +488,29 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 
-.contentVotingDiv {
+.contentVotingDiv,
+.contentRefDiv {
   margin: 0 16px 24px 16px;
   border-radius: 4px;
+}
+.contentVotingDiv {
   background-color: #ffffff;
 }
-
+.contentRefDiv {
+  background-color: rgba(155, 174, 202, 0.2);
+}
+.contentRefDiv ol {
+  margin-bottom: 0;
+  padding-inline-start: 20px;
+}
+.contentRefDiv ol li,
+.contentRefDiv p {
+  color: #999999;
+}
+.contentRefDiv p {
+  margin-bottom: 15px;
+}
+.contentRefDiv,
 .contentVotingDiv .proposalHead {
   padding: 24px 16px;
 }
