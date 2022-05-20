@@ -6,13 +6,57 @@ var web3Instance;
 let getWeb3Instance = () => {
   if (web3Instance) return web3Instance;
 
+  // Get METADIUM network data
+  const chainId = process.env.REACT_APP_NETWORK_CHAIN_ID;
+  const chainName = process.env.REACT_APP_NETWORK_CHAIN_NAME;
+  const rpcUrls = process.env.REACT_APP_NETWORK_RPC_URLS;
+  const blockExplorerUrls = process.env.REACT_APP_NETWORK_BLOCK_EXPLORER_URLS;
+  const name = process.env.REACT_APP_NETWORK_NATIVE_CURRENCY_NAME;
+  const decimals = parseInt(
+    process.env.REACT_APP_NETWORK_NATIVE_CURRENCY_DECIMALS
+  );
+  const symbol = process.env.REACT_APP_NETWORK_NATIVE_CURRENCY_SYMBOL;
+
+  // Adding METADIUM network to the Metamask
+  const addMetadiumNetwork = async () => {
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId,
+          chainName,
+          rpcUrls: [rpcUrls],
+          blockExplorerUrls: [blockExplorerUrls],
+          nativeCurrency: { name, decimals, symbol },
+        },
+      ],
+    });
+  };
+
+  // Switch Metamask network to METADIUM network
+  const switchMetadiumNetwork = async () => {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId }],
+    });
+  };
+
   return new Promise((resolve, reject) => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener("load", async () => {
       let web3, netName, netId, branch, network, defaultAccount;
       // Checking if Web3 has been injected by the browser
       if (window.ethereum) {
-        web3 = new Web3(window.ethereum);
+        try {
+          await addMetadiumNetwork();
+          // await switchMetadiumNetwork();
+
+          web3 = new Web3(window.ethereum);
+        } catch (e) {
+          reject(
+            new Error(`${e.message || "Please use the METADIUM networks."}`)
+          );
+        }
       } else if (typeof window.web3 !== "undefined") {
         web3 = new Web3(window.web3.currentProvider);
       } else {
