@@ -308,7 +308,7 @@ const RmoveProposalForm = ({
           onSearch={(value) => getLockAmount(value)}
         />
         <p className={oldAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
+          Voting Address is invalid
         </p>
       </Form.Item>
       <div className="divider flex">
