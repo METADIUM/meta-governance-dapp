@@ -11,6 +11,7 @@ import {
   RmoveProposalForm,
   // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
+  VotingDurationSetting,
 } from "./Forms";
 
 import { web3Instance } from "../web3";
@@ -476,6 +477,16 @@ class ProposalForm extends React.Component {
             netName={web3Instance.netName}
             loading={this.props.loading}
             gasPriceErr={this.state.gasPriceErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "VotingDurationSetting":
+        return (
+          <VotingDurationSetting
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            votingDurationErr={this.state.votingDurationErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />

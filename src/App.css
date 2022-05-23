@@ -137,12 +137,25 @@ p {
   flex-direction: column;
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
 .flex-full {
   flex: 100;
 }
 
 .flex-half {
   flex: 0 1 50%;
+}
+
+.w-180 {
+  width: 180px;
+}
+
+.w-25 {
+  width: 25px;
 }
 
 .text_btn {
@@ -178,11 +191,20 @@ p {
 .mt-0 {
   margin-top: 0 !important;
 }
+
+.mt-5 {
+  margin-top: 5px;
+}
+
 .mt-16 {
   margin-top: 16px;
 }
 .mr-0 {
   margin-right: 0 !important;
+}
+.mg-rl-15 {
+  margin-right: 15px;
+  margin-left: 15px;
 }
 
 .pd-rl-24 {
