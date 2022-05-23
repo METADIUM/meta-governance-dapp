@@ -5,6 +5,7 @@ import {
   AddProposalForm,
   ChangeOfGovernanceContractAddressForm,
   GasPriceForm,
+  GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
   RmoveProposalForm,
@@ -37,6 +38,8 @@ class ProposalForm extends React.Component {
     showLockAmount: "",
     // Change Of Governance Contract Address
     newGovAddrErr: false,
+    // Gas Limit
+    gasLimitErr: false,
     // Gas Price
     gasPriceErr: false,
   };
@@ -113,6 +116,10 @@ class ProposalForm extends React.Component {
       // Change Of Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
+        break;
+      // Gas Limit
+      case "gasLimit":
+        this.setState({ gasLimitErr: !this.checkPrice(e.target.value) });
         break;
       // Gas Price
       case "gasPrice":
@@ -204,6 +211,10 @@ class ProposalForm extends React.Component {
           formData.newGovAddr,
           formData.memo
         );
+        // TODO contract method 추가
+        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
+      } else if (this.data.selectedVoteTopic === "gasLimit") {
+        // trx = this.governance.
         // TODO envName, envType 맞는지 확인 필요
         // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
       } else if (this.data.selectedVoteTopic === "GasPrice") {
@@ -462,6 +473,16 @@ class ProposalForm extends React.Component {
             netName={web3Instance.netName}
             loading={this.props.loading}
             newGovAddrErr={this.state.newGovAddrErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "GasLimit":
+        return (
+          <GasLimitForm
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            gasLimitErr={this.state.gasLimitErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />
