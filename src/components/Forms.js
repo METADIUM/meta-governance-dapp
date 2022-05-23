@@ -798,6 +798,332 @@ const AuthorityMemberStakingAmount = ({
   </div>
 );
 
+const BlockCreationTime = ({
+  netName,
+  loading,
+  BlockCreationErr,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form onSubmit={handleSubmit}>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Block Creation Time <span className="required">*</span>
+          </p>
+
+          <Form.Item>
+            <div className="flex-column">
+              <div className="flex-full flex-row">
+                <Input
+                  name="newblockcreation"
+                  onChange={handleChange}
+                  className={"w-180 mg-rl-15 ml-0" + (BlockCreationErr ? "errInput" : "")}
+                  disabled={loading}
+                />
+                <span className="align-bottom-next-to-input">s</span>
+              </div>
+            </div>
+            <p className={BlockCreationErr ? "errHint" : "errHint-hide"}>
+              Invalid Block Creation Time
+            </p>
+          </Form.Item>
+        </div>
+      </div>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>
+          Block Creation time is possible from at least 0.1s.
+        </p>
+      </div>
+      <p className="subtitle">Description</p>
+      <Form.Item>
+        <TextArea
+          rows={4}
+          placeholder="Max. 256 bytes"
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          name="memo"
+          onChange={handleChange}
+          disabled={loading}
+        />
+      </Form.Item>
+      <div className="divider flex flex-end-vertical mt-16">
+        <div className="flex-half flex-end-vertical flex-column mr-0">
+          <Form.Item>
+            <label className="subtitle mt-0 flex-align-self-center">
+              Voting Duration
+            </label>
+            <Select
+                defaultValue={3}
+               name="votDuration"
+               disabled={loading}
+               className="mg-rl-15"
+               style={{width: 180}}
+               onChange={handleChange}
+            >
+              <Option value="3">3</Option>
+              <Option value="4">4</Option>
+              <Option value="5">5</Option>
+            </Select>
+            <span>day</span>
+            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
+              Invalid Amount
+            </p> */}
+          </Form.Item>
+        </div>
+      </div>
+      <Form.Item>
+        <div className="submitDiv flex">
+          <Button
+            name="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            htmlType="submit"
+            disabled={
+              BlockCreationErr
+            }
+            loading={loading}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
+    </Form>
+  </div>
+);
+
+const BlockRewardAmount = ({
+  netName,
+  loading,
+  BlockRewardErr,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form onSubmit={handleSubmit}>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Block Creation Time <span className="required">*</span>
+          </p>
+
+          <Form.Item>
+            <div className="flex-column">
+              <div className="flex-full flex-row">
+                <Input
+                  name="newblockcreation"
+                  onChange={handleChange}
+                  className={"w-180 mg-rl-15 ml-0" + (BlockRewardErr ? "errInput" : "")}
+                  disabled={loading}
+                />
+                <span>WEMIX/Block</span>
+              </div>
+            </div>
+            <p className={BlockRewardErr ? "errHint" : "errHint-hide"}>
+              Invalid Block Reward Amount
+            </p>
+          </Form.Item>
+        </div>
+      </div>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>
+          Block Rewards are available from at least 1WEMIX/Block
+        </p>
+      </div>
+      <p className="subtitle">Description</p>
+      <Form.Item>
+        <TextArea
+          rows={4}
+          placeholder="Max. 256 bytes"
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          name="memo"
+          onChange={handleChange}
+          disabled={loading}
+        />
+      </Form.Item>
+      <div className="divider flex flex-end-vertical mt-16">
+        <div className="flex-half flex-end-vertical flex-column mr-0">
+          <Form.Item>
+            <label className="subtitle mt-0 flex-align-self-center">
+              Voting Duration
+            </label>
+            <Select
+                defaultValue={3}
+               name="votDuration"
+               disabled={loading}
+               className="mg-rl-15"
+               style={{width: 180}}
+               onChange={handleChange}
+            >
+              <Option value="3">3</Option>
+              <Option value="4">4</Option>
+              <Option value="5">5</Option>
+            </Select>
+            <span>day</span>
+            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
+              Invalid Amount
+            </p> */}
+          </Form.Item>
+        </div>
+      </div>
+      <Form.Item>
+        <div className="submitDiv flex">
+          <Button
+            name="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            htmlType="submit"
+            disabled={
+              BlockRewardErr
+            }
+            loading={loading}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
+    </Form>
+  </div>
+);
+
+const BlockRewardDistributionMethod = ({
+  netName,
+  loading,
+  BlockRewardDisMthErr,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form onSubmit={handleSubmit}>
+      <div className="divider flex">
+        <div className="flex-full mr-0">
+          <p className="subtitle">
+            Distribution Rate <span className="required">*</span>
+          </p>
+          <Form.Item className="bor-box pd-rl-24 pd-tb-24">
+            <div className="flex-full flex-row">
+              <div className="flex-column w-15per">
+                <label>Block Producer</label>
+                <Input
+                  name="newBlockprod"
+                  addonAfter="%"
+                  onChange={handleChange}
+                  className={"w-100 mg-rl-5 ml-0" + (BlockRewardDisMthErr ? "errInput" : "")}
+                  disabled={loading}
+                />
+              </div>
+              <span className="sign">+</span>
+              <div className="flex-column w-15per">
+                <label>Staking Reward</label>
+                <Input
+                  name="newStakingRew"
+                  addonAfter="%"
+                  onChange={handleChange}
+                  className={"mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")}
+                  disabled={loading}
+                />
+              </div>
+              <span className="sign">+</span>
+              <div className="flex-column w-15per">
+                <label>Ecosystem</label>
+                <Input
+                  name="newEcosys"
+                  addonAfter="%"
+                  onChange={handleChange}
+                  className={"mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")}
+                  disabled={loading}
+                />
+              </div>
+              <span className="sign">+</span>
+              <div className="flex-column w-15per">
+                <label>Maintenance</label>
+                <Input
+                  name="newMaintain"
+                  addonAfter="%"
+                  onChange={handleChange}
+                  className={"mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")}
+                  disabled={loading}
+                />
+              </div>
+              <span className="sign">=</span>
+              <div className="flex-column w-auto">
+                <label>Sum</label>
+                <Input
+                  name="newSum"
+                  addonAfter="%"
+                  onChange={handleChange}
+                  className={"w-auto mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")}
+                  disabled={loading}
+                />
+              </div>
+            </div>
+            <p className={BlockRewardDisMthErr ? "errHint" : "errHint-hide"}>
+              Invalid Block Reward Distribution Rate
+            </p>
+          </Form.Item>
+        </div>
+      </div>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>
+          For the Block reward distribution rate, the sum of Default, Block Producer, Ecosystem, and Maintenance should be 100
+        </p>
+      </div>
+      <p className="subtitle">Description</p>
+      <Form.Item>
+        <TextArea
+          rows={4}
+          placeholder="Max. 256 bytes"
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          name="memo"
+          onChange={handleChange}
+          disabled={loading}
+        />
+      </Form.Item>
+      <div className="divider flex flex-end-vertical mt-16">
+        <div className="flex-half flex-end-vertical flex-column mr-0">
+          <Form.Item>
+            <label className="subtitle mt-0 flex-align-self-center">
+              Voting Duration
+            </label>
+            <Select
+                defaultValue={3}
+               name="votDuration"
+               disabled={loading}
+               className="mg-rl-15"
+               style={{width: 180}}
+               onChange={handleChange}
+            >
+              <Option value="3">3</Option>
+              <Option value="4">4</Option>
+              <Option value="5">5</Option>
+            </Select>
+            <span>day</span>
+            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
+              Invalid Amount
+            </p> */}
+          </Form.Item>
+        </div>
+      </div>
+      <Form.Item>
+        <div className="submitDiv flex">
+          <Button
+            name="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            htmlType="submit"
+            disabled={
+              BlockRewardDisMthErr
+            }
+            loading={loading}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
+    </Form>
+  </div>
+);
+
 export {
   AddProposalForm,
   // ! legacy code -> remove <Replace Authority>
@@ -810,4 +1136,7 @@ export {
   GasPriceForm,
   VotingDurationSetting,
   AuthorityMemberStakingAmount,
+  BlockCreationTime,
+  BlockRewardAmount,
+  BlockRewardDistributionMethod,
 };

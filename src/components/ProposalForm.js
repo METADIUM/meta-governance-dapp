@@ -13,6 +13,9 @@ import {
   UpdateProposalForm,
   VotingDurationSetting,
   AuthorityMemberStakingAmount,
+  BlockCreationTime,
+  BlockRewardAmount,
+  BlockRewardDistributionMethod,
 } from "./Forms";
 
 import { web3Instance } from "../web3";
@@ -502,6 +505,36 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
+      case "BlockCreationTime":
+        return (
+          <BlockCreationTime
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            BlockCreationErr={this.state.BlockCreationErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "BlockRewardAmount":
+        return (
+          <BlockRewardAmount
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            BlockRewardErr={this.state.BlockRewardErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "BlockRewardDistributionMethod":
+        return (
+          <BlockRewardDistributionMethod
+          netName={web3Instance.netName}
+          loading={this.props.loading}
+          BlockRewardDisMthErr={this.state.BlockRewardDisMthErr}
+          handleSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+          />
+        );
       default:
         break;
     }
@@ -558,8 +591,8 @@ class ProposalForm extends React.Component {
                 <Select.Option value="BlockCreationTime">
                   Block Creation Time
                 </Select.Option>
-                <Select.Option value="BlockReward">Block Reward</Select.Option>
-                <Select.Option value="BlockRewardDistibutionMethod">
+                <Select.Option value="BlockRewardAmount">Block Reward Amount</Select.Option>
+                <Select.Option value="BlockRewardDistributionMethod">
                   Block Reward Distribution Method
                 </Select.Option>
                 <Select.Option value="ChangeOfMaxPriorityFeePerGas">

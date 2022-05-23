@@ -131,6 +131,11 @@ p {
   align-self: center;
 }
 
+.align-bottom-next-to-input {
+  line-height: 16px;
+  align-self: flex-end;
+}
+
 .flex-column {
 	display: -ms-flexbox;
   display: flex;
@@ -148,6 +153,14 @@ p {
 
 .flex-half {
   flex: 0 1 50%;
+}
+
+.w-auto {
+  width: auto;
+}
+
+.w-15per {
+  width: 15%;
 }
 
 .w-180 {
@@ -202,6 +215,16 @@ p {
 .mr-0 {
   margin-right: 0 !important;
 }
+
+.ml-0 {
+  margin-left: 0 !important;
+}
+
+.mg-rl-5 {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
 .mg-rl-15 {
   margin-right: 15px;
   margin-left: 15px;
@@ -215,6 +238,12 @@ p {
 .pd-tb-24 {
   padding-top: 24px;
   padding-bottom: 24px;
+}
+
+.sign {
+  width: 5%;
+  text-align: center;
+  align-self: flex-end;
 }
 
 /* total */

@@ -534,6 +534,7 @@
   color: rgba(0,0,0,0.6);
   margin-top: 16px;
   line-height: 1.5;
+  white-space: nowrap;
 }
 
 .contentVotingDiv .required {
@@ -602,6 +603,10 @@
 }
 .contentVotingDiv .proposalBody .divider .flex-column .ant-form-item-control .ant-form-item-children {
   display: flex;
+}
+
+.ant-form label {
+  white-space: nowrap;
 }
 
 
