@@ -4,9 +4,12 @@ import { Button, Select, Icon } from "antd";
 import {
   AddProposalForm,
   ChangeOfGovernanceContractAddressForm,
+  // ! legacy code -> remove <Gas Price>
   GasPriceForm,
+  // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
   RmoveProposalForm,
+  // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
 } from "./Forms";
 
@@ -112,6 +115,7 @@ class ProposalForm extends React.Component {
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
         break;
+      // ! legacy code -> remove <Gas Price>
       // Gas Price
       case "gasPrice":
         this.setState({ gasPriceErr: !this.checkPrice(e.target.value) });
@@ -166,6 +170,7 @@ class ProposalForm extends React.Component {
           [formData.newNode.port, formData.newLockAmount],
           formData.memo
         );
+        // ! legacy code -> remove <Replace Authority>
       } else if (this.data.selectedVoteTopic === "ReplaceAuthorityMember") {
         trx = this.governance.addProposalToChangeMember(
           [formData.oldAddr, formData.newAddr],
@@ -181,6 +186,7 @@ class ProposalForm extends React.Component {
           formData.oldLockAmount,
           formData.memo
         );
+        // ! legacy code -> remove <Update Authority>
       } else if (this.data.selectedVoteTopic === "UpdateAuthority") {
         let myLockBalance = await this.staking.lockedBalanceOf(
           web3Instance.defaultAccount
@@ -200,6 +206,7 @@ class ProposalForm extends React.Component {
           formData.newGovAddr,
           formData.memo
         );
+        // ! legacy code -> remove <Gas Price>
         // TODO envName, envType 맞는지 확인 필요
         // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
       } else if (this.data.selectedVoteTopic === "GasPrice") {
@@ -280,6 +287,7 @@ class ProposalForm extends React.Component {
           "Proposal Submit Error"
         );
       }
+      // ! legacy code -> remove <Replace Authority>
     } else if (this.data.selectedVoteTopic === "ReplaceAuthorityMember") {
       const oldMemberLockedBalance = await this.staking.lockedBalanceOf(
         formData.oldAddr
@@ -406,6 +414,7 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
+      // ! legacy code -> remove <Replace Authority>
       case "ReplaceAuthorityMember":
         return (
           <ReplaceProposalForm
@@ -438,6 +447,7 @@ class ProposalForm extends React.Component {
             getLockAmount={this.getLockAmount}
           />
         );
+      // ! legacy code -> remove <Update Authority>
       case "UpdateAuthority":
         return (
           <UpdateProposalForm
@@ -459,6 +469,7 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
+      // ! legacy code -> remove <Gas Price>
       case "GasPrice":
         return (
           <GasPriceForm
@@ -510,34 +521,28 @@ class ProposalForm extends React.Component {
                 <Select.Option value="AddAuthorityMember">
                   Add Authority Member
                 </Select.Option>
-                <Select.Option value="ReplaceAuthorityMember">
-                  Replace Authority Member
-                </Select.Option>
                 <Select.Option value="RemoveAuthorityMember">
                   Remove Authority Member
                 </Select.Option>
-                <Select.Option value="UpdateAuthority">
-                  Update Authority
-                </Select.Option>
                 <Select.Option value="ChangeOfGovernanceContractAddress">
-                  Change Of Governance Contract Address
+                  Change of Governance Contract Address
                 </Select.Option>
                 <Select.Option value="VotingDurationSetting">
                   Voting Duration Setting
                 </Select.Option>
-                <Select.Option value="AuthorityMemberStakingAmount">
-                  Authority Member Staking Amount
+                <Select.Option value="AuthorityMemberStaking">
+                  Authority Member Staking
                 </Select.Option>
                 <Select.Option value="BlockCreationTime">
                   Block Creation Time
                 </Select.Option>
-                <Select.Option value="BlockRewardAmount">
-                  Block Reward Amount
-                </Select.Option>
+                <Select.Option value="BlockReward">Block Reward</Select.Option>
                 <Select.Option value="BlockRewardDistibutionMethod">
                   Block Reward Distribution Method
                 </Select.Option>
-                <Select.Option value="GasPrice">Gas Price</Select.Option>
+                <Select.Option value="ChangeOfMaxPriorityFeePerGas">
+                  Change of MaxPriorityFeePerGas
+                </Select.Option>
                 <Select.Option value="GasLimit">Gas Limit</Select.Option>
               </Select>
             </div>

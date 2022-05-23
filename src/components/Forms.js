@@ -123,6 +123,7 @@ const AddProposalForm = ({
   </div>
 );
 
+// ! legacy code -> remove <Replace Authority>
 const ReplaceProposalForm = ({
   netName,
   loading,
@@ -370,6 +371,7 @@ const RmoveProposalForm = ({
   </div>
 );
 
+// ! legacy code -> remove <Update Authority>
 const UpdateProposalForm = ({
   netName,
   loading,
@@ -494,6 +496,7 @@ const ChangeOfGovernanceContractAddressForm = ({
   </div>
 );
 
+// ! legacy code -> remove <Gas Price>
 const GasPriceForm = ({
   netName,
   loading,
@@ -552,9 +555,12 @@ const GasPriceForm = ({
 
 export {
   AddProposalForm,
+  // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
   RmoveProposalForm,
+  // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
   ChangeOfGovernanceContractAddressForm,
+  // ! legacy code -> remove <Gas Price>
   GasPriceForm,
 };
