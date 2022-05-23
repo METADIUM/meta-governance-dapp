@@ -595,6 +595,16 @@
   margin-right: 32px;
 }
 
+.contentVotingDiv .proposalBody .divider .flex-column .ant-form-item-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.contentVotingDiv .proposalBody .divider .flex-column .ant-form-item-control .ant-form-item-children {
+  display: flex;
+}
+
+
 .loading {
 	display: -ms-flexbox;
 	display: flex;

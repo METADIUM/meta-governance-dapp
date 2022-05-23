@@ -6,7 +6,6 @@ var web3Instance;
 let getWeb3Instance = () => {
   if (web3Instance) return web3Instance;
 
-  alert(JSON.stringify(process.env));
   // Get METADIUM network data
   const chainId = process.env.REACT_APP_NETWORK_CHAIN_ID;
   const chainName = process.env.REACT_APP_NETWORK_CHAIN_NAME;

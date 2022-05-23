@@ -127,6 +127,9 @@ p {
 .flex-end-vertical {
   justify-content: flex-end;
 }
+.flex-align-self-center {
+  align-self: center;
+}
 
 .flex-column {
 	display: -ms-flexbox;
@@ -136,6 +139,10 @@ p {
 
 .flex-full {
   flex: 100;
+}
+
+.flex-half {
+  flex: 0 1 50%;
 }
 
 .text_btn {
@@ -171,11 +178,18 @@ p {
 .mt-0 {
   margin-top: 0 !important;
 }
+.mt-16 {
+  margin-top: 16px;
+}
+.mr-0 {
+  margin-right: 0 !important;
+}
 
 .pd-rl-24 {
   padding-right: 24px;
   padding-left: 24px;
 }
+
 .pd-tb-24 {
   padding-top: 24px;
   padding-bottom: 24px;
