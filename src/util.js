@@ -136,6 +136,7 @@ function refineSubmitData(m) {
       case "oldLockAmount":
       case "newLockAmount":
       // ! legacy code -> remove <Gas Price>
+      // eslint-disable-next-line
       case "gasPrice":
         copy[key] = web3Instance.web3.utils.toWei(
           copy[key].toString(),
@@ -229,8 +230,8 @@ function splitNodeDescription(str) {
   return { node, ip, port };
 }
 
-// eslint-disable-next-line
 const shouldPass = () => {
+  // eslint-disable-next-line
   throw "Function should be passed";
 };
 
