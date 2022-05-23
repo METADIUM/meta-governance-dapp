@@ -16,8 +16,6 @@ import {
   BlockCreationTime,
   BlockRewardAmount,
   BlockRewardDistributionMethod,
-  ChangeOfMaxPriorityFeePerGas,
-  GasLimit,
 } from "./Forms";
 
 import { web3Instance } from "../web3";
@@ -560,27 +558,6 @@ class ProposalForm extends React.Component {
           handleChange={this.handleChange}
           />
         );
-      case "ChangeOfMaxPriorityFeePerGas":
-        return (
-          <ChangeOfMaxPriorityFeePerGas
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            MaxPriGasErr={this.state.MaxPriGasErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "GasLimit":
-        return (
-          <GasLimit
-          netName={web3Instance.netName}
-          loading={this.props.loading}
-          GasLimitErr={this.state.GasLimitErr}
-          handleSubmit={this.handleSubmit}
-          handleChange={this.handleChange}
-
-          />
-        )
       default:
         break;
     }
