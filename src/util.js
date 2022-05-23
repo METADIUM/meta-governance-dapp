@@ -135,9 +135,7 @@ function refineSubmitData(m) {
       case "lockAmount":
       case "oldLockAmount":
       case "newLockAmount":
-      // ! legacy code -> remove <Gas Price>
-      // eslint-disable-next-line
-      case "gasPrice":
+      case "gasLimit":
         copy[key] = web3Instance.web3.utils.toWei(
           copy[key].toString(),
           "ether"

@@ -4,8 +4,8 @@ import { Button, Select, Icon } from "antd";
 import {
   AddProposalForm,
   ChangeOfGovernanceContractAddressForm,
-  // ! legacy code -> remove <Gas Price>
-  GasPriceForm,
+  ChangeOfMaxPriorityFeePerGasForm,
+  GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
   RmoveProposalForm,
@@ -45,8 +45,10 @@ class ProposalForm extends React.Component {
     showLockAmount: "",
     // Change Of Governance Contract Address
     newGovAddrErr: false,
-    // Gas Price
-    gasPriceErr: false,
+    // Change Of MaxPriorityFeePerGas
+    maxPriorityFeePerGasErr: false,
+    // Gas Limit
+    gasLimitErr: false,
   };
 
   constructor(props) {
@@ -57,6 +59,7 @@ class ProposalForm extends React.Component {
 
   onSelectChange = async (value) => {
     this.data.selectedVoteTopic = value;
+    // TODO newLockAmount, oldLockAmount 는 필요한 곳에만 넣으면 될 것 같은데 확인 필요
     this.data.formData = {
       newLockAmount: this.props.stakingMin,
       oldLockAmount: this.props.stakingMin,
@@ -122,10 +125,15 @@ class ProposalForm extends React.Component {
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
         break;
-      // ! legacy code -> remove <Gas Price>
-      // Gas Price
-      case "gasPrice":
-        this.setState({ gasPriceErr: !this.checkPrice(e.target.value) });
+      // Change Of MaxPriorityFeePerGas
+      case "maxPriorityFeePerGas":
+        this.setState({
+          maxPriorityFeePerGasErr: !this.checkPrice(e.target.value),
+        });
+        break;
+      // Gas Limit
+      case "gasLimit":
+        this.setState({ gasLimitErr: !this.checkPrice(e.target.value) });
         break;
       default:
         break;
@@ -154,7 +162,7 @@ class ProposalForm extends React.Component {
   }
 
   checkPrice(price) {
-    return /^[0-9]*$/.test(price);
+    return /^[0-9]{1,}$/.test(price);
   }
 
   // Submit form data
@@ -213,14 +221,20 @@ class ProposalForm extends React.Component {
           formData.newGovAddr,
           formData.memo
         );
-        // ! legacy code -> remove <Gas Price>
-        // TODO envName, envType 맞는지 확인 필요
+        // TODO contract method 추가
         // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      } else if (this.data.selectedVoteTopic === "GasPrice") {
+      } else if (
+        this.data.selectedVoteTopic === "ChangeOfMaxPriorityFeePerGas"
+      ) {
+        // trx =
+        // TODO envName, envType 맞는지 확인 필요
+        // TODO contract method 추가
+        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
+      } else if (this.data.selectedVoteTopic === "GasLimit") {
         trx = this.governance.addProposalToChangeEnv(
-          web3Instance.web3.utils.asciiToHex("GasPrice"), // envName
+          web3Instance.web3.utils.asciiToHex("GasLimit"), // envName
           "2", // envType (uint)
-          formData.gasPrice,
+          formData.gasLimit,
           formData.memo
         );
       } else return;
@@ -476,13 +490,22 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
-      // ! legacy code -> remove <Gas Price>
-      case "GasPrice":
+      case "ChangeOfMaxPriorityFeePerGas":
         return (
-          <GasPriceForm
+          <ChangeOfMaxPriorityFeePerGasForm
             netName={web3Instance.netName}
             loading={this.props.loading}
-            gasPriceErr={this.state.gasPriceErr}
+            maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "GasLimit":
+        return (
+          <GasLimitForm
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            gasLimitErr={this.state.gasLimitErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />

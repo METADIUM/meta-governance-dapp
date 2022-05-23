@@ -523,34 +523,33 @@ const ChangeOfGovernanceContractAddressForm = ({
   </div>
 );
 
-// ! legacy code -> remove <Gas Price>
-const GasPriceForm = ({
+const ChangeOfMaxPriorityFeePerGasForm = ({
   netName,
   loading,
-  gasPriceErr,
+  maxPriorityFeePerGasErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
   <div className="proposalBody">
     <Form onSubmit={handleSubmit}>
       <p className="subtitle">
-        Gas Price <span className="required">*</span>
+        MaxPriorityFeePerGas <span className="required">*</span>
       </p>
       <Form.Item>
         <Input
           addonAfter="GWei"
-          name="gasPrice"
-          className={gasPriceErr ? "errInput" : ""}
+          name="maxPriorityFeePerGas"
+          className={maxPriorityFeePerGasErr ? "errInput" : ""}
           disabled={loading}
           onChange={handleChange}
         />
-        <p className={gasPriceErr ? "errHint" : "errHint-hide"}>
-          Invalid Price
+        <p className={maxPriorityFeePerGasErr ? "errHint" : "errHint-hide"}>
+          Invalid MaxPriorityFeePerGas
         </p>
       </Form.Item>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>The default gas price is 800Wei.</p>
+        <p>The default gas price is 100 GWei.</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -570,7 +569,63 @@ const GasPriceForm = ({
             htmlType="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             loading={loading}
-            disabled={gasPriceErr}
+            disabled={maxPriorityFeePerGasErr}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
+    </Form>
+  </div>
+);
+
+const GasLimitForm = ({
+  netName,
+  loading,
+  gasLimitErr,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form onSubmit={handleSubmit}>
+      <p className="subtitle">
+        Gas Limit <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          addonAfter="GWei"
+          name="gasLimit"
+          className={gasLimitErr ? "errInput" : ""}
+          disabled={loading}
+          onChange={handleChange}
+        />
+        <p className={gasLimitErr ? "errHint" : "errHint-hide"}>
+          Invalid Limit
+        </p>
+      </Form.Item>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>The default gas limit is 10,000,000 GWei.</p>
+      </div>
+      <p className="subtitle">Description</p>
+      <Form.Item>
+        <TextArea
+          name="memo"
+          placeholder="Max. 256 bytes"
+          rows={4}
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          maxLength={256}
+          disabled={loading}
+          onChange={handleChange}
+        />
+      </Form.Item>
+      <Form.Item>
+        <div className="submitDiv flex">
+          <Button
+            htmlType="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            loading={loading}
+            disabled={gasLimitErr}
           >
             Submit
           </Button>
@@ -1124,193 +1179,6 @@ const BlockRewardDistributionMethod = ({
   </div>
 );
 
-const ChangeOfMaxPriorityFeePerGas = ({
-  netName,
-  loading,
-  MaxPriGasErr,
-  handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
-}) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            MaxPriorityFeePerGas <span className="required">*</span>
-          </p>
-
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Input
-                  name="newMaxgas"
-                  onChange={handleChange}
-                  className={"w-180 mg-rl-15 ml-0" + (MaxPriGasErr ? "errInput" : "")}
-                  disabled={loading}
-                />
-                <span>GWei</span>
-              </div>
-            </div>
-            <p className={MaxPriGasErr ? "errHint" : "errHint-hide"}>
-              Invalid MaxPriorityFeePerGas
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          The default gas price is 100GWei.
-        </p>
-      </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-                defaultValue={3}
-               name="votDuration"
-               disabled={loading}
-               className="mg-rl-15"
-               style={{width: 180}}
-               onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={
-              MaxPriGasErr
-            }
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
-    </Form>
-  </div>
-);
-
-const GasLimit = ({
-  netName,
-  loading,
-  GasLimitErr,
-  handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
-}) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Gas Limit <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Input
-                  name="newMaxgas"
-                  onChange={handleChange}
-                  className={"w-180 mg-rl-15 ml-0" + (GasLimitErr ? "errInput" : "")}
-                  disabled={loading}
-                />
-                <span>GWei</span>
-              </div>
-            </div>
-            <p className={GasLimitErr ? "errHint" : "errHint-hide"}>
-              Invalid Gas Limit
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          The default gas limit is 10,000,000 GWei.
-        </p>
-      </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-                defaultValue={3}
-               name="votDuration"
-               disabled={loading}
-               className="mg-rl-15"
-               style={{width: 180}}
-               onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={
-              GasLimitErr
-            }
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
-    </Form>
-  </div>
-);
-
 export {
   AddProposalForm,
   // ! legacy code -> remove <Replace Authority>
@@ -1319,13 +1187,11 @@ export {
   // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
   ChangeOfGovernanceContractAddressForm,
-  // ! legacy code -> remove <Gas Price>
-  GasPriceForm,
   VotingDurationSetting,
   AuthorityMemberStakingAmount,
   BlockCreationTime,
   BlockRewardAmount,
   BlockRewardDistributionMethod,
-  ChangeOfMaxPriorityFeePerGas,
-  GasLimit,
+  ChangeOfMaxPriorityFeePerGasForm,
+  GasLimitForm,
 };
