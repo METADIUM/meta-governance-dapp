@@ -4,6 +4,7 @@ import { Button, Select, Icon } from "antd";
 import {
   AddProposalForm,
   ChangeOfGovernanceContractAddressForm,
+  ChangeOfMaxPriorityFeePerGasForm,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
@@ -37,6 +38,8 @@ class ProposalForm extends React.Component {
     showLockAmount: "",
     // Change Of Governance Contract Address
     newGovAddrErr: false,
+    // Change Of MaxPriorityFeePerGas
+    maxPriorityFeePerGasErr: false,
     // Gas Limit
     gasLimitErr: false,
   };
@@ -114,6 +117,12 @@ class ProposalForm extends React.Component {
       // Change Of Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
+        break;
+      // Change Of MaxPriorityFeePerGas
+      case "maxPriorityFeePerGas":
+        this.setState({
+          maxPriorityFeePerGasErr: !this.checkPrice(e.target.value),
+        });
         break;
       // Gas Limit
       case "gasLimit":
@@ -205,7 +214,12 @@ class ProposalForm extends React.Component {
           formData.newGovAddr,
           formData.memo
         );
-        // ! legacy code -> remove <Gas Price>
+        // TODO contract method 추가
+        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
+      } else if (
+        this.data.selectedVoteTopic === "ChangeOfMaxPriorityFeePerGas"
+      ) {
+        // trx =
         // TODO envName, envType 맞는지 확인 필요
         // TODO contract method 추가
         // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
@@ -465,6 +479,16 @@ class ProposalForm extends React.Component {
             netName={web3Instance.netName}
             loading={this.props.loading}
             newGovAddrErr={this.state.newGovAddrErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "ChangeOfMaxPriorityFeePerGas":
+        return (
+          <ChangeOfMaxPriorityFeePerGasForm
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />
