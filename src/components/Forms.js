@@ -488,12 +488,12 @@ const ChangeOfGovernanceContractAddressForm = ({
               Voting Duration
             </label>
             <Select
-                defaultValue={3}
-               name="votDuration"
-               disabled={loading}
-               className="mg-rl-15"
-               style={{width: 180}}
-               onChange={handleChange}
+              defaultValue={3}
+              name="votDuration"
+              disabled={loading}
+              className="mg-rl-15"
+              style={{ width: 180 }}
+              onChange={handleChange}
             >
               <Option value="3">3</Option>
               <Option value="4">4</Option>
@@ -588,21 +588,31 @@ const GasLimitForm = ({
 }) => (
   <div className="proposalBody">
     <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
-        Gas Limit <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          addonAfter="GWei"
-          name="gasLimit"
-          className={gasLimitErr ? "errInput" : ""}
-          disabled={loading}
-          onChange={handleChange}
-        />
-        <p className={gasLimitErr ? "errHint" : "errHint-hide"}>
-          Invalid Limit
-        </p>
-      </Form.Item>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Gas Limit <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <div className="flex-column">
+              <div className="flex-full flex-row">
+                <Input
+                  name="gasLimit"
+                  onChange={handleChange}
+                  className={
+                    "w-180 mg-rl-15 ml-0" + (gasLimitErr ? "errInput" : "")
+                  }
+                  disabled={loading}
+                />
+                <span>GWei</span>
+              </div>
+            </div>
+            <p className={gasLimitErr ? "errHint" : "errHint-hide"}>
+              Invalid Limit
+            </p>
+          </Form.Item>
+        </div>
+      </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
         <p>The default gas limit is 10,000,000 GWei.</p>
@@ -610,22 +620,47 @@ const GasLimitForm = ({
       <p className="subtitle">Description</p>
       <Form.Item>
         <TextArea
-          name="memo"
-          placeholder="Max. 256 bytes"
           rows={4}
+          placeholder="Max. 256 bytes"
           autoSize={{ minRows: 4, maxRows: 4 }}
-          maxLength={256}
-          disabled={loading}
+          name="memo"
           onChange={handleChange}
+          disabled={loading}
         />
       </Form.Item>
+      <div className="divider flex flex-end-vertical mt-16">
+        <div className="flex-half flex-end-vertical flex-column mr-0">
+          <Form.Item>
+            <label className="subtitle mt-0 flex-align-self-center">
+              Voting Duration
+            </label>
+            <Select
+              defaultValue={3}
+              name="votDuration"
+              disabled={loading}
+              className="mg-rl-15"
+              style={{ width: 180 }}
+              onChange={handleChange}
+            >
+              <Option value="3">3</Option>
+              <Option value="4">4</Option>
+              <Option value="5">5</Option>
+            </Select>
+            <span>day</span>
+            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
+              Invalid Amount
+            </p> */}
+          </Form.Item>
+        </div>
+      </div>
       <Form.Item>
         <div className="submitDiv flex">
           <Button
-            htmlType="submit"
+            name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
-            loading={loading}
+            htmlType="submit"
             disabled={gasLimitErr}
+            loading={loading}
           >
             Submit
           </Button>
@@ -659,7 +694,9 @@ const VotingDurationSetting = ({
                 <Input
                   name="newMin"
                   onChange={handleChange}
-                  className={"w-180 mg-rl-15" + (votingDurationErr ? "errInput" : "")}
+                  className={
+                    "w-180 mg-rl-15" + (votingDurationErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
                 <span>day</span>
@@ -671,7 +708,9 @@ const VotingDurationSetting = ({
                 <Input
                   name="newMax"
                   onChange={handleChange}
-                  className={"w-180 mg-rl-15" + (votingDurationErr ? "errInput" : "")}
+                  className={
+                    "w-180 mg-rl-15" + (votingDurationErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
                 <span>day</span>
@@ -685,9 +724,7 @@ const VotingDurationSetting = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>
-          The minimum value for Voting Duration is 1 day.
-        </p>
+        <p>The minimum value for Voting Duration is 1 day.</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -707,12 +744,12 @@ const VotingDurationSetting = ({
               Voting Duration
             </label>
             <Select
-                defaultValue={3}
-               name="votDuration"
-               disabled={loading}
-               className="mg-rl-15"
-               style={{width: 180}}
-               onChange={handleChange}
+              defaultValue={3}
+              name="votDuration"
+              disabled={loading}
+              className="mg-rl-15"
+              style={{ width: 180 }}
+              onChange={handleChange}
             >
               <Option value="3">3</Option>
               <Option value="4">4</Option>
@@ -731,9 +768,7 @@ const VotingDurationSetting = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={
-              votingDurationErr
-            }
+            disabled={votingDurationErr}
             loading={loading}
           >
             Submit
@@ -768,7 +803,9 @@ const AuthorityMemberStakingAmount = ({
                 <Input
                   name="newMin"
                   onChange={handleChange}
-                  className={"w-180 mg-rl-15" + (AuthMemSkAmountErr ? "errInput" : "")}
+                  className={
+                    "w-180 mg-rl-15" + (AuthMemSkAmountErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
                 <span>WEMIX</span>
@@ -780,7 +817,9 @@ const AuthorityMemberStakingAmount = ({
                 <Input
                   name="newMax"
                   onChange={handleChange}
-                  className={"w-180 mg-rl-15" + (AuthMemSkAmountErr ? "errInput" : "")}
+                  className={
+                    "w-180 mg-rl-15" + (AuthMemSkAmountErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
                 <span>WEMIX</span>
@@ -794,9 +833,7 @@ const AuthorityMemberStakingAmount = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>
-          The maximum amount of staking that can be set is 4,980,000 WEMIX.
-        </p>
+        <p>The maximum amount of staking that can be set is 4,980,000 WEMIX.</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -816,12 +853,12 @@ const AuthorityMemberStakingAmount = ({
               Voting Duration
             </label>
             <Select
-                defaultValue={3}
-               name="votDuration"
-               disabled={loading}
-               className="mg-rl-15"
-               style={{width: 180}}
-               onChange={handleChange}
+              defaultValue={3}
+              name="votDuration"
+              disabled={loading}
+              className="mg-rl-15"
+              style={{ width: 180 }}
+              onChange={handleChange}
             >
               <Option value="3">3</Option>
               <Option value="4">4</Option>
@@ -840,9 +877,7 @@ const AuthorityMemberStakingAmount = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={
-              AuthMemSkAmountErr
-            }
+            disabled={AuthMemSkAmountErr}
             loading={loading}
           >
             Submit
@@ -874,7 +909,9 @@ const BlockCreationTime = ({
                 <Input
                   name="newblockcreation"
                   onChange={handleChange}
-                  className={"w-180 mg-rl-15 ml-0" + (BlockCreationErr ? "errInput" : "")}
+                  className={
+                    "w-180 mg-rl-15 ml-0" + (BlockCreationErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
                 <span className="align-bottom-next-to-input">s</span>
@@ -888,9 +925,7 @@ const BlockCreationTime = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>
-          Block Creation time is possible from at least 0.1s.
-        </p>
+        <p>Block Creation time is possible from at least 0.1s.</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -910,12 +945,12 @@ const BlockCreationTime = ({
               Voting Duration
             </label>
             <Select
-                defaultValue={3}
-               name="votDuration"
-               disabled={loading}
-               className="mg-rl-15"
-               style={{width: 180}}
-               onChange={handleChange}
+              defaultValue={3}
+              name="votDuration"
+              disabled={loading}
+              className="mg-rl-15"
+              style={{ width: 180 }}
+              onChange={handleChange}
             >
               <Option value="3">3</Option>
               <Option value="4">4</Option>
@@ -934,9 +969,7 @@ const BlockCreationTime = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={
-              BlockCreationErr
-            }
+            disabled={BlockCreationErr}
             loading={loading}
           >
             Submit
@@ -968,7 +1001,9 @@ const BlockRewardAmount = ({
                 <Input
                   name="newblockcreation"
                   onChange={handleChange}
-                  className={"w-180 mg-rl-15 ml-0" + (BlockRewardErr ? "errInput" : "")}
+                  className={
+                    "w-180 mg-rl-15 ml-0" + (BlockRewardErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
                 <span>WEMIX/Block</span>
@@ -982,9 +1017,7 @@ const BlockRewardAmount = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>
-          Block Rewards are available from at least 1WEMIX/Block
-        </p>
+        <p>Block Rewards are available from at least 1WEMIX/Block</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -1004,12 +1037,12 @@ const BlockRewardAmount = ({
               Voting Duration
             </label>
             <Select
-                defaultValue={3}
-               name="votDuration"
-               disabled={loading}
-               className="mg-rl-15"
-               style={{width: 180}}
-               onChange={handleChange}
+              defaultValue={3}
+              name="votDuration"
+              disabled={loading}
+              className="mg-rl-15"
+              style={{ width: 180 }}
+              onChange={handleChange}
             >
               <Option value="3">3</Option>
               <Option value="4">4</Option>
@@ -1028,9 +1061,7 @@ const BlockRewardAmount = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={
-              BlockRewardErr
-            }
+            disabled={BlockRewardErr}
             loading={loading}
           >
             Submit
@@ -1063,7 +1094,10 @@ const BlockRewardDistributionMethod = ({
                   name="newBlockprod"
                   addonAfter="%"
                   onChange={handleChange}
-                  className={"w-100 mg-rl-5 ml-0" + (BlockRewardDisMthErr ? "errInput" : "")}
+                  className={
+                    "w-100 mg-rl-5 ml-0" +
+                    (BlockRewardDisMthErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
               </div>
@@ -1074,7 +1108,9 @@ const BlockRewardDistributionMethod = ({
                   name="newStakingRew"
                   addonAfter="%"
                   onChange={handleChange}
-                  className={"mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")}
+                  className={
+                    "mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
               </div>
@@ -1085,7 +1121,9 @@ const BlockRewardDistributionMethod = ({
                   name="newEcosys"
                   addonAfter="%"
                   onChange={handleChange}
-                  className={"mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")}
+                  className={
+                    "mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
               </div>
@@ -1096,7 +1134,9 @@ const BlockRewardDistributionMethod = ({
                   name="newMaintain"
                   addonAfter="%"
                   onChange={handleChange}
-                  className={"mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")}
+                  className={
+                    "mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
               </div>
@@ -1107,7 +1147,9 @@ const BlockRewardDistributionMethod = ({
                   name="newSum"
                   addonAfter="%"
                   onChange={handleChange}
-                  className={"w-auto mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")}
+                  className={
+                    "w-auto mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                  }
                   disabled={loading}
                 />
               </div>
@@ -1121,7 +1163,8 @@ const BlockRewardDistributionMethod = ({
       <div className="helpDescription">
         <Icon type="question-circle" />
         <p>
-          For the Block reward distribution rate, the sum of Default, Block Producer, Ecosystem, and Maintenance should be 100
+          For the Block reward distribution rate, the sum of Default, Block
+          Producer, Ecosystem, and Maintenance should be 100
         </p>
       </div>
       <p className="subtitle">Description</p>
@@ -1142,12 +1185,12 @@ const BlockRewardDistributionMethod = ({
               Voting Duration
             </label>
             <Select
-                defaultValue={3}
-               name="votDuration"
-               disabled={loading}
-               className="mg-rl-15"
-               style={{width: 180}}
-               onChange={handleChange}
+              defaultValue={3}
+              name="votDuration"
+              disabled={loading}
+              className="mg-rl-15"
+              style={{ width: 180 }}
+              onChange={handleChange}
             >
               <Option value="3">3</Option>
               <Option value="4">4</Option>
@@ -1166,9 +1209,7 @@ const BlockRewardDistributionMethod = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={
-              BlockRewardDisMthErr
-            }
+            disabled={BlockRewardDisMthErr}
             loading={loading}
           >
             Submit
