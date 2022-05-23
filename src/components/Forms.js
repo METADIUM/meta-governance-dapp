@@ -493,6 +493,62 @@ const ChangeOfGovernanceContractAddressForm = ({
   </div>
 );
 
+const ChangeOfMaxPriorityFeePerGasForm = ({
+  netName,
+  loading,
+  maxPriorityFeePerGasErr,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form onSubmit={handleSubmit}>
+      <p className="subtitle">
+        MaxPriorityFeePerGas <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          addonAfter="GWei"
+          name="maxPriorityFeePerGas"
+          className={maxPriorityFeePerGasErr ? "errInput" : ""}
+          disabled={loading}
+          onChange={handleChange}
+        />
+        <p className={maxPriorityFeePerGasErr ? "errHint" : "errHint-hide"}>
+          Invalid MaxPriorityFeePerGas
+        </p>
+      </Form.Item>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>The default gas price is 100 GWei.</p>
+      </div>
+      <p className="subtitle">Description</p>
+      <Form.Item>
+        <TextArea
+          name="memo"
+          placeholder="Max. 256 bytes"
+          rows={4}
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          maxLength={256}
+          disabled={loading}
+          onChange={handleChange}
+        />
+      </Form.Item>
+      <Form.Item>
+        <div className="submitDiv flex">
+          <Button
+            htmlType="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            loading={loading}
+            disabled={maxPriorityFeePerGasErr}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
+    </Form>
+  </div>
+);
+
 const GasLimitForm = ({
   netName,
   loading,
@@ -557,5 +613,6 @@ export {
   // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
   ChangeOfGovernanceContractAddressForm,
+  ChangeOfMaxPriorityFeePerGasForm,
   GasLimitForm,
 };
