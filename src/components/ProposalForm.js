@@ -205,6 +205,7 @@ class ProposalForm extends React.Component {
           formData.newGovAddr,
           formData.memo
         );
+        // ! legacy code -> remove <Gas Price>
         // TODO envName, envType 맞는지 확인 필요
         // TODO contract method 추가
         // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
