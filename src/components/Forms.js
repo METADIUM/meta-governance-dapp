@@ -493,34 +493,33 @@ const ChangeOfGovernanceContractAddressForm = ({
   </div>
 );
 
-// ! legacy code -> remove <Gas Price>
-const GasPriceForm = ({
+const GasLimitForm = ({
   netName,
   loading,
-  gasPriceErr,
+  gasLimitErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
   <div className="proposalBody">
     <Form onSubmit={handleSubmit}>
       <p className="subtitle">
-        Gas Price <span className="required">*</span>
+        Gas Limit <span className="required">*</span>
       </p>
       <Form.Item>
         <Input
           addonAfter="GWei"
-          name="gasPrice"
-          className={gasPriceErr ? "errInput" : ""}
+          name="gasLimit"
+          className={gasLimitErr ? "errInput" : ""}
           disabled={loading}
           onChange={handleChange}
         />
-        <p className={gasPriceErr ? "errHint" : "errHint-hide"}>
-          Invalid Price
+        <p className={gasLimitErr ? "errHint" : "errHint-hide"}>
+          Invalid Limit
         </p>
       </Form.Item>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>The default gas price is 800Wei.</p>
+        <p>The default gas limit is 10,000,000 GWei.</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -540,7 +539,7 @@ const GasPriceForm = ({
             htmlType="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             loading={loading}
-            disabled={gasPriceErr}
+            disabled={gasLimitErr}
           >
             Submit
           </Button>
@@ -558,6 +557,5 @@ export {
   // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
   ChangeOfGovernanceContractAddressForm,
-  // ! legacy code -> remove <Gas Price>
-  GasPriceForm,
+  GasLimitForm,
 };
