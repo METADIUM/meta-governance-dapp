@@ -29,7 +29,7 @@ const constants = {
     MemberRemoval: "2",
     MemberChange: "3",
     ChangeOfGovernanceContractAddress: "4",
-    GasPrice: "5",
+    EnvValChange: "5",
   },
   ballotStateArr: [
     "Invalid",
@@ -45,7 +45,7 @@ const constants = {
     "MemberRemoval",
     "MemberChange",
     "ChangeOfGovernanceContractAddress",
-    "GasPrice",
+    "EnvValChange",
   ],
   /* Debug */
   debugMode: false,

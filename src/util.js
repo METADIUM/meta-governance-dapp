@@ -135,7 +135,7 @@ function refineSubmitData(m) {
       case "lockAmount":
       case "oldLockAmount":
       case "newLockAmount":
-      case "gasPrice":
+      case "gasLimit":
         copy[key] = web3Instance.web3.utils.toWei(
           copy[key].toString(),
           "ether"

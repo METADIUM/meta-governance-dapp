@@ -4,7 +4,6 @@ import { Button, Select, Icon } from "antd";
 import {
   AddProposalForm,
   ChangeOfGovernanceContractAddressForm,
-  GasPriceForm,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
@@ -40,8 +39,6 @@ class ProposalForm extends React.Component {
     newGovAddrErr: false,
     // Gas Limit
     gasLimitErr: false,
-    // Gas Price
-    gasPriceErr: false,
   };
 
   constructor(props) {
@@ -52,6 +49,7 @@ class ProposalForm extends React.Component {
 
   onSelectChange = async (value) => {
     this.data.selectedVoteTopic = value;
+    // TODO newLockAmount, oldLockAmount 는 필요한 곳에만 넣으면 될 것 같은데 확인 필요
     this.data.formData = {
       newLockAmount: this.props.stakingMin,
       oldLockAmount: this.props.stakingMin,
@@ -121,10 +119,6 @@ class ProposalForm extends React.Component {
       case "gasLimit":
         this.setState({ gasLimitErr: !this.checkPrice(e.target.value) });
         break;
-      // Gas Price
-      case "gasPrice":
-        this.setState({ gasPriceErr: !this.checkPrice(e.target.value) });
-        break;
       default:
         break;
     }
@@ -152,7 +146,7 @@ class ProposalForm extends React.Component {
   }
 
   checkPrice(price) {
-    return /^[0-9]*$/.test(price);
+    return /^[0-9]{1,}$/.test(price);
   }
 
   // Submit form data
@@ -211,17 +205,14 @@ class ProposalForm extends React.Component {
           formData.newGovAddr,
           formData.memo
         );
+        // TODO envName, envType 맞는지 확인 필요
         // TODO contract method 추가
         // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      } else if (this.data.selectedVoteTopic === "gasLimit") {
-        // trx = this.governance.
-        // TODO envName, envType 맞는지 확인 필요
-        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      } else if (this.data.selectedVoteTopic === "GasPrice") {
+      } else if (this.data.selectedVoteTopic === "GasLimit") {
         trx = this.governance.addProposalToChangeEnv(
-          web3Instance.web3.utils.asciiToHex("GasPrice"), // envName
+          web3Instance.web3.utils.asciiToHex("GasLimit"), // envName
           "2", // envType (uint)
-          formData.gasPrice,
+          formData.gasLimit,
           formData.memo
         );
       } else return;
@@ -483,16 +474,6 @@ class ProposalForm extends React.Component {
             netName={web3Instance.netName}
             loading={this.props.loading}
             gasLimitErr={this.state.gasLimitErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "GasPrice":
-        return (
-          <GasPriceForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            gasPriceErr={this.state.gasPriceErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />
