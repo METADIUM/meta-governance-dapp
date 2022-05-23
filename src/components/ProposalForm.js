@@ -16,6 +16,7 @@ import {
   BlockCreationTime,
   BlockRewardAmount,
   BlockRewardDistributionMethod,
+  ChangeOfMaxPriorityFeePerGas,
 } from "./Forms";
 
 import { web3Instance } from "../web3";
@@ -533,6 +534,16 @@ class ProposalForm extends React.Component {
           BlockRewardDisMthErr={this.state.BlockRewardDisMthErr}
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
+          />
+        );
+      case "ChangeOfMaxPriorityFeePerGas":
+        return (
+          <ChangeOfMaxPriorityFeePerGas
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            MaxPriGasErr={this.state.MaxPriGasErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
           />
         );
       default:
