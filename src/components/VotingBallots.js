@@ -31,6 +31,7 @@ const VotingBallots = ({
     <div className="ballotInfoDiv flex">
       <div className="infoLeft flex-full">
         <p className="topic text-exlarge text-bold">
+          {/* TODO : 제목 띄어쓰기 적용 */}
           {setTopic(item.ballotType, newMemberAddress, oldMemberAddress)}
         </p>
         <p className="company text-small">{authorityName}</p>

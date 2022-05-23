@@ -11,6 +11,11 @@ import {
   RmoveProposalForm,
   // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
+  VotingDurationSetting,
+  AuthorityMemberStakingAmount,
+  BlockCreationTime,
+  BlockRewardAmount,
+  BlockRewardDistributionMethod,
 } from "./Forms";
 
 import { web3Instance } from "../web3";
@@ -503,6 +508,56 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
+      case "VotingDurationSetting":
+        return (
+          <VotingDurationSetting
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            votingDurationErr={this.state.votingDurationErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "AuthorityMemberStakingAmount":
+        return (
+          <AuthorityMemberStakingAmount
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            AuthMemSkAmountErr={this.state.AuthMemSkAmountErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "BlockCreationTime":
+        return (
+          <BlockCreationTime
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            BlockCreationErr={this.state.BlockCreationErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "BlockRewardAmount":
+        return (
+          <BlockRewardAmount
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            BlockRewardErr={this.state.BlockRewardErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "BlockRewardDistributionMethod":
+        return (
+          <BlockRewardDistributionMethod
+          netName={web3Instance.netName}
+          loading={this.props.loading}
+          BlockRewardDisMthErr={this.state.BlockRewardDisMthErr}
+          handleSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+          />
+        );
       default:
         break;
     }
@@ -553,14 +608,14 @@ class ProposalForm extends React.Component {
                 <Select.Option value="VotingDurationSetting">
                   Voting Duration Setting
                 </Select.Option>
-                <Select.Option value="AuthorityMemberStaking">
-                  Authority Member Staking
+                <Select.Option value="AuthorityMemberStakingAmount">
+                  Authority Member Staking Amount
                 </Select.Option>
                 <Select.Option value="BlockCreationTime">
                   Block Creation Time
                 </Select.Option>
-                <Select.Option value="BlockReward">Block Reward</Select.Option>
-                <Select.Option value="BlockRewardDistibutionMethod">
+                <Select.Option value="BlockRewardAmount">Block Reward Amount</Select.Option>
+                <Select.Option value="BlockRewardDistributionMethod">
                   Block Reward Distribution Method
                 </Select.Option>
                 <Select.Option value="ChangeOfMaxPriorityFeePerGas">
@@ -572,6 +627,14 @@ class ProposalForm extends React.Component {
             {this.data.selectedVoteTopic !== "" && (
               <div>{this.getProposalForm()}</div>
             )}
+          </div>
+          {/* reference memo */}
+          <div className="contentRefDiv">
+            <p>[Reference]</p>
+            <ol>
+              <li>Even within the voting duration, if more than 50% of opinions are expressed for or against, voting ends and follow-up work is carried out.</li>
+              <li>Basically, only one voting is conducted at a time, so if there is already voting in progress, you cannot start a new voting.</li>
+            </ol>
           </div>
         </div>
       </div>

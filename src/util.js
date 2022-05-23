@@ -228,8 +228,8 @@ function splitNodeDescription(str) {
   return { node, ip, port };
 }
 
-// eslint-disable-next-line
 const shouldPass = () => {
+  // eslint-disable-next-line
   throw "Function should be passed";
 };
 
