@@ -12,6 +12,7 @@ import {
   // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
   VotingDurationSetting,
+  AuthorityMemberStakingAmount,
 } from "./Forms";
 
 import { web3Instance } from "../web3";
@@ -491,6 +492,16 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
+      case "AuthorityMemberStakingAmount":
+        return (
+          <AuthorityMemberStakingAmount
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            AuthMemSkAmountErr={this.state.AuthMemSkAmountErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
       default:
         break;
     }
@@ -541,8 +552,8 @@ class ProposalForm extends React.Component {
                 <Select.Option value="VotingDurationSetting">
                   Voting Duration Setting
                 </Select.Option>
-                <Select.Option value="AuthorityMemberStaking">
-                  Authority Member Staking
+                <Select.Option value="AuthorityMemberStakingAmount">
+                  Authority Member Staking Amount
                 </Select.Option>
                 <Select.Option value="BlockCreationTime">
                   Block Creation Time
