@@ -34,6 +34,7 @@ let getWeb3Instance = () => {
   };
 
   // Switch Metamask network to METADIUM network
+  // eslint-disable-next-line
   const switchMetadiumNetwork = async () => {
     await window.ethereum.request({
       method: "wallet_switchEthereumChain",
