@@ -300,7 +300,8 @@ const RmoveProposalForm = ({
   loading,
   showLockAmount,
   stakingMin,
-  oldAddrErr,
+  votingAddrErr,
+  stakingAddrErr,
   oldLockAmountErr,
   oldLockAmount,
   handleSubmit = shouldPass(),
@@ -312,30 +313,43 @@ const RmoveProposalForm = ({
       <p className="subtitle">
         Address to be removed <span className="required">*</span>
       </p>
-      <Form.Item className="bor-box pd-rl-24 pd-tb-24">
-        <p className="subtitle mt-0">Voting Address</p>
-        <Input></Input>
-        <p className="subtitle">Staking Address</p>
-        <Input.Search
-          name="oldAddr"
-          onChange={handleChange}
-          className={oldAddrErr ? "errInput" : ""}
-          disabled={loading}
-          enterButton={
-            <span>
-              <Icon type="search" />
-              <span> Check Balance</span>
-            </span>
-          }
-          onSearch={(value) => getLockAmount(value)}
-        />
-        <p className={oldAddrErr ? "errHint" : "errHint-hide"}>
-          Voting Address is invalid
-        </p>
-      </Form.Item>
+      <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
+        <Form.Item className="mt-0">
+          <p className="subtitle mt-0">Voting Address</p>
+          <Input
+            name="votingAddr"
+            onChange={handleChange}
+            className={"mt-5" + (votingAddrErr ? "errInput" : "")}
+            disabled={loading}
+          /> 
+          <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
+            Invalid Address
+          </p>
+        </Form.Item>
+        <Form.Item>
+          <p className="subtitle mt-0">Staking Address</p>
+          <Input.Search
+            name="stakingAddr"
+            onChange={handleChange}
+            className={"mt-5" + (stakingAddrErr ? "errInput" : "")}
+            disabled={loading}
+            enterButton={
+              <span>
+                <Icon type="search" />
+                <span> Check Balance</span>
+              </span>
+            }
+            onSearch={(value) => getLockAmount(value)}
+          />
+          <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
+            Invalid Address
+          </p>
+        </Form.Item>
+      </div>
+
       <div className="divider flex">
         <div className="flex-full">
-          <p className="subtitle">Locked META Amount</p>
+          <p className="subtitle">Locked WEMIX Amount</p>
           <Form.Item>
             <Input
               name="showLockAmount"
@@ -347,7 +361,7 @@ const RmoveProposalForm = ({
         </div>
         <div className="flex-full">
           <p className="subtitle">
-            META Amount to be unlocked <span className="required">*</span>
+            WEMIX Amount to be unlocked <span className="required">*</span>
           </p>
           <Form.Item>
             <Input
@@ -381,7 +395,7 @@ const RmoveProposalForm = ({
           <Button
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={oldAddrErr}
+            disabled={votingAddrErr || stakingAddrErr}
             loading={loading}
           >
             Submit

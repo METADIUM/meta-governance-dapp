@@ -3,12 +3,12 @@ import { Button, Select, Icon } from "antd";
 
 import {
   AddProposalForm,
+  RmoveProposalForm,
   ChangeOfGovernanceContractAddressForm,
   ChangeOfMaxPriorityFeePerGasForm,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
-  RmoveProposalForm,
   // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
   VotingDurationSetting,
@@ -108,7 +108,7 @@ class ProposalForm extends React.Component {
             newLockAmountErr: !this.checkLockAmount(e.target.value),
           });
         break;
-      // ! legacy code -> remove <AddProposalForm><Replace Authority>
+      // ! legacy code -> remove <AddProposalForm><Replace Authority><RmoveProposalForm>
       case "newAddr":
         this.setState({ newAddrErr: !this.checkAddr(e.target.value) });
         break;
@@ -467,9 +467,10 @@ class ProposalForm extends React.Component {
           <RmoveProposalForm
             netName={web3Instance.netName}
             loading={this.props.loading}
+            stakingAddrErr={this.state.stakingAddrErr}
+            votingAddrErr={this.state.votingAddrErr}
             showLockAmount={this.state.showLockAmount}
             stakingMin={this.props.stakingMin}
-            oldAddrErr={this.state.oldAddrErr}
             oldLockAmountErr={this.state.oldLockAmountErr}
             oldLockAmount={this.data.formData.oldLockAmount}
             handleSubmit={this.handleSubmit}
