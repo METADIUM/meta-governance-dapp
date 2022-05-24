@@ -10,8 +10,9 @@ const { Option } = Select;
 const AddProposalForm = ({
   netName,
   loading,
+  votingAddrErr,
+  stakingAddrErr,
   stakingMin,
-  newAddrErr,
   newLockAmountErr,
   newLockAmount,
   newNodeErr,
@@ -24,17 +25,36 @@ const AddProposalForm = ({
       <p className="subtitle">
         New Authority Address <span className="required">*</span>
       </p>
-      <Form.Item>
-        <Input
-          name="newAddr"
-          onChange={handleChange}
-          className={newAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
+      <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
+        <Form.Item className="mt-0">
+          <p className="subtitle mt-0">Voting Address</p>
+          <Input
+            name="votingAddr"
+            onChange={handleChange}
+            className={"mt-5" + (votingAddrErr ? "errInput" : "")}
+            disabled={loading}
+          />
+          <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
+            Invalid Address
+          </p>
+        </Form.Item>
+        <Form.Item>
+          <p className="subtitle mt-0">Staking Address</p>
+          <Input
+            name="stakingAddr"
+            onChange={handleChange}
+            className={"mt-5" + (stakingAddrErr ? "errInput" : "")}
+            disabled={loading}
+          />
+          <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
+            Invaild Address
+          </p>
+        </Form.Item>
+      </div>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>Rewards for block generation will be given to the Staking account.</p>
+      </div>
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">
@@ -112,7 +132,7 @@ const AddProposalForm = ({
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
             disabled={
-              newLockAmountErr || newAddrErr || newNodeErr || newNameErr
+              newLockAmountErr || votingAddrErr || stakingAddrErr || newNodeErr || newNameErr
             }
             loading={loading}
           >

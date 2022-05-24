@@ -33,6 +33,8 @@ class ProposalForm extends React.Component {
   state = {
     selectedChange: false,
     submitForm: false,
+    votingAddrErr: false,
+    stakingAddrErr: false,
     newLockAmountErr: false,
     newAddrErr: false,
     newNodeErr: false,
@@ -91,6 +93,12 @@ class ProposalForm extends React.Component {
     const originStr = this.data.formData[e.target.name];
     this.data.formData[e.target.name] = e.target.value;
     switch (e.target.name) {
+      case "votingAddr":
+        this.setState({ votingAddrErr: !this.checkAddr(e.target.value) });
+        break;
+      case "stakingAddr":
+        this.setState({ stakingAddrErr: !this.checkAddr(e.target.value) });
+        break;
       case "newLockAmount":
         if (!/^([0-9]*)$/.test(e.target.value))
           this.data.formData[e.target.name] = originStr;
@@ -99,6 +107,7 @@ class ProposalForm extends React.Component {
             newLockAmountErr: !this.checkLockAmount(e.target.value),
           });
         break;
+      // ! legacy code -> remove <AddProposalForm><Replace Authority>
       case "newAddr":
         this.setState({ newAddrErr: !this.checkAddr(e.target.value) });
         break;
@@ -424,7 +433,9 @@ class ProposalForm extends React.Component {
             netName={web3Instance.netName}
             loading={this.props.loading}
             stakingMin={this.props.stakingMin}
-            newAddrErr={this.state.newAddrErr}
+            stakingAddrErr={this.state.stakingAddrErr}
+            votingAddrErr={this.state.votingAddrErr}
+
             newLockAmountErr={this.state.newLockAmountErr}
             newLockAmount={this.data.formData.newLockAmount}
             newNodeErr={this.state.newNodeErr}
