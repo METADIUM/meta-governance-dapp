@@ -108,7 +108,7 @@ class ProposalForm extends React.Component {
             newLockAmountErr: !this.checkLockAmount(e.target.value),
           });
         break;
-      // ! legacy code -> remove <AddProposalForm><Replace Authority><rmoveProposalForm></rmoveProposalForm>
+      // ! legacy code -> remove <AddProposalForm><Replace Authority><RmoveProposalForm>
       case "newAddr":
         this.setState({ newAddrErr: !this.checkAddr(e.target.value) });
         break;
