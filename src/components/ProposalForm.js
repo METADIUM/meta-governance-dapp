@@ -467,11 +467,10 @@ class ProposalForm extends React.Component {
           <RmoveProposalForm
             netName={web3Instance.netName}
             loading={this.props.loading}
-            showLockAmount={this.state.showLockAmount}
-            stakingMin={this.props.stakingMin}
-            // oldAddrErr={this.state.oldAddrErr}
             stakingAddrErr={this.state.stakingAddrErr}
             votingAddrErr={this.state.votingAddrErr}
+            showLockAmount={this.state.showLockAmount}
+            stakingMin={this.props.stakingMin}
             oldLockAmountErr={this.state.oldLockAmountErr}
             oldLockAmount={this.data.formData.oldLockAmount}
             handleSubmit={this.handleSubmit}

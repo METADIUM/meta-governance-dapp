@@ -300,10 +300,8 @@ const RmoveProposalForm = ({
   loading,
   showLockAmount,
   stakingMin,
-  oldAddrErr,
   votingAddrErr,
   stakingAddrErr,
-
   oldLockAmountErr,
   oldLockAmount,
   handleSubmit = shouldPass(),
@@ -397,7 +395,7 @@ const RmoveProposalForm = ({
           <Button
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={oldAddrErr}
+            disabled={votingAddrErr || stakingAddrErr}
             loading={loading}
           >
             Submit
