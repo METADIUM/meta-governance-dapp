@@ -36,6 +36,7 @@ class ProposalForm extends React.Component {
     votingAddrErr: false,
     stakingAddrErr: false,
     newLockAmountErr: false,
+    // ! legacy code -> remove <AddProposalForm><Replace Authority>
     newAddrErr: false,
     newNodeErr: false,
     newNameErr: false,
@@ -435,7 +436,6 @@ class ProposalForm extends React.Component {
             stakingMin={this.props.stakingMin}
             stakingAddrErr={this.state.stakingAddrErr}
             votingAddrErr={this.state.votingAddrErr}
-
             newLockAmountErr={this.state.newLockAmountErr}
             newLockAmount={this.data.formData.newLockAmount}
             newNodeErr={this.state.newNodeErr}
