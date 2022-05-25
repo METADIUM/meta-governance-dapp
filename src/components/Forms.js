@@ -534,13 +534,9 @@ const ChangeOfGovernanceContractAddressForm = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={newLockAmountErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
-
       <Form.Item>
         <div className="submitDiv flex">
           <Button
