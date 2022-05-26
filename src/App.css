@@ -220,9 +220,18 @@ p {
   margin-left: 0 !important;
 }
 
+.ml-40 {
+  margin-left: 40px;
+}
+
 .mg-rl-5 {
   margin-right: 5px;
   margin-left: 5px;
+}
+ 
+.mg-tb-16 {
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .mg-rl-15 {

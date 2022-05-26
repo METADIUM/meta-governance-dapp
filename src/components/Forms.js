@@ -757,48 +757,49 @@ const VotingDurationSetting = ({
           <p className="subtitle">
             Voting Duration Setting <span className="required">*</span>
           </p>
-
-          <Form.Item>
             <div className="flex-column">
               <div className="flex-full flex-row">
-                <label className="subtitle mt-0 flex-align-self-center w-25">
-                  Min
-                </label>
-                <Input
-                  name="newMin"
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15" + (votingDurationErr ? "errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>day</span>
+                <Form.Item>
+                  <label className="subtitle mt-0 flex-align-self-center w-25">
+                    Min
+                  </label>
+                  <Input
+                    name="newMin"
+                    onChange={handleChange}
+                    className={
+                      "w-180 mg-rl-15 " + (votingDurationErr ? "errInput" : "")
+                    }
+                    disabled={loading}
+                  />
+                  <span>day</span>
+                </Form.Item>
               </div>
               <div className="flex-full flex-row mt-5">
-                <label className="subtitle mt-0 flex-align-self-center w-25">
-                  Max
-                </label>
-                <Input
-                  name="newMax"
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15" + (votingDurationErr ? "errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>day</span>
+                <Form.Item>
+                  <label className="subtitle mt-0 flex-align-self-center w-25">
+                    Max
+                  </label>
+                  <Input
+                    name="newMax"
+                    onChange={handleChange}
+                    className={
+                      "w-180 mg-rl-15 " + (votingDurationErr ? "errInput" : "")
+                    }
+                    disabled={loading}
+                  />
+                  <span>day</span>
+                </Form.Item>
               </div>
-            </div>
-            <p className={votingDurationErr ? "errHint" : "errHint-hide"}>
+              <p className={"mt-5 ml-40 " + (votingDurationErr ? "errHint" : "errHint-hide")}>
               {`${
                 votingDurationErr === "min"
-                  ? "Invalid Min Date Setting"
-                  : votingDurationErr === "max"
-                  ? "Invalid Max Date Setting"
-                  : "Invalid Duration Seting"
+                ? "Invalid Min Date Setting"
+                : votingDurationErr === "max"
+                ? "Invalid Max Date Setting"
+                : "Invalid Duration Seting"
               }`}
-            </p>
-          </Form.Item>
+              </p>
+            </div>
         </div>
       </div>
       <div className="helpDescription">
@@ -835,9 +836,6 @@ const VotingDurationSetting = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
