@@ -53,7 +53,9 @@ const AddProposalForm = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>Rewards for block generation will be given to the Staking account.</p>
+        <p>
+          Rewards for block generation will be given to the Staking account.
+        </p>
       </div>
       <div className="divider flex">
         <div className="flex-full">
@@ -132,7 +134,11 @@ const AddProposalForm = ({
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
             disabled={
-              newLockAmountErr || votingAddrErr || stakingAddrErr || newNodeErr || newNameErr
+              newLockAmountErr ||
+              votingAddrErr ||
+              stakingAddrErr ||
+              newNodeErr ||
+              newNameErr
             }
             loading={loading}
           >
@@ -321,7 +327,7 @@ const RmoveProposalForm = ({
             onChange={handleChange}
             className={"mt-5" + (votingAddrErr ? "errInput" : "")}
             disabled={loading}
-          /> 
+          />
           <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
             Invalid Address
           </p>
@@ -784,7 +790,13 @@ const VotingDurationSetting = ({
               </div>
             </div>
             <p className={votingDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Duration Setting
+              {`${
+                votingDurationErr === "min"
+                  ? "Invalid Min Date Setting"
+                  : votingDurationErr === "max"
+                  ? "Invalid Max Date Setting"
+                  : "Invalid Duration Seting"
+              }`}
             </p>
           </Form.Item>
         </div>

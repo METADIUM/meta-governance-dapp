@@ -50,6 +50,7 @@ class ProposalForm extends React.Component {
     maxPriorityFeePerGasErr: false,
     // Gas Limit
     gasLimitErr: false,
+    votingDurationErr: null,
   };
 
   constructor(props) {
@@ -143,6 +144,16 @@ class ProposalForm extends React.Component {
       case "gasLimit":
         this.setState({ gasLimitErr: !this.checkPrice(e.target.value) });
         break;
+      case "newMin":
+        this.setState({
+          votingDurationErr: this.checkDuration("min"),
+        });
+        break;
+      case "newMax":
+        this.setState({
+          votingDurationErr: this.checkDuration("max"),
+        });
+        break;
       default:
         break;
     }
@@ -171,6 +182,16 @@ class ProposalForm extends React.Component {
 
   checkPrice(price) {
     return /^[0-9]{1,}$/.test(price);
+  }
+
+  checkDuration(date) {
+    const newMin = parseInt(this.data.formData.newMin);
+    const newMax = parseInt(this.data.formData.newMax);
+    if (date === "min") {
+      return newMin > newMax ? date : null;
+    } else if (date === "max") {
+      return newMax < newMin ? date : null;
+    } else return;
   }
 
   // Submit form data
@@ -563,11 +584,11 @@ class ProposalForm extends React.Component {
       case "BlockRewardDistributionMethod":
         return (
           <BlockRewardDistributionMethod
-          netName={web3Instance.netName}
-          loading={this.props.loading}
-          BlockRewardDisMthErr={this.state.BlockRewardDisMthErr}
-          handleSubmit={this.handleSubmit}
-          handleChange={this.handleChange}
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            BlockRewardDisMthErr={this.state.BlockRewardDisMthErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
           />
         );
       default:
@@ -626,7 +647,9 @@ class ProposalForm extends React.Component {
                 <Select.Option value="BlockCreationTime">
                   Block Creation Time
                 </Select.Option>
-                <Select.Option value="BlockRewardAmount">Block Reward Amount</Select.Option>
+                <Select.Option value="BlockRewardAmount">
+                  Block Reward Amount
+                </Select.Option>
                 <Select.Option value="BlockRewardDistributionMethod">
                   Block Reward Distribution Method
                 </Select.Option>
@@ -644,8 +667,15 @@ class ProposalForm extends React.Component {
           <div className="contentRefDiv">
             <p>[Reference]</p>
             <ol>
-              <li>Even within the voting duration, if more than 50% of opinions are expressed for or against, voting ends and follow-up work is carried out.</li>
-              <li>Basically, only one voting is conducted at a time, so if there is already voting in progress, you cannot start a new voting.</li>
+              <li>
+                Even within the voting duration, if more than 50% of opinions
+                are expressed for or against, voting ends and follow-up work is
+                carried out.
+              </li>
+              <li>
+                Basically, only one voting is conducted at a time, so if there
+                is already voting in progress, you cannot start a new voting.
+              </li>
             </ol>
           </div>
         </div>
