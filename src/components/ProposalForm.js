@@ -5,17 +5,18 @@ import {
   AddProposalForm,
   RmoveProposalForm,
   ChangeOfGovernanceContractAddressForm,
+  VotingDurationSetting,
+  AuthorityMemberStakingAmount,
+  BlockCreationTime,
+  BlockRewardAmount,
+  BlockRewardDistributionMethod,
   ChangeOfMaxPriorityFeePerGasForm,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
   // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
-  VotingDurationSetting,
-  AuthorityMemberStakingAmount,
-  BlockCreationTime,
-  BlockRewardAmount,
-  BlockRewardDistributionMethod,
+  
 } from "./Forms";
 
 import { web3Instance } from "../web3";
@@ -36,8 +37,6 @@ class ProposalForm extends React.Component {
     votingAddrErr: false,
     stakingAddrErr: false,
     newLockAmountErr: false,
-    // ! legacy code -> remove <AddProposalForm><Replace Authority>
-    newAddrErr: false,
     newNodeErr: false,
     newNameErr: false,
     oldLockAmountErr: false,
@@ -50,7 +49,9 @@ class ProposalForm extends React.Component {
     maxPriorityFeePerGasErr: false,
     // Gas Limit
     gasLimitErr: false,
-    votingDurationErr: null,
+    votDurationErr: null,
+    // ! legacy code -> remove <AddProposalForm><Replace Authority>
+    newAddrErr: false,
   };
 
   constructor(props) {
@@ -144,7 +145,7 @@ class ProposalForm extends React.Component {
       case "gasLimit":
         this.setState({ gasLimitErr: !this.checkPrice(e.target.value) });
         break;
-      case "newMin":
+      case "votDurationMin":
         if (!/^([0-9]*)$/.test(e.target.value))
           this.data.formData[e.target.name] = originStr;
         else
@@ -152,7 +153,7 @@ class ProposalForm extends React.Component {
             votingDurationErr: this.checkDuration("min"),
           });
         break;
-      case "newMax":
+      case "votDurationMax":
         if (!/^([0-9]*)$/.test(e.target.value))
           this.data.formData[e.target.name] = originStr;
         else
@@ -191,8 +192,8 @@ class ProposalForm extends React.Component {
   }
 
   checkDuration(date) {
-    const newMin = parseInt(this.data.formData.newMin);
-    const newMax = parseInt(this.data.formData.newMax);
+    const newMin = parseInt(this.data.formData.votDurationMin);
+    const newMax = parseInt(this.data.formData.votDurationMax);
     if (date === "min") {
       return newMin > newMax ? date : null;
     } else if (date === "max") {
@@ -471,24 +472,6 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
-      // ! legacy code -> remove <Replace Authority>
-      case "ReplaceAuthorityMember":
-        return (
-          <ReplaceProposalForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            stakingMin={this.props.stakingMin}
-            oldAddrErr={this.state.oldAddrErr}
-            newAddrErr={this.state.newAddrErr}
-            newNameErr={this.state.newNameErr}
-            newNodeErr={this.state.newNodeErr}
-            newLockAmountErr={this.state.newLockAmountErr}
-            newLockAmount={this.data.formData.newLockAmount}
-            oldNodeErr={this.state.oldNodeErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
       case "RemoveAuthorityMember":
         return (
           <RmoveProposalForm
@@ -505,18 +488,6 @@ class ProposalForm extends React.Component {
             getLockAmount={this.getLockAmount}
           />
         );
-      // ! legacy code -> remove <Update Authority>
-      case "UpdateAuthority":
-        return (
-          <UpdateProposalForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            newNameErr={this.state.newNameErr}
-            newNodeErr={this.state.newNodeErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
       case "ChangeOfGovernanceContractAddress":
         return (
           <ChangeOfGovernanceContractAddressForm
@@ -527,34 +498,14 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
-      case "ChangeOfMaxPriorityFeePerGas":
-        return (
-          <ChangeOfMaxPriorityFeePerGasForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "GasLimit":
-        return (
-          <GasLimitForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            gasLimitErr={this.state.gasLimitErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
       case "VotingDurationSetting":
         return (
           <VotingDurationSetting
             netName={web3Instance.netName}
             loading={this.props.loading}
-            votingDurationErr={this.state.votingDurationErr}
-            newMin={this.data.formData.newMin}
-            newMax={this.data.formData.newMax}
+            votDurationErr={this.state.votDurationErr}
+            votDurationMin={this.data.formData.votDurationMin}
+            votDurationMax={this.data.formData.votDurationMax}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />
@@ -595,6 +546,56 @@ class ProposalForm extends React.Component {
             netName={web3Instance.netName}
             loading={this.props.loading}
             BlockRewardDisMthErr={this.state.BlockRewardDisMthErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "ChangeOfMaxPriorityFeePerGas":
+        return (
+          <ChangeOfMaxPriorityFeePerGasForm
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "GasLimit":
+        return (
+          <GasLimitForm
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            gasLimitErr={this.state.gasLimitErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      // ! legacy code -> remove <Replace Authority>
+      case "ReplaceAuthorityMember":
+        return (
+          <ReplaceProposalForm
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            stakingMin={this.props.stakingMin}
+            oldAddrErr={this.state.oldAddrErr}
+            newAddrErr={this.state.newAddrErr}
+            newNameErr={this.state.newNameErr}
+            newNodeErr={this.state.newNodeErr}
+            newLockAmountErr={this.state.newLockAmountErr}
+            newLockAmount={this.data.formData.newLockAmount}
+            oldNodeErr={this.state.oldNodeErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      // ! legacy code -> remove <Update Authority>
+      case "UpdateAuthority":
+        return (
+          <UpdateProposalForm
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            newNameErr={this.state.newNameErr}
+            newNodeErr={this.state.newNodeErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />
