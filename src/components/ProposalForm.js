@@ -131,6 +131,48 @@ class ProposalForm extends React.Component {
       case "oldNode":
         this.setState({ oldNodeErr: !this.checkNode(e.target.value) });
         break;
+      // Voting Duration Setting
+      case "votDurationMin":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else {
+          const { votDurationMin, votDurationMax } = this.data.formData;
+          this.setState({
+            votDurationErr: this.checkDuration("min", votDurationMin, votDurationMax)
+          });
+        }
+        break;
+      case "votDurationMax":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else {
+          const { votDurationMin, votDurationMax } = this.data.formData;
+          this.setState({
+            votDurationErr: this.checkDuration("max", votDurationMin, votDurationMax)
+          });
+        }
+        break;
+      //Authority Member Staking Amount
+      case "AuthMemSkAmountMin":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else {
+          const { AuthMemSkAmountMin, AuthMemSkAmountMax } = this.data.formData;
+          this.setState({
+            AuthMemSkAmountErr: this.checkDuration("min", AuthMemSkAmountMin, AuthMemSkAmountMax),
+          });
+        }
+        break;
+      case "AuthMemSkAmountMax":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else {
+          const { AuthMemSkAmountMin, AuthMemSkAmountMax } = this.data.formData;
+          this.setState({
+            AuthMemSkAmountErr: this.checkDuration("min", AuthMemSkAmountMin, AuthMemSkAmountMax),
+          });
+        }
+        break;
       // Change Of Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
@@ -145,22 +187,7 @@ class ProposalForm extends React.Component {
       case "gasLimit":
         this.setState({ gasLimitErr: !this.checkPrice(e.target.value) });
         break;
-      case "votDurationMin":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else
-          this.setState({
-            votingDurationErr: this.checkDuration("min"),
-          });
-        break;
-      case "votDurationMax":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else
-          this.setState({
-            votingDurationErr: this.checkDuration("max"),
-          });
-        break;
+      
       default:
         break;
     }
@@ -191,13 +218,13 @@ class ProposalForm extends React.Component {
     return /^[0-9]{1,}$/.test(price);
   }
 
-  checkDuration(date) {
-    const newMin = parseInt(this.data.formData.votDurationMin);
-    const newMax = parseInt(this.data.formData.votDurationMax);
-    if (date === "min") {
-      return newMin > newMax ? date : null;
-    } else if (date === "max") {
-      return newMax < newMin ? date : null;
+  checkDuration(type, min, max) {
+    const newMin = parseInt(min);
+    const newMax = parseInt(max);
+    if (type === "min") {
+      return newMin > newMax ? type : null;
+    } else if (type === "max") {
+      return newMax < newMin ? type : null;
     } else return;
   }
 
@@ -516,6 +543,8 @@ class ProposalForm extends React.Component {
             netName={web3Instance.netName}
             loading={this.props.loading}
             AuthMemSkAmountErr={this.state.AuthMemSkAmountErr}
+            AuthMemSkAmountMin={this.data.formData.AuthMemSkAmountMin}
+            AuthMemSkAmountMax={this.data.formData.AuthMemSkAmountMax}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />

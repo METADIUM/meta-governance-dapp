@@ -359,7 +359,7 @@ const VotingDurationSetting = ({
                 </label>
                 <Input
                   name="votDurationMin"
-                  defaultValue={1}
+                  defaultValue="1"
                   value={votDurationMin}
                   onChange={handleChange}
                   className={
@@ -377,7 +377,7 @@ const VotingDurationSetting = ({
                 </label>
                 <Input
                   name="votDurationMax"
-                  defaultValue={7}
+                  defaultValue="7"
                   value={votDurationMax}
                   onChange={handleChange}
                   className={
@@ -398,7 +398,7 @@ const VotingDurationSetting = ({
                   ? "Invalid Min Date Setting"
                   : votDurationErr === "max"
                   ? "Invalid Max Date Setting"
-                  : "Invalid Duration Seting"
+                  : "Invalid Duration Setting"
               }`}
             </p>
           </div>
@@ -462,6 +462,8 @@ const AuthorityMemberStakingAmount = ({
   netName,
   loading,
   AuthMemSkAmountErr,
+  AuthMemSkAmountMin,
+  AuthMemSkAmountMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -472,42 +474,53 @@ const AuthorityMemberStakingAmount = ({
           <p className="subtitle">
             Staking Amount <span className="required">*</span>
           </p>
-
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
+          <div className="flex-column">
+            <div className="flex-full flex-row">
+              <Form.Item>
                 <label className="subtitle mt-0 flex-align-self-center w-25">
                   Min
                 </label>
                 <Input
-                  name="newMin"
+                  name="AuthMemSkAmountMin"
+                  value={AuthMemSkAmountMin}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15" + (AuthMemSkAmountErr ? "errInput" : "")
+                    "w-180 mg-rl-15 " + (AuthMemSkAmountErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
                 <span>WEMIX</span>
-              </div>
-              <div className="flex-full flex-row mt-5">
+              </Form.Item>
+            </div>
+            <div className="flex-full flex-row mt-5">
+              <Form.Item>
                 <label className="subtitle mt-0 flex-align-self-center w-25">
                   Max
                 </label>
                 <Input
-                  name="newMax"
+                  name="AuthMemSkAmountMax"
+                  value={AuthMemSkAmountMax}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15" + (AuthMemSkAmountErr ? "errInput" : "")
+                    "w-180 mg-rl-15 " + (AuthMemSkAmountErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
                 <span>WEMIX</span>
-              </div>
+              </Form.Item>
             </div>
-            <p className={AuthMemSkAmountErr ? "errHint" : "errHint-hide"}>
-              Invalid Staking Amount
-            </p>
-          </Form.Item>
+          </div>
+          <p className={"mt-5 ml-40 " + (AuthMemSkAmountErr ? "errHint" : "errHint-hide")}>
+          {`${
+              AuthMemSkAmountErr === "min"
+                ? "Invalid Min Amount"
+                : AuthMemSkAmountErr === "max"
+                ? "Invalid Max Amout"
+                : "Invalid Staking Amount"
+          }`}
+          </p>
+          
+          
         </div>
       </div>
       <div className="helpDescription">
@@ -544,9 +557,6 @@ const AuthorityMemberStakingAmount = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
