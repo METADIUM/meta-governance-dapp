@@ -339,7 +339,7 @@ class ProposalForm extends React.Component {
         );
       } else if (newMemberBalance < newLockedAmount) {
         return this.props.getErrModal(
-          "Not Enough META Stake (New)",
+          "Not Enough WEMIX Stake (New)",
           "Proposal Submit Error"
         );
       }
@@ -380,18 +380,18 @@ class ProposalForm extends React.Component {
       } else if (Number(oldMemberLockedBalance) !== newLockedAmount) {
         return this.props.getErrModal(
           [
-            "Invalid Replace META Amount",
+            "Invalid Replace WEMIX Amount",
             <br />,
             `(Old Address: ${web3Instance.web3.utils.fromWei(
               oldMemberLockedBalance,
               "ether"
-            )} META Locked)`,
+            )} WEMIX Locked)`,
           ],
           "Proposal Submit Error"
         );
       } else if (newMemberBalance < newLockedAmount) {
         return this.props.getErrModal(
-          "Not Enough META Stake (New)",
+          "Not Enough WEMIX Stake (New)",
           "Proposal Submit Error"
         );
       }
@@ -415,7 +415,7 @@ class ProposalForm extends React.Component {
         );
       } else if (oldMemberBalance < oldLockedAmount) {
         return this.props.getErrModal(
-          "Invalid META Unlock Amount",
+          "Invalid WEMIX Unlock Amount",
           "Proposal Submit Error"
         );
       }
