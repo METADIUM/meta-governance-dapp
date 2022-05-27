@@ -53,7 +53,9 @@ const AddProposalForm = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>Rewards for block generation will be given to the Staking account.</p>
+        <p>
+          Rewards for block generation will be given to the Staking account.
+        </p>
       </div>
       <div className="divider flex">
         <div className="flex-full">
@@ -132,7 +134,11 @@ const AddProposalForm = ({
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
             disabled={
-              newLockAmountErr || votingAddrErr || stakingAddrErr || newNodeErr || newNameErr
+              newLockAmountErr ||
+              votingAddrErr ||
+              stakingAddrErr ||
+              newNodeErr ||
+              newNameErr
             }
             loading={loading}
           >
@@ -321,7 +327,7 @@ const RmoveProposalForm = ({
             onChange={handleChange}
             className={"mt-5" + (votingAddrErr ? "errInput" : "")}
             disabled={loading}
-          /> 
+          />
           <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
             Invalid Address
           </p>
@@ -741,6 +747,8 @@ const VotingDurationSetting = ({
   netName,
   loading,
   votingDurationErr,
+  newMin,
+  newMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -751,42 +759,53 @@ const VotingDurationSetting = ({
           <p className="subtitle">
             Voting Duration Setting <span className="required">*</span>
           </p>
-
-          <Form.Item>
             <div className="flex-column">
               <div className="flex-full flex-row">
-                <label className="subtitle mt-0 flex-align-self-center w-25">
-                  Min
-                </label>
-                <Input
-                  name="newMin"
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15" + (votingDurationErr ? "errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>day</span>
+                <Form.Item>
+                  <label className="subtitle mt-0 flex-align-self-center w-25">
+                    Min
+                  </label>
+                  <Input
+                    name="newMin"
+                    defaultValue={1}
+                    value={newMin || ""}
+                    onChange={handleChange}
+                    className={
+                      "w-180 mg-rl-15 " + (votingDurationErr ? "errInput" : "")
+                    }
+                    disabled={loading}
+                  />
+                  <span>day</span>
+                </Form.Item>
               </div>
               <div className="flex-full flex-row mt-5">
-                <label className="subtitle mt-0 flex-align-self-center w-25">
-                  Max
-                </label>
-                <Input
-                  name="newMax"
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15" + (votingDurationErr ? "errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>day</span>
+                <Form.Item>
+                  <label className="subtitle mt-0 flex-align-self-center w-25">
+                    Max
+                  </label>
+                  <Input
+                    name="newMax"
+                    defaultValue={7}
+                    value={newMax || ""}
+                    onChange={handleChange}
+                    className={
+                      "w-180 mg-rl-15 " + (votingDurationErr ? "errInput" : "")
+                    }
+                    disabled={loading}
+                  />
+                  <span>day</span>
+                </Form.Item>
               </div>
+              <p className={"mt-5 ml-40 " + (votingDurationErr ? "errHint" : "errHint-hide")}>
+              {`${
+                votingDurationErr === "min"
+                ? "Invalid Min Date Setting"
+                : votingDurationErr === "max"
+                ? "Invalid Max Date Setting"
+                : "Invalid Duration Seting"
+              }`}
+              </p>
             </div>
-            <p className={votingDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Duration Setting
-            </p>
-          </Form.Item>
         </div>
       </div>
       <div className="helpDescription">
@@ -823,9 +842,6 @@ const VotingDurationSetting = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
