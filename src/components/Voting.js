@@ -161,7 +161,7 @@ class Voting extends React.Component {
           <p className="description flex-full">
             New Authority Address: {newAddr}
             <br />
-            META To be Locked: {lockAmount}META
+            WEMIX To be Locked: {lockAmount} WEMIX
           </p>
         );
       case constants.ballotTypes.MemberRemoval:
@@ -169,14 +169,14 @@ class Voting extends React.Component {
           <p className="description flex-full">
             Address To be Removed: {oldAddr}
             <br />
-            META Amount to be unlocked: {lockAmount}META
+            WEMIX Amount to be unlocked: {lockAmount} WEMIX
           </p>
         );
       case constants.ballotTypes.MemberChange:
         if (newAddr === oldAddr) {
           return (
             <p className="description flex-full">
-              META To be Locked: {lockAmount}META
+              WEMIX To be Locked: {lockAmount} WEMIX
             </p>
           );
         } else {
@@ -186,7 +186,7 @@ class Voting extends React.Component {
               <br />
               New Authority Address: {newAddr}
               <br />
-              META To be Locked: {lockAmount}META
+              WEMIX To be Locked: {lockAmount} WEMIX
             </p>
           );
         }
@@ -195,7 +195,7 @@ class Voting extends React.Component {
           <p className="description flex-full">
             New Authority Address: {newAddr}
             <br />
-            META To be Locked: {lockAmount}META
+            WEMIX To be Locked: {lockAmount} WEMIX
           </p>
         );
     }

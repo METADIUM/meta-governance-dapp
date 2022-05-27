@@ -437,7 +437,7 @@ class App extends React.Component {
     this.setState({ stakingModalVisible: true });
   };
 
-  submitMetaStaking = () => {
+  submitWemixStaking = () => {
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
       this.setState({ errStakging: true });
       return;
@@ -513,7 +513,7 @@ class App extends React.Component {
                 if (!this.state.loading)
                   this.setState({ stakingModalVisible: false });
               }}
-              submitMetaStaking={this.submitMetaStaking}
+              submitWemixStaking={this.submitWemixStaking}
               handleInputChange={this.handleInputChange}
               handleSelectChange={this.handleSelectChange}
             />

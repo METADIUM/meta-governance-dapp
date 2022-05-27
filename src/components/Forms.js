@@ -76,11 +76,11 @@ const AddProposalForm = ({
         </div>
         <div className="flex-full">
           <p className="subtitle">
-            META Amount to be locked <span className="required">*</span>
+            WEMIX Amount to be locked <span className="required">*</span>
           </p>
           <Form.Item>
             <Input
-              addonAfter="META"
+              addonAfter="WEMIX"
               name="newLockAmount"
               defaultValue={stakingMin}
               value={newLockAmount || ""}
@@ -214,11 +214,11 @@ const ReplaceProposalForm = ({
         </div>
         <div className="flex-full">
           <p className="subtitle">
-            Replace META Amount <span className="required">*</span>
+            Replace WEMIX Amount <span className="required">*</span>
           </p>
           <Form.Item>
             <Input
-              addonAfter="META"
+              addonAfter="WEMIX"
               name="newLockAmount"
               defaultValue={stakingMin}
               value={newLockAmount || ""}
@@ -759,53 +759,57 @@ const VotingDurationSetting = ({
           <p className="subtitle">
             Voting Duration Setting <span className="required">*</span>
           </p>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Form.Item>
-                  <label className="subtitle mt-0 flex-align-self-center w-25">
-                    Min
-                  </label>
-                  <Input
-                    name="newMin"
-                    defaultValue={1}
-                    value={newMin || ""}
-                    onChange={handleChange}
-                    className={
-                      "w-180 mg-rl-15 " + (votingDurationErr ? "errInput" : "")
-                    }
-                    disabled={loading}
-                  />
-                  <span>day</span>
-                </Form.Item>
-              </div>
-              <div className="flex-full flex-row mt-5">
-                <Form.Item>
-                  <label className="subtitle mt-0 flex-align-self-center w-25">
-                    Max
-                  </label>
-                  <Input
-                    name="newMax"
-                    defaultValue={7}
-                    value={newMax || ""}
-                    onChange={handleChange}
-                    className={
-                      "w-180 mg-rl-15 " + (votingDurationErr ? "errInput" : "")
-                    }
-                    disabled={loading}
-                  />
-                  <span>day</span>
-                </Form.Item>
-              </div>
-              <p className={"mt-5 ml-40 " + (votingDurationErr ? "errHint" : "errHint-hide")}>
+          <div className="flex-column">
+            <div className="flex-full flex-row">
+              <Form.Item>
+                <label className="subtitle mt-0 flex-align-self-center w-25">
+                  Min
+                </label>
+                <Input
+                  name="newMin"
+                  defaultValue={1}
+                  value={newMin || ""}
+                  onChange={handleChange}
+                  className={
+                    "w-180 mg-rl-15 " + (votingDurationErr ? "errInput" : "")
+                  }
+                  disabled={loading}
+                />
+                <span>day</span>
+              </Form.Item>
+            </div>
+            <div className="flex-full flex-row mt-5">
+              <Form.Item>
+                <label className="subtitle mt-0 flex-align-self-center w-25">
+                  Max
+                </label>
+                <Input
+                  name="newMax"
+                  defaultValue={7}
+                  value={newMax || ""}
+                  onChange={handleChange}
+                  className={
+                    "w-180 mg-rl-15 " + (votingDurationErr ? "errInput" : "")
+                  }
+                  disabled={loading}
+                />
+                <span>day</span>
+              </Form.Item>
+            </div>
+            <p
+              className={
+                "mt-5 ml-40 " + (votingDurationErr ? "errHint" : "errHint-hide")
+              }
+            >
               {`${
                 votingDurationErr === "min"
-                ? "Invalid Min Date Setting"
-                : votingDurationErr === "max"
-                ? "Invalid Max Date Setting"
-                : "Invalid Duration Seting"
+                  ? "Invalid Min Date Setting"
+                  : votingDurationErr === "max"
+                  ? "Invalid Max Date Setting"
+                  : "Invalid Duration Seting"
               }`}
-              </p>
-            </div>
+            </p>
+          </div>
         </div>
       </div>
       <div className="helpDescription">

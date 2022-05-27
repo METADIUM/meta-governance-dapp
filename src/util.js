@@ -65,12 +65,12 @@ function refine(m) {
         m[key] = convertHexToString(m[key]);
         break;
       case "reward":
-        m[key + "Meta"] =
-          web3Instance.web3.utils.fromWei(m[key], "ether") + "META";
+        m[key + "WEMIX"] =
+          web3Instance.web3.utils.fromWei(m[key], "ether") + "WEMIX";
         break;
       case "reserved":
-        m[key + "Meta"] =
-          web3Instance.web3.utils.fromWei(m[key], "ether") + "META";
+        m[key + "WEMIX"] =
+          web3Instance.web3.utils.fromWei(m[key], "ether") + "WEMIX";
         break;
       case "createdAt":
         m[key] = timeConverter(m[key]);
@@ -182,7 +182,7 @@ function validate(key, val) {
       if (val < 5)
         return {
           b: false,
-          err: key.toUpperCase() + " should be greater than 5 META",
+          err: key.toUpperCase() + " should be greater than 5 WEMIX",
         };
       return { b: true };
     case "issuer":
