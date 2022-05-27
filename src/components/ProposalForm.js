@@ -145,14 +145,20 @@ class ProposalForm extends React.Component {
         this.setState({ gasLimitErr: !this.checkPrice(e.target.value) });
         break;
       case "newMin":
-        this.setState({
-          votingDurationErr: this.checkDuration("min"),
-        });
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else
+          this.setState({
+            votingDurationErr: this.checkDuration("min"),
+          });
         break;
       case "newMax":
-        this.setState({
-          votingDurationErr: this.checkDuration("max"),
-        });
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else
+          this.setState({
+            votingDurationErr: this.checkDuration("max"),
+          });
         break;
       default:
         break;
@@ -547,6 +553,8 @@ class ProposalForm extends React.Component {
             netName={web3Instance.netName}
             loading={this.props.loading}
             votingDurationErr={this.state.votingDurationErr}
+            newMin={this.data.formData.newMin}
+            newMax={this.data.formData.newMax}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />

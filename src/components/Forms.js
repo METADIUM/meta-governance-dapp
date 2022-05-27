@@ -747,6 +747,8 @@ const VotingDurationSetting = ({
   netName,
   loading,
   votingDurationErr,
+  newMin,
+  newMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -765,6 +767,8 @@ const VotingDurationSetting = ({
                   </label>
                   <Input
                     name="newMin"
+                    defaultValue={1}
+                    value={newMin || ""}
                     onChange={handleChange}
                     className={
                       "w-180 mg-rl-15 " + (votingDurationErr ? "errInput" : "")
@@ -781,6 +785,8 @@ const VotingDurationSetting = ({
                   </label>
                   <Input
                     name="newMax"
+                    defaultValue={7}
+                    value={newMax || ""}
                     onChange={handleChange}
                     className={
                       "w-180 mg-rl-15 " + (votingDurationErr ? "errInput" : "")
