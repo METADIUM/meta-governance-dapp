@@ -21,7 +21,9 @@
   "scripts": {
     "start": "PORT=3005 react-app-rewired start",
     "start:mainnet": "NODE_ENV=production PORT=3005 react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build": "echo \"Please use build:testnet or build:mainnet \" && exit 1",
+    "build:testnet": "dotenv -e .env.development react-app-rewired build",
+    "build:mainnet": "dotenv -e .env.production react-app-rewired build",
     "test": "standard --parser babel-eslint",
     "fix": "standard --parser babel-eslint --fix",
     "eject": "react-scripts eject"
@@ -38,6 +40,7 @@
   "devDependencies": {
     "babel-plugin-import": "^1.11.0",
     "customize-cra": "^0.2.11",
+    "dotenv-cli": "^5.1.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "react-app-rewired": "^2.1.0",
