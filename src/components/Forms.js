@@ -510,17 +510,19 @@ const AuthorityMemberStakingAmount = ({
               </Form.Item>
             </div>
           </div>
-          <p className={"mt-5 ml-40 " + (AuthMemSkAmountErr ? "errHint" : "errHint-hide")}>
-          {`${
+          <p
+            className={
+              "mt-5 ml-40 " + (AuthMemSkAmountErr ? "errHint" : "errHint-hide")
+            }
+          >
+            {`${
               AuthMemSkAmountErr === "min"
                 ? "Invalid Min Amount"
                 : AuthMemSkAmountErr === "max"
                 ? "Invalid Max Amout"
                 : "Invalid Staking Amount"
-          }`}
+            }`}
           </p>
-          
-          
         </div>
       </div>
       <div className="helpDescription">
@@ -580,7 +582,8 @@ const AuthorityMemberStakingAmount = ({
 const BlockCreationTime = ({
   netName,
   loading,
-  BlockCreationErr,
+  newBlockCreation,
+  blockCreationErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -591,22 +594,23 @@ const BlockCreationTime = ({
           <p className="subtitle">
             Block Creation Time <span className="required">*</span>
           </p>
-
           <Form.Item>
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="newblockcreation"
+                  name="newBlockCreation"
+                  value={newBlockCreation}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" + (BlockCreationErr ? "errInput" : "")
+                    "w-180 mg-rl-15 ml-0 " +
+                    (blockCreationErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
                 <span className="align-bottom-next-to-input">s</span>
               </div>
             </div>
-            <p className={BlockCreationErr ? "errHint" : "errHint-hide"}>
+            <p className={blockCreationErr ? "errHint" : "errHint-hide"}>
               Invalid Block Creation Time
             </p>
           </Form.Item>
@@ -646,9 +650,6 @@ const BlockCreationTime = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
@@ -658,7 +659,7 @@ const BlockCreationTime = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={BlockCreationErr}
+            disabled={blockCreationErr}
             loading={loading}
           >
             Submit
@@ -1331,5 +1332,5 @@ export {
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
   // ! legacy code -> remove <Update Authority>
-  UpdateProposalForm, 
+  UpdateProposalForm,
 };

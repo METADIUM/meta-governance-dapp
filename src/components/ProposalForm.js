@@ -16,7 +16,6 @@ import {
   ReplaceProposalForm,
   // ! legacy code -> remove <Update Authority>
   UpdateProposalForm,
-  
 } from "./Forms";
 
 import { web3Instance } from "../web3";
@@ -50,6 +49,7 @@ class ProposalForm extends React.Component {
     // Gas Limit
     gasLimitErr: false,
     votDurationErr: null,
+    blockCreationErr: false,
     // ! legacy code -> remove <AddProposalForm><Replace Authority>
     newAddrErr: false,
   };
@@ -138,17 +138,25 @@ class ProposalForm extends React.Component {
         else {
           const { votDurationMin, votDurationMax } = this.data.formData;
           this.setState({
-            votDurationErr: this.checkDuration("min", votDurationMin, votDurationMax)
+            votDurationErr: this.checkDuration(
+              "min",
+              votDurationMin,
+              votDurationMax
+            ),
           });
         }
         break;
       case "votDurationMax":
-        if (!/^([0-9]*)$/.test(e.target.value))
+        if (!/^([0-9]*)$/.test(e.target.value)) {
           this.data.formData[e.target.name] = originStr;
-        else {
+        } else {
           const { votDurationMin, votDurationMax } = this.data.formData;
           this.setState({
-            votDurationErr: this.checkDuration("max", votDurationMin, votDurationMax)
+            votDurationErr: this.checkDuration(
+              "max",
+              votDurationMin,
+              votDurationMax
+            ),
           });
         }
         break;
@@ -159,7 +167,11 @@ class ProposalForm extends React.Component {
         else {
           const { AuthMemSkAmountMin, AuthMemSkAmountMax } = this.data.formData;
           this.setState({
-            AuthMemSkAmountErr: this.checkDuration("min", AuthMemSkAmountMin, AuthMemSkAmountMax),
+            AuthMemSkAmountErr: this.checkDuration(
+              "min",
+              AuthMemSkAmountMin,
+              AuthMemSkAmountMax
+            ),
           });
         }
         break;
@@ -169,9 +181,16 @@ class ProposalForm extends React.Component {
         else {
           const { AuthMemSkAmountMin, AuthMemSkAmountMax } = this.data.formData;
           this.setState({
-            AuthMemSkAmountErr: this.checkDuration("min", AuthMemSkAmountMin, AuthMemSkAmountMax),
+            AuthMemSkAmountErr: this.checkDuration(
+              "min",
+              AuthMemSkAmountMin,
+              AuthMemSkAmountMax
+            ),
           });
         }
+        break;
+      case "newBlockCreation":
+        this.setState({ blockCreationErr: !this.checkTimes(e.target.value) });
         break;
       // Change Of Governance Contract Address
       case "newGovAddr":
@@ -187,7 +206,7 @@ class ProposalForm extends React.Component {
       case "gasLimit":
         this.setState({ gasLimitErr: !this.checkPrice(e.target.value) });
         break;
-      
+
       default:
         break;
     }
@@ -216,6 +235,11 @@ class ProposalForm extends React.Component {
 
   checkPrice(price) {
     return /^[0-9]{1,}$/.test(price);
+  }
+
+  checkTimes(time) {
+    // Start with number, singular dot, at least 0.1
+    return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1,})?|0?\.[1-9]{1,})?$/.test(time);
   }
 
   checkDuration(type, min, max) {
@@ -554,7 +578,8 @@ class ProposalForm extends React.Component {
           <BlockCreationTime
             netName={web3Instance.netName}
             loading={this.props.loading}
-            BlockCreationErr={this.state.BlockCreationErr}
+            newBlockCreation={this.data.formData.newBlockCreation}
+            blockCreationErr={this.state.blockCreationErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />
