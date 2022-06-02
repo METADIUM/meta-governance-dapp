@@ -673,7 +673,8 @@ const BlockCreationTime = ({
 const BlockRewardAmount = ({
   netName,
   loading,
-  BlockRewardErr,
+  newBlockRewardAmount,
+  blockRewardErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -689,17 +690,18 @@ const BlockRewardAmount = ({
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="newblockcreation"
+                  name="newBlockRewardAmount"
+                  value={newBlockRewardAmount}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" + (BlockRewardErr ? "errInput" : "")
+                    "w-180 mg-rl-15 ml-0 " + (blockRewardErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
                 <span>WEMIX/Block</span>
               </div>
             </div>
-            <p className={BlockRewardErr ? "errHint" : "errHint-hide"}>
+            <p className={blockRewardErr ? "errHint" : "errHint-hide"}>
               Invalid Block Reward Amount
             </p>
           </Form.Item>
@@ -739,9 +741,6 @@ const BlockRewardAmount = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
@@ -751,7 +750,7 @@ const BlockRewardAmount = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={BlockRewardErr}
+            disabled={blockRewardErr}
             loading={loading}
           >
             Submit
@@ -887,9 +886,6 @@ const BlockRewardDistributionMethod = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
@@ -980,9 +976,6 @@ const ChangeOfMaxPriorityFeePerGasForm = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
@@ -1071,9 +1064,6 @@ const GasLimitForm = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
