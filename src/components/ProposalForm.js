@@ -190,7 +190,9 @@ class ProposalForm extends React.Component {
         }
         break;
       case "newBlockCreation":
-        this.setState({ blockCreationErr: !this.checkTimes(e.target.value) });
+        this.setState({
+          blockCreationErr: !this.checkBlockCreationTime(e.target.value),
+        });
         break;
       // Change Of Governance Contract Address
       case "newGovAddr":
@@ -237,8 +239,8 @@ class ProposalForm extends React.Component {
     return /^[0-9]{1,}$/.test(price);
   }
 
-  checkTimes(time) {
-    // Start with number, singular dot, at least 0.1
+  // Start with number, singular dot, at least 0.1
+  checkBlockCreationTime(time) {
     return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1,})?|0?\.[1-9]{1,})?$/.test(time);
   }
 
