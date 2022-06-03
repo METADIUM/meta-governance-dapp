@@ -13,7 +13,7 @@
 
 .ant-layout-header .header-logo {
   width: 240px;
-  padding: 0 10px;
+  padding: 0 16px;
 }
 
 .ant-layout-header .header-logo img {
@@ -247,7 +247,7 @@
 
 .ant-layout-footer {
   padding: 0;
-  background-color: #ffffff;
+  background-color: #1a1a1a;
 }
 
 .ant-layout-footer .ant-row {
@@ -256,6 +256,10 @@
 
 .ant-layout-footer .ant-row div {
   justify-content: flex-end;
+}
+
+.ant-layout-footer .ant-row p {
+  color: #ffffff;
 }
 
 .ant-layout-footer .ant-row div .ant-btn {
@@ -692,8 +696,8 @@
   -ms-flex-pack: justify;
   justify-content: space-between;
   position: absolute;
-  width: 206px;
-  padding-top: 50px;
+  width: 214px;
+  padding-top: 70px;
 }
 
 .loading:before {
@@ -702,7 +706,7 @@
   left: 0;
   top: 0;
   width: 206px;
-  height: 35px;
+  height: 60px;
   background-image: url("./loading.png");
   background-position: 0 0;
 }
