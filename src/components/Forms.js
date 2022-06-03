@@ -510,17 +510,19 @@ const AuthorityMemberStakingAmount = ({
               </Form.Item>
             </div>
           </div>
-          <p className={"mt-5 ml-40 " + (AuthMemSkAmountErr ? "errHint" : "errHint-hide")}>
-          {`${
+          <p
+            className={
+              "mt-5 ml-40 " + (AuthMemSkAmountErr ? "errHint" : "errHint-hide")
+            }
+          >
+            {`${
               AuthMemSkAmountErr === "min"
                 ? "Invalid Min Amount"
                 : AuthMemSkAmountErr === "max"
                 ? "Invalid Max Amout"
                 : "Invalid Staking Amount"
-          }`}
+            }`}
           </p>
-          
-          
         </div>
       </div>
       <div className="helpDescription">
@@ -580,7 +582,8 @@ const AuthorityMemberStakingAmount = ({
 const BlockCreationTime = ({
   netName,
   loading,
-  BlockCreationErr,
+  newBlockCreation,
+  blockCreationErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -591,22 +594,23 @@ const BlockCreationTime = ({
           <p className="subtitle">
             Block Creation Time <span className="required">*</span>
           </p>
-
           <Form.Item>
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="newblockcreation"
+                  name="newBlockCreation"
+                  value={newBlockCreation}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" + (BlockCreationErr ? "errInput" : "")
+                    "w-180 mg-rl-15 ml-0 " +
+                    (blockCreationErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
                 <span className="align-bottom-next-to-input">s</span>
               </div>
             </div>
-            <p className={BlockCreationErr ? "errHint" : "errHint-hide"}>
+            <p className={blockCreationErr ? "errHint" : "errHint-hide"}>
               Invalid Block Creation Time
             </p>
           </Form.Item>
@@ -646,9 +650,6 @@ const BlockCreationTime = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
@@ -658,7 +659,7 @@ const BlockCreationTime = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={BlockCreationErr}
+            disabled={blockCreationErr}
             loading={loading}
           >
             Submit
@@ -672,7 +673,8 @@ const BlockCreationTime = ({
 const BlockRewardAmount = ({
   netName,
   loading,
-  BlockRewardErr,
+  newBlockRewardAmount,
+  blockRewardErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -681,24 +683,25 @@ const BlockRewardAmount = ({
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">
-            Block Creation Time <span className="required">*</span>
+            Block Reward Amount <span className="required">*</span>
           </p>
 
           <Form.Item>
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="newblockcreation"
+                  name="newBlockRewardAmount"
+                  value={newBlockRewardAmount}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" + (BlockRewardErr ? "errInput" : "")
+                    "w-180 mg-rl-15 ml-0 " + (blockRewardErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
                 <span>WEMIX/Block</span>
               </div>
             </div>
-            <p className={BlockRewardErr ? "errHint" : "errHint-hide"}>
+            <p className={blockRewardErr ? "errHint" : "errHint-hide"}>
               Invalid Block Reward Amount
             </p>
           </Form.Item>
@@ -706,7 +709,7 @@ const BlockRewardAmount = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>Block Rewards are available from at least 1WEMIX/Block</p>
+        <p>Block Rewards are available from at least 1WEMIX/Block.</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -738,9 +741,6 @@ const BlockRewardAmount = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
@@ -750,7 +750,7 @@ const BlockRewardAmount = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={BlockRewardErr}
+            disabled={blockRewardErr}
             loading={loading}
           >
             Submit
@@ -784,7 +784,7 @@ const BlockRewardDistributionMethod = ({
                   addonAfter="%"
                   onChange={handleChange}
                   className={
-                    "w-100 mg-rl-5 ml-0" +
+                    "w-100 mg-rl-5 ml-0 " +
                     (BlockRewardDisMthErr ? "errInput" : "")
                   }
                   disabled={loading}
@@ -798,7 +798,7 @@ const BlockRewardDistributionMethod = ({
                   addonAfter="%"
                   onChange={handleChange}
                   className={
-                    "mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                    "mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -811,7 +811,7 @@ const BlockRewardDistributionMethod = ({
                   addonAfter="%"
                   onChange={handleChange}
                   className={
-                    "mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                    "mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -824,7 +824,7 @@ const BlockRewardDistributionMethod = ({
                   addonAfter="%"
                   onChange={handleChange}
                   className={
-                    "mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                    "mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -837,7 +837,7 @@ const BlockRewardDistributionMethod = ({
                   addonAfter="%"
                   onChange={handleChange}
                   className={
-                    "w-auto mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                    "w-auto mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -886,9 +886,6 @@ const BlockRewardDistributionMethod = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
@@ -979,9 +976,6 @@ const ChangeOfMaxPriorityFeePerGasForm = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
@@ -1070,9 +1064,6 @@ const GasLimitForm = ({
               <Option value="5">5</Option>
             </Select>
             <span>day</span>
-            {/* <p className={votDurationErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p> */}
           </Form.Item>
         </div>
       </div>
@@ -1331,5 +1322,5 @@ export {
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
   // ! legacy code -> remove <Update Authority>
-  UpdateProposalForm, 
+  UpdateProposalForm,
 };
