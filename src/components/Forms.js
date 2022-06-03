@@ -709,7 +709,7 @@ const BlockRewardAmount = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>Block Rewards are available from at least 1WEMIX/Block</p>
+        <p>Block Rewards are available from at least 1WEMIX/Block.</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>

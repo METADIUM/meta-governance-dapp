@@ -50,6 +50,7 @@ class ProposalForm extends React.Component {
     gasLimitErr: false,
     votDurationErr: null,
     blockCreationErr: false,
+    blockRewardErr: null,
     // ! legacy code -> remove <AddProposalForm><Replace Authority>
     newAddrErr: false,
   };
@@ -194,6 +195,11 @@ class ProposalForm extends React.Component {
           blockCreationErr: !this.checkBlockCreationTime(e.target.value),
         });
         break;
+      case "newBlockRewardAmount":
+        this.setState({
+          blockRewardErr: !this.checkRewardAmount(e.target.value),
+        });
+        break;
       // Change Of Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
@@ -242,6 +248,11 @@ class ProposalForm extends React.Component {
   // Start with number, singular dot, at least 0.1
   checkBlockCreationTime(time) {
     return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1,})?|0?\.[1-9]{1,})?$/.test(time);
+  }
+
+  // Start with number(at least 1), singular dot, 18 decimal place or more is err
+  checkRewardAmount(amount) {
+    return /^[1-9]+\.?([0-9]{1,17})?$/.test(amount);
   }
 
   checkDuration(type, min, max) {
@@ -591,7 +602,8 @@ class ProposalForm extends React.Component {
           <BlockRewardAmount
             netName={web3Instance.netName}
             loading={this.props.loading}
-            BlockRewardErr={this.state.BlockRewardErr}
+            newBlockRewardAmount={this.data.formData.newBlockRewardAmount}
+            blockRewardErr={this.state.blockRewardErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />
