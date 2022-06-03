@@ -50,7 +50,7 @@ class ProposalForm extends React.Component {
     gasLimitErr: false,
     votDurationErr: null,
     blockCreationErr: false,
-    blockRewardErr: null,
+    blockRewardErr: false,
     // ! legacy code -> remove <AddProposalForm><Replace Authority>
     newAddrErr: false,
   };
