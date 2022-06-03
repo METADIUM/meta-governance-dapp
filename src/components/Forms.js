@@ -683,7 +683,7 @@ const BlockRewardAmount = ({
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">
-            Block Creation Time <span className="required">*</span>
+            Block Reward Amount <span className="required">*</span>
           </p>
 
           <Form.Item>
@@ -709,7 +709,7 @@ const BlockRewardAmount = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>Block Rewards are available from at least 1WEMIX/Block</p>
+        <p>Block Rewards are available from at least 1WEMIX/Block.</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -784,7 +784,7 @@ const BlockRewardDistributionMethod = ({
                   addonAfter="%"
                   onChange={handleChange}
                   className={
-                    "w-100 mg-rl-5 ml-0" +
+                    "w-100 mg-rl-5 ml-0 " +
                     (BlockRewardDisMthErr ? "errInput" : "")
                   }
                   disabled={loading}
@@ -798,7 +798,7 @@ const BlockRewardDistributionMethod = ({
                   addonAfter="%"
                   onChange={handleChange}
                   className={
-                    "mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                    "mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -811,7 +811,7 @@ const BlockRewardDistributionMethod = ({
                   addonAfter="%"
                   onChange={handleChange}
                   className={
-                    "mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                    "mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -824,7 +824,7 @@ const BlockRewardDistributionMethod = ({
                   addonAfter="%"
                   onChange={handleChange}
                   className={
-                    "mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                    "mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -837,7 +837,7 @@ const BlockRewardDistributionMethod = ({
                   addonAfter="%"
                   onChange={handleChange}
                   className={
-                    "w-auto mg-rl-5" + (BlockRewardDisMthErr ? "errInput" : "")
+                    "w-auto mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
                   }
                   disabled={loading}
                 />
