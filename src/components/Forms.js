@@ -683,7 +683,7 @@ const BlockRewardAmount = ({
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">
-            Block Reward amount <span className="required">*</span>
+            Block Reward Amount <span className="required">*</span>
           </p>
 
           <Form.Item>
