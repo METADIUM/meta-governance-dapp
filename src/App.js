@@ -344,14 +344,14 @@ class App extends React.Component {
 
   onClickFootIcon = (e) => {
     switch (e.target.alt) {
-      case "metadium":
-        window.open("https://metadium.com/", "_blank");
+      case "wemix":
+        window.open("", "_blank");
         break;
       case "explorer":
         window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER);
         break;
       case "github":
-        window.open("https://github.com/METADIUM/", "_blank");
+        window.open("https://github.com/nxtmeta/", "_blank");
         break;
       default:
     }

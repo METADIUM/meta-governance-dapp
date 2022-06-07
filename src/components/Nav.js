@@ -98,7 +98,7 @@ const FootNav = ({ netName, onClickFootIcon }) => (
     <p>Copyright © Since 2019 Metadium Technology, Inc. All rights reserved</p>
     <div className="flex flex-full">
       <Button className="btn-img" onClick={onClickFootIcon}>
-        <img src="/img/metadium_footer.png" alt="wemix" key="wemix" />
+        <img src="/img/wemix_footer.png" alt="wemix" key="wemix" />
       </Button>
       <Button className="btn-img" onClick={onClickFootIcon}>
         <img
