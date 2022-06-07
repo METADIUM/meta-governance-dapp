@@ -923,6 +923,78 @@ const BlockRewardDistributionMethod = ({
   </div>
 );
 
+const ChangeOfEcoFundAddress = ({
+  netName,
+  loading,
+  ecoFundAddrErr,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form onSubmit={handleSubmit}>
+      <p className="subtitle">
+        Old Eco-Fund Address <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          name="oldEcoAddr"
+          onChange={handleChange}
+          className={ecoFundAddrErr ? "errInput" : ""}
+          disabled={loading}
+        />
+        <p className={ecoFundAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
+      </Form.Item>
+      <p className="subtitle">
+        New Eco-Fund Address <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          name="newEcoAddr"
+          onChange={handleChange}
+          className={ecoFundAddrErr ? "errInput" : ""}
+          disabled={loading}
+        />
+        <p className={ecoFundAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
+      </Form.Item>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>
+          Enter the address to recieve the ecosystem rewards distributed from
+          Block Rewards.
+        </p>
+      </div>
+
+      <p className="subtitle">Description</p>
+      <Form.Item>
+        <TextArea
+          rows={4}
+          placeholder="Max. 256 bytes"
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          name="memo"
+          onChange={handleChange}
+          disabled={loading}
+        />
+      </Form.Item>
+      <Form.Item>
+        <div className="submitDiv flex">
+          <Button
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            htmlType="submit"
+            disabled={ecoFundAddrErr}
+            loading={loading}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
+    </Form>
+  </div>
+);
+
 const ChangeOfMaxPriorityFeePerGasForm = ({
   netName,
   loading,
@@ -1334,6 +1406,7 @@ export {
   BlockCreationTime,
   BlockRewardAmount,
   BlockRewardDistributionMethod,
+  ChangeOfEcoFundAddress,
   ChangeOfMaxPriorityFeePerGasForm,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>

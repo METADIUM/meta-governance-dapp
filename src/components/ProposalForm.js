@@ -10,6 +10,7 @@ import {
   BlockCreationTime,
   BlockRewardAmount,
   BlockRewardDistributionMethod,
+  ChangeOfEcoFundAddress,
   ChangeOfMaxPriorityFeePerGasForm,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
@@ -59,6 +60,7 @@ class ProposalForm extends React.Component {
     },
     blockRateTotal: 0,
     blockRewardDisMthErr: false,
+    ecoFundAddrErr: false,
     // ! legacy code -> remove <AddProposalForm><Replace Authority>
     newAddrErr: false,
   };
@@ -674,6 +676,16 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
+      case "ChangeOfEcoFundAddress":
+        return (
+          <ChangeOfEcoFundAddress
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            ecoFundAddrErr={this.state.ecoFundAddrErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
       case "ChangeOfMaxPriorityFeePerGas":
         return (
           <ChangeOfMaxPriorityFeePerGasForm
@@ -785,6 +797,9 @@ class ProposalForm extends React.Component {
                 </Select.Option>
                 <Select.Option value="BlockRewardDistributionMethod">
                   Block Reward Distribution Method
+                </Select.Option>
+                <Select.Option value="ChangeOfEcoFundAddress">
+                  Change of Eco-Fund Address
                 </Select.Option>
                 <Select.Option value="ChangeOfMaxPriorityFeePerGas">
                   Change of MaxPriorityFeePerGas
