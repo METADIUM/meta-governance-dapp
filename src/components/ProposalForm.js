@@ -60,7 +60,8 @@ class ProposalForm extends React.Component {
     },
     blockRateTotal: 0,
     blockRewardDisMthErr: false,
-    ecoFundAddrErr: false,
+    oldEcoFundAddrErr: false,
+    newEcoFundAddrErr: false,
     // ! legacy code -> remove <AddProposalForm><Replace Authority>
     newAddrErr: false,
   };
@@ -234,6 +235,13 @@ class ProposalForm extends React.Component {
           });
         }
         break;
+      case "oldEcoAddr":
+        this.setState({ oldEcoFundAddrErr: !this.checkAddr(e.target.value) });
+        break;
+      case "newEcoAddr":
+        this.setState({ newEcoFundAddrErr: !this.checkAddr(e.target.value) });
+        break;
+
       // Change Of Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
@@ -681,7 +689,8 @@ class ProposalForm extends React.Component {
           <ChangeOfEcoFundAddress
             netName={web3Instance.netName}
             loading={this.props.loading}
-            ecoFundAddrErr={this.state.ecoFundAddrErr}
+            oldEcoFundAddrErr={this.state.oldEcoFundAddrErr}
+            newEcoFundAddrErr={this.state.newEcoFundAddrErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />

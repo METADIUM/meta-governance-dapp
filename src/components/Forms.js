@@ -926,7 +926,8 @@ const BlockRewardDistributionMethod = ({
 const ChangeOfEcoFundAddress = ({
   netName,
   loading,
-  ecoFundAddrErr,
+  oldEcoFundAddrErr,
+  newEcoFundAddrErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -939,10 +940,10 @@ const ChangeOfEcoFundAddress = ({
         <Input
           name="oldEcoAddr"
           onChange={handleChange}
-          className={ecoFundAddrErr ? "errInput" : ""}
+          className={oldEcoFundAddrErr ? "errInput" : ""}
           disabled={loading}
         />
-        <p className={ecoFundAddrErr ? "errHint" : "errHint-hide"}>
+        <p className={oldEcoFundAddrErr ? "errHint" : "errHint-hide"}>
           Invalid Address
         </p>
       </Form.Item>
@@ -953,10 +954,10 @@ const ChangeOfEcoFundAddress = ({
         <Input
           name="newEcoAddr"
           onChange={handleChange}
-          className={ecoFundAddrErr ? "errInput" : ""}
+          className={newEcoFundAddrErr ? "errInput" : ""}
           disabled={loading}
         />
-        <p className={ecoFundAddrErr ? "errHint" : "errHint-hide"}>
+        <p className={newEcoFundAddrErr ? "errHint" : "errHint-hide"}>
           Invalid Address
         </p>
       </Form.Item>
@@ -984,7 +985,7 @@ const ChangeOfEcoFundAddress = ({
           <Button
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={ecoFundAddrErr}
+            disabled={oldEcoFundAddrErr | newEcoFundAddrErr}
             loading={loading}
           >
             Submit
