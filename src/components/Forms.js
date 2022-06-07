@@ -31,7 +31,7 @@ const AddProposalForm = ({
           <Input
             name="votingAddr"
             onChange={handleChange}
-            className={"mt-5" + (votingAddrErr ? "errInput" : "")}
+            className={"mt-5 " + (votingAddrErr ? "errInput" : "")}
             disabled={loading}
           />
           <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
@@ -43,7 +43,7 @@ const AddProposalForm = ({
           <Input
             name="stakingAddr"
             onChange={handleChange}
-            className={"mt-5" + (stakingAddrErr ? "errInput" : "")}
+            className={"mt-5 " + (stakingAddrErr ? "errInput" : "")}
             disabled={loading}
           />
           <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
@@ -174,7 +174,7 @@ const RmoveProposalForm = ({
           <Input
             name="votingAddr"
             onChange={handleChange}
-            className={"mt-5" + (votingAddrErr ? "errInput" : "")}
+            className={"mt-5 " + (votingAddrErr ? "errInput" : "")}
             disabled={loading}
           />
           <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
@@ -186,7 +186,7 @@ const RmoveProposalForm = ({
           <Input.Search
             name="stakingAddr"
             onChange={handleChange}
-            className={"mt-5" + (stakingAddrErr ? "errInput" : "")}
+            className={"mt-5 " + (stakingAddrErr ? "errInput" : "")}
             disabled={loading}
             enterButton={
               <span>
@@ -764,7 +764,12 @@ const BlockRewardAmount = ({
 const BlockRewardDistributionMethod = ({
   netName,
   loading,
-  BlockRewardDisMthErr,
+  blockRate1,
+  blockRate2,
+  blockRate3,
+  blockRate4,
+  blockRateTotal,
+  blockRewardDisMthErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -775,85 +780,97 @@ const BlockRewardDistributionMethod = ({
           <p className="subtitle">
             Distribution Rate <span className="required">*</span>
           </p>
-          <Form.Item className="bor-box pd-rl-24 pd-tb-24">
+          <div className="bor-box pd-rl-24 pd-tb-24">
             <div className="flex-full flex-row">
               <div className="flex-column w-15per">
-                <label>Block Producer</label>
-                <Input
-                  name="newBlockprod"
-                  addonAfter="%"
-                  onChange={handleChange}
-                  className={
-                    "w-100 mg-rl-5 ml-0 " +
-                    (BlockRewardDisMthErr ? "errInput" : "")
-                  }
-                  disabled={loading}
-                />
+                <Form.Item label="Block Producer">
+                  <Input
+                    name="blockRate1"
+                    value={blockRate1}
+                    addonAfter="%"
+                    onChange={handleChange}
+                    className={
+                      "w-100 mg-rl-5 ml-0 " +
+                      (blockRewardDisMthErr ? "errInput" : "")
+                    }
+                    disabled={loading}
+                  />
+                </Form.Item>
               </div>
-              <span className="sign">+</span>
+              <span className="sign pb-8">+</span>
               <div className="flex-column w-15per">
-                <label>Staking Reward</label>
-                <Input
-                  name="newStakingRew"
-                  addonAfter="%"
-                  onChange={handleChange}
-                  className={
-                    "mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
-                  }
-                  disabled={loading}
-                />
+                <Form.Item label="Staking Reward">
+                  <Input
+                    name="blockRate2"
+                    value={blockRate2}
+                    addonAfter="%"
+                    onChange={handleChange}
+                    className={
+                      "mg-rl-5 " + (blockRewardDisMthErr ? "errInput" : "")
+                    }
+                    disabled={loading}
+                  />
+                </Form.Item>
               </div>
-              <span className="sign">+</span>
+              <span className="sign pb-8">+</span>
               <div className="flex-column w-15per">
-                <label>Ecosystem</label>
-                <Input
-                  name="newEcosys"
-                  addonAfter="%"
-                  onChange={handleChange}
-                  className={
-                    "mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
-                  }
-                  disabled={loading}
-                />
+                <Form.Item label="Ecosystem">
+                  <Input
+                    name="blockRate3"
+                    value={blockRate3}
+                    addonAfter="%"
+                    onChange={handleChange}
+                    className={
+                      "mg-rl-5 " + (blockRewardDisMthErr ? "errInput" : "")
+                    }
+                    disabled={loading}
+                  />
+                </Form.Item>
               </div>
-              <span className="sign">+</span>
+              <span className="sign pb-8">+</span>
               <div className="flex-column w-15per">
-                <label>Maintenance</label>
-                <Input
-                  name="newMaintain"
-                  addonAfter="%"
-                  onChange={handleChange}
-                  className={
-                    "mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
-                  }
-                  disabled={loading}
-                />
+                <Form.Item label="Maintenance">
+                  <Input
+                    name="blockRate4"
+                    value={blockRate4}
+                    addonAfter="%"
+                    onChange={handleChange}
+                    className={
+                      "mg-rl-5 " + (blockRewardDisMthErr ? "errInput" : "")
+                    }
+                    disabled={loading}
+                  />
+                </Form.Item>
               </div>
-              <span className="sign">=</span>
+              <span className="sign pb-8">=</span>
               <div className="flex-column w-auto">
-                <label>Sum</label>
-                <Input
-                  name="newSum"
-                  addonAfter="%"
-                  onChange={handleChange}
-                  className={
-                    "w-auto mg-rl-5 " + (BlockRewardDisMthErr ? "errInput" : "")
-                  }
-                  disabled={loading}
-                />
+                <Form.Item label="Sum">
+                  <Input
+                    name="blockRateTotal"
+                    value={blockRateTotal}
+                    addonAfter="%"
+                    onChange={handleChange}
+                    className={
+                      "w-auto mg-rl-5 " +
+                      (blockRewardDisMthErr ? "errInput" : "")
+                    }
+                    disabled
+                    readOnly
+                  />
+                </Form.Item>
               </div>
             </div>
-            <p className={BlockRewardDisMthErr ? "errHint" : "errHint-hide"}>
-              Invalid Block Reward Distribution Rate
+            <p className={blockRewardDisMthErr ? "errHint" : "errHint-hide"}>
+              Only numbers can be entered, and Sum must be 100.
             </p>
-          </Form.Item>
+          </div>
         </div>
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
         <p>
           For the Block reward distribution rate, the sum of Default, Block
-          Producer, Ecosystem, and Maintenance should be 100
+          Producer, Ecosystem, and Maintenance should be 100.
         </p>
       </div>
       <p className="subtitle">Description</p>
@@ -895,7 +912,7 @@ const BlockRewardDistributionMethod = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={BlockRewardDisMthErr}
+            disabled={blockRewardDisMthErr}
             loading={loading}
           >
             Submit
