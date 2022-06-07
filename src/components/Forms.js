@@ -797,7 +797,7 @@ const BlockRewardDistributionMethod = ({
                   />
                 </Form.Item>
               </div>
-              <span className="sign">+</span>
+              <span className="sign pb-8">+</span>
               <div className="flex-column w-15per">
                 <Form.Item label="Staking Reward">
                   <Input
@@ -812,7 +812,7 @@ const BlockRewardDistributionMethod = ({
                   />
                 </Form.Item>
               </div>
-              <span className="sign">+</span>
+              <span className="sign pb-8">+</span>
               <div className="flex-column w-15per">
                 <Form.Item label="Ecosystem">
                   <Input
@@ -827,7 +827,7 @@ const BlockRewardDistributionMethod = ({
                   />
                 </Form.Item>
               </div>
-              <span className="sign">+</span>
+              <span className="sign pb-8">+</span>
               <div className="flex-column w-15per">
                 <Form.Item label="Maintenance">
                   <Input
@@ -842,7 +842,7 @@ const BlockRewardDistributionMethod = ({
                   />
                 </Form.Item>
               </div>
-              <span className="sign">=</span>
+              <span className="sign pb-8">=</span>
               <div className="flex-column w-auto">
                 <Form.Item label="Sum">
                   <Input
