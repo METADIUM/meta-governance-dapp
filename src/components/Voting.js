@@ -79,10 +79,8 @@ class Voting extends React.Component {
     // Use origin data in contract
 
     Object.values(this.props.ballotBasicOriginData).forEach((item, index) => {
-      const newMemberAddress =
-        this.props.ballotMemberOriginData[item.id].newMemberAddress;
-      const oldMemberAddress =
-        this.props.ballotMemberOriginData[item.id].oldMemberAddress;
+      const { newMemberAddress, oldMemberAddress } =
+        this.props.ballotMemberOriginData[item.id];
 
       if (
         item.state === constants.ballotState.Ready ||
@@ -98,8 +96,7 @@ class Voting extends React.Component {
           item={item}
           ballotDetails={this.ballotDetails}
           authorityName={this.data.authorityNames.get(item.creator)}
-          newMemberAddress={newMemberAddress}
-          oldMemberAddress={oldMemberAddress}
+          ballotMemberOriginData={this.props.ballotMemberOriginData[item.id]}
           setTopic={this.setTopic}
           onClickDetail={this.onClickDetail}
           onClickVote={this.onClickVote}
@@ -150,16 +147,21 @@ class Voting extends React.Component {
     else return constants.ballotTypesArr[parseInt(type)];
   };
 
-  setDescription = (type, newAddr, oldAddr, id) => {
+  setDescription = (type, id) => {
+    const { newMemberAddress, newStakerAddress, oldMemberAddress } =
+      this.props.ballotMemberOriginData[id];
     const lockAmount = web3Instance.web3.utils.fromWei(
       this.props.ballotMemberOriginData[id].lockAmount,
       "ether"
     );
     switch (type) {
-      case constants.ballotTypes.MemverAdd:
+      /* Add Authority Member */
+      case constants.ballotTypes.AddAuthorityMember:
         return (
           <p className="description flex-full">
-            New Authority Address: {newAddr}
+            Voting Address: {newMemberAddress}
+            <br />
+            Staking Address: {newStakerAddress}
             <br />
             WEMIX To be Locked: {lockAmount} WEMIX
           </p>
@@ -167,13 +169,13 @@ class Voting extends React.Component {
       case constants.ballotTypes.MemberRemoval:
         return (
           <p className="description flex-full">
-            Address To be Removed: {oldAddr}
+            Address To be Removed: {oldMemberAddress}
             <br />
             WEMIX Amount to be unlocked: {lockAmount} WEMIX
           </p>
         );
       case constants.ballotTypes.MemberChange:
-        if (newAddr === oldAddr) {
+        if (newMemberAddress === oldMemberAddress) {
           return (
             <p className="description flex-full">
               WEMIX To be Locked: {lockAmount} WEMIX
@@ -182,9 +184,9 @@ class Voting extends React.Component {
         } else {
           return (
             <p className="description flex-full">
-              Old Authority Address: {oldAddr}
+              Old Authority Address: {oldMemberAddress}
               <br />
-              New Authority Address: {newAddr}
+              New Authority Address: {newMemberAddress}
               <br />
               WEMIX To be Locked: {lockAmount} WEMIX
             </p>
@@ -193,7 +195,7 @@ class Voting extends React.Component {
       default:
         return (
           <p className="description flex-full">
-            New Authority Address: {newAddr}
+            New Authority Address: {newMemberAddress}
             <br />
             WEMIX To be Locked: {lockAmount} WEMIX
           </p>
