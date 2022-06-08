@@ -11,6 +11,7 @@ import {
   BlockRewardAmount,
   BlockRewardDistributionMethod,
   ChangeOfEcoFundAddress,
+  ChangeOfMaintenanceAddress,
   ChangeOfMaxPriorityFeePerGasForm,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
@@ -62,6 +63,8 @@ class ProposalForm extends React.Component {
     blockRewardDisMthErr: false,
     oldEcoFundAddrErr: false,
     newEcoFundAddrErr: false,
+    oldMainAddrErr: false,
+    newMainAddrErr: false,
     // ! legacy code -> remove <AddProposalForm><Replace Authority>
     newAddrErr: false,
   };
@@ -241,6 +244,13 @@ class ProposalForm extends React.Component {
         break;
       case "newEcoAddr":
         this.setState({ newEcoFundAddrErr: !this.checkAddr(e.target.value) });
+        break;
+      // Change Of Maintenance Address
+      case "oldMainAddr":
+        this.setState({ oldMainAddrErr: !this.checkAddr(e.target.value) });
+        break;
+      case "newMainAddr":
+        this.setState({ newMainAddrErr: !this.checkAddr(e.target.value) });
         break;
       // Change Of Governance Contract Address
       case "newGovAddr":
@@ -691,6 +701,17 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
+      case "ChangeOfMaintenanceAddress":
+        return (
+          <ChangeOfMaintenanceAddress
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            oldMainAddrErr={this.state.oldMainAddrErr}
+            newMainAddrErr={this.state.newMainAddrErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
       case "ChangeOfMaxPriorityFeePerGas":
         return (
           <ChangeOfMaxPriorityFeePerGasForm
@@ -805,6 +826,9 @@ class ProposalForm extends React.Component {
                 </Select.Option>
                 <Select.Option value="ChangeOfEcoFundAddress">
                   Change of Eco-Fund Address
+                </Select.Option>
+                <Select.Option value="ChangeOfMaintenanceAddress">
+                  Change Of Maintenance Address
                 </Select.Option>
                 <Select.Option value="ChangeOfMaxPriorityFeePerGas">
                   Change of MaxPriorityFeePerGas
