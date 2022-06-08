@@ -235,13 +235,13 @@ class ProposalForm extends React.Component {
           });
         }
         break;
+      // Change Of Eco-Fund Address
       case "oldEcoAddr":
         this.setState({ oldEcoFundAddrErr: !this.checkAddr(e.target.value) });
         break;
       case "newEcoAddr":
         this.setState({ newEcoFundAddrErr: !this.checkAddr(e.target.value) });
         break;
-
       // Change Of Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
@@ -287,9 +287,7 @@ class ProposalForm extends React.Component {
     return /^[0-9]{1,}$/.test(price);
   }
 
-  /*
-   Start with number with sinular dot - start
-  */
+  // Start with number with singular dot - start
   // at least 0.1
   checkBlockCreationTime(time) {
     return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1,})?|0?\.[1-9]{1,})?$/.test(time);
@@ -312,9 +310,7 @@ class ProposalForm extends React.Component {
       return finalValue + value;
     }, 0);
   };
-  /*
-   Start with number with sinular dot - end
-  */
+  // Start with number with singular dot - end
 
   checkDuration(type, min, max) {
     const newMin = parseInt(min);
