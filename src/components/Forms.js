@@ -7,16 +7,17 @@ import { shouldPass } from "../util";
 const { TextArea } = Input;
 const { Option } = Select;
 
+/* Add Authority Member */
 const AddProposalForm = ({
   netName,
   loading,
   votingAddrErr,
   stakingAddrErr,
-  stakingMin,
-  newLockAmountErr,
-  newLockAmount,
-  newNodeErr,
   newNameErr,
+  stakingMin,
+  newLockAmount,
+  newLockAmountErr,
+  newNodeErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -30,9 +31,9 @@ const AddProposalForm = ({
           <p className="subtitle mt-0">Voting Address</p>
           <Input
             name="votingAddr"
-            onChange={handleChange}
             className={"mt-5" + (votingAddrErr ? "errInput" : "")}
             disabled={loading}
+            onChange={handleChange}
           />
           <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
             Invalid Address
@@ -42,9 +43,9 @@ const AddProposalForm = ({
           <p className="subtitle mt-0">Staking Address</p>
           <Input
             name="stakingAddr"
-            onChange={handleChange}
             className={"mt-5" + (stakingAddrErr ? "errInput" : "")}
             disabled={loading}
+            onChange={handleChange}
           />
           <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
             Invaild Address
@@ -65,9 +66,9 @@ const AddProposalForm = ({
           <Form.Item>
             <Input
               name="newName"
-              onChange={handleChange}
               className={newNameErr ? "errInput" : ""}
               disabled={loading}
+              onChange={handleChange}
             />
             <p className={newNameErr ? "errHint" : "errHint-hide"}>
               Invalid Name
@@ -80,13 +81,13 @@ const AddProposalForm = ({
           </p>
           <Form.Item>
             <Input
-              addonAfter="WEMIX"
               name="newLockAmount"
+              addonAfter="WEMIX"
               defaultValue={stakingMin}
               value={newLockAmount || ""}
-              onChange={handleChange}
               className={newLockAmountErr ? "errInput" : ""}
               disabled={loading}
+              onChange={handleChange}
             />
             <p className={newLockAmountErr ? "errHint" : "errHint-hide"}>
               Invalid Amount
@@ -100,10 +101,10 @@ const AddProposalForm = ({
       <Form.Item>
         <Input
           name="newNode"
-          onChange={handleChange}
+          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
           className={newNodeErr ? "errInput" : ""}
           disabled={loading}
-          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
+          onChange={handleChange}
         />
         <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
       </Form.Item>
@@ -119,20 +120,43 @@ const AddProposalForm = ({
       <p className="subtitle">Description</p>
       <Form.Item>
         <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
           name="memo"
-          onChange={handleChange}
+          placeholder="Max. 256 bytes"
+          rows={4}
+          autoSize={{ minRows: 4, maxRows: 4 }}
           disabled={loading}
+          onChange={handleChange}
         />
       </Form.Item>
+      {/* // TODO set votDuration min max */}
+      <div className="divider flex flex-end-vertical mt-16">
+        <div className="flex-half flex-end-vertical flex-column mr-0">
+          <Form.Item>
+            <label className="subtitle mt-0 flex-align-self-center">
+              Voting Duration
+            </label>
+            <Select
+              defaultValue={3}
+              name="votDuration"
+              disabled={loading}
+              className="mg-rl-15"
+              style={{ width: 180 }}
+              onChange={handleChange}
+            >
+              <Select.Option value="votDuration_3">3</Select.Option>
+              <Select.Option value="votDuration_4">4</Select.Option>
+              <Select.Option value="votDuration_5">5</Select.Option>
+            </Select>
+            <span>day</span>
+          </Form.Item>
+        </div>
+      </div>
       <Form.Item>
         <div className="submitDiv flex">
           <Button
             name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
             disabled={
               newLockAmountErr ||
               votingAddrErr ||
