@@ -35,6 +35,9 @@ function convertDayToTimestamp(day) {
 }
 
 function convertHexToString(input) {
+  if (input === null) {
+    return "";
+  }
   var hex = input.toString();
   var str = "";
   for (var i = 0; i < hex.length && hex.substr(i, 2) !== "00"; i += 2) {

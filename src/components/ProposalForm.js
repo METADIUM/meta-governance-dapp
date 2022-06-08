@@ -361,25 +361,22 @@ class ProposalForm extends React.Component {
       e.preventDefault();
       let trx = {};
       let formData = util.refineSubmitData(this.data.formData);
-      // ! for only test
-      // TODO set voting duration min max
-      if (formData.votDuration === undefined) {
-        formData.votDuration = 3;
-      }
-      if ((await this.handleProposalError(formData)) !== false) {
+      if (typeof (await this.handleProposalError(formData)) === "undefined") {
         this.props.convertLoading(false);
         return;
       }
       /* Add Authority Member */
       if (this.data.selectedVoteTopic === "AddAuthorityMember") {
+        // ! for only test
+        // TODO set voting duration min max
         let {
           votingAddr,
           stakingAddr,
           newName,
           newNode: { node, ip, port },
           newLockAmount,
-          memo,
-          votDuration,
+          memo = "0x",
+          votDuration = 3,
         } = formData;
         trx = this.governance.addProposalToAddMember(
           votingAddr,
@@ -494,10 +491,8 @@ class ProposalForm extends React.Component {
     /* Add Authority Member */
     if (this.data.selectedVoteTopic === "AddAuthorityMember") {
       const { votingAddr, stakingAddr, newLockAmount } = formData;
-      // ! annotated for test
       const newLockedAmount = Number(newLockAmount);
 
-      // ! annotated for test
       // Get the balance of staking address
       const stakingAddrBalance = Number(
         await this.staking.availableBalanceOf(stakingAddr)
@@ -531,13 +526,12 @@ class ProposalForm extends React.Component {
           "Proposal Submit Error"
         );
       }
-      // ! annotated for test
-      // if (stakingAddrBalance < newLockedAmount) {
-      //   return this.props.getErrModal(
-      //     "Not Enough WEMIX to Stake (Staking Address)",
-      //     "Proposal Submit Error"
-      //   );
-      // }
+      if (stakingAddrBalance < newLockedAmount) {
+        return this.props.getErrModal(
+          "Not Enough WEMIX to Stake (Staking Address)",
+          "Proposal Submit Error"
+        );
+      }
       // ! legacy code -> remove <Replace Authority>
     } else if (this.data.selectedVoteTopic === "ReplaceAuthorityMember") {
       const oldMemberLockedBalance = await this.staking.lockedBalanceOf(
