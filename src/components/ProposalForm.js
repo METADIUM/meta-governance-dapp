@@ -10,6 +10,7 @@ import {
   BlockCreationTime,
   BlockRewardAmount,
   BlockRewardDistributionMethod,
+  ChangeOfEcoFundAddress,
   ChangeOfMaxPriorityFeePerGasForm,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
@@ -54,6 +55,16 @@ class ProposalForm extends React.Component {
     votDurationErr: null,
     blockCreationErr: false,
     blockRewardErr: false,
+    numbers: {
+      blockRate1: 0,
+      blockRate2: 0,
+      blockRate3: 0,
+      blockRate4: 0,
+    },
+    blockRateTotal: 0,
+    blockRewardDisMthErr: false,
+    oldEcoFundAddrErr: false,
+    newEcoFundAddrErr: false,
     // ! legacy code -> remove <AddProposalForm><Replace Authority>
     newAddrErr: false,
   };
@@ -212,6 +223,37 @@ class ProposalForm extends React.Component {
           blockRewardErr: !this.checkRewardAmount(e.target.value),
         });
         break;
+      // Block Reward Distribution Method
+      case "blockRate1":
+      case "blockRate2":
+      case "blockRate3":
+      case "blockRate4":
+        if (!/^[0-9]*\.?([0-9]{1,2})?$/.test(e.target.value)) {
+          this.data.formData[e.target.name] = originStr;
+        } else {
+          const { value, name } = e.target;
+          const parsedValue = value === "" ? "" : parseFloat(value);
+          this.setState((prevState) => {
+            const updatedNumbers = {
+              ...prevState.numbers,
+              [name]: parsedValue,
+            };
+            const newTotal = this.calculateTotal(updatedNumbers);
+            return {
+              numbers: updatedNumbers,
+              blockRateTotal: newTotal,
+              blockRewardDisMthErr: newTotal !== 100 ? true : false,
+            };
+          });
+        }
+        break;
+      // Change Of Eco-Fund Address
+      case "oldEcoAddr":
+        this.setState({ oldEcoFundAddrErr: !this.checkAddr(e.target.value) });
+        break;
+      case "newEcoAddr":
+        this.setState({ newEcoFundAddrErr: !this.checkAddr(e.target.value) });
+        break;
       // Change Of Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
@@ -263,15 +305,30 @@ class ProposalForm extends React.Component {
     return /^[0-9]{1,}$/.test(price);
   }
 
-  // Start with number, singular dot, at least 0.1
+  // Start with number with singular dot - start
+  // at least 0.1
   checkBlockCreationTime(time) {
     return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1,})?|0?\.[1-9]{1,})?$/.test(time);
   }
-
-  // Start with number(at least 1), singular dot, 18 decimal place or more is err
+  // at least 1
+  // + 18 decimal place or more is err
   checkRewardAmount(amount) {
     return /^[1-9]+\.?([0-9]{1,17})?$/.test(amount);
   }
+  // 2 decimal place or more is err
+  checkRate(num) {
+    return /^[0-9]+\.?([0-9]{1,2})?$/.test(num);
+  }
+
+  calculateTotal = (numbers) => {
+    return Object.entries(numbers).reduce((finalValue, [key, value]) => {
+      if (value === "") {
+        return finalValue;
+      }
+      return finalValue + value;
+    }, 0);
+  };
+  // Start with number with singular dot - end
 
   checkDuration(type, min, max) {
     const newMin = parseInt(min);
@@ -686,7 +743,23 @@ class ProposalForm extends React.Component {
           <BlockRewardDistributionMethod
             netName={web3Instance.netName}
             loading={this.props.loading}
-            BlockRewardDisMthErr={this.state.BlockRewardDisMthErr}
+            blockRate1={this.data.formData.blockRate1}
+            blockRate2={this.data.formData.blockRate2}
+            blockRate3={this.data.formData.blockRate3}
+            blockRate4={this.data.formData.blockRate4}
+            blockRateTotal={this.state.blockRateTotal}
+            blockRewardDisMthErr={this.state.blockRewardDisMthErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
+      case "ChangeOfEcoFundAddress":
+        return (
+          <ChangeOfEcoFundAddress
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            oldEcoFundAddrErr={this.state.oldEcoFundAddrErr}
+            newEcoFundAddrErr={this.state.newEcoFundAddrErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
           />
@@ -802,6 +875,9 @@ class ProposalForm extends React.Component {
                 </Select.Option>
                 <Select.Option value="BlockRewardDistributionMethod">
                   Block Reward Distribution Method
+                </Select.Option>
+                <Select.Option value="ChangeOfEcoFundAddress">
+                  Change of Eco-Fund Address
                 </Select.Option>
                 <Select.Option value="ChangeOfMaxPriorityFeePerGas">
                   Change of MaxPriorityFeePerGas
