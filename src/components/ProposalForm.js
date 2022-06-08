@@ -10,6 +10,7 @@ import {
   BlockCreationTime,
   BlockRewardAmount,
   BlockRewardDistributionMethod,
+  ChangeOfEcoFundAddress,
   ChangeOfMaxPriorityFeePerGasForm,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
@@ -59,6 +60,8 @@ class ProposalForm extends React.Component {
     },
     blockRateTotal: 0,
     blockRewardDisMthErr: false,
+    oldEcoFundAddrErr: false,
+    newEcoFundAddrErr: false,
     // ! legacy code -> remove <AddProposalForm><Replace Authority>
     newAddrErr: false,
   };
@@ -232,6 +235,13 @@ class ProposalForm extends React.Component {
           });
         }
         break;
+      // Change Of Eco-Fund Address
+      case "oldEcoAddr":
+        this.setState({ oldEcoFundAddrErr: !this.checkAddr(e.target.value) });
+        break;
+      case "newEcoAddr":
+        this.setState({ newEcoFundAddrErr: !this.checkAddr(e.target.value) });
+        break;
       // Change Of Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
@@ -277,9 +287,7 @@ class ProposalForm extends React.Component {
     return /^[0-9]{1,}$/.test(price);
   }
 
-  /*
-   Start with number with sinular dot - start
-  */
+  // Start with number with singular dot - start
   // at least 0.1
   checkBlockCreationTime(time) {
     return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1,})?|0?\.[1-9]{1,})?$/.test(time);
@@ -302,9 +310,7 @@ class ProposalForm extends React.Component {
       return finalValue + value;
     }, 0);
   };
-  /*
-   Start with number with sinular dot - end
-  */
+  // Start with number with singular dot - end
 
   checkDuration(type, min, max) {
     const newMin = parseInt(min);
@@ -674,6 +680,17 @@ class ProposalForm extends React.Component {
             handleChange={this.handleChange}
           />
         );
+      case "ChangeOfEcoFundAddress":
+        return (
+          <ChangeOfEcoFundAddress
+            netName={web3Instance.netName}
+            loading={this.props.loading}
+            oldEcoFundAddrErr={this.state.oldEcoFundAddrErr}
+            newEcoFundAddrErr={this.state.newEcoFundAddrErr}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+          />
+        );
       case "ChangeOfMaxPriorityFeePerGas":
         return (
           <ChangeOfMaxPriorityFeePerGasForm
@@ -785,6 +802,9 @@ class ProposalForm extends React.Component {
                 </Select.Option>
                 <Select.Option value="BlockRewardDistributionMethod">
                   Block Reward Distribution Method
+                </Select.Option>
+                <Select.Option value="ChangeOfEcoFundAddress">
+                  Change of Eco-Fund Address
                 </Select.Option>
                 <Select.Option value="ChangeOfMaxPriorityFeePerGas">
                   Change of MaxPriorityFeePerGas
