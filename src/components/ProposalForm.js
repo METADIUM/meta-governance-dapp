@@ -10,7 +10,7 @@ import {
   BlockCreationTime,
   BlockRewardAmount,
   BlockRewardDistributionMethod,
-  ChangeOfMaxPriorityFeePerGasForm,
+  ChangeOfMaxPriorityFeePerGas,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
@@ -739,7 +739,7 @@ class ProposalForm extends React.Component {
         );
       case "ChangeOfMaxPriorityFeePerGas":
         return (
-          <ChangeOfMaxPriorityFeePerGasForm
+          <ChangeOfMaxPriorityFeePerGas
             netName={web3Instance.netName}
             loading={this.props.loading}
             maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}

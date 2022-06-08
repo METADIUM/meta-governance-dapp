@@ -947,7 +947,7 @@ const BlockRewardDistributionMethod = ({
   </div>
 );
 
-const ChangeOfMaxPriorityFeePerGasForm = ({
+const ChangeOfMaxPriorityFeePerGas = ({
   netName,
   loading,
   maxPriorityFeePerGasErr,
@@ -966,10 +966,10 @@ const ChangeOfMaxPriorityFeePerGasForm = ({
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="masPriorityFeePerGas"
+                  name="maxPriorityFeePerGas"
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" +
+                    "w-180 mg-rl-15 ml-0 " +
                     (maxPriorityFeePerGasErr ? "errInput" : "")
                   }
                   disabled={loading}
@@ -985,7 +985,7 @@ const ChangeOfMaxPriorityFeePerGasForm = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>The default gas price is 100GWei.</p>
+        <p>Specifies the fee returned to the miner</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -1358,7 +1358,7 @@ export {
   BlockCreationTime,
   BlockRewardAmount,
   BlockRewardDistributionMethod,
-  ChangeOfMaxPriorityFeePerGasForm,
+  ChangeOfMaxPriorityFeePerGas,
   GasLimitForm,
   // ! legacy code -> remove <Replace Authority>
   ReplaceProposalForm,
