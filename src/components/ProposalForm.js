@@ -35,11 +35,14 @@ class ProposalForm extends React.Component {
   state = {
     selectedChange: false,
     submitForm: false,
+
+    /* Add Authority Member */
     votingAddrErr: false,
     stakingAddrErr: false,
-    newLockAmountErr: false,
-    newNodeErr: false,
     newNameErr: false,
+    newNodeErr: false,
+    newLockAmountErr: false,
+
     oldLockAmountErr: false,
     oldAddrErr: false,
     oldNodeErr: false,
@@ -75,9 +78,9 @@ class ProposalForm extends React.Component {
     this.staking = this.props.contracts.staking;
   }
 
-  onSelectChange = async (value) => {
+  // only, when the topic has changed
+  handleSelectTopicChange = async (value) => {
     this.data.selectedVoteTopic = value;
-    // TODO newLockAmount, oldLockAmount 는 필요한 곳에만 넣으면 될 것 같은데 확인 필요
     this.data.formData = {
       newLockAmount: this.props.stakingMin,
       oldLockAmount: this.props.stakingMin,
@@ -108,14 +111,25 @@ class ProposalForm extends React.Component {
   }
 
   handleChange = (e) => {
+    // if selected value is topic
+    if (typeof e === "string") {
+      this.handleSelectChange(e);
+      return;
+    }
+
     const originStr = this.data.formData[e.target.name];
     this.data.formData[e.target.name] = e.target.value;
+
     switch (e.target.name) {
+      /* Add Authority Member */
       case "votingAddr":
         this.setState({ votingAddrErr: !this.checkAddr(e.target.value) });
         break;
       case "stakingAddr":
         this.setState({ stakingAddrErr: !this.checkAddr(e.target.value) });
+        break;
+      case "newName":
+        this.setState({ newNameErr: !this.checkName(e.target.value) });
         break;
       case "newLockAmount":
         if (!/^([0-9]*)$/.test(e.target.value))
@@ -125,15 +139,13 @@ class ProposalForm extends React.Component {
             newLockAmountErr: !this.checkLockAmount(e.target.value),
           });
         break;
-      // ! legacy code -> remove <AddProposalForm><Replace Authority><RmoveProposalForm>
-      case "newAddr":
-        this.setState({ newAddrErr: !this.checkAddr(e.target.value) });
-        break;
       case "newNode":
         this.setState({ newNodeErr: !this.checkNode(e.target.value) });
         break;
-      case "newName":
-        this.setState({ newNameErr: !this.checkName(e.target.value) });
+
+      // ! legacy code -> remove <AddProposalForm><Replace Authority><RmoveProposalForm>
+      case "newAddr":
+        this.setState({ newAddrErr: !this.checkAddr(e.target.value) });
         break;
       case "oldLockAmount":
         if (!/^([0-9]*)$/.test(e.target.value))
@@ -272,6 +284,12 @@ class ProposalForm extends React.Component {
     }
   };
 
+  // when the select option has changed
+  handleSelectChange(e) {
+    let [name, value] = e.split("_");
+    this.data.formData[name] = value;
+  }
+
   checkLockAmount(amount) {
     return (
       Number(amount) <= this.props.stakingMax &&
@@ -332,25 +350,54 @@ class ProposalForm extends React.Component {
     } else return;
   }
 
+  // ! for only test
+  // getABI() {
+  //   let addr =
+  //     "https://raw.githubusercontent.com/infiduk/meta-web3-abis/testnet/abis/GovImp.json";
+  //   return fetch(addr).then((response) => response.json());
+  // }
+
   // Submit form data
   handleSubmit = async (e) => {
+    // ! for only test
+    // const abi = await this.getABI();
+    // const contract = new web3Instance.web3.eth.Contract(
+    //   abi.abi,
+    //   "0x286f56881466C1aBf258dB7feE6F9eA6865Ac02A"
+    // );
+
     this.props.convertLoading(true);
     try {
       e.preventDefault();
       let trx = {};
       let formData = util.refineSubmitData(this.data.formData);
-      if ((await this.handleProposalError(formData)) !== false) {
+      if (typeof (await this.handleProposalError(formData)) === "undefined") {
         this.props.convertLoading(false);
         return;
       }
+      /* Add Authority Member */
       if (this.data.selectedVoteTopic === "AddAuthorityMember") {
+        // ! for only test
+        // TODO set voting duration min max
+        let {
+          votingAddr,
+          stakingAddr,
+          newName,
+          newNode: { node, ip, port },
+          newLockAmount,
+          memo = "0x",
+          votDuration = 3,
+        } = formData;
         trx = this.governance.addProposalToAddMember(
-          formData.newAddr,
-          formData.newName,
-          formData.newNode.node,
-          formData.newNode.ip,
-          [formData.newNode.port, formData.newLockAmount],
-          formData.memo
+          votingAddr,
+          stakingAddr,
+          newName,
+          node,
+          ip,
+          port,
+          newLockAmount,
+          memo,
+          votDuration
         );
         // ! legacy code -> remove <Replace Authority>
       } else if (this.data.selectedVoteTopic === "ReplaceAuthorityMember") {
@@ -419,7 +466,7 @@ class ProposalForm extends React.Component {
           } else {
             // console.log('hash:', hash)
             this.props.waitForReceipt(hash, async (receipt) => {
-              // console.log('Updated :', receipt)
+              // console.log("Updated :", receipt);
               if (receipt.status) {
                 await this.props.convertComponent("voting");
               } else {
@@ -446,32 +493,52 @@ class ProposalForm extends React.Component {
       !constants.debugMode
     ) {
       return this.props.getErrModal(
-        "You are not member",
+        "You are not Governance Member.",
         "Proposal Submit Error"
       );
     }
 
+    /* Add Authority Member */
     if (this.data.selectedVoteTopic === "AddAuthorityMember") {
-      const newMemberBalance = Number(
-        await this.staking.availableBalanceOf(formData.newAddr)
-      );
-      const newLockedAmount = Number(formData.newLockAmount);
+      const { votingAddr, stakingAddr, newLockAmount } = formData;
+      const newLockedAmount = Number(newLockAmount);
 
-      if (await this.governance.isMember(formData.newAddr)) {
+      // Get the balance of staking address
+      const stakingAddrBalance = Number(
+        await this.staking.availableBalanceOf(stakingAddr)
+      );
+
+      // Check if addresses already exist
+      const isMemberVotingAddr = await this.governance.isMember(votingAddr);
+      const isMemberStakingAddr = await this.governance.isMember(stakingAddr);
+
+      // Check if addresses already voted
+      const inBallotMemberVotingAddr = this.props.newMemberaddr.some(
+        (addr) => addr === votingAddr
+      );
+      const inBallotMemberStakingAddr = this.props.newMemberaddr.some(
+        (addr) => addr === stakingAddr
+      );
+
+      if (isMemberVotingAddr || isMemberStakingAddr) {
         return this.props.getErrModal(
-          "Existing Member Address (New)",
+          `Existing Member Address (${
+            isMemberVotingAddr ? "Voting Address" : "Staking Address"
+          })`,
           "Proposal Submit Error"
         );
-      } else if (
-        this.props.newMemberaddr.some((item) => item === formData.newAddr)
-      ) {
+      }
+      if (inBallotMemberVotingAddr || inBallotMemberStakingAddr) {
         return this.props.getErrModal(
-          "Address with existing ballot (New)",
+          `Address with Existing Ballot (${
+            inBallotMemberVotingAddr ? "Voting Address" : "Staking Address"
+          })`,
           "Proposal Submit Error"
         );
-      } else if (newMemberBalance < newLockedAmount) {
+      }
+      if (stakingAddrBalance < newLockedAmount) {
         return this.props.getErrModal(
-          "Not Enough WEMIX Stake (New)",
+          "Not Enough WEMIX to Stake (Staking Address)",
           "Proposal Submit Error"
         );
       }
@@ -797,7 +864,7 @@ class ProposalForm extends React.Component {
               </p>
               <Select
                 showArrow
-                onChange={this.onSelectChange}
+                onChange={this.handleSelectTopicChange}
                 disabled={this.props.buttonLoading}
               >
                 <Select.Option value="AddAuthorityMember">

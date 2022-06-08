@@ -25,7 +25,7 @@ const constants = {
   },
   ballotTypes: {
     Invalid: "0",
-    MemverAdd: "1",
+    AddAuthorityMember: "1",
     MemberRemoval: "2",
     MemberChange: "3",
     ChangeOfGovernanceContractAddress: "4",
@@ -41,7 +41,7 @@ const constants = {
   ],
   ballotTypesArr: [
     "Invalid",
-    "MemberAdd",
+    "Add Authority Member",
     "MemberRemoval",
     "MemberChange",
     "ChangeOfGovernanceContractAddress",
