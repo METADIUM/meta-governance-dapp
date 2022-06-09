@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
-import "./index.css";
-import App from "./App";
-import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+import * as serviceWorker from "./serviceWorker";
+
+import App from "./App";
+import "./index.css";
 
 const renderApp = () => (
   <BrowserRouter>
