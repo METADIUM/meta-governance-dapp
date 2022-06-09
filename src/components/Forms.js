@@ -1,11 +1,54 @@
 import React from "react";
 import { Button, Input, Form, Icon, Select } from "antd";
 
-import "./style/style.css";
+// import "./style/style.css";
 import { shouldPass } from "../util";
 
 const { TextArea } = Input;
 const { Option } = Select;
+
+// seletct voting duration option
+const VotingDurationForm = ({
+  loading,
+  votingDurationMin,
+  votingDurationMax,
+  handleChange = shouldPass(),
+}) => {
+  // select option component
+  const selectOption = () => {
+    let childComponent = [];
+    for (let op = votingDurationMin; op <= votingDurationMax; op++) {
+      childComponent.push(
+        <Select.Option key={op} value={`votDuration_${op}`}>
+          {op}
+        </Select.Option>
+      );
+    }
+    return childComponent;
+  };
+  return (
+    <div className="divider flex flex-end-vertical mt-16">
+      <div className="flex-half flex-end-vertical flex-column mr-0">
+        <Form.Item>
+          <label className="subtitle mt-0 flex-align-self-center">
+            Voting Duration
+          </label>
+          <Select
+            defaultValue={votingDurationMin}
+            name="votDuration"
+            disabled={loading}
+            className="mg-rl-15"
+            style={{ width: 180 }}
+            onChange={handleChange}
+          >
+            {selectOption()}
+          </Select>
+          <span>day</span>
+        </Form.Item>
+      </div>
+    </div>
+  );
+};
 
 /* Add Authority Member */
 const AddProposalForm = ({
@@ -17,6 +60,8 @@ const AddProposalForm = ({
   stakingMin,
   newLockAmount,
   newLockAmountErr,
+  votingDurationMin,
+  votingDurationMax,
   newNodeErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
@@ -129,28 +174,12 @@ const AddProposalForm = ({
         />
       </Form.Item>
       {/* // TODO set votDuration min max */}
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Select.Option value="votDuration_3">3</Select.Option>
-              <Select.Option value="votDuration_4">4</Select.Option>
-              <Select.Option value="votDuration_5">5</Select.Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
+      <VotingDurationForm
+        loading={loading}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
       <Form.Item>
         <div className="submitDiv flex">
           <Button

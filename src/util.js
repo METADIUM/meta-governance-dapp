@@ -2,12 +2,7 @@ import { web3Instance } from "./web3";
 
 const fetch = require("node-fetch");
 
-var borderColor = {
-  valid: "#3db389",
-  invalid: "red",
-};
-
-var dayTimestamp = 86400;
+var secondsInDay = 86400;
 
 /**
  * Convert UNIX timestamp to readable
@@ -30,8 +25,14 @@ function timeConverter(timestamp) {
   );
 }
 
-function convertDayToTimestamp(day) {
-  return day * dayTimestamp;
+// convert seconds -> day
+function convertSecondsToDay(seconds) {
+  return seconds < secondsInDay ? 1 : seconds / secondsInDay;
+}
+
+// convert day -> seconds
+function convertDayToSeconds(day) {
+  return day * secondsInDay;
 }
 
 function convertHexToString(input) {
@@ -105,7 +106,7 @@ function refineBallotBasic(m) {
         m[key] = convertHexToString(m[key]);
         break;
       case "duration":
-        m[key] /= dayTimestamp;
+        m[key] /= secondsInDay;
         break;
       case "powerOfRejects":
       case "powerOfAccepts":
@@ -252,11 +253,11 @@ var setUpdatedTimeToLocal = (obj) => save("metaUpdatedTime", obj);
 var setModifiedToLocal = (obj) => save("metaModifiedBlock", obj);
 
 export {
-  borderColor,
   timeConverter,
   sleep,
   convertHexToString,
-  convertDayToTimestamp,
+  convertSecondsToDay,
+  convertDayToSeconds,
   asyncForEach,
   refine,
   refineBallotBasic,

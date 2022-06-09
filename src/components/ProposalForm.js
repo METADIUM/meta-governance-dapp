@@ -24,7 +24,7 @@ import { web3Instance } from "../web3";
 import { constants } from "../constants";
 import * as util from "../util";
 
-import "./style/style.css";
+// import "./style/style.css";
 
 class ProposalForm extends React.Component {
   data = {
@@ -43,12 +43,14 @@ class ProposalForm extends React.Component {
     newNodeErr: false,
     newLockAmountErr: false,
 
+    /* Change Of Governance Contract Address */
+    newGovAddrErr: false,
+
     oldLockAmountErr: false,
     oldAddrErr: false,
     oldNodeErr: false,
     showLockAmount: "",
-    // Change Of Governance Contract Address
-    newGovAddrErr: false,
+
     // Change Of MaxPriorityFeePerGas
     maxPriorityFeePerGasErr: false,
     // Gas Limit
@@ -84,6 +86,8 @@ class ProposalForm extends React.Component {
     this.data.formData = {
       newLockAmount: this.props.stakingMin,
       oldLockAmount: this.props.stakingMin,
+      votingDurationMax: this.props.votingDurationMax,
+      votingDurationMin: this.props.votingDurationMin,
     };
     this.resetForm();
     Object.keys(this.state)
@@ -141,6 +145,11 @@ class ProposalForm extends React.Component {
         break;
       case "newNode":
         this.setState({ newNodeErr: !this.checkNode(e.target.value) });
+        break;
+
+      /* Change Of Governance Contract Address */
+      case "newGovAddr":
+        this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
         break;
 
       // ! legacy code -> remove <AddProposalForm><Replace Authority><RmoveProposalForm>
@@ -264,10 +273,6 @@ class ProposalForm extends React.Component {
       case "newMainAddr":
         this.setState({ newMainAddrErr: !this.checkAddr(e.target.value) });
         break;
-      // Change Of Governance Contract Address
-      case "newGovAddr":
-        this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
-        break;
       // Change Of MaxPriorityFeePerGas
       case "maxPriorityFeePerGas":
         this.setState({
@@ -349,7 +354,6 @@ class ProposalForm extends React.Component {
       return newMax < newMin ? type : null;
     } else return;
   }
-
   // ! for only test
   // getABI() {
   //   let addr =
@@ -359,16 +363,16 @@ class ProposalForm extends React.Component {
 
   // Submit form data
   handleSubmit = async (e) => {
-    // ! for only test
-    // const abi = await this.getABI();
-    // const contract = new web3Instance.web3.eth.Contract(
-    //   abi.abi,
-    //   "0x286f56881466C1aBf258dB7feE6F9eA6865Ac02A"
-    // );
-
     this.props.convertLoading(true);
     try {
       e.preventDefault();
+      // ! for only test
+      // const abi = await this.getABI();
+      // const contract = new web3Instance.web3.eth.Contract(
+      //   abi.abi,
+      //   "0x286f56881466C1aBf258dB7feE6F9eA6865Ac02A"
+      // );
+
       let trx = {};
       let formData = util.refineSubmitData(this.data.formData);
       if (typeof (await this.handleProposalError(formData)) === "undefined") {
@@ -377,9 +381,8 @@ class ProposalForm extends React.Component {
       }
       /* Add Authority Member */
       if (this.data.selectedVoteTopic === "AddAuthorityMember") {
-        // ! for only test
         // TODO set voting duration min max
-        let {
+        const {
           votingAddr,
           stakingAddr,
           newName,
@@ -399,7 +402,17 @@ class ProposalForm extends React.Component {
           memo,
           votDuration
         );
-        // ! legacy code -> remove <Replace Authority>
+      } else if (
+        this.data.selectedVoteTopic === "ChangeOfGovernanceContractAddress"
+      ) {
+        const { newGovAddr, memo = "0x", votDuration = 3 } = formData;
+        trx = this.governance.addProposalToChangeGov(
+          newGovAddr,
+          memo,
+          votDuration
+        );
+        // TODO contract method 추가
+        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
       } else if (this.data.selectedVoteTopic === "ReplaceAuthorityMember") {
         trx = this.governance.addProposalToChangeMember(
           [formData.oldAddr, formData.newAddr],
@@ -427,16 +440,6 @@ class ProposalForm extends React.Component {
           [formData.newNode.port, myLockBalance],
           formData.memo
         );
-        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      } else if (
-        this.data.selectedVoteTopic === "ChangeOfGovernanceContractAddress"
-      ) {
-        trx = this.governance.addProposalToChangeGov(
-          formData.newGovAddr,
-          formData.memo
-        );
-        // TODO contract method 추가
-        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
       } else if (
         this.data.selectedVoteTopic === "ChangeOfMaxPriorityFeePerGas"
       ) {
@@ -668,6 +671,8 @@ class ProposalForm extends React.Component {
             newNameErr={this.state.newNameErr}
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
+            votingDurationMax={this.props.votingDurationMax}
+            votingDurationMin={this.props.votingDurationMin}
           />
         );
       case "RemoveAuthorityMember":
