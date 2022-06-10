@@ -46,14 +46,40 @@ const convertHexToString = (input) => {
   return str;
 };
 
-//  ---------- check ----------- //
-// check the parameter is a function
-export const shouldPass = () => {
-  // eslint-disable-next-line
-  throw "Function should be passed";
+// ---------- refine data ---------- //
+// up to 64 character, english and numbers only
+export const checkName = (name) => {
+  return /^[A-Za-z0-9+]{1,64}$/.test(name);
 };
 
-// ---------- refine data ---------- //
+// numbers only
+export const checkPrice = (price) => {
+  return /^[0-9]{1,}$/.test(price);
+};
+
+// start with 0x, hexadecimal only 40 characters
+export const checkAddress = (address) => {
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
+};
+
+// up to 128 character hexadecimal, @ after that, ip:port
+export const checkNode = (node) => {
+  return /^([a-fA-F0-9]{128})+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})$/.test(
+    node
+  );
+};
+
+// check if value is greater than or less than
+export const checkDuration = (type, min, max) => {
+  const newMin = parseInt(min);
+  const newMax = parseInt(max);
+  if (type === "min") {
+    return newMin > newMax ? type : null;
+  } else if (type === "max") {
+    return newMax < newMin ? type : null;
+  } else return;
+};
+
 // override data format for save storage
 export const refineBallotBasic = (m) => {
   if (!m) return null;
@@ -145,6 +171,12 @@ export const refineSubmitData = (m) => {
 };
 
 // ---------- etc ----------
+// check the parameter is a function
+export const shouldPass = () => {
+  // eslint-disable-next-line
+  throw "Function should be passed";
+};
+
 // get authority list with static file
 export const getAuthorityLists = (org, repo, branch, source) => {
   const URL = `https://raw.githubusercontent.com/${org}/${repo}/${branch}/${source}`;
