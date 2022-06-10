@@ -42,6 +42,11 @@ class App extends React.Component {
     errLink: null,
     errAccessFail: null,
     isMember: false,
+    // for getting ballot data
+    ballotTypeData: [],
+    // voting duration
+    votingDurationMin: null,
+    votingDurationMax: null,
   };
 
   state = {
@@ -61,7 +66,7 @@ class App extends React.Component {
     this.initContractData = this.initContractData.bind(this);
     this.refreshContractData = this.refreshContractData.bind(this);
 
-    // Get web3 instance
+    // get web3 instance
     getWeb3Instance().then(
       async (web3Config) => {
         this.initContracts(web3Config);
@@ -75,7 +80,7 @@ class App extends React.Component {
     );
   }
 
-  // Initial contract
+  // initial contract
   async initContracts(web3Config) {
     initContractsByNames({
       web3: web3Config.web3,
@@ -83,12 +88,14 @@ class App extends React.Component {
       names: web3Config.names,
     }).then(async () => {
       await this.getStakingRange();
+      // TODO get voting duration
+      await this.getVotingDuration();
       await this.initContractData();
       await this.updateAccountBalance();
 
-      // Detect when the MetaMask account is changed
+      // detect when the MetaMask account is changed
       window.ethereum.on("accountsChanged", async (chagedAccounts) => {
-        // Disconnect MetaMask
+        // disconnect MetaMask
         if (chagedAccounts[0] === undefined) {
           console.error("MetaMask connection is broken!");
           window.location.reload();
@@ -98,7 +105,7 @@ class App extends React.Component {
       });
 
       this.setStakingEventsWatch();
-      // Check if account is a proposalable member
+      // check if account is a proposalable member
       this.data.isMember = await contracts.governance.isMember(
         web3Instance.defaultAccount
       );
@@ -106,7 +113,7 @@ class App extends React.Component {
     });
   }
 
-  // Set the balance of account
+  // set the balance of account
   async updateAccountBalance() {
     this.data.myBalance = await contracts.staking.balanceOf(
       web3Instance.defaultAccount
@@ -125,7 +132,7 @@ class App extends React.Component {
     this.setState({ stakingModalVisible: false, loading: false });
   }
 
-  // Set the default account in case MetaMask account is the same as web3 account
+  // set the default account to MetaMask account
   async updateDefaultAccount(account) {
     if (web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase()) {
       web3Instance.defaultAccount = account;
@@ -162,7 +169,7 @@ class App extends React.Component {
     );
   }
 
-  // Sets the minimum and maximum values that can be staked
+  // set the minimum and maximum values that can be staked
   async getStakingRange() {
     if (["MAINNET", "TESTNET"].includes(web3Instance.netName)) {
       this.data.stakingMin = web3Instance.web3.utils.fromWei(
@@ -170,6 +177,18 @@ class App extends React.Component {
       );
       this.data.stakingMax = web3Instance.web3.utils.fromWei(
         await contracts.envStorage.getStakingMax()
+      );
+    }
+  }
+
+  // set voting duration minium and maximum values
+  async getVotingDuration() {
+    if (["MAINNET", "TESTNET"].includes(web3Instance.netName)) {
+      this.data.votingDurationMin = util.convertSecondsToDay(
+        await contracts.ballotStorage.getMinVotingDuration()
+      );
+      this.data.votingDurationMax = util.convertSecondsToDay(
+        await contracts.ballotStorage.getMaxVotingDuration()
       );
     }
   }
@@ -190,7 +209,7 @@ class App extends React.Component {
     ]).then(() => util.setUpdatedTimeToLocal(new Date()));
   }
 
-  // Get the authority list stored in localStorage if modified block height is equal
+  // get the authority list stored in localStorage if modified block height is equal
   // or initalize new authority list
   async getAuthorityData() {
     const modifiedBlock = await contracts.governance.getModifiedBlock();
@@ -234,7 +253,7 @@ class App extends React.Component {
     this.data.voteLength -= 1;
   }
 
-  // Get a static list for network status from github repository
+  // get a static list for network status from github repository
   async initAuthorityData() {
     let authorityOriginData = await util.getAuthorityLists(
       constants.authorityRepo.org,
@@ -248,7 +267,7 @@ class App extends React.Component {
     util.setAuthorityToLocal(this.data.authorityOriginData);
   }
 
-  // To make sure that the authority is included
+  // to make sure that the authority is included
   async refineAuthority(authorityList) {
     let memberAuthority = {};
     let index = 0;
@@ -264,7 +283,7 @@ class App extends React.Component {
     return memberAuthority;
   }
 
-  // Get the ballot list stored in localStorage
+  // get the ballot list stored in localStorage
   // or initalize new ballot list
   async initBallotData() {
     let ballotBasicFinalizedData = util.getBallotBasicFromLocal()
@@ -305,7 +324,9 @@ class App extends React.Component {
   async getBallotBasicOriginData(i, ballotBasicFinalizedData = {}) {
     let isUpdated = false;
     await contracts.ballotStorage.getBallotBasic(i).then((ret) => {
-      ret.id = i; // Add ballot id
+      this.data.ballotTypeData[i] = ret.ballotType; // for sorting ballot data
+      ret.id = i; // add ballot id
+
       util.refineBallotBasic(ret);
       this.data.ballotBasicOriginData[i] = ret;
 
@@ -317,23 +338,55 @@ class App extends React.Component {
         isUpdated = true;
       }
     });
-    return isUpdated;
+    return { isUpdated };
   }
 
-  // Match the ballot item with the ballot member
+  // match the ballot item with the ballot data
   async getBallotMemberOriginData(
     i,
     isUpdated = false,
     ballotMemberFinalizedData
   ) {
-    await contracts.ballotStorage.getBallotMember(i).then((ret) => {
-      ret.id = i; // Add ballot id
+    const ballotType = this.data.ballotTypeData[i];
+    let result,
+      type = "";
+
+    switch (ballotType) {
+      // TODO address
+      case "4":
+        result = contracts.ballotStorage.getBallotAddress(i);
+        type = "newGovernanceAddress";
+        break;
+      // TODO variable
+      // case "":
+      // result = contracts.ballotStorage.getBallotVariable(i);
+      // type = "variable";
+      //   break;
+      // TODO member
+      case "1":
+      default:
+        result = contracts.ballotStorage.getBallotMember(i);
+        break;
+    }
+    await result.then((ret) => {
+      if (typeof ret === "object") {
+        // delete duplicate key values that web3 returns
+        for (let key in ret) {
+          if (!isNaN(key)) delete ret[key];
+        }
+        ret.id = i; // add ballot id
+      } else {
+        ret = {
+          id: i,
+          [type]: ret,
+        };
+      }
       this.data.ballotMemberOriginData[i] = ret;
       if (isUpdated) ballotMemberFinalizedData[i] = ret;
     });
   }
 
-  // Called when menu clicked
+  // called when menu clicked
   onMenuClick = ({ key }) => {
     if (this.state.showProposal && this.state.nav === "2" && key === "2") {
       this.convertVotingComponent("voting");
@@ -389,6 +442,8 @@ class App extends React.Component {
             isMember={this.data.isMember}
             stakingMax={this.data.stakingMax}
             stakingMin={this.data.stakingMin}
+            votingDurationMax={this.data.votingDurationMax}
+            votingDurationMin={this.data.votingDurationMin}
           />
         );
       default:
@@ -396,7 +451,7 @@ class App extends React.Component {
     this.setState({ selectedMenu: true });
   }
 
-  // Called when voting menu is clicked
+  // called when voting menu is clicked
   convertVotingComponent = (component) => {
     switch (component) {
       case "voting":

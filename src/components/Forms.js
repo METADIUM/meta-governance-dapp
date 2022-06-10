@@ -1,14 +1,98 @@
 import React from "react";
 import { Button, Input, Form, Icon, Select } from "antd";
 
-import "./style/style.css";
 import { shouldPass } from "../util";
 
 const { TextArea } = Input;
 const { Option } = Select;
 
+// components for communicating common props
+export const PassesCommonProps = ({
+  netName,
+  loading,
+  handleSubmit,
+  handleChange,
+  votingDurationMax,
+  votingDurationMin,
+  children,
+}) => {
+  return (
+    <>
+      {React.cloneElement(children, {
+        netName,
+        loading,
+        handleSubmit,
+        handleChange,
+        votingDurationMax,
+        votingDurationMin,
+      })}
+    </>
+  );
+};
+
+// voting duration and submit button
+const ProposalFormFooter = ({
+  netName,
+  loading,
+  disabled,
+  votingDurationMin,
+  votingDurationMax,
+  handleChange = shouldPass(),
+}) => {
+  // option component
+  const selectOption = () => {
+    let comp = [];
+    for (let op = votingDurationMin; op <= votingDurationMax; op++) {
+      comp.push(
+        <Select.Option key={op} value={`votDuration_${op}`}>
+          {op}
+        </Select.Option>
+      );
+    }
+    return comp;
+  };
+  return (
+    <>
+      <div className="divider flex flex-end-vertical mt-16">
+        <div className="flex-half flex-end-vertical flex-column mr-0">
+          <Form.Item>
+            <label className="subtitle mt-0 flex-align-self-center">
+              Voting Duration
+            </label>
+            <Select
+              defaultValue={votingDurationMin}
+              name="votDuration"
+              disabled={loading}
+              className="mg-rl-15"
+              style={{ width: 180 }}
+              onChange={handleChange}
+            >
+              {selectOption()}
+            </Select>
+            <span>day</span>
+          </Form.Item>
+        </div>
+      </div>
+      <Form.Item>
+        <div className="submitDiv flex">
+          {disabled}
+          <Button
+            name="submit"
+            htmlType="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            disabled={disabled}
+            loading={loading}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
+    </>
+  );
+};
+
 /* Add Authority Member */
-const AddProposalForm = ({
+export const AddProposalForm = ({
   netName,
   loading,
   votingAddrErr,
@@ -17,6 +101,8 @@ const AddProposalForm = ({
   stakingMin,
   newLockAmount,
   newLockAmountErr,
+  votingDurationMin,
+  votingDurationMax,
   newNodeErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
@@ -129,52 +215,25 @@ const AddProposalForm = ({
         />
       </Form.Item>
       {/* // TODO set votDuration min max */}
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Select.Option value="votDuration_3">3</Select.Option>
-              <Select.Option value="votDuration_4">4</Select.Option>
-              <Select.Option value="votDuration_5">5</Select.Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            htmlType="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            disabled={
-              newLockAmountErr ||
-              votingAddrErr ||
-              stakingAddrErr ||
-              newNodeErr ||
-              newNameErr
-            }
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={
+          newLockAmountErr ||
+          votingAddrErr ||
+          stakingAddrErr ||
+          newNodeErr ||
+          newNameErr
+        }
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
 
-const RmoveProposalForm = ({
+export const RmoveProposalForm = ({
   netName,
   loading,
   showLockAmount,
@@ -285,7 +344,7 @@ const RmoveProposalForm = ({
   </div>
 );
 
-const ChangeOfGovernanceContractAddressForm = ({
+export const ChangeOfGovernanceContractAddressForm = ({
   netName,
   loading,
   newGovAddrErr,
@@ -359,7 +418,7 @@ const ChangeOfGovernanceContractAddressForm = ({
   </div>
 );
 
-const VotingDurationSetting = ({
+export const VotingDurationSetting = ({
   netName,
   loading,
   votDurationErr,
@@ -482,7 +541,7 @@ const VotingDurationSetting = ({
   </div>
 );
 
-const AuthorityMemberStakingAmount = ({
+export const AuthorityMemberStakingAmount = ({
   netName,
   loading,
   AuthMemSkAmountErr,
@@ -603,7 +662,7 @@ const AuthorityMemberStakingAmount = ({
   </div>
 );
 
-const BlockCreationTime = ({
+export const BlockCreationTime = ({
   netName,
   loading,
   newBlockCreation,
@@ -694,7 +753,7 @@ const BlockCreationTime = ({
   </div>
 );
 
-const BlockRewardAmount = ({
+export const BlockRewardAmount = ({
   netName,
   loading,
   newBlockRewardAmount,
@@ -785,7 +844,7 @@ const BlockRewardAmount = ({
   </div>
 );
 
-const BlockRewardDistributionMethod = ({
+export const BlockRewardDistributionMethod = ({
   netName,
   loading,
   blockRate1,
@@ -947,7 +1006,7 @@ const BlockRewardDistributionMethod = ({
   </div>
 );
 
-const ChangeOfMaxPriorityFeePerGas = ({
+export const ChangeOfMaxPriorityFeePerGas = ({
   netName,
   loading,
   maxPriorityFeePerGasErr,
@@ -1037,7 +1096,7 @@ const ChangeOfMaxPriorityFeePerGas = ({
   </div>
 );
 
-const GasLimitForm = ({
+export const GasLimitForm = ({
   netName,
   loading,
   gasLimitErr,
@@ -1126,7 +1185,7 @@ const GasLimitForm = ({
 );
 
 // ! legacy code -> remove <Replace Authority>
-const ReplaceProposalForm = ({
+export const ReplaceProposalForm = ({
   netName,
   loading,
   stakingMin,
@@ -1277,7 +1336,7 @@ const ReplaceProposalForm = ({
 );
 
 // ! legacy code -> remove <Update Authority>
-const UpdateProposalForm = ({
+export const UpdateProposalForm = ({
   netName,
   loading,
   newNameErr,
@@ -1348,20 +1407,3 @@ const UpdateProposalForm = ({
     </Form>
   </div>
 );
-
-export {
-  AddProposalForm,
-  RmoveProposalForm,
-  ChangeOfGovernanceContractAddressForm,
-  VotingDurationSetting,
-  AuthorityMemberStakingAmount,
-  BlockCreationTime,
-  BlockRewardAmount,
-  BlockRewardDistributionMethod,
-  ChangeOfMaxPriorityFeePerGas,
-  GasLimitForm,
-  // ! legacy code -> remove <Replace Authority>
-  ReplaceProposalForm,
-  // ! legacy code -> remove <Update Authority>
-  UpdateProposalForm,
-};

@@ -13,7 +13,8 @@ import {
 import * as util from "../util";
 import { web3Instance } from "../web3";
 import { constants } from "../constants";
-import "./style/style.css";
+
+// import "./style/style.css";
 
 class Voting extends React.Component {
   data = {
@@ -81,7 +82,6 @@ class Voting extends React.Component {
     Object.values(this.props.ballotBasicOriginData).forEach((item, index) => {
       const { newMemberAddress, oldMemberAddress } =
         this.props.ballotMemberOriginData[item.id];
-
       if (
         item.state === constants.ballotState.Ready ||
         item.state === constants.ballotState.InProgress
@@ -148,12 +148,17 @@ class Voting extends React.Component {
   };
 
   setDescription = (type, id) => {
-    const { newMemberAddress, newStakerAddress, oldMemberAddress } =
-      this.props.ballotMemberOriginData[id];
-    const lockAmount = web3Instance.web3.utils.fromWei(
-      this.props.ballotMemberOriginData[id].lockAmount,
-      "ether"
-    );
+    let {
+      newMemberAddress,
+      newStakerAddress,
+      oldMemberAddress,
+      lockAmount,
+      newGovernanceAddress,
+    } = this.props.ballotMemberOriginData[id];
+    lockAmount =
+      typeof lockAmount === "undefined"
+        ? 0
+        : web3Instance.web3.utils.fromWei(lockAmount, "ether");
     switch (type) {
       /* Add Authority Member */
       case constants.ballotTypes.AddAuthorityMember:
@@ -164,6 +169,14 @@ class Voting extends React.Component {
             Staking Address: {newStakerAddress}
             <br />
             WEMIX To be Locked: {lockAmount} WEMIX
+          </p>
+        );
+      case constants.ballotTypes.ChangeOfGovernanceContractAddress:
+        return (
+          <p className="description flex-full">
+            Old Governance Address: {newMemberAddress}
+            <br />
+            New Governnce Address: {newGovernanceAddress}
           </p>
         );
       case constants.ballotTypes.MemberRemoval:
@@ -272,7 +285,7 @@ class Voting extends React.Component {
     this.props.convertLoading(true);
     let trx = await this.ballotStorage.updateBallotDuration(
       this.data.curBallotIdx,
-      util.convertDayToTimestamp(this.state.ballotUpdateDuration)
+      util.convertDayToSeconds(this.state.ballotUpdateDuration)
     );
     this.sendTransaction(trx, "Change", true);
     this.setState({ updateModal: false });
@@ -446,6 +459,8 @@ class Voting extends React.Component {
             waitForReceipt={this.waitForReceipt}
             stakingMax={this.props.stakingMax}
             stakingMin={this.props.stakingMin}
+            votingDurationMax={this.props.votingDurationMax}
+            votingDurationMin={this.props.votingDurationMin}
           />
         )}
       </div>

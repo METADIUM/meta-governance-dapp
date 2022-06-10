@@ -1,39 +1,20 @@
 import React from "react";
 import { Button, Select, Icon } from "antd";
 
-import {
-  AddProposalForm,
-  RmoveProposalForm,
-  ChangeOfGovernanceContractAddressForm,
-  VotingDurationSetting,
-  AuthorityMemberStakingAmount,
-  BlockCreationTime,
-  BlockRewardAmount,
-  BlockRewardDistributionMethod,
-  ChangeOfMaxPriorityFeePerGas,
-  GasLimitForm,
-  // ! legacy code -> remove <Replace Authority>
-  ReplaceProposalForm,
-  // ! legacy code -> remove <Update Authority>
-  UpdateProposalForm,
-} from "./Forms";
-
 import { web3Instance } from "../web3";
-import { constants } from "../constants";
+
+import * as PComponent from "./Forms";
 import * as util from "../util";
 
-import "./style/style.css";
+import { constants } from "../constants";
 
 class ProposalForm extends React.Component {
   data = {
-    selectedVoteTopic: "",
+    selectedTopic: "",
     formData: {},
   };
 
   state = {
-    selectedChange: false,
-    submitForm: false,
-
     /* Add Authority Member */
     votingAddrErr: false,
     stakingAddrErr: false,
@@ -41,12 +22,14 @@ class ProposalForm extends React.Component {
     newNodeErr: false,
     newLockAmountErr: false,
 
+    /* Change Of Governance Contract Address */
+    newGovAddrErr: false,
+
     oldLockAmountErr: false,
     oldAddrErr: false,
     oldNodeErr: false,
     showLockAmount: "",
-    // Change Of Governance Contract Address
-    newGovAddrErr: false,
+
     // Change Of MaxPriorityFeePerGas
     maxPriorityFeePerGasErr: false,
     // Gas Limit
@@ -73,19 +56,22 @@ class ProposalForm extends React.Component {
   }
 
   // only, when the topic has changed
-  handleSelectTopicChange = async (value) => {
-    this.data.selectedVoteTopic = value;
+  handleSelectTopicChange = (topic) => {
+    const { stakingMin, votingDurationMin, votingDurationMax } = this.props;
+    this.data.selectedTopic = topic;
     this.data.formData = {
-      newLockAmount: this.props.stakingMin,
-      oldLockAmount: this.props.stakingMin,
+      newLockAmount: stakingMin,
+      oldLockAmount: stakingMin,
+      votingDurationMin,
+      votingDurationMax,
     };
     this.resetForm();
+
     Object.keys(this.state)
       .filter((key) => key.indexOf("Err") > 0)
       .forEach((key) => {
-        this.state[key] = false;
+        this.setState({ [key]: false });
       });
-    this.setState(this.state);
   };
 
   resetForm() {
@@ -102,6 +88,12 @@ class ProposalForm extends React.Component {
         }
       });
     }
+  }
+
+  // when the select option has changed
+  handleSelectChange(e) {
+    let [name, value] = e.split("_");
+    this.data.formData[name] = value;
   }
 
   handleChange = (e) => {
@@ -135,6 +127,11 @@ class ProposalForm extends React.Component {
         break;
       case "newNode":
         this.setState({ newNodeErr: !this.checkNode(e.target.value) });
+        break;
+
+      /* Change Of Governance Contract Address */
+      case "newGovAddr":
+        this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
         break;
 
       // ! legacy code -> remove <AddProposalForm><Replace Authority><RmoveProposalForm>
@@ -244,10 +241,6 @@ class ProposalForm extends React.Component {
           });
         }
         break;
-      // Change Of Governance Contract Address
-      case "newGovAddr":
-        this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
-        break;
       // Change Of MaxPriorityFeePerGas
       case "maxPriorityFeePerGas":
         this.setState({
@@ -264,12 +257,7 @@ class ProposalForm extends React.Component {
     }
   };
 
-  // when the select option has changed
-  handleSelectChange(e) {
-    let [name, value] = e.split("_");
-    this.data.formData[name] = value;
-  }
-
+  // TODO util file
   checkLockAmount(amount) {
     return (
       Number(amount) <= this.props.stakingMax &&
@@ -277,49 +265,29 @@ class ProposalForm extends React.Component {
     );
   }
 
+  // TODO util file
   checkAddr(addr) {
     return /^0x[a-fA-F0-9]{40}$/.test(addr);
   }
 
+  // TODO util file
   checkNode(node) {
     return /^([a-fA-F0-9]{128})+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})$/.test(
       node
     );
   }
 
+  // TODO util file
   checkName(name) {
     return /^[A-Za-z0-9+]{1,64}$/.test(name);
   }
 
+  // TODO util file
   checkPrice(price) {
     return /^[0-9]{1,}$/.test(price);
   }
 
-  // Start with number with singular dot - start
-  // at least 0.1
-  checkBlockCreationTime(time) {
-    return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1,})?|0?\.[1-9]{1,})?$/.test(time);
-  }
-  // at least 1
-  // + 18 decimal place or more is err
-  checkRewardAmount(amount) {
-    return /^[1-9]+\.?([0-9]{1,17})?$/.test(amount);
-  }
-  // 2 decimal place or more is err
-  checkRate(num) {
-    return /^[0-9]+\.?([0-9]{1,2})?$/.test(num);
-  }
-
-  calculateTotal = (numbers) => {
-    return Object.entries(numbers).reduce((finalValue, [key, value]) => {
-      if (value === "") {
-        return finalValue;
-      }
-      return finalValue + value;
-    }, 0);
-  };
-  // Start with number with singular dot - end
-
+  // TODO util file
   checkDuration(type, min, max) {
     const newMin = parseInt(min);
     const newMax = parseInt(max);
@@ -330,6 +298,27 @@ class ProposalForm extends React.Component {
     } else return;
   }
 
+  // TODO util file
+  // at least 0.1
+  checkBlockCreationTime(time) {
+    return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1,})?|0?\.[1-9]{1,})?$/.test(time);
+  }
+
+  // TODO util file
+  // at least 1 and error with 18 decimal place or more
+  checkRewardAmount(amount) {
+    return /^[1-9]+\.?([0-9]{1,17})?$/.test(amount);
+  }
+
+  calculateTotal = (numbers) => {
+    return Object.entries(numbers).reduce((finalValue, [key, value]) => {
+      if (value === "") {
+        return finalValue;
+      }
+      return finalValue + value;
+    }, 0);
+  };
+
   // ! for only test
   // getABI() {
   //   let addr =
@@ -337,36 +326,36 @@ class ProposalForm extends React.Component {
   //   return fetch(addr).then((response) => response.json());
   // }
 
-  // Submit form data
+  // submit form data
   handleSubmit = async (e) => {
-    // ! for only test
-    // const abi = await this.getABI();
-    // const contract = new web3Instance.web3.eth.Contract(
-    //   abi.abi,
-    //   "0x286f56881466C1aBf258dB7feE6F9eA6865Ac02A"
-    // );
-
     this.props.convertLoading(true);
     try {
       e.preventDefault();
+      // ! for only test
+      // const abi = await this.getABI();
+      // const contract = new web3Instance.web3.eth.Contract(
+      //   abi.abi,
+      //   "0x286f56881466C1aBf258dB7feE6F9eA6865Ac02A"
+      // );
+
       let trx = {};
       let formData = util.refineSubmitData(this.data.formData);
+
       if (typeof (await this.handleProposalError(formData)) === "undefined") {
         this.props.convertLoading(false);
         return;
       }
+
       /* Add Authority Member */
-      if (this.data.selectedVoteTopic === "AddAuthorityMember") {
-        // ! for only test
-        // TODO set voting duration min max
-        let {
+      if (this.data.selectedTopic === "AddAuthorityMember") {
+        const {
           votingAddr,
           stakingAddr,
           newName,
           newNode: { node, ip, port },
           newLockAmount,
           memo = "0x",
-          votDuration = 3,
+          votDuration = this.props.votingDurationMin,
         } = formData;
         trx = this.governance.addProposalToAddMember(
           votingAddr,
@@ -379,8 +368,18 @@ class ProposalForm extends React.Component {
           memo,
           votDuration
         );
-        // ! legacy code -> remove <Replace Authority>
-      } else if (this.data.selectedVoteTopic === "ReplaceAuthorityMember") {
+      } else if (
+        this.data.selectedTopic === "ChangeOfGovernanceContractAddress"
+      ) {
+        const { newGovAddr, memo = "0x", votDuration = 3 } = formData;
+        trx = this.governance.addProposalToChangeGov(
+          newGovAddr,
+          memo,
+          votDuration
+        );
+        // TODO contract method 추가
+        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
+      } else if (this.data.selectedTopic === "ReplaceAuthorityMember") {
         trx = this.governance.addProposalToChangeMember(
           [formData.oldAddr, formData.newAddr],
           formData.newName,
@@ -389,14 +388,14 @@ class ProposalForm extends React.Component {
           [formData.newNode.port, formData.newLockAmount],
           formData.memo
         );
-      } else if (this.data.selectedVoteTopic === "RemoveAuthorityMember") {
+      } else if (this.data.selectedTopic === "RemoveAuthorityMember") {
         trx = this.governance.addProposalToRemoveMember(
           formData.oldAddr,
           formData.oldLockAmount,
           formData.memo
         );
         // ! legacy code -> remove <Update Authority>
-      } else if (this.data.selectedVoteTopic === "UpdateAuthority") {
+      } else if (this.data.selectedTopic === "UpdateAuthority") {
         let myLockBalance = await this.staking.lockedBalanceOf(
           web3Instance.defaultAccount
         );
@@ -407,24 +406,12 @@ class ProposalForm extends React.Component {
           [formData.newNode.port, myLockBalance],
           formData.memo
         );
-        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      } else if (
-        this.data.selectedVoteTopic === "ChangeOfGovernanceContractAddress"
-      ) {
-        trx = this.governance.addProposalToChangeGov(
-          formData.newGovAddr,
-          formData.memo
-        );
-        // TODO contract method 추가
-        // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      } else if (
-        this.data.selectedVoteTopic === "ChangeOfMaxPriorityFeePerGas"
-      ) {
+      } else if (this.data.selectedTopic === "ChangeOfMaxPriorityFeePerGas") {
         // trx =
         // TODO envName, envType 맞는지 확인 필요
         // TODO contract method 추가
         // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      } else if (this.data.selectedVoteTopic === "GasLimit") {
+      } else if (this.data.selectedTopic === "GasLimit") {
         trx = this.governance.addProposalToChangeEnv(
           web3Instance.web3.utils.asciiToHex("GasLimit"), // envName
           "2", // envType (uint)
@@ -433,6 +420,7 @@ class ProposalForm extends React.Component {
         );
       } else return;
 
+      // send transaction
       web3Instance.web3.eth.sendTransaction(
         {
           from: web3Instance.defaultAccount,
@@ -479,27 +467,18 @@ class ProposalForm extends React.Component {
     }
 
     /* Add Authority Member */
-    if (this.data.selectedVoteTopic === "AddAuthorityMember") {
+    if (this.data.selectedTopic === "AddAuthorityMember") {
       const { votingAddr, stakingAddr, newLockAmount } = formData;
       const newLockedAmount = Number(newLockAmount);
 
-      // Get the balance of staking address
+      // get the balance of staking address
       const stakingAddrBalance = Number(
         await this.staking.availableBalanceOf(stakingAddr)
       );
 
-      // Check if addresses already exist
+      // check if addresses already exist
       const isMemberVotingAddr = await this.governance.isMember(votingAddr);
       const isMemberStakingAddr = await this.governance.isMember(stakingAddr);
-
-      // Check if addresses already voted
-      const inBallotMemberVotingAddr = this.props.newMemberaddr.some(
-        (addr) => addr === votingAddr
-      );
-      const inBallotMemberStakingAddr = this.props.newMemberaddr.some(
-        (addr) => addr === stakingAddr
-      );
-
       if (isMemberVotingAddr || isMemberStakingAddr) {
         return this.props.getErrModal(
           `Existing Member Address (${
@@ -508,6 +487,14 @@ class ProposalForm extends React.Component {
           "Proposal Submit Error"
         );
       }
+
+      // check if addresses already voted
+      const inBallotMemberVotingAddr = this.props.newMemberaddr.some(
+        (addr) => addr === votingAddr
+      );
+      const inBallotMemberStakingAddr = this.props.newMemberaddr.some(
+        (addr) => addr === stakingAddr
+      );
       if (inBallotMemberVotingAddr || inBallotMemberStakingAddr) {
         return this.props.getErrModal(
           `Address with Existing Ballot (${
@@ -516,6 +503,8 @@ class ProposalForm extends React.Component {
           "Proposal Submit Error"
         );
       }
+
+      // check if staking address havs wemix
       if (stakingAddrBalance < newLockedAmount) {
         return this.props.getErrModal(
           "Not Enough WEMIX to Stake (Staking Address)",
@@ -523,7 +512,7 @@ class ProposalForm extends React.Component {
         );
       }
       // ! legacy code -> remove <Replace Authority>
-    } else if (this.data.selectedVoteTopic === "ReplaceAuthorityMember") {
+    } else if (this.data.selectedTopic === "ReplaceAuthorityMember") {
       const oldMemberLockedBalance = await this.staking.lockedBalanceOf(
         formData.oldAddr
       );
@@ -574,7 +563,7 @@ class ProposalForm extends React.Component {
           "Proposal Submit Error"
         );
       }
-    } else if (this.data.selectedVoteTopic === "RemoveAuthorityMember") {
+    } else if (this.data.selectedTopic === "RemoveAuthorityMember") {
       const oldMemberBalance = Number(
         await this.staking.lockedBalanceOf(formData.oldAddr)
       );
@@ -632,167 +621,137 @@ class ProposalForm extends React.Component {
     }
   };
 
-  getProposalForm() {
-    switch (this.data.selectedVoteTopic) {
-      case "AddAuthorityMember":
-        return (
-          <AddProposalForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            stakingMin={this.props.stakingMin}
-            stakingAddrErr={this.state.stakingAddrErr}
-            votingAddrErr={this.state.votingAddrErr}
-            newLockAmountErr={this.state.newLockAmountErr}
-            newLockAmount={this.data.formData.newLockAmount}
-            newNodeErr={this.state.newNodeErr}
-            newNameErr={this.state.newNameErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "RemoveAuthorityMember":
-        return (
-          <RmoveProposalForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            stakingAddrErr={this.state.stakingAddrErr}
-            votingAddrErr={this.state.votingAddrErr}
-            showLockAmount={this.state.showLockAmount}
-            stakingMin={this.props.stakingMin}
-            oldLockAmountErr={this.state.oldLockAmountErr}
-            oldLockAmount={this.data.formData.oldLockAmount}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-            getLockAmount={this.getLockAmount}
-          />
-        );
-      case "ChangeOfGovernanceContractAddress":
-        return (
-          <ChangeOfGovernanceContractAddressForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            newGovAddrErr={this.state.newGovAddrErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "VotingDurationSetting":
-        return (
-          <VotingDurationSetting
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            votDurationErr={this.state.votDurationErr}
-            votDurationMin={this.data.formData.votDurationMin}
-            votDurationMax={this.data.formData.votDurationMax}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "AuthorityMemberStakingAmount":
-        return (
-          <AuthorityMemberStakingAmount
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            AuthMemSkAmountErr={this.state.AuthMemSkAmountErr}
-            AuthMemSkAmountMin={this.data.formData.AuthMemSkAmountMin}
-            AuthMemSkAmountMax={this.data.formData.AuthMemSkAmountMax}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "BlockCreationTime":
-        return (
-          <BlockCreationTime
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            newBlockCreation={this.data.formData.newBlockCreation}
-            blockCreationErr={this.state.blockCreationErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "BlockRewardAmount":
-        return (
-          <BlockRewardAmount
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            newBlockRewardAmount={this.data.formData.newBlockRewardAmount}
-            blockRewardErr={this.state.blockRewardErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "BlockRewardDistributionMethod":
-        return (
-          <BlockRewardDistributionMethod
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            blockRate1={this.data.formData.blockRate1}
-            blockRate2={this.data.formData.blockRate2}
-            blockRate3={this.data.formData.blockRate3}
-            blockRate4={this.data.formData.blockRate4}
-            blockRateTotal={this.state.blockRateTotal}
-            blockRewardDisMthErr={this.state.blockRewardDisMthErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "ChangeOfMaxPriorityFeePerGas":
-        return (
-          <ChangeOfMaxPriorityFeePerGas
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      case "GasLimit":
-        return (
-          <GasLimitForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            gasLimitErr={this.state.gasLimitErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      // ! legacy code -> remove <Replace Authority>
-      case "ReplaceAuthorityMember":
-        return (
-          <ReplaceProposalForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            stakingMin={this.props.stakingMin}
-            oldAddrErr={this.state.oldAddrErr}
-            newAddrErr={this.state.newAddrErr}
-            newNameErr={this.state.newNameErr}
-            newNodeErr={this.state.newNodeErr}
-            newLockAmountErr={this.state.newLockAmountErr}
-            newLockAmount={this.data.formData.newLockAmount}
-            oldNodeErr={this.state.oldNodeErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      // ! legacy code -> remove <Update Authority>
-      case "UpdateAuthority":
-        return (
-          <UpdateProposalForm
-            netName={web3Instance.netName}
-            loading={this.props.loading}
-            newNameErr={this.state.newNameErr}
-            newNodeErr={this.state.newNodeErr}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-          />
-        );
-      default:
-        break;
-    }
+  // show components that follow selected topic
+  showProposalForm() {
+    const { selectedTopic } = this.data;
+    const TopicComponent = (topic) => {
+      switch (topic) {
+        case "AddAuthorityMember":
+          return (
+            <PComponent.AddProposalForm
+              stakingAddrErr={this.state.stakingAddrErr}
+              votingAddrErr={this.state.votingAddrErr}
+              newLockAmountErr={this.state.newLockAmountErr}
+              newLockAmount={this.data.formData.newLockAmount}
+              newNodeErr={this.state.newNodeErr}
+              newNameErr={this.state.newNameErr}
+            />
+          );
+        case "RemoveAuthorityMember":
+          return (
+            <PComponent.RmoveProposalForm
+              stakingAddrErr={this.state.stakingAddrErr}
+              votingAddrErr={this.state.votingAddrErr}
+              showLockAmount={this.state.showLockAmount}
+              stakingMin={this.props.stakingMin}
+              oldLockAmountErr={this.state.oldLockAmountErr}
+              oldLockAmount={this.data.formData.oldLockAmount}
+              getLockAmount={this.getLockAmount}
+            />
+          );
+        case "ChangeOfGovernanceContractAddress":
+          return (
+            <PComponent.ChangeOfGovernanceContractAddressForm
+              newGovAddrErr={this.state.newGovAddrErr}
+            />
+          );
+        case "VotingDurationSetting":
+          return (
+            <PComponent.VotingDurationSetting
+              votDurationErr={this.state.votDurationErr}
+              votDurationMin={this.data.formData.votDurationMin}
+              votDurationMax={this.data.formData.votDurationMax}
+            />
+          );
+        case "AuthorityMemberStakingAmount":
+          return (
+            <PComponent.AuthorityMemberStakingAmount
+              AuthMemSkAmountErr={this.state.AuthMemSkAmountErr}
+              AuthMemSkAmountMin={this.data.formData.AuthMemSkAmountMin}
+              AuthMemSkAmountMax={this.data.formData.AuthMemSkAmountMax}
+            />
+          );
+        case "BlockCreationTime":
+          return (
+            <PComponent.BlockCreationTime
+              newBlockCreation={this.data.formData.newBlockCreation}
+              blockCreationErr={this.state.blockCreationErr}
+            />
+          );
+        case "BlockRewardAmount":
+          return (
+            <PComponent.BlockRewardAmount
+              newBlockRewardAmount={this.data.formData.newBlockRewardAmount}
+              blockRewardErr={this.state.blockRewardErr}
+            />
+          );
+        case "BlockRewardDistributionMethod":
+          return (
+            <PComponent.BlockRewardDistributionMethod
+              blockRate1={this.data.formData.blockRate1}
+              blockRate2={this.data.formData.blockRate2}
+              blockRate3={this.data.formData.blockRate3}
+              blockRate4={this.data.formData.blockRate4}
+              blockRateTotal={this.state.blockRateTotal}
+              blockRewardDisMthErr={this.state.blockRewardDisMthErr}
+            />
+          );
+        case "ChangeOfMaxPriorityFeePerGas":
+          return (
+            <PComponent.ChangeOfMaxPriorityFeePerGas
+              maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}
+            />
+          );
+        case "GasLimit":
+          return (
+            <PComponent.GasLimitForm gasLimitErr={this.state.gasLimitErr} />
+          );
+        case "ReplaceAuthorityMember":
+          return (
+            <PComponent.ReplaceProposalForm
+              stakingMin={this.props.stakingMin}
+              oldAddrErr={this.state.oldAddrErr}
+              newAddrErr={this.state.newAddrErr}
+              newNameErr={this.state.newNameErr}
+              newNodeErr={this.state.newNodeErr}
+              newLockAmountErr={this.state.newLockAmountErr}
+              newLockAmount={this.data.formData.newLockAmount}
+              oldNodeErr={this.state.oldNodeErr}
+            />
+          );
+        case "UpdateAuthority":
+          return (
+            <PComponent.UpdateProposalForm
+              newNameErr={this.state.newNameErr}
+              newNodeErr={this.state.newNodeErr}
+            />
+          );
+        default:
+          return <></>;
+      }
+    };
+
+    // TODO add stakingMin
+    return (
+      /* component for only common props pass */
+      <PComponent.PassesCommonProps
+        netName={web3Instance.netName}
+        loading={this.props.loading}
+        handleSubmit={this.handleSubmit}
+        handleChange={this.handleChange}
+        votingDurationMax={this.props.votingDurationMax}
+        votingDurationMin={this.props.votingDurationMin}
+      >
+        {/* component of selected topic */}
+        {TopicComponent(selectedTopic)}
+      </PComponent.PassesCommonProps>
+    );
   }
 
   render() {
+    const { convertComponent, buttonLoading } = this.props;
+    const { selectedTopic } = this.data;
+
     return (
       <div>
         <div className="contentDiv container">
@@ -802,8 +761,8 @@ class ProposalForm extends React.Component {
                 "btn-fill-white flex flex-center-horizontal text-large " +
                 web3Instance.netName
               }
-              onClick={(e) => this.props.convertComponent("voting")}
-              loading={this.props.buttonLoading}
+              onClick={(e) => convertComponent("voting")}
+              loading={buttonLoading}
             >
               <span>
                 <Icon type="left" />
@@ -823,7 +782,7 @@ class ProposalForm extends React.Component {
               <Select
                 showArrow
                 onChange={this.handleSelectTopicChange}
-                disabled={this.props.buttonLoading}
+                disabled={buttonLoading}
               >
                 <Select.Option value="AddAuthorityMember">
                   Add Authority Member
@@ -855,9 +814,7 @@ class ProposalForm extends React.Component {
                 <Select.Option value="GasLimit">Gas Limit</Select.Option>
               </Select>
             </div>
-            {this.data.selectedVoteTopic !== "" && (
-              <div>{this.getProposalForm()}</div>
-            )}
+            {selectedTopic !== "" && <div>{this.showProposalForm()}</div>}
           </div>
           {/* reference memo */}
           <div className="contentRefDiv">
