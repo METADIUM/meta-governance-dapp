@@ -191,7 +191,6 @@ class App extends React.Component {
         await contracts.ballotStorage.getMaxVotingDuration()
       );
     }
-    console.warn(this.data.votingDurationMax, this.data.votingDurationMin);
   }
 
   async initContractData() {
