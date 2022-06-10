@@ -1,15 +1,12 @@
 import { web3Instance } from "./web3";
 
 const fetch = require("node-fetch");
+const secondsInDay = 86400;
 
-var secondsInDay = 86400;
-
-/**
- * Convert UNIX timestamp to readable
- * @param {*} timestamp UNIX
- */
-function timeConverter(timestamp) {
-  var a = new Date(timestamp * 1000);
+// ---------- time ---------- //
+// convert UNIX timestamp to readable
+const timeConverter = (timestamp) => {
+  let a = new Date(timestamp * 1000);
   return (
     a.getFullYear() +
     "/" +
@@ -23,73 +20,45 @@ function timeConverter(timestamp) {
     a.getMinutes() +
     "(UTC)"
   );
-}
+};
 
 // convert seconds -> day
-function convertSecondsToDay(seconds) {
+export const convertSecondsToDay = (seconds) => {
   return seconds < secondsInDay ? 1 : seconds / secondsInDay;
-}
+};
 
 // convert day -> seconds
-function convertDayToSeconds(day) {
+export const convertDayToSeconds = (day) => {
   return day * secondsInDay;
-}
+};
 
-function convertHexToString(input) {
+// ---------- string ---------- //
+// convert hex -> string
+const convertHexToString = (input) => {
   if (input === null) {
     return "";
   }
-  var hex = input.toString();
-  var str = "";
-  for (var i = 0; i < hex.length && hex.substr(i, 2) !== "00"; i += 2) {
+  let hex = input.toString();
+  let str = "";
+  for (let i = 0; i < hex.length && hex.substr(i, 2) !== "00"; i += 2) {
     str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
   }
   return str;
-}
+};
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+//  ---------- check ----------- //
+// check the parameter is a function
+export const shouldPass = () => {
+  // eslint-disable-next-line
+  throw "Function should be passed";
+};
 
-async function asyncForEach(array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-}
-
-function refine(m) {
-  if (!m) return null;
-  Object.keys(m).forEach((key) => {
-    if (!isNaN(key)) return delete m[key];
-    switch (key) {
-      case "title":
-        m[key] = convertHexToString(m[key]);
-        break;
-      case "explanation":
-        m[key] = convertHexToString(m[key]);
-        break;
-      case "reward":
-        m[key + "WEMIX"] =
-          web3Instance.web3.utils.fromWei(m[key], "ether") + "WEMIX";
-        break;
-      case "reserved":
-        m[key + "WEMIX"] =
-          web3Instance.web3.utils.fromWei(m[key], "ether") + "WEMIX";
-        break;
-      case "createdAt":
-        m[key] = timeConverter(m[key]);
-        break;
-      default:
-        if (!m[key]) m[key] = "";
-        break;
-    }
-  });
-  return m;
-}
-
-function refineBallotBasic(m) {
+// ---------- refine data ---------- //
+// override data format for save storage
+export const refineBallotBasic = (m) => {
   if (!m) return null;
   if (m.state === "2" && m.endTime * 1000 < Date.now()) m.state = "4";
+
   Object.keys(m).forEach((key) => {
     if (!isNaN(key)) return delete m[key];
     switch (key) {
@@ -118,9 +87,10 @@ function refineBallotBasic(m) {
     }
   });
   return m;
-}
+};
 
-function refineSubmitData(m) {
+// override data format for send transaction
+export const refineSubmitData = (m) => {
   if (m === null || typeof m !== "object") {
     return m;
   }
@@ -128,6 +98,17 @@ function refineSubmitData(m) {
   for (let key in m) {
     copy[key] = m[key];
   }
+
+  const splitNodeInfo = (nodeInfo) => {
+    let node, ip, port, splitedStr;
+    splitedStr = nodeInfo.split("@");
+    node = "0x" + splitedStr[0];
+    splitedStr = splitedStr[1].split(":");
+    ip = web3Instance.web3.utils.asciiToHex(splitedStr[0]);
+    splitedStr = splitedStr[1].split("?");
+    port = parseInt(splitedStr[0]);
+    return { node, ip, port };
+  };
 
   Object.keys(copy).forEach((key) => {
     if (!isNaN(key)) return delete copy[key];
@@ -152,7 +133,7 @@ function refineSubmitData(m) {
       case "node":
       case "newNode":
       case "oldNode":
-        let { node, ip, port } = splitNodeDescription(copy[key]);
+        let { node, ip, port } = splitNodeInfo(copy[key]);
         copy[key] = { node, ip, port };
         break;
       default:
@@ -161,123 +142,27 @@ function refineSubmitData(m) {
     }
   });
   return copy;
-}
+};
 
-function cmpIgnoreCase(a, b) {
-  return a.toLowerCase().includes(b.toLowerCase());
-}
-
-/**
- *
- * @param {*} key
- * @param {*} val
- * @returns {map} b: true if valid or false if invalid, err: error message
- */
-function validate(key, val) {
-  switch (key) {
-    case "title":
-    case "explanation":
-      if (!val) return { b: false, err: "Please fill all red box" };
-      if (isValidLength(val) > 32)
-        return { b: false, err: "Only 32 bytes allowed" };
-      return { b: true };
-    case "reward":
-    case "reserve":
-      if (val < 5)
-        return {
-          b: false,
-          err: key.toUpperCase() + " should be greater than 5 WEMIX",
-        };
-      return { b: true };
-    case "issuer":
-      if (!val || !web3Instance.web3.utils.isAddress(val))
-        return { b: false, err: "Please fill up valid issuers" };
-      return { b: true };
-    case "topics":
-      if (!val || val.length === 0)
-        return { b: false, err: "Select at least 1 topic" };
-      else if (val.filter((e) => e.title === val).length > 0)
-        return { b: false, err: "Duplicated topic" };
-      else if (val.filter((e) => e.issuer === "").length > 0)
-        return { b: false, err: "Please fill up valid issuers" };
-      return { b: true };
-    default:
-      return { b: false, err: "Error encountered, please try again" };
-  }
-}
-
-var encoder = new TextEncoder("utf-8");
-
-/**
- * Check if in 32 bytes or not
- * @param {*} str
- */
-function isValidLength(str) {
-  return encoder.encode(str).length;
-}
-
-async function getAuthorityLists(org, repo, branch, source) {
+// ---------- etc ----------
+// get authority list with static file
+export const getAuthorityLists = (org, repo, branch, source) => {
   const URL = `https://raw.githubusercontent.com/${org}/${repo}/${branch}/${source}`;
   return fetch(URL).then((response) => response.json());
-}
-
-function splitNodeDescription(str) {
-  let node, ip, port, splitedStr;
-  splitedStr = str.split("@");
-  node = "0x" + splitedStr[0];
-  splitedStr = splitedStr[1].split(":");
-  ip = web3Instance.web3.utils.asciiToHex(splitedStr[0]);
-  splitedStr = splitedStr[1].split("?");
-  port = parseInt(splitedStr[0]);
-  return { node, ip, port };
-}
-
-const shouldPass = () => {
-  // eslint-disable-next-line
-  throw "Function should be passed";
 };
 
-// Serialize / Deserialize object at local storage
-var save = (key, obj) => window.localStorage.setItem(key, JSON.stringify(obj));
-var load = (key) => JSON.parse(window.localStorage.getItem(key));
+// serialize and deserialize object at local storage
+const save = (key, obj) =>
+  window.localStorage.setItem(key, JSON.stringify(obj));
+const load = (key) => JSON.parse(window.localStorage.getItem(key));
 
-var getBallotBasicFromLocal = () => load("metaBallotBasic");
-var getBallotMemberFromLocal = () => load("metaBallotMember");
-var getUpdatedTimeFromLocal = () => load("metaUpdatedTime");
-var getAuthorityFromLocal = () => load("metaAuthority");
-var getModifiedFromLocal = () => load("metaModifiedBlock");
-var setBallotBasicToLocal = (obj) => save("metaBallotBasic", obj);
-var setBallotMemberToLocal = (obj) => save("metaBallotMember", obj);
-var setAuthorityToLocal = (obj) => save("metaAuthority", obj);
-var setUpdatedTimeToLocal = (obj) => save("metaUpdatedTime", obj);
-var setModifiedToLocal = (obj) => save("metaModifiedBlock", obj);
-
-export {
-  timeConverter,
-  sleep,
-  convertHexToString,
-  convertSecondsToDay,
-  convertDayToSeconds,
-  asyncForEach,
-  refine,
-  refineBallotBasic,
-  refineSubmitData,
-  cmpIgnoreCase,
-  isValidLength,
-  getAuthorityLists,
-  validate,
-  splitNodeDescription,
-  shouldPass,
-  save,
-  load,
-  getBallotBasicFromLocal,
-  getBallotMemberFromLocal,
-  getUpdatedTimeFromLocal,
-  getAuthorityFromLocal,
-  getModifiedFromLocal,
-  setBallotBasicToLocal,
-  setBallotMemberToLocal,
-  setAuthorityToLocal,
-  setUpdatedTimeToLocal,
-  setModifiedToLocal,
-};
+export const getBallotBasicFromLocal = () => load("metaBallotBasic");
+export const getBallotMemberFromLocal = () => load("metaBallotMember");
+export const getUpdatedTimeFromLocal = () => load("metaUpdatedTime");
+export const getAuthorityFromLocal = () => load("metaAuthority");
+export const getModifiedFromLocal = () => load("metaModifiedBlock");
+export const setBallotBasicToLocal = (obj) => save("metaBallotBasic", obj);
+export const setBallotMemberToLocal = (obj) => save("metaBallotMember", obj);
+export const setAuthorityToLocal = (obj) => save("metaAuthority", obj);
+export const setUpdatedTimeToLocal = (obj) => save("metaUpdatedTime", obj);
+export const setModifiedToLocal = (obj) => save("metaModifiedBlock", obj);
