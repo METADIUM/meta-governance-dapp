@@ -1006,153 +1006,7 @@ export const BlockRewardDistributionMethod = ({
   </div>
 );
 
-export const ChangeOfEcoFundAddress = ({
-  netName,
-  loading,
-  oldEcoFundAddrErr,
-  newEcoFundAddrErr,
-  handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
-}) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
-        Old Eco-Fund Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="oldEcoAddr"
-          onChange={handleChange}
-          className={oldEcoFundAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={oldEcoFundAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <p className="subtitle">
-        New Eco-Fund Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newEcoAddr"
-          onChange={handleChange}
-          className={newEcoFundAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={newEcoFundAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          Enter the address to recieve the ecosystem rewards distributed from
-          Block Rewards.
-        </p>
-      </div>
-
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={oldEcoFundAddrErr | newEcoFundAddrErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
-    </Form>
-  </div>
-);
-
-export const ChangeOfMaintenanceAddress = ({
-  netName,
-  loading,
-  oldMainAddrErr,
-  newMainAddrErr,
-  handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
-}) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
-        Old Maintenance Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="oldMainAddr"
-          onChange={handleChange}
-          className={oldMainAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={oldMainAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <p className="subtitle">
-        New Maintenance Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newMainAddr"
-          onChange={handleChange}
-          className={newMainAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={newMainAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          Enter the address to recieve the Maintenance rewards distributed from
-          Block Rewards.
-        </p>
-      </div>
-
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={oldMainAddrErr | newMainAddrErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
-    </Form>
-  </div>
-);
-
-export const ChangeOfMaxPriorityFeePerGasForm = ({
+export const ChangeOfMaxPriorityFeePerGas = ({
   netName,
   loading,
   maxPriorityFeePerGasErr,
@@ -1171,10 +1025,10 @@ export const ChangeOfMaxPriorityFeePerGasForm = ({
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="masPriorityFeePerGas"
+                  name="maxPriorityFeePerGas"
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" +
+                    "w-180 mg-rl-15 ml-0 " +
                     (maxPriorityFeePerGasErr ? "errInput" : "")
                   }
                   disabled={loading}
@@ -1190,7 +1044,7 @@ export const ChangeOfMaxPriorityFeePerGasForm = ({
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>The default gas price is 100GWei.</p>
+        <p>Specifies the fee returned to the miner</p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
