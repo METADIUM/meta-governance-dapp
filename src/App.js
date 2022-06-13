@@ -88,7 +88,6 @@ class App extends React.Component {
       names: web3Config.names,
     }).then(async () => {
       await this.getStakingRange();
-      // TODO get voting duration
       await this.getVotingDuration();
       await this.initContractData();
       await this.updateAccountBalance();
@@ -354,8 +353,12 @@ class App extends React.Component {
     switch (ballotType) {
       // TODO address
       case "4":
-        result = contracts.ballotStorage.getBallotAddress(i);
-        type = "newGovernanceAddress";
+        result = {
+          oldGovernanceAddress: await contracts.governance.implementation(),
+          newGovernanceAddress: await contracts.ballotStorage.getBallotAddress(
+            i
+          ),
+        };
         break;
       // TODO variable
       // case "":
@@ -365,25 +368,20 @@ class App extends React.Component {
       // TODO member
       case "1":
       default:
-        result = contracts.ballotStorage.getBallotMember(i);
+        result = await contracts.ballotStorage.getBallotMember(i);
         break;
     }
-    await result.then((ret) => {
-      if (typeof ret === "object") {
-        // delete duplicate key values that web3 returns
-        for (let key in ret) {
-          if (!isNaN(key)) delete ret[key];
-        }
-        ret.id = i; // add ballot id
-      } else {
-        ret = {
-          id: i,
-          [type]: ret,
-        };
+
+    if (typeof result === "object") {
+      // delete duplicate key values that web3 returns
+      for (let key in result) {
+        if (!isNaN(key)) delete result[key];
       }
-      this.data.ballotMemberOriginData[i] = ret;
-      if (isUpdated) ballotMemberFinalizedData[i] = ret;
-    });
+    }
+
+    result.id = i; // add ballot id
+    this.data.ballotMemberOriginData[i] = result;
+    if (isUpdated) ballotMemberFinalizedData[i] = result;
   }
 
   // called when menu clicked

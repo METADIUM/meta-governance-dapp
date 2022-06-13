@@ -101,9 +101,9 @@ export const AddProposalForm = ({
   stakingMin,
   newLockAmount,
   newLockAmountErr,
+  newNodeErr,
   votingDurationMin,
   votingDurationMax,
-  newNodeErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -214,7 +214,6 @@ export const AddProposalForm = ({
           onChange={handleChange}
         />
       </Form.Item>
-      {/* // TODO set votDuration min max */}
       <ProposalFormFooter
         netName={netName}
         loading={loading}
@@ -344,17 +343,20 @@ export const RmoveProposalForm = ({
   </div>
 );
 
-export const ChangeOfGovernanceContractAddressForm = ({
+/* Governance Contract Address */
+export const GovernanceContractAddressForm = ({
   netName,
   loading,
   newGovAddrErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
   <div className="proposalBody">
     <Form onSubmit={handleSubmit}>
       <p className="subtitle">
-        New Governance Address <span className="required">*</span>
+        New Governance Contract Address <span className="required">*</span>
       </p>
       <Form.Item>
         <Input
@@ -380,40 +382,14 @@ export const ChangeOfGovernanceContractAddressForm = ({
           onChange={handleChange}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            htmlType="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            loading={loading}
-            disabled={newGovAddrErr}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={newGovAddrErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
