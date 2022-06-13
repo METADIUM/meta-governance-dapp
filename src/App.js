@@ -347,8 +347,7 @@ class App extends React.Component {
     ballotMemberFinalizedData
   ) {
     const ballotType = this.data.ballotTypeData[i];
-    let result,
-      type = "";
+    let result = null;
 
     switch (ballotType) {
       // TODO address
@@ -361,10 +360,9 @@ class App extends React.Component {
         };
         break;
       // TODO variable
-      // case "":
-      // result = contracts.ballotStorage.getBallotVariable(i);
-      // type = "variable";
-      //   break;
+      case "5":
+        result = await contracts.ballotStorage.getBallotVariable(i);
+        break;
       // TODO member
       case "1":
       default:

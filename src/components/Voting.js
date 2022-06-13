@@ -181,6 +181,12 @@ class Voting extends React.Component {
             New Governnce Address: {newGovernanceAddress}
           </p>
         );
+      /* Voting Duration Setting */
+      // TODO duration 값 가져와야 함
+      case constants.ballotTypes.VotingDurationSetting:
+        return (
+          <p className="description flex-full">Voting Duration Setting:</p>
+        );
       case constants.ballotTypes.MemberRemoval:
         return (
           <p className="description flex-full">

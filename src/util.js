@@ -46,6 +46,11 @@ const convertHexToString = (input) => {
   return str;
 };
 
+// encoding string -> sha3
+export const encodingSha3 = (input) => {
+  return web3Instance.web3.utils.sha3(input);
+};
+
 // ---------- refine data ---------- //
 // up to 64 character, english and numbers only
 export const checkName = (name) => {
@@ -73,6 +78,10 @@ export const checkNode = (node) => {
 export const checkDuration = (type, min, max) => {
   const newMin = parseInt(min);
   const newMax = parseInt(max);
+
+  // when no value
+  if (!(min && max)) return true;
+
   if (type === "min") {
     return newMin > newMax ? type : null;
   } else if (type === "max") {
