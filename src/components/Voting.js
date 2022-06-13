@@ -153,6 +153,7 @@ class Voting extends React.Component {
       newStakerAddress,
       oldMemberAddress,
       lockAmount,
+      oldGovernanceAddress,
       newGovernanceAddress,
     } = this.props.ballotMemberOriginData[id];
     lockAmount =
@@ -171,10 +172,11 @@ class Voting extends React.Component {
             WEMIX To be Locked: {lockAmount} WEMIX
           </p>
         );
-      case constants.ballotTypes.ChangeOfGovernanceContractAddress:
+      /* Governance Contract Address */
+      case constants.ballotTypes.GovernanceContractAddress:
         return (
           <p className="description flex-full">
-            Old Governance Address: {newMemberAddress}
+            Old Governance Address: {oldGovernanceAddress}
             <br />
             New Governnce Address: {newGovernanceAddress}
           </p>
