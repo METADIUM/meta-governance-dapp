@@ -109,13 +109,13 @@ class ProposalForm extends React.Component {
     switch (e.target.name) {
       /* Add Authority Member */
       case "votingAddr":
-        this.setState({ votingAddrErr: !this.checkAddr(e.target.value) });
+        this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
         break;
       case "stakingAddr":
-        this.setState({ stakingAddrErr: !this.checkAddr(e.target.value) });
+        this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) });
         break;
       case "newName":
-        this.setState({ newNameErr: !this.checkName(e.target.value) });
+        this.setState({ newNameErr: !util.checkName(e.target.value) });
         break;
       case "newLockAmount":
         if (!/^([0-9]*)$/.test(e.target.value))
@@ -126,17 +126,17 @@ class ProposalForm extends React.Component {
           });
         break;
       case "newNode":
-        this.setState({ newNodeErr: !this.checkNode(e.target.value) });
+        this.setState({ newNodeErr: !util.checkNode(e.target.value) });
         break;
 
       /* Change Of Governance Contract Address */
       case "newGovAddr":
-        this.setState({ newGovAddrErr: !this.checkAddr(e.target.value) });
+        this.setState({ newGovAddrErr: !util.checkAddress(e.target.value) });
         break;
 
       // ! legacy code -> remove <AddProposalForm><Replace Authority><RmoveProposalForm>
       case "newAddr":
-        this.setState({ newAddrErr: !this.checkAddr(e.target.value) });
+        this.setState({ newAddrErr: !util.checkAddress(e.target.value) });
         break;
       case "oldLockAmount":
         if (!/^([0-9]*)$/.test(e.target.value))
@@ -144,10 +144,10 @@ class ProposalForm extends React.Component {
         this.setState({ oldLockAmountErr: e.target.value === "" });
         break;
       case "oldAddr":
-        this.setState({ oldAddrErr: !this.checkAddr(e.target.value) });
+        this.setState({ oldAddrErr: !util.checkAddress(e.target.value) });
         break;
       case "oldNode":
-        this.setState({ oldNodeErr: !this.checkNode(e.target.value) });
+        this.setState({ oldNodeErr: !util.checkNode(e.target.value) });
         break;
       // Voting Duration Setting
       case "votDurationMin":
@@ -156,7 +156,7 @@ class ProposalForm extends React.Component {
         else {
           const { votDurationMin, votDurationMax } = this.data.formData;
           this.setState({
-            votDurationErr: this.checkDuration(
+            votDurationErr: util.checkDuration(
               "min",
               votDurationMin,
               votDurationMax
@@ -170,7 +170,7 @@ class ProposalForm extends React.Component {
         } else {
           const { votDurationMin, votDurationMax } = this.data.formData;
           this.setState({
-            votDurationErr: this.checkDuration(
+            votDurationErr: util.checkDuration(
               "max",
               votDurationMin,
               votDurationMax
@@ -185,7 +185,7 @@ class ProposalForm extends React.Component {
         else {
           const { AuthMemSkAmountMin, AuthMemSkAmountMax } = this.data.formData;
           this.setState({
-            AuthMemSkAmountErr: this.checkDuration(
+            AuthMemSkAmountErr: util.checkDuration(
               "min",
               AuthMemSkAmountMin,
               AuthMemSkAmountMax
@@ -199,7 +199,7 @@ class ProposalForm extends React.Component {
         else {
           const { AuthMemSkAmountMin, AuthMemSkAmountMax } = this.data.formData;
           this.setState({
-            AuthMemSkAmountErr: this.checkDuration(
+            AuthMemSkAmountErr: util.checkDuration(
               "min",
               AuthMemSkAmountMin,
               AuthMemSkAmountMax
@@ -244,12 +244,12 @@ class ProposalForm extends React.Component {
       // Change Of MaxPriorityFeePerGas
       case "maxPriorityFeePerGas":
         this.setState({
-          maxPriorityFeePerGasErr: !this.checkPrice(e.target.value),
+          maxPriorityFeePerGasErr: !util.checkPrice(e.target.value),
         });
         break;
       // Gas Limit
       case "gasLimit":
-        this.setState({ gasLimitErr: !this.checkPrice(e.target.value) });
+        this.setState({ gasLimitErr: !util.checkPrice(e.target.value) });
         break;
 
       default:
@@ -257,45 +257,11 @@ class ProposalForm extends React.Component {
     }
   };
 
-  // TODO util file
   checkLockAmount(amount) {
     return (
       Number(amount) <= this.props.stakingMax &&
       Number(amount) >= this.props.stakingMin
     );
-  }
-
-  // TODO util file
-  checkAddr(addr) {
-    return /^0x[a-fA-F0-9]{40}$/.test(addr);
-  }
-
-  // TODO util file
-  checkNode(node) {
-    return /^([a-fA-F0-9]{128})+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})$/.test(
-      node
-    );
-  }
-
-  // TODO util file
-  checkName(name) {
-    return /^[A-Za-z0-9+]{1,64}$/.test(name);
-  }
-
-  // TODO util file
-  checkPrice(price) {
-    return /^[0-9]{1,}$/.test(price);
-  }
-
-  // TODO util file
-  checkDuration(type, min, max) {
-    const newMin = parseInt(min);
-    const newMax = parseInt(max);
-    if (type === "min") {
-      return newMin > newMax ? type : null;
-    } else if (type === "max") {
-      return newMax < newMin ? type : null;
-    } else return;
   }
 
   // TODO util file
