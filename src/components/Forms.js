@@ -399,7 +399,7 @@ export const RmoveProposalForm = ({
   loading,
   showLockAmount,
   stakingMin,
-  votingAddrErr,
+  stakingAddrErr,
   oldLockAmountErr,
   oldLockAmount,
   handleSubmit = shouldPass(),
@@ -413,14 +413,21 @@ export const RmoveProposalForm = ({
       </p>
       <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
         <Form.Item className="mt-0">
-          <p className="subtitle mt-0">Voting Address</p>
-          <Input
-            name="votingAddr"
+          <p className="subtitle mt-0">Staking Address</p>
+          <Input.Search
+            name="stakingAddr"
             onChange={handleChange}
-            className={"mt-5" + (votingAddrErr ? " errInput" : "")}
+            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
             disabled={loading}
+            enterButton={
+              <span>
+                <Icon type="search" />
+                <span> Check Balance</span>
+              </span>
+            }
+            onSearch={(value) => getLockAmount(value)}
           />
-          <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
+          <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
             Invalid Address
           </p>
         </Form.Item>
@@ -473,7 +480,7 @@ export const RmoveProposalForm = ({
           <Button
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={votingAddrErr}
+            disabled={stakingAddrErr}
             loading={loading}
           >
             Submit
