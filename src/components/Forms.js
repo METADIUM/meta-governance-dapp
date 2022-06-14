@@ -117,7 +117,7 @@ export const AddProposalForm = ({
           <p className="subtitle mt-0">Voting Address</p>
           <Input
             name="votingAddr"
-            className={"mt-5" + (votingAddrErr ? "errInput" : "")}
+            className={"mt-5" + (votingAddrErr ? " errInput" : "")}
             disabled={loading}
             onChange={handleChange}
           />
@@ -129,7 +129,7 @@ export const AddProposalForm = ({
           <p className="subtitle mt-0">Staking Address</p>
           <Input
             name="stakingAddr"
-            className={"mt-5" + (stakingAddrErr ? "errInput" : "")}
+            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
             disabled={loading}
             onChange={handleChange}
           />
@@ -256,7 +256,7 @@ export const RmoveProposalForm = ({
           <Input
             name="votingAddr"
             onChange={handleChange}
-            className={"mt-5 " + (votingAddrErr ? "errInput" : "")}
+            className={"mt-5" + (votingAddrErr ? " errInput" : "")}
             disabled={loading}
           />
           <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
@@ -268,7 +268,7 @@ export const RmoveProposalForm = ({
           <Input.Search
             name="stakingAddr"
             onChange={handleChange}
-            className={"mt-5 " + (stakingAddrErr ? "errInput" : "")}
+            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
             disabled={loading}
             enterButton={
               <span>
@@ -425,7 +425,7 @@ export const VotingDurationSettingForm = ({
                   value={votDurationMin}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 " + (votDurationErr ? "errInput" : "")
+                    "w-180 mg-rl-15" + (votDurationErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -443,7 +443,7 @@ export const VotingDurationSettingForm = ({
                   value={votDurationMax}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 " + (votDurationErr ? "errInput" : "")
+                    "w-180 mg-rl-15" + (votDurationErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -452,7 +452,7 @@ export const VotingDurationSettingForm = ({
             </div>
             <p
               className={
-                "mt-5 ml-40 " + (votDurationErr ? "errHint" : "errHint-hide")
+                "mt-5 ml-40" + (votDurationErr ? " errHint" : " errHint-hide")
               }
             >
               {`${
@@ -520,7 +520,7 @@ export const AuthorityMemberStakingAmount = ({
                   value={AuthMemSkAmountMin}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 " + (AuthMemSkAmountErr ? "errInput" : "")
+                    "w-180 mg-rl-15" + (AuthMemSkAmountErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -537,7 +537,7 @@ export const AuthorityMemberStakingAmount = ({
                   value={AuthMemSkAmountMax}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 " + (AuthMemSkAmountErr ? "errInput" : "")
+                    "w-180 mg-rl-15" + (AuthMemSkAmountErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -547,7 +547,7 @@ export const AuthorityMemberStakingAmount = ({
           </div>
           <p
             className={
-              "mt-5 ml-40 " + (AuthMemSkAmountErr ? "errHint" : "errHint-hide")
+              "mt-5 ml-40" + (AuthMemSkAmountErr ? " errHint" : " errHint-hide")
             }
           >
             {`${
@@ -637,8 +637,8 @@ export const BlockCreationTime = ({
                   value={newBlockCreation}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0 " +
-                    (blockCreationErr ? "errInput" : "")
+                    "w-180 mg-rl-15 ml-0" +
+                    (blockCreationErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -729,7 +729,7 @@ export const BlockRewardAmount = ({
                   value={newBlockRewardAmount}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0 " + (blockRewardErr ? "errInput" : "")
+                    "w-180 mg-rl-15 ml-0" + (blockRewardErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -825,8 +825,8 @@ export const BlockRewardDistributionMethod = ({
                     addonAfter="%"
                     onChange={handleChange}
                     className={
-                      "w-100 mg-rl-5 ml-0 " +
-                      (blockRewardDisMthErr ? "errInput" : "")
+                      "w-100 mg-rl-5 ml-0" +
+                      (blockRewardDisMthErr ? " errInput" : "")
                     }
                     disabled={loading}
                   />
@@ -841,7 +841,7 @@ export const BlockRewardDistributionMethod = ({
                     addonAfter="%"
                     onChange={handleChange}
                     className={
-                      "mg-rl-5 " + (blockRewardDisMthErr ? "errInput" : "")
+                      "mg-rl-5" + (blockRewardDisMthErr ? " errInput" : "")
                     }
                     disabled={loading}
                   />
@@ -856,7 +856,7 @@ export const BlockRewardDistributionMethod = ({
                     addonAfter="%"
                     onChange={handleChange}
                     className={
-                      "mg-rl-5 " + (blockRewardDisMthErr ? "errInput" : "")
+                      "mg-rl-5" + (blockRewardDisMthErr ? " errInput" : "")
                     }
                     disabled={loading}
                   />
@@ -871,7 +871,7 @@ export const BlockRewardDistributionMethod = ({
                     addonAfter="%"
                     onChange={handleChange}
                     className={
-                      "mg-rl-5 " + (blockRewardDisMthErr ? "errInput" : "")
+                      "mg-rl-5" + (blockRewardDisMthErr ? " errInput" : "")
                     }
                     disabled={loading}
                   />
@@ -886,8 +886,8 @@ export const BlockRewardDistributionMethod = ({
                     addonAfter="%"
                     onChange={handleChange}
                     className={
-                      "w-auto mg-rl-5 " +
-                      (blockRewardDisMthErr ? "errInput" : "")
+                      "w-auto mg-rl-5" +
+                      (blockRewardDisMthErr ? " errInput" : "")
                     }
                     disabled
                     readOnly
@@ -980,8 +980,8 @@ export const ChangeOfMaxPriorityFeePerGas = ({
                   name="maxPriorityFeePerGas"
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0 " +
-                    (maxPriorityFeePerGasErr ? "errInput" : "")
+                    "w-180 mg-rl-15 ml-0" +
+                    (maxPriorityFeePerGasErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -1052,6 +1052,8 @@ export const GasLimitForm = ({
   netName,
   loading,
   gasLimitErr,
+  baseFeeDenominatorErr,
+  ElasticityErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -1069,7 +1071,7 @@ export const GasLimitForm = ({
                   name="gasLimit"
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" + (gasLimitErr ? "errInput" : "")
+                    "w-180 mg-rl-15 ml-0" + (gasLimitErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -1080,11 +1082,64 @@ export const GasLimitForm = ({
               Invalid Limit
             </p>
           </Form.Item>
+          <p className="subtitle">
+            BaseFee Max Change Denominator <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <div className="flex-column">
+              <div className="flex-full flex-row">
+                <Input
+                  name="baseFeeDenominator"
+                  onChange={handleChange}
+                  className={
+                    "w-180 mg-rl-15 ml-0" +
+                    (baseFeeDenominatorErr ? " errInput" : "")
+                  }
+                  disabled={loading}
+                />
+              </div>
+            </div>
+            <p className={baseFeeDenominatorErr ? "errHint" : "errHint-hide"}>
+              Invalid value
+            </p>
+          </Form.Item>
         </div>
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>The default gas limit is 10,000,000 GWei.</p>
+        <p>Specifies how full the block must ne to increase the basefee.</p>
+      </div>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Elasticity Multiplier <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <div className="flex-column">
+              <div className="flex-full flex-row">
+                <Input
+                  name="Elasticity"
+                  onChange={handleChange}
+                  className={
+                    "w-180 mg-rl-15 ml-0" + (ElasticityErr ? " errInput" : "")
+                  }
+                  disabled={loading}
+                />
+              </div>
+            </div>
+            <p className={ElasticityErr ? "errHint" : "errHint-hide"}>
+              Invalid value
+            </p>
+          </Form.Item>
+        </div>
+      </div>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>
+          Determines what percentage to increase when baseFee is increased.
+          <br />
+          ex&#41; x&rarr; 1/8 = 12.5%
+        </p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -1125,7 +1180,7 @@ export const GasLimitForm = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={gasLimitErr}
+            disabled={gasLimitErr | baseFeeDenominatorErr | ElasticityErr}
             loading={loading}
           >
             Submit
