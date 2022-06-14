@@ -46,9 +46,19 @@ const convertHexToString = (input) => {
   return str;
 };
 
-// encoding string -> sha3
+// encode string -> sha3
 export const encodingSha3 = (input) => {
   return web3Instance.web3.utils.sha3(input);
+};
+
+// encode parameters (type, name - only string[])
+export const encodeParameters = (type, name) => {
+  return web3Instance.web3.eth.abi.encodeParameters(type, name);
+};
+
+// decode parameters (string -> type, name)
+export const decodeParameters = (type, input) => {
+  return web3Instance.web3.eth.abi.decodeParameters(type, input);
 };
 
 // ---------- refine data ---------- //

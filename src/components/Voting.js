@@ -148,14 +148,8 @@ class Voting extends React.Component {
   };
 
   setDescription = (type, id) => {
-    let {
-      newMemberAddress,
-      newStakerAddress,
-      oldMemberAddress,
-      lockAmount,
-      oldGovernanceAddress,
-      newGovernanceAddress,
-    } = this.props.ballotMemberOriginData[id];
+    let { newMemberAddress, newStakerAddress, oldMemberAddress, lockAmount } =
+      this.props.ballotMemberOriginData[id];
     lockAmount =
       typeof lockAmount === "undefined"
         ? 0
@@ -173,7 +167,9 @@ class Voting extends React.Component {
           </p>
         );
       /* Governance Contract Address */
-      case constants.ballotTypes.GovernanceContractAddress:
+      case constants.ballotTypes.GovernanceContractAddress: {
+        const { oldGovernanceAddress, newGovernanceAddress } =
+          this.props.ballotMemberOriginData[id];
         return (
           <p className="description flex-full">
             Old Governance Address: {oldGovernanceAddress}
@@ -181,12 +177,20 @@ class Voting extends React.Component {
             New Governnce Address: {newGovernanceAddress}
           </p>
         );
+      }
       /* Voting Duration Setting */
-      // TODO duration 값 가져와야 함
-      case constants.ballotTypes.VotingDurationSetting:
-        return (
-          <p className="description flex-full">Voting Duration Setting:</p>
+      case constants.ballotTypes.VotingDurationSetting: {
+        const { envVariableValue } = this.props.ballotMemberOriginData[id];
+        const decodeValue = util.decodeParameters(
+          ["uint256", "uint256"],
+          envVariableValue
         );
+        return (
+          <p className="description flex-full">
+            Voting Duration Setting: {decodeValue[0]}-{decodeValue[1]}day
+          </p>
+        );
+      }
       case constants.ballotTypes.MemberRemoval:
         return (
           <p className="description flex-full">

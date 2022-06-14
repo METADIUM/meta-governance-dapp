@@ -341,13 +341,15 @@ class ProposalForm extends React.Component {
         /* Voting Duration Setting */
       } else if (selectedTopic === "VotingDurationSetting") {
         const { votDurationMin, votDurationMax, memo, votDuration } = formData;
-
+        // encode parameters
         const envName = util.encodingSha3(selectedTopic);
-        const envVal = `${votDurationMin},${votDurationMax}`;
-
+        const envVal = util.encodeParameters(
+          ["uint256", "uint256"],
+          [votDurationMin, votDurationMax]
+        );
         trx = this.governance.addProposalToChangeEnv(
           envName,
-          2,
+          String(2),
           envVal,
           memo,
           votDuration
@@ -499,9 +501,8 @@ class ProposalForm extends React.Component {
           );
         }
         return false;
-
       /* Governance Contract Address */
-      case "GovernanceContractAddress":
+      case "GovernanceContractAddress": {
         const { newGovAddr } = formData;
 
         // check if address is contract code
@@ -513,6 +514,7 @@ class ProposalForm extends React.Component {
           );
         }
         return false;
+      }
       // ! legacy code -> remove <Replace Authority>
       case "ReplaceAuthorityMember":
         const oldMemberLockedBalance = await this.staking.lockedBalanceOf(
@@ -589,7 +591,6 @@ class ProposalForm extends React.Component {
           );
         }
         break;
-
       /* Governance Contract Address */
       case "VotingDurationSetting":
         return false;
