@@ -104,7 +104,7 @@ p {
 .errHint {
   display: block !important;
   line-height: 1.5;
-  margin: 0;
+  margin: 4px 0 0 0;
   color: #fc0f1b;
 }
 .errHint-hide {

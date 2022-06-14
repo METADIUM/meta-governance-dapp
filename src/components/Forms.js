@@ -217,7 +217,9 @@ export const ReplaceProposalForm = ({
   netName,
   loading,
   stakingMin,
-  oldAddrErr,
+  votingAddrErr,
+  stakingAddrErr,
+  rewardAddrErr,
   newAddrErr,
   newNameErr,
   newNodeErr,
@@ -232,17 +234,44 @@ export const ReplaceProposalForm = ({
       <p className="subtitle">
         Old Authority Address <span className="required">*</span>
       </p>
-      <Form.Item>
-        <Input
-          name="oldAddr"
-          onChange={handleChange}
-          className={oldAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={oldAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
+      <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
+        <Form.Item className="mt-0">
+          <p className="subtitle mt-0">Voting Address</p>
+          <Input
+            name="votingAddr"
+            className={"mt-5" + (votingAddrErr ? " errInput" : "")}
+            disabled={loading}
+            onChange={handleChange}
+          />
+          <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
+            Invalid Address
+          </p>
+        </Form.Item>
+        <Form.Item>
+          <p className="subtitle mt-0">Staking Address</p>
+          <Input
+            name="stakingAddr"
+            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
+            disabled={loading}
+            onChange={handleChange}
+          />
+          <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
+            Invaild Address
+          </p>
+        </Form.Item>
+        <Form.Item>
+          <p className="subtitle mt-0">Reward Address</p>
+          <Input
+            name="rewardAddr"
+            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
+            disabled={loading}
+            onChange={handleChange}
+          />
+          <p className={rewardAddrErr ? "errHint" : "errHint-hide"}>
+            Invaild Address
+          </p>
+        </Form.Item>
+      </div>
       <p className="subtitle">
         New Authority Address <span className="required">*</span>
       </p>
@@ -346,11 +375,13 @@ export const ReplaceProposalForm = ({
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
             disabled={
+              votingAddrErr ||
+              stakingAddrErr ||
+              rewardAddrErr ||
               newLockAmountErr ||
               newAddrErr ||
               newNodeErr ||
               newNameErr ||
-              oldAddrErr ||
               oldNodeErr
             }
             loading={loading}

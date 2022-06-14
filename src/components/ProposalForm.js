@@ -15,13 +15,18 @@ class ProposalForm extends React.Component {
   };
 
   state = {
-    /* Add Authority Member */
+    // Add Authority Member
     newAddrErr: false,
     newNameErr: false,
     newNodeErr: false,
     newLockAmountErr: false,
 
-    /*  Governance Contract Address */
+    // Replace Authority Member
+    votingAddrErr: false,
+    stakingAddrErr: false,
+    rewardAddrErr: false,
+
+    // Governance Contract Address
     newGovAddrErr: false,
 
     oldLockAmountErr: false,
@@ -106,7 +111,7 @@ class ProposalForm extends React.Component {
     this.data.formData[e.target.name] = e.target.value;
 
     switch (e.target.name) {
-      /* Add Authority Member */
+      // Add Authority Member
       case "newAddr":
         this.setState({ newAddrErr: !util.checkAddress(e.target.value) });
         break;
@@ -125,14 +130,20 @@ class ProposalForm extends React.Component {
         this.setState({ newNodeErr: !util.checkNode(e.target.value) });
         break;
 
-      /* Governance Contract Address */
-      case "newGovAddr":
-        this.setState({ newGovAddrErr: !util.checkAddress(e.target.value) });
+      // Replace Authority Member
+      case "votingAddr":
+        this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      case "stakingAddr":
+        this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      case "rewardAddr":
+        this.setState({ rewardAddrErr: !util.checkAddress(e.target.value) });
         break;
 
-      // ! legacy code -> remove <AddProposalForm><Replace Authority><RmoveProposalForm>
-      case "newAddr":
-        this.setState({ newAddrErr: !util.checkAddress(e.target.value) });
+      // Governance Contract Address
+      case "newGovAddr":
+        this.setState({ newGovAddrErr: !util.checkAddress(e.target.value) });
         break;
       case "oldLockAmount":
         if (!/^([0-9]*)$/.test(e.target.value))
@@ -617,7 +628,9 @@ class ProposalForm extends React.Component {
           return (
             <PComponent.ReplaceProposalForm
               stakingMin={this.props.stakingMin}
-              oldAddrErr={this.state.oldAddrErr}
+              votingAddrErr={this.state.votingAddrErr}
+              stakingAddrErr={this.state.stakingAddrErr}
+              rewardAddrErr={this.state.rewardAddrErr}
               newAddrErr={this.state.newAddrErr}
               newNameErr={this.state.newNameErr}
               newNodeErr={this.state.newNodeErr}
@@ -768,7 +781,7 @@ class ProposalForm extends React.Component {
                 <Select.Option value="AddAuthorityMember">
                   Add Authority Member
                 </Select.Option>
-                <Select.Option value="ReplaceProposalForm">
+                <Select.Option value="ReplaceAuthorityMember">
                   Replace Authority Member
                 </Select.Option>
                 <Select.Option value="RemoveAuthorityMember">
