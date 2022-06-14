@@ -46,6 +46,21 @@ const convertHexToString = (input) => {
   return str;
 };
 
+// encode string -> sha3
+export const encodingSha3 = (input) => {
+  return web3Instance.web3.utils.sha3(input);
+};
+
+// encode parameters (type, name - only string[])
+export const encodeParameters = (type, name) => {
+  return web3Instance.web3.eth.abi.encodeParameters(type, name);
+};
+
+// decode parameters (string -> type, name)
+export const decodeParameters = (type, input) => {
+  return web3Instance.web3.eth.abi.decodeParameters(type, input);
+};
+
 // ---------- refine data ---------- //
 // up to 64 character, english and numbers only
 export const checkName = (name) => {
@@ -73,6 +88,10 @@ export const checkNode = (node) => {
 export const checkDuration = (type, min, max) => {
   const newMin = parseInt(min);
   const newMax = parseInt(max);
+
+  // when no value
+  if (!(min && max)) return true;
+
   if (type === "min") {
     return newMin > newMax ? type : null;
   } else if (type === "max") {

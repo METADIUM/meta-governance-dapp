@@ -394,12 +394,15 @@ export const GovernanceContractAddressForm = ({
   </div>
 );
 
-export const VotingDurationSetting = ({
+/* Voting Duration Setting Form */
+export const VotingDurationSettingForm = ({
   netName,
   loading,
   votDurationErr,
   votDurationMin,
   votDurationMax,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -478,41 +481,14 @@ export const VotingDurationSetting = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={votDurationErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={votDurationErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
