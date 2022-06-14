@@ -21,6 +21,7 @@ import { constants } from "./constants";
 import * as util from "./util";
 
 import "./App.css";
+import "./components/style/style.css";
 
 const { Header, Content, Footer } = Layout;
 
