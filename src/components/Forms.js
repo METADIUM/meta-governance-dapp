@@ -91,7 +91,7 @@ const ProposalFormFooter = ({
   );
 };
 
-/* Add Authority Member */
+// Add Authority Member
 export const AddProposalForm = ({
   netName,
   loading,
@@ -222,10 +222,10 @@ export const ReplaceProposalForm = ({
   rewardAddrErr,
   newAddrErr,
   newNameErr,
-  newNodeErr,
   newLockAmountErr,
   newLockAmount,
-  oldNodeErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -323,41 +323,6 @@ export const ReplaceProposalForm = ({
           </Form.Item>
         </div>
       </div>
-      <p className="subtitle">
-        New Authority Node Description <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newNode"
-          onChange={handleChange}
-          className={newNodeErr ? "errInput" : ""}
-          disabled={loading}
-          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-        />
-        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
-      </Form.Item>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          The hexadecimal node ID is encoded in the username portion of the URL,
-          separated from the host by an @ sign. The hostname can only be given
-          as an IP address, DNS domain names are not allowed. The port in the
-          host name section is the TCP listening port.
-        </p>
-      </div>
-      <p className="subtitle">
-        Old Authority Node Description <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="oldNode"
-          onChange={handleChange}
-          className={oldNodeErr ? "errInput" : ""}
-          disabled={loading}
-          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-        />
-        <p className={oldNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
-      </Form.Item>
       <p className="subtitle">Description </p>
       <Form.Item>
         <TextArea
@@ -369,27 +334,21 @@ export const ReplaceProposalForm = ({
           disabled={loading}
         />
       </Form.Item>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={
-              votingAddrErr ||
-              stakingAddrErr ||
-              rewardAddrErr ||
-              newLockAmountErr ||
-              newAddrErr ||
-              newNodeErr ||
-              newNameErr ||
-              oldNodeErr
-            }
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={
+          votingAddrErr ||
+          stakingAddrErr ||
+          rewardAddrErr ||
+          newLockAmountErr ||
+          newAddrErr ||
+          newNameErr
+        }
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -402,6 +361,8 @@ export const RmoveProposalForm = ({
   stakingAddrErr,
   oldLockAmountErr,
   oldLockAmount,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
   getLockAmount = shouldPass(),
@@ -475,23 +436,19 @@ export const RmoveProposalForm = ({
           disabled={loading}
         />
       </Form.Item>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={stakingAddrErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={stakingAddrErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
 
-/* Governance Contract Address */
+// Governance Contract Address
 export const GovernanceContractAddressForm = ({
   netName,
   loading,
@@ -671,6 +628,8 @@ export const AuthorityMemberStakingAmount = ({
   AuthMemSkAmountErr,
   AuthMemSkAmountMin,
   AuthMemSkAmountMax,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -769,19 +728,14 @@ export const AuthorityMemberStakingAmount = ({
           </Form.Item>
         </div>
       </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={AuthMemSkAmountErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={AuthMemSkAmountErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -791,6 +745,8 @@ export const BlockCreationTime = ({
   loading,
   newBlockCreation,
   blockCreationErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -860,19 +816,14 @@ export const BlockCreationTime = ({
           </Form.Item>
         </div>
       </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={blockCreationErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={blockCreationErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -882,6 +833,8 @@ export const BlockRewardAmount = ({
   loading,
   newBlockRewardAmount,
   blockRewardErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -892,7 +845,6 @@ export const BlockRewardAmount = ({
           <p className="subtitle">
             Block Reward Amount <span className="required">*</span>
           </p>
-
           <Form.Item>
             <div className="flex-column">
               <div className="flex-full flex-row">
@@ -929,41 +881,14 @@ export const BlockRewardAmount = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={blockRewardErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={blockRewardErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -977,6 +902,8 @@ export const BlockRewardDistributionMethod = ({
   blockRate4,
   blockRateTotal,
   blockRewardDisMthErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -1091,41 +1018,14 @@ export const BlockRewardDistributionMethod = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={blockRewardDisMthErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={blockRewardDisMthErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -1134,6 +1034,8 @@ export const ChangeOfMaxPriorityFeePerGas = ({
   netName,
   loading,
   maxPriorityFeePerGasErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -1144,7 +1046,6 @@ export const ChangeOfMaxPriorityFeePerGas = ({
           <p className="subtitle">
             MaxPriorityFeePerGas <span className="required">*</span>
           </p>
-
           <Form.Item>
             <div className="flex-column">
               <div className="flex-full flex-row">
@@ -1181,41 +1082,14 @@ export const ChangeOfMaxPriorityFeePerGas = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={maxPriorityFeePerGasErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={maxPriorityFeePerGasErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -1226,6 +1100,8 @@ export const GasLimitForm = ({
   gasLimitErr,
   baseFeeDenominatorErr,
   ElasticityErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -1324,41 +1200,14 @@ export const GasLimitForm = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={gasLimitErr | baseFeeDenominatorErr | ElasticityErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={gasLimitErr | baseFeeDenominatorErr | ElasticityErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );

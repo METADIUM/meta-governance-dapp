@@ -20,21 +20,16 @@ class ProposalForm extends React.Component {
     newNameErr: false,
     newNodeErr: false,
     newLockAmountErr: false,
-
     // Replace Authority Member
     votingAddrErr: false,
     stakingAddrErr: false,
     rewardAddrErr: false,
-
+    // Remove Authority Member
+    oldLockAmountErr: false,
+    showLockAmount: "",
     // Governance Contract Address
     newGovAddrErr: false,
-
-    oldLockAmountErr: false,
-    oldAddrErr: false,
-    oldNodeErr: false,
-    showLockAmount: "",
-
-    // Change Of MaxPriorityFeePerGas
+    // MaxPriorityFeePerGas
     maxPriorityFeePerGasErr: false,
     // Gas Limit
     gasLimitErr: false,
@@ -51,6 +46,10 @@ class ProposalForm extends React.Component {
     },
     blockRateTotal: 0,
     blockRewardDisMthErr: false,
+
+    // !legacy code
+    oldAddrErr: false,
+    oldNodeErr: false,
   };
 
   constructor(props) {
@@ -150,11 +149,9 @@ class ProposalForm extends React.Component {
           this.data.formData[e.target.name] = originStr;
         this.setState({ oldLockAmountErr: e.target.value === "" });
         break;
+      // !legacy code
       case "oldAddr":
         this.setState({ oldAddrErr: !util.checkAddress(e.target.value) });
-        break;
-      case "oldNode":
-        this.setState({ oldNodeErr: !util.checkNode(e.target.value) });
         break;
       // Voting Duration Setting
       case "votDurationMin":
@@ -633,10 +630,8 @@ class ProposalForm extends React.Component {
               rewardAddrErr={this.state.rewardAddrErr}
               newAddrErr={this.state.newAddrErr}
               newNameErr={this.state.newNameErr}
-              newNodeErr={this.state.newNodeErr}
               newLockAmountErr={this.state.newLockAmountErr}
               newLockAmount={this.data.formData.newLockAmount}
-              oldNodeErr={this.state.oldNodeErr}
             />
           );
         case "RemoveAuthorityMember":
@@ -788,7 +783,7 @@ class ProposalForm extends React.Component {
                   Remove Authority Member
                 </Select.Option>
                 <Select.Option value="GovernanceContractAddress">
-                  Change of Governance Contract Address
+                  Governance Contract Address
                 </Select.Option>
                 <Select.Option value="VotingDurationSetting">
                   Voting Duration Setting
@@ -806,10 +801,10 @@ class ProposalForm extends React.Component {
                   Block Reward Distribution Method
                 </Select.Option>
                 <Select.Option value="ChangeOfMaxPriorityFeePerGas">
-                  Change of MaxPriorityFeePerGas
+                  MaxPriorityFeePerGas
                 </Select.Option>
                 <Select.Option value="GasLimit">
-                  Change of Gas Limit &amp; baseFee
+                  Gas Limit &amp; baseFee
                 </Select.Option>
               </Select>
             </div>
