@@ -16,8 +16,7 @@ class ProposalForm extends React.Component {
 
   state = {
     /* Add Authority Member */
-    votingAddrErr: false,
-    stakingAddrErr: false,
+    newAddrErr: false,
     newNameErr: false,
     newNodeErr: false,
     newLockAmountErr: false,
@@ -47,8 +46,6 @@ class ProposalForm extends React.Component {
     },
     blockRateTotal: 0,
     blockRewardDisMthErr: false,
-    // ! legacy code -> remove <AddProposalForm><Replace Authority>
-    newAddrErr: false,
   };
 
   constructor(props) {
@@ -110,11 +107,8 @@ class ProposalForm extends React.Component {
 
     switch (e.target.name) {
       /* Add Authority Member */
-      case "votingAddr":
-        this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
-        break;
-      case "stakingAddr":
-        this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) });
+      case "newAddr":
+        this.setState({ newAddrErr: !util.checkAddress(e.target.value) });
         break;
       case "newName":
         this.setState({ newNameErr: !util.checkName(e.target.value) });
@@ -612,30 +606,41 @@ class ProposalForm extends React.Component {
         case "AddAuthorityMember":
           return (
             <PComponent.AddProposalForm
-              stakingAddrErr={this.state.stakingAddrErr}
-              votingAddrErr={this.state.votingAddrErr}
+              newAddrErr={this.state.newAddrErr}
               newLockAmountErr={this.state.newLockAmountErr}
               newLockAmount={this.data.formData.newLockAmount}
               newNodeErr={this.state.newNodeErr}
               newNameErr={this.state.newNameErr}
             />
           );
-        case "GovernanceContractAddress":
+        case "ReplaceAuthorityMember":
           return (
-            <PComponent.GovernanceContractAddressForm
-              newGovAddrErr={this.state.newGovAddrErr}
+            <PComponent.ReplaceProposalForm
+              stakingMin={this.props.stakingMin}
+              oldAddrErr={this.state.oldAddrErr}
+              newAddrErr={this.state.newAddrErr}
+              newNameErr={this.state.newNameErr}
+              newNodeErr={this.state.newNodeErr}
+              newLockAmountErr={this.state.newLockAmountErr}
+              newLockAmount={this.data.formData.newLockAmount}
+              oldNodeErr={this.state.oldNodeErr}
             />
           );
         case "RemoveAuthorityMember":
           return (
             <PComponent.RmoveProposalForm
-              stakingAddrErr={this.state.stakingAddrErr}
-              votingAddrErr={this.state.votingAddrErr}
+              newAddrErr={this.state.newAddrErr}
               showLockAmount={this.state.showLockAmount}
               stakingMin={this.props.stakingMin}
               oldLockAmountErr={this.state.oldLockAmountErr}
               oldLockAmount={this.data.formData.oldLockAmount}
               getLockAmount={this.getLockAmount}
+            />
+          );
+        case "GovernanceContractAddress":
+          return (
+            <PComponent.GovernanceContractAddressForm
+              newGovAddrErr={this.state.newGovAddrErr}
             />
           );
         case "VotingDurationSetting":
@@ -693,19 +698,8 @@ class ProposalForm extends React.Component {
               ElasticityErr={this.state.ElasticityErr}
             />
           );
-        case "ReplaceAuthorityMember":
-          return (
-            <PComponent.ReplaceProposalForm
-              stakingMin={this.props.stakingMin}
-              oldAddrErr={this.state.oldAddrErr}
-              newAddrErr={this.state.newAddrErr}
-              newNameErr={this.state.newNameErr}
-              newNodeErr={this.state.newNodeErr}
-              newLockAmountErr={this.state.newLockAmountErr}
-              newLockAmount={this.data.formData.newLockAmount}
-              oldNodeErr={this.state.oldNodeErr}
-            />
-          );
+
+        // ! legacy code -> remove <Update Authority>
         case "UpdateAuthority":
           return (
             <PComponent.UpdateProposalForm
@@ -774,17 +768,20 @@ class ProposalForm extends React.Component {
                 <Select.Option value="AddAuthorityMember">
                   Add Authority Member
                 </Select.Option>
+                <Select.Option value="ReplaceProposalForm">
+                  Replace Authority Member
+                </Select.Option>
                 <Select.Option value="RemoveAuthorityMember">
                   Remove Authority Member
                 </Select.Option>
                 <Select.Option value="GovernanceContractAddress">
-                  Governance Contract Address
+                  Change of Governance Contract Address
                 </Select.Option>
                 <Select.Option value="VotingDurationSetting">
                   Voting Duration Setting
                 </Select.Option>
                 <Select.Option value="AuthorityMemberStakingAmount">
-                  Authority Member Staking Amount
+                  Authority Member Staking
                 </Select.Option>
                 <Select.Option value="BlockCreationTime">
                   Block Creation Time
@@ -799,7 +796,7 @@ class ProposalForm extends React.Component {
                   Change of MaxPriorityFeePerGas
                 </Select.Option>
                 <Select.Option value="GasLimit">
-                  Gas Limit &amp; baseFee
+                  Change of Gas Limit &amp; baseFee
                 </Select.Option>
               </Select>
             </div>

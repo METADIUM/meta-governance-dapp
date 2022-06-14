@@ -95,8 +95,7 @@ const ProposalFormFooter = ({
 export const AddProposalForm = ({
   netName,
   loading,
-  votingAddrErr,
-  stakingAddrErr,
+  newAddrErr,
   newNameErr,
   stakingMin,
   newLockAmount,
@@ -112,38 +111,26 @@ export const AddProposalForm = ({
       <p className="subtitle">
         New Authority Address <span className="required">*</span>
       </p>
-      <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
-        <Form.Item className="mt-0">
-          <p className="subtitle mt-0">Voting Address</p>
-          <Input
-            name="votingAddr"
-            className={"mt-5" + (votingAddrErr ? " errInput" : "")}
-            disabled={loading}
-            onChange={handleChange}
-          />
-          <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
-            Invalid Address
-          </p>
-        </Form.Item>
-        <Form.Item>
-          <p className="subtitle mt-0">Staking Address</p>
-          <Input
-            name="stakingAddr"
-            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
-            disabled={loading}
-            onChange={handleChange}
-          />
-          <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
-            Invaild Address
-          </p>
-        </Form.Item>
-      </div>
+      <Form.Item>
+        <Input
+          name="newAddr"
+          className={newAddrErr ? "errInput" : ""}
+          disabled={loading}
+          onChange={handleChange}
+        />
+        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
+      </Form.Item>
+
       <div className="helpDescription">
         <Icon type="question-circle" />
         <p>
-          Rewards for block generation will be given to the Staking account.
+          When registering the first Authority Address, the Staking Address,
+          Voting Address, and Reward Address are the same.
         </p>
       </div>
+
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">
@@ -217,17 +204,161 @@ export const AddProposalForm = ({
       <ProposalFormFooter
         netName={netName}
         loading={loading}
-        disabled={
-          newLockAmountErr ||
-          votingAddrErr ||
-          stakingAddrErr ||
-          newNodeErr ||
-          newNameErr
-        }
+        disabled={newLockAmountErr || newAddrErr || newNodeErr || newNameErr}
         votingDurationMin={votingDurationMin}
         votingDurationMax={votingDurationMax}
         handleChange={handleChange}
       />
+    </Form>
+  </div>
+);
+
+export const ReplaceProposalForm = ({
+  netName,
+  loading,
+  stakingMin,
+  oldAddrErr,
+  newAddrErr,
+  newNameErr,
+  newNodeErr,
+  newLockAmountErr,
+  newLockAmount,
+  oldNodeErr,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form onSubmit={handleSubmit}>
+      <p className="subtitle">
+        Old Authority Address <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          name="oldAddr"
+          onChange={handleChange}
+          className={oldAddrErr ? "errInput" : ""}
+          disabled={loading}
+        />
+        <p className={oldAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
+      </Form.Item>
+      <p className="subtitle">
+        New Authority Address <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          name="newAddr"
+          onChange={handleChange}
+          className={newAddrErr ? "errInput" : ""}
+          disabled={loading}
+        />
+        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
+      </Form.Item>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Node Name <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <Input
+              name="newName"
+              onChange={handleChange}
+              className={newNameErr ? "errInput" : ""}
+              disabled={loading}
+            />
+            <p className={newNameErr ? "errHint" : "errHint-hide"}>
+              Invalid Name
+            </p>
+          </Form.Item>
+        </div>
+        <div className="flex-full">
+          <p className="subtitle">
+            Replace WEMIX Amount <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <Input
+              addonAfter="WEMIX"
+              name="newLockAmount"
+              defaultValue={stakingMin}
+              value={newLockAmount || ""}
+              onChange={handleChange}
+              className={newLockAmountErr ? "errInput" : ""}
+              disabled={loading}
+            />
+            <p className={newLockAmountErr ? "errHint" : "errHint-hide"}>
+              Invalid Amount
+            </p>
+          </Form.Item>
+        </div>
+      </div>
+      <p className="subtitle">
+        New Authority Node Description <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          name="newNode"
+          onChange={handleChange}
+          className={newNodeErr ? "errInput" : ""}
+          disabled={loading}
+          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
+        />
+        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
+      </Form.Item>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>
+          The hexadecimal node ID is encoded in the username portion of the URL,
+          separated from the host by an @ sign. The hostname can only be given
+          as an IP address, DNS domain names are not allowed. The port in the
+          host name section is the TCP listening port.
+        </p>
+      </div>
+      <p className="subtitle">
+        Old Authority Node Description <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          name="oldNode"
+          onChange={handleChange}
+          className={oldNodeErr ? "errInput" : ""}
+          disabled={loading}
+          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
+        />
+        <p className={oldNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
+      </Form.Item>
+      <p className="subtitle">Description </p>
+      <Form.Item>
+        <TextArea
+          rows={4}
+          placeholder="Max. 256 bytes"
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          name="memo"
+          onChange={handleChange}
+          disabled={loading}
+        />
+      </Form.Item>
+      <Form.Item>
+        <div className="submitDiv flex">
+          <Button
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            htmlType="submit"
+            disabled={
+              newLockAmountErr ||
+              newAddrErr ||
+              newNodeErr ||
+              newNameErr ||
+              oldAddrErr ||
+              oldNodeErr
+            }
+            loading={loading}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
     </Form>
   </div>
 );
@@ -238,7 +369,6 @@ export const RmoveProposalForm = ({
   showLockAmount,
   stakingMin,
   votingAddrErr,
-  stakingAddrErr,
   oldLockAmountErr,
   oldLockAmount,
   handleSubmit = shouldPass(),
@@ -263,27 +393,7 @@ export const RmoveProposalForm = ({
             Invalid Address
           </p>
         </Form.Item>
-        <Form.Item>
-          <p className="subtitle mt-0">Staking Address</p>
-          <Input.Search
-            name="stakingAddr"
-            onChange={handleChange}
-            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
-            disabled={loading}
-            enterButton={
-              <span>
-                <Icon type="search" />
-                <span> Check Balance</span>
-              </span>
-            }
-            onSearch={(value) => getLockAmount(value)}
-          />
-          <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
-            Invalid Address
-          </p>
-        </Form.Item>
       </div>
-
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">Locked WEMIX Amount</p>
@@ -332,7 +442,7 @@ export const RmoveProposalForm = ({
           <Button
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={votingAddrErr || stakingAddrErr}
+            disabled={votingAddrErr}
             loading={loading}
           >
             Submit
@@ -1205,157 +1315,6 @@ export const GasLimitForm = ({
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
             disabled={gasLimitErr | baseFeeDenominatorErr | ElasticityErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
-    </Form>
-  </div>
-);
-
-// ! legacy code -> remove <Replace Authority>
-export const ReplaceProposalForm = ({
-  netName,
-  loading,
-  stakingMin,
-  oldAddrErr,
-  newAddrErr,
-  newNameErr,
-  newNodeErr,
-  newLockAmountErr,
-  newLockAmount,
-  oldNodeErr,
-  handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
-}) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
-        Old Authority Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="oldAddr"
-          onChange={handleChange}
-          className={oldAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={oldAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <p className="subtitle">
-        New Authority Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newAddr"
-          onChange={handleChange}
-          className={newAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Node Name <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              name="newName"
-              onChange={handleChange}
-              className={newNameErr ? "errInput" : ""}
-              disabled={loading}
-            />
-            <p className={newNameErr ? "errHint" : "errHint-hide"}>
-              Invalid Name
-            </p>
-          </Form.Item>
-        </div>
-        <div className="flex-full">
-          <p className="subtitle">
-            Replace WEMIX Amount <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              addonAfter="WEMIX"
-              name="newLockAmount"
-              defaultValue={stakingMin}
-              value={newLockAmount || ""}
-              onChange={handleChange}
-              className={newLockAmountErr ? "errInput" : ""}
-              disabled={loading}
-            />
-            <p className={newLockAmountErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <p className="subtitle">
-        New Authority Node Description <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newNode"
-          onChange={handleChange}
-          className={newNodeErr ? "errInput" : ""}
-          disabled={loading}
-          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-        />
-        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
-      </Form.Item>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          The hexadecimal node ID is encoded in the username portion of the URL,
-          separated from the host by an @ sign. The hostname can only be given
-          as an IP address, DNS domain names are not allowed. The port in the
-          host name section is the TCP listening port.
-        </p>
-      </div>
-      <p className="subtitle">
-        Old Authority Node Description <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="oldNode"
-          onChange={handleChange}
-          className={oldNodeErr ? "errInput" : ""}
-          disabled={loading}
-          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-        />
-        <p className={oldNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
-      </Form.Item>
-      <p className="subtitle">Description </p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={
-              newLockAmountErr ||
-              newAddrErr ||
-              newNodeErr ||
-              newNameErr ||
-              oldAddrErr ||
-              oldNodeErr
-            }
             loading={loading}
           >
             Submit
