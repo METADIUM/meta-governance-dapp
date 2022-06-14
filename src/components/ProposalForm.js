@@ -34,6 +34,8 @@ class ProposalForm extends React.Component {
     maxPriorityFeePerGasErr: false,
     // Gas Limit
     gasLimitErr: false,
+    baseFeeDenominatorErr: false,
+    ElasticityErr: false,
     votDurationErr: null,
     blockCreationErr: false,
     blockRewardErr: false,
@@ -251,7 +253,16 @@ class ProposalForm extends React.Component {
       case "gasLimit":
         this.setState({ gasLimitErr: !util.checkPrice(e.target.value) });
         break;
-
+      // 단위 확인
+      case "baseFeeDenominator":
+        this.setState({
+          baseFeeDenominatorErr: !util.checkPrice(e.target.value),
+        });
+        break;
+      // percentage
+      case "Elasticity":
+        this.setState({ ElasticityErr: !util.checkPrice(e.target.value) });
+        break;
       default:
         break;
     }
@@ -676,7 +687,11 @@ class ProposalForm extends React.Component {
           );
         case "GasLimit":
           return (
-            <PComponent.GasLimitForm gasLimitErr={this.state.gasLimitErr} />
+            <PComponent.GasLimitForm
+              gasLimitErr={this.state.gasLimitErr}
+              baseFeeDenominatorErr={this.state.baseFeeDenominatorErr}
+              ElasticityErr={this.state.ElasticityErr}
+            />
           );
         case "ReplaceAuthorityMember":
           return (
@@ -783,7 +798,9 @@ class ProposalForm extends React.Component {
                 <Select.Option value="ChangeOfMaxPriorityFeePerGas">
                   Change of MaxPriorityFeePerGas
                 </Select.Option>
-                <Select.Option value="GasLimit">Gas Limit</Select.Option>
+                <Select.Option value="GasLimit">
+                  Gas Limit &amp; baseFee
+                </Select.Option>
               </Select>
             </div>
             {selectedTopic !== "" && <div>{this.showProposalForm()}</div>}

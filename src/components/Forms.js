@@ -1076,6 +1076,8 @@ export const GasLimitForm = ({
   netName,
   loading,
   gasLimitErr,
+  baseFeeDenominatorErr,
+  ElasticityErr,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -1093,7 +1095,7 @@ export const GasLimitForm = ({
                   name="gasLimit"
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" + (gasLimitErr ? "errInput" : "")
+                    "w-180 mg-rl-15 ml-0" + (gasLimitErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -1104,11 +1106,64 @@ export const GasLimitForm = ({
               Invalid Limit
             </p>
           </Form.Item>
+          <p className="subtitle">
+            BaseFee Max Change Denominator <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <div className="flex-column">
+              <div className="flex-full flex-row">
+                <Input
+                  name="baseFeeDenominator"
+                  onChange={handleChange}
+                  className={
+                    "w-180 mg-rl-15 ml-0" +
+                    (baseFeeDenominatorErr ? " errInput" : "")
+                  }
+                  disabled={loading}
+                />
+              </div>
+            </div>
+            <p className={baseFeeDenominatorErr ? "errHint" : "errHint-hide"}>
+              Invalid value
+            </p>
+          </Form.Item>
         </div>
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>The default gas limit is 10,000,000 GWei.</p>
+        <p>Specifies how full the block must ne to increase the basefee.</p>
+      </div>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Elasticity Multiplier <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <div className="flex-column">
+              <div className="flex-full flex-row">
+                <Input
+                  name="Elasticity"
+                  onChange={handleChange}
+                  className={
+                    "w-180 mg-rl-15 ml-0" + (ElasticityErr ? " errInput" : "")
+                  }
+                  disabled={loading}
+                />
+              </div>
+            </div>
+            <p className={ElasticityErr ? "errHint" : "errHint-hide"}>
+              Invalid value
+            </p>
+          </Form.Item>
+        </div>
+      </div>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>
+          Determines what percentage to increase when baseFee is increased.
+          <br />
+          ex&#41; x&rarr; 1/8 = 12.5%
+        </p>
       </div>
       <p className="subtitle">Description</p>
       <Form.Item>
@@ -1149,7 +1204,7 @@ export const GasLimitForm = ({
             name="submit"
             className={"submit_Btn btn-fill-primary text-large " + netName}
             htmlType="submit"
-            disabled={gasLimitErr}
+            disabled={gasLimitErr | baseFeeDenominatorErr | ElasticityErr}
             loading={loading}
           >
             Submit
