@@ -15,30 +15,27 @@ class ProposalForm extends React.Component {
   };
 
   state = {
-    /* Add Authority Member */
-    votingAddrErr: false,
-    stakingAddrErr: false,
+    // Add Authority Member
+    newAddrErr: false,
     newNameErr: false,
     newNodeErr: false,
     newLockAmountErr: false,
-
-    /*  Governance Contract Address */
-    newGovAddrErr: false,
-
-    /* Voting Duration Setting */
-    votDurationErr: null,
-
+    // Replace Authority Member
+    votingAddrErr: false,
+    stakingAddrErr: false,
+    rewardAddrErr: false,
+    // Remove Authority Member
     oldLockAmountErr: false,
-    oldAddrErr: false,
-    oldNodeErr: false,
     showLockAmount: "",
-    // Change Of MaxPriorityFeePerGas
+    // Governance Contract Address
+    newGovAddrErr: false,
+    // MaxPriorityFeePerGas
     maxPriorityFeePerGasErr: false,
     // Gas Limit
     gasLimitErr: false,
-
     baseFeeDenominatorErr: false,
     ElasticityErr: false,
+    votDurationErr: null,
     blockCreationErr: false,
     blockRewardErr: false,
     numbers: {
@@ -49,8 +46,10 @@ class ProposalForm extends React.Component {
     },
     blockRateTotal: 0,
     blockRewardDisMthErr: false,
-    // ! legacy code -> remove <AddProposalForm><Replace Authority>
-    newAddrErr: false,
+
+    // !legacy code
+    oldAddrErr: false,
+    oldNodeErr: false,
   };
 
   constructor(props) {
@@ -111,12 +110,9 @@ class ProposalForm extends React.Component {
     this.data.formData[e.target.name] = e.target.value;
 
     switch (e.target.name) {
-      /* Add Authority Member */
-      case "votingAddr":
-        this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
-        break;
-      case "stakingAddr":
-        this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) });
+      // Add Authority Member
+      case "newAddr":
+        this.setState({ newAddrErr: !util.checkAddress(e.target.value) });
         break;
       case "newName":
         this.setState({ newNameErr: !util.checkName(e.target.value) });
@@ -133,12 +129,31 @@ class ProposalForm extends React.Component {
         this.setState({ newNodeErr: !util.checkNode(e.target.value) });
         break;
 
-      /* Governance Contract Address */
+      // Replace Authority Member
+      case "votingAddr":
+        this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      case "stakingAddr":
+        this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      case "rewardAddr":
+        this.setState({ rewardAddrErr: !util.checkAddress(e.target.value) });
+        break;
+
+      // Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !util.checkAddress(e.target.value) });
         break;
-
-      /* Voting Duration Setting */
+      case "oldLockAmount":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        this.setState({ oldLockAmountErr: e.target.value === "" });
+        break;
+      // !legacy code
+      case "oldAddr":
+        this.setState({ oldAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      // Voting Duration Setting
       case "votDurationMin":
         if (!/^([0-9]*)$/.test(e.target.value))
           this.data.formData[e.target.name] = originStr;
@@ -354,7 +369,7 @@ class ProposalForm extends React.Component {
       } else if (selectedTopic === "VotingDurationSetting") {
         const { votDurationMin, votDurationMax, memo, votDuration } = formData;
         // encode parameters
-        const envName = util.encodingSha3(selectedTopic);
+        const envName = util.encodingStringToSha3(selectedTopic);
         const envVal = util.encodeParameters(
           ["uint256", "uint256"],
           [votDurationMin, votDurationMax]
@@ -649,30 +664,41 @@ class ProposalForm extends React.Component {
         case "AddAuthorityMember":
           return (
             <PComponent.AddProposalForm
-              stakingAddrErr={this.state.stakingAddrErr}
-              votingAddrErr={this.state.votingAddrErr}
+              newAddrErr={this.state.newAddrErr}
               newLockAmountErr={this.state.newLockAmountErr}
               newLockAmount={this.data.formData.newLockAmount}
               newNodeErr={this.state.newNodeErr}
               newNameErr={this.state.newNameErr}
             />
           );
-        case "GovernanceContractAddress":
+        case "ReplaceAuthorityMember":
           return (
-            <PComponent.GovernanceContractAddressForm
-              newGovAddrErr={this.state.newGovAddrErr}
+            <PComponent.ReplaceProposalForm
+              stakingMin={this.props.stakingMin}
+              votingAddrErr={this.state.votingAddrErr}
+              stakingAddrErr={this.state.stakingAddrErr}
+              rewardAddrErr={this.state.rewardAddrErr}
+              newAddrErr={this.state.newAddrErr}
+              newNameErr={this.state.newNameErr}
+              newLockAmountErr={this.state.newLockAmountErr}
+              newLockAmount={this.data.formData.newLockAmount}
             />
           );
         case "RemoveAuthorityMember":
           return (
             <PComponent.RmoveProposalForm
-              stakingAddrErr={this.state.stakingAddrErr}
-              votingAddrErr={this.state.votingAddrErr}
+              newAddrErr={this.state.newAddrErr}
               showLockAmount={this.state.showLockAmount}
               stakingMin={this.props.stakingMin}
               oldLockAmountErr={this.state.oldLockAmountErr}
               oldLockAmount={this.data.formData.oldLockAmount}
               getLockAmount={this.getLockAmount}
+            />
+          );
+        case "GovernanceContractAddress":
+          return (
+            <PComponent.GovernanceContractAddressForm
+              newGovAddrErr={this.state.newGovAddrErr}
             />
           );
         case "VotingDurationSetting":
@@ -730,19 +756,8 @@ class ProposalForm extends React.Component {
               ElasticityErr={this.state.ElasticityErr}
             />
           );
-        case "ReplaceAuthorityMember":
-          return (
-            <PComponent.ReplaceProposalForm
-              stakingMin={this.props.stakingMin}
-              oldAddrErr={this.state.oldAddrErr}
-              newAddrErr={this.state.newAddrErr}
-              newNameErr={this.state.newNameErr}
-              newNodeErr={this.state.newNodeErr}
-              newLockAmountErr={this.state.newLockAmountErr}
-              newLockAmount={this.data.formData.newLockAmount}
-              oldNodeErr={this.state.oldNodeErr}
-            />
-          );
+
+        // ! legacy code -> remove <Update Authority>
         case "UpdateAuthority":
           return (
             <PComponent.UpdateProposalForm
@@ -811,6 +826,9 @@ class ProposalForm extends React.Component {
                 <Select.Option value="AddAuthorityMember">
                   Add Authority Member
                 </Select.Option>
+                <Select.Option value="ReplaceAuthorityMember">
+                  Replace Authority Member
+                </Select.Option>
                 <Select.Option value="RemoveAuthorityMember">
                   Remove Authority Member
                 </Select.Option>
@@ -821,7 +839,7 @@ class ProposalForm extends React.Component {
                   Voting Duration Setting
                 </Select.Option>
                 <Select.Option value="AuthorityMemberStakingAmount">
-                  Authority Member Staking Amount
+                  Authority Member Staking
                 </Select.Option>
                 <Select.Option value="BlockCreationTime">
                   Block Creation Time
@@ -833,7 +851,7 @@ class ProposalForm extends React.Component {
                   Block Reward Distribution Method
                 </Select.Option>
                 <Select.Option value="ChangeOfMaxPriorityFeePerGas">
-                  Change of MaxPriorityFeePerGas
+                  MaxPriorityFeePerGas
                 </Select.Option>
                 <Select.Option value="GasLimit">
                   Gas Limit &amp; baseFee
