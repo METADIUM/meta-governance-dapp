@@ -91,12 +91,11 @@ const ProposalFormFooter = ({
   );
 };
 
-/* Add Authority Member */
+// Add Authority Member
 export const AddProposalForm = ({
   netName,
   loading,
-  votingAddrErr,
-  stakingAddrErr,
+  newAddrErr,
   newNameErr,
   stakingMin,
   newLockAmount,
@@ -112,38 +111,26 @@ export const AddProposalForm = ({
       <p className="subtitle">
         New Authority Address <span className="required">*</span>
       </p>
-      <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
-        <Form.Item className="mt-0">
-          <p className="subtitle mt-0">Voting Address</p>
-          <Input
-            name="votingAddr"
-            className={"mt-5" + (votingAddrErr ? " errInput" : "")}
-            disabled={loading}
-            onChange={handleChange}
-          />
-          <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
-            Invalid Address
-          </p>
-        </Form.Item>
-        <Form.Item>
-          <p className="subtitle mt-0">Staking Address</p>
-          <Input
-            name="stakingAddr"
-            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
-            disabled={loading}
-            onChange={handleChange}
-          />
-          <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
-            Invaild Address
-          </p>
-        </Form.Item>
-      </div>
+      <Form.Item>
+        <Input
+          name="newAddr"
+          className={newAddrErr ? "errInput" : ""}
+          disabled={loading}
+          onChange={handleChange}
+        />
+        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
+      </Form.Item>
+
       <div className="helpDescription">
         <Icon type="question-circle" />
         <p>
-          Rewards for block generation will be given to the Staking account.
+          When registering the first Authority Address, the Staking Address,
+          Voting Address, and Reward Address are the same.
         </p>
       </div>
+
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">
@@ -217,11 +204,145 @@ export const AddProposalForm = ({
       <ProposalFormFooter
         netName={netName}
         loading={loading}
+        disabled={newLockAmountErr || newAddrErr || newNodeErr || newNameErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
+    </Form>
+  </div>
+);
+
+export const ReplaceProposalForm = ({
+  netName,
+  loading,
+  stakingMin,
+  votingAddrErr,
+  stakingAddrErr,
+  rewardAddrErr,
+  newAddrErr,
+  newNameErr,
+  newLockAmountErr,
+  newLockAmount,
+  votingDurationMin,
+  votingDurationMax,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form onSubmit={handleSubmit}>
+      <p className="subtitle">
+        Old Authority Address <span className="required">*</span>
+      </p>
+      <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
+        <Form.Item className="mt-0">
+          <p className="subtitle mt-0">Voting Address</p>
+          <Input
+            name="votingAddr"
+            className={"mt-5" + (votingAddrErr ? " errInput" : "")}
+            disabled={loading}
+            onChange={handleChange}
+          />
+          <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
+            Invalid Address
+          </p>
+        </Form.Item>
+        <Form.Item>
+          <p className="subtitle mt-0">Staking Address</p>
+          <Input
+            name="stakingAddr"
+            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
+            disabled={loading}
+            onChange={handleChange}
+          />
+          <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
+            Invaild Address
+          </p>
+        </Form.Item>
+        <Form.Item>
+          <p className="subtitle mt-0">Reward Address</p>
+          <Input
+            name="rewardAddr"
+            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
+            disabled={loading}
+            onChange={handleChange}
+          />
+          <p className={rewardAddrErr ? "errHint" : "errHint-hide"}>
+            Invaild Address
+          </p>
+        </Form.Item>
+      </div>
+      <p className="subtitle">
+        New Authority Address <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          name="newAddr"
+          onChange={handleChange}
+          className={newAddrErr ? "errInput" : ""}
+          disabled={loading}
+        />
+        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
+      </Form.Item>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Node Name <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <Input
+              name="newName"
+              onChange={handleChange}
+              className={newNameErr ? "errInput" : ""}
+              disabled={loading}
+            />
+            <p className={newNameErr ? "errHint" : "errHint-hide"}>
+              Invalid Name
+            </p>
+          </Form.Item>
+        </div>
+        <div className="flex-full">
+          <p className="subtitle">
+            Replace WEMIX Amount <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <Input
+              addonAfter="WEMIX"
+              name="newLockAmount"
+              defaultValue={stakingMin}
+              value={newLockAmount || ""}
+              onChange={handleChange}
+              className={newLockAmountErr ? "errInput" : ""}
+              disabled={loading}
+            />
+            <p className={newLockAmountErr ? "errHint" : "errHint-hide"}>
+              Invalid Amount
+            </p>
+          </Form.Item>
+        </div>
+      </div>
+      <p className="subtitle">Description </p>
+      <Form.Item>
+        <TextArea
+          rows={4}
+          placeholder="Max. 256 bytes"
+          autoSize={{ minRows: 4, maxRows: 4 }}
+          name="memo"
+          onChange={handleChange}
+          disabled={loading}
+        />
+      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
         disabled={
-          newLockAmountErr ||
           votingAddrErr ||
           stakingAddrErr ||
-          newNodeErr ||
+          rewardAddrErr ||
+          newLockAmountErr ||
+          newAddrErr ||
           newNameErr
         }
         votingDurationMin={votingDurationMin}
@@ -237,10 +358,11 @@ export const RmoveProposalForm = ({
   loading,
   showLockAmount,
   stakingMin,
-  votingAddrErr,
   stakingAddrErr,
   oldLockAmountErr,
   oldLockAmount,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
   getLockAmount = shouldPass(),
@@ -252,18 +374,6 @@ export const RmoveProposalForm = ({
       </p>
       <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
         <Form.Item className="mt-0">
-          <p className="subtitle mt-0">Voting Address</p>
-          <Input
-            name="votingAddr"
-            onChange={handleChange}
-            className={"mt-5" + (votingAddrErr ? " errInput" : "")}
-            disabled={loading}
-          />
-          <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
-            Invalid Address
-          </p>
-        </Form.Item>
-        <Form.Item>
           <p className="subtitle mt-0">Staking Address</p>
           <Input.Search
             name="stakingAddr"
@@ -283,7 +393,6 @@ export const RmoveProposalForm = ({
           </p>
         </Form.Item>
       </div>
-
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">Locked WEMIX Amount</p>
@@ -327,23 +436,19 @@ export const RmoveProposalForm = ({
           disabled={loading}
         />
       </Form.Item>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={votingAddrErr || stakingAddrErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={stakingAddrErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
 
-/* Governance Contract Address */
+// Governance Contract Address
 export const GovernanceContractAddressForm = ({
   netName,
   loading,
@@ -499,6 +604,8 @@ export const AuthorityMemberStakingAmount = ({
   AuthMemSkAmountErr,
   AuthMemSkAmountMin,
   AuthMemSkAmountMax,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -597,19 +704,14 @@ export const AuthorityMemberStakingAmount = ({
           </Form.Item>
         </div>
       </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={AuthMemSkAmountErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={AuthMemSkAmountErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -619,6 +721,8 @@ export const BlockCreationTime = ({
   loading,
   newBlockCreation,
   blockCreationErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -688,19 +792,14 @@ export const BlockCreationTime = ({
           </Form.Item>
         </div>
       </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={blockCreationErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={blockCreationErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -710,6 +809,8 @@ export const BlockRewardAmount = ({
   loading,
   newBlockRewardAmount,
   blockRewardErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -720,7 +821,6 @@ export const BlockRewardAmount = ({
           <p className="subtitle">
             Block Reward Amount <span className="required">*</span>
           </p>
-
           <Form.Item>
             <div className="flex-column">
               <div className="flex-full flex-row">
@@ -757,41 +857,14 @@ export const BlockRewardAmount = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={blockRewardErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={blockRewardErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -805,6 +878,8 @@ export const BlockRewardDistributionMethod = ({
   blockRate4,
   blockRateTotal,
   blockRewardDisMthErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -919,41 +994,14 @@ export const BlockRewardDistributionMethod = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={blockRewardDisMthErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={blockRewardDisMthErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -962,6 +1010,8 @@ export const ChangeOfMaxPriorityFeePerGas = ({
   netName,
   loading,
   maxPriorityFeePerGasErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -972,7 +1022,6 @@ export const ChangeOfMaxPriorityFeePerGas = ({
           <p className="subtitle">
             MaxPriorityFeePerGas <span className="required">*</span>
           </p>
-
           <Form.Item>
             <div className="flex-column">
               <div className="flex-full flex-row">
@@ -1009,41 +1058,14 @@ export const ChangeOfMaxPriorityFeePerGas = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={maxPriorityFeePerGasErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={maxPriorityFeePerGasErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
@@ -1054,6 +1076,8 @@ export const GasLimitForm = ({
   gasLimitErr,
   baseFeeDenominatorErr,
   ElasticityErr,
+  votingDurationMin,
+  votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
@@ -1152,192 +1176,14 @@ export const GasLimitForm = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={gasLimitErr | baseFeeDenominatorErr | ElasticityErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
-    </Form>
-  </div>
-);
-
-// ! legacy code -> remove <Replace Authority>
-export const ReplaceProposalForm = ({
-  netName,
-  loading,
-  stakingMin,
-  oldAddrErr,
-  newAddrErr,
-  newNameErr,
-  newNodeErr,
-  newLockAmountErr,
-  newLockAmount,
-  oldNodeErr,
-  handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
-}) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
-        Old Authority Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="oldAddr"
-          onChange={handleChange}
-          className={oldAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={oldAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <p className="subtitle">
-        New Authority Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newAddr"
-          onChange={handleChange}
-          className={newAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Node Name <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              name="newName"
-              onChange={handleChange}
-              className={newNameErr ? "errInput" : ""}
-              disabled={loading}
-            />
-            <p className={newNameErr ? "errHint" : "errHint-hide"}>
-              Invalid Name
-            </p>
-          </Form.Item>
-        </div>
-        <div className="flex-full">
-          <p className="subtitle">
-            Replace WEMIX Amount <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              addonAfter="WEMIX"
-              name="newLockAmount"
-              defaultValue={stakingMin}
-              value={newLockAmount || ""}
-              onChange={handleChange}
-              className={newLockAmountErr ? "errInput" : ""}
-              disabled={loading}
-            />
-            <p className={newLockAmountErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <p className="subtitle">
-        New Authority Node Description <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newNode"
-          onChange={handleChange}
-          className={newNodeErr ? "errInput" : ""}
-          disabled={loading}
-          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-        />
-        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
-      </Form.Item>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          The hexadecimal node ID is encoded in the username portion of the URL,
-          separated from the host by an @ sign. The hostname can only be given
-          as an IP address, DNS domain names are not allowed. The port in the
-          host name section is the TCP listening port.
-        </p>
-      </div>
-      <p className="subtitle">
-        Old Authority Node Description <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="oldNode"
-          onChange={handleChange}
-          className={oldNodeErr ? "errInput" : ""}
-          disabled={loading}
-          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-        />
-        <p className={oldNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
-      </Form.Item>
-      <p className="subtitle">Description </p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={
-              newLockAmountErr ||
-              newAddrErr ||
-              newNodeErr ||
-              newNameErr ||
-              oldAddrErr ||
-              oldNodeErr
-            }
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <ProposalFormFooter
+        netName={netName}
+        loading={loading}
+        disabled={gasLimitErr | baseFeeDenominatorErr | ElasticityErr}
+        votingDurationMin={votingDurationMin}
+        votingDurationMax={votingDurationMax}
+        handleChange={handleChange}
+      />
     </Form>
   </div>
 );
