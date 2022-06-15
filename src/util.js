@@ -33,17 +33,29 @@ export const convertDayToSeconds = (day) => {
 };
 
 // ---------- string ---------- //
-// convert hex -> string
-const convertHexToString = (input) => {
-  if (input === null) {
+// TODO 테스트 용으로 입력했던 기존 값이 잘못된 값일 경우 나오는 에러 처리를 위해 함수로 뺐는데 추후 수정이 필요할 수 있음
+// decode hex -> string
+export const decodeHexToString = (input) => {
+  try {
+    return web3Instance.web3.utils.hexToUtf8(input);
+  } catch (e) {
     return "";
   }
-  let hex = input.toString();
-  let str = "";
-  for (let i = 0; i < hex.length && hex.substr(i, 2) !== "00"; i += 2) {
-    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-  }
-  return str;
+};
+
+// encode string -> sha3
+export const encodingStringToSha3 = (input) => {
+  return web3Instance.web3.utils.sha3(input);
+};
+
+// encode parameters (type, name - only string[])
+export const encodeParameters = (type, name) => {
+  return web3Instance.web3.eth.abi.encodeParameters(type, name);
+};
+
+// decode parameters (string -> type, name)
+export const decodeParameters = (type, input) => {
+  return web3Instance.web3.eth.abi.decodeParameters(type, input);
 };
 
 // ---------- refine data ---------- //
@@ -73,6 +85,10 @@ export const checkNode = (node) => {
 export const checkDuration = (type, min, max) => {
   const newMin = parseInt(min);
   const newMax = parseInt(max);
+
+  // when no value
+  if (!(min && max)) return true;
+
   if (type === "min") {
     return newMin > newMax ? type : null;
   } else if (type === "max") {
@@ -98,7 +114,7 @@ export const refineBallotBasic = (m) => {
         m.endTimeConverted = timeConverter(m[key]);
         break;
       case "memo":
-        m[key] = convertHexToString(m[key]);
+        m[key] = decodeHexToString(m[key]);
         break;
       case "duration":
         m[key] /= secondsInDay;
@@ -154,7 +170,7 @@ export const refineSubmitData = (m) => {
         break;
       case "memo":
       case "newName":
-        copy[key] = web3Instance.web3.utils.asciiToHex(copy[key]);
+        copy[key] = web3Instance.web3.utils.utf8ToHex(copy[key]);
         break;
       case "node":
       case "newNode":

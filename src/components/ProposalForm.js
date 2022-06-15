@@ -182,6 +182,22 @@ class ProposalForm extends React.Component {
           });
         }
         break;
+
+      // ! legacy code -> remove <AddProposalForm><Replace Authority><RmoveProposalForm>
+      case "newAddr":
+        this.setState({ newAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      case "oldLockAmount":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        this.setState({ oldLockAmountErr: e.target.value === "" });
+        break;
+      case "oldAddr":
+        this.setState({ oldAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      case "oldNode":
+        this.setState({ oldNodeErr: !util.checkNode(e.target.value) });
+        break;
       //Authority Member Staking Amount
       case "AuthMemSkAmountMin":
         if (!/^([0-9]*)$/.test(e.target.value))
@@ -301,9 +317,8 @@ class ProposalForm extends React.Component {
   // submit form data
   handleSubmit = async (e) => {
     this.props.convertLoading(true);
+    e.preventDefault();
     try {
-      e.preventDefault();
-
       let trx = {};
       let formData = util.refineSubmitData(this.data.formData);
 
@@ -311,6 +326,13 @@ class ProposalForm extends React.Component {
         this.props.convertLoading(false);
         return;
       }
+
+      // setting memo, votDuration default value
+      formData = {
+        ...formData,
+        memo: formData.memo || "0x",
+        votDuration: formData.votDuration || this.props.votingDurationMin,
+      };
 
       const { selectedTopic } = this.data;
       /* Add Authority Member */
@@ -321,8 +343,8 @@ class ProposalForm extends React.Component {
           newName,
           newNode: { node, ip, port },
           newLockAmount,
-          memo = "0x",
-          votDuration = this.props.votingDurationMin,
+          memo,
+          votDuration,
         } = formData;
         trx = this.governance.addProposalToAddMember(
           votingAddr,
@@ -337,9 +359,25 @@ class ProposalForm extends React.Component {
         );
         /* Governance Contract Address */
       } else if (selectedTopic === "GovernanceContractAddress") {
-        const { newGovAddr, memo = "0x", votDuration = 3 } = formData;
+        const { newGovAddr, memo, votDuration } = formData;
         trx = this.governance.addProposalToChangeGov(
           newGovAddr,
+          memo,
+          votDuration
+        );
+        /* Voting Duration Setting */
+      } else if (selectedTopic === "VotingDurationSetting") {
+        const { votDurationMin, votDurationMax, memo, votDuration } = formData;
+        // encode parameters
+        const envName = util.encodingStringToSha3(selectedTopic);
+        const envVal = util.encodeParameters(
+          ["uint256", "uint256"],
+          [votDurationMin, votDurationMax]
+        );
+        trx = this.governance.addProposalToChangeEnv(
+          envName,
+          String(2),
+          envVal,
           memo,
           votDuration
         );
@@ -385,8 +423,17 @@ class ProposalForm extends React.Component {
           formData.memo
         );
       } else return;
+      this.sendTransaction(trx);
+    } catch (err) {
+      console.log(err);
+      this.props.getErrModal(err.message, err.name);
+      this.props.convertLoading(false);
+    }
+  };
 
-      // send transaction
+  // send transaction
+  async sendTransaction(trx) {
+    try {
       web3Instance.web3.eth.sendTransaction(
         {
           from: web3Instance.defaultAccount,
@@ -419,7 +466,7 @@ class ProposalForm extends React.Component {
       this.props.getErrModal(err.message, err.name);
       this.props.convertLoading(false);
     }
-  };
+  }
 
   // check before sending transaction
   async handleProposalError(formData) {
@@ -481,9 +528,8 @@ class ProposalForm extends React.Component {
           );
         }
         return false;
-
       /* Governance Contract Address */
-      case "GovernanceContractAddress":
+      case "GovernanceContractAddress": {
         const { newGovAddr } = formData;
 
         // check if address is contract code
@@ -495,6 +541,7 @@ class ProposalForm extends React.Component {
           );
         }
         return false;
+      }
       // ! legacy code -> remove <Replace Authority>
       case "ReplaceAuthorityMember":
         const oldMemberLockedBalance = await this.staking.lockedBalanceOf(
@@ -571,6 +618,9 @@ class ProposalForm extends React.Component {
           );
         }
         break;
+      /* Governance Contract Address */
+      case "VotingDurationSetting":
+        return false;
       default:
         return this.props.getErrModal("Wrong Access.", "Proposal Submit Error");
     }
@@ -653,7 +703,7 @@ class ProposalForm extends React.Component {
           );
         case "VotingDurationSetting":
           return (
-            <PComponent.VotingDurationSetting
+            <PComponent.VotingDurationSettingForm
               votDurationErr={this.state.votDurationErr}
               votDurationMin={this.data.formData.votDurationMin}
               votDurationMax={this.data.formData.votDurationMax}
