@@ -24,8 +24,8 @@ const StakingModal = ({
     visible={stakingModalVisible}
     onCancel={hideStakingModal}
     footer={[
-      <Button key="cancle" onClick={hideStakingModal}>
-        cancle
+      <Button key="cancel" onClick={hideStakingModal}>
+        cancel
       </Button>,
       <Button
         key="submit"

@@ -509,10 +509,10 @@ class App extends React.Component {
       if (err) {
         console.log(err);
         this.getErrModal(err.message, "Staking Error");
-        this.setState({ stakingModalVisible: false, loading: false });
       } else {
         console.log("hash: ", hash);
       }
+      this.setState({ stakingModalVisible: false, loading: false });
     });
   }
 
