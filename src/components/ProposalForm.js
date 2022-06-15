@@ -354,7 +354,7 @@ class ProposalForm extends React.Component {
       } else if (selectedTopic === "VotingDurationSetting") {
         const { votDurationMin, votDurationMax, memo, votDuration } = formData;
         // encode parameters
-        const envName = util.encodingSha3(selectedTopic);
+        const envName = util.encodingStringToSha3(selectedTopic);
         const envVal = util.encodeParameters(
           ["uint256", "uint256"],
           [votDurationMin, votDurationMax]
