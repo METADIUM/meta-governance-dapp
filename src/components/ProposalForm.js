@@ -182,19 +182,6 @@ class ProposalForm extends React.Component {
           });
         }
         break;
-
-      // ! legacy code -> remove <AddProposalForm><Replace Authority><RmoveProposalForm>
-      case "newAddr":
-        this.setState({ newAddrErr: !util.checkAddress(e.target.value) });
-        break;
-      case "oldLockAmount":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        this.setState({ oldLockAmountErr: e.target.value === "" });
-        break;
-      case "oldAddr":
-        this.setState({ oldAddrErr: !util.checkAddress(e.target.value) });
-        break;
       case "oldNode":
         this.setState({ oldNodeErr: !util.checkNode(e.target.value) });
         break;
