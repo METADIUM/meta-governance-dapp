@@ -1179,7 +1179,7 @@ export const GasLimitForm = ({
       <ProposalFormFooter
         netName={netName}
         loading={loading}
-        disabled={gasLimitErr | baseFeeDenominatorErr | ElasticityErr}
+        disabled={gasLimitErr || baseFeeDenominatorErr || ElasticityErr}
         votingDurationMin={votingDurationMin}
         votingDurationMax={votingDurationMax}
         handleChange={handleChange}
