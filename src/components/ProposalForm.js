@@ -308,14 +308,11 @@ class ProposalForm extends React.Component {
 
     try {
       const trx = await this.checkSubmitData(this.data.formData);
-      this.sendTransaction(trx);
-      return;
 
-      const { selectedTopic } = this.data;
-
-      switch (selectedTopic) {
+      // run only if there is data for sending transactions
+      if (trx !== undefined) {
+        this.sendTransaction(trx);
       }
-
       // /* Add Authority Member */
       // if (selectedTopic === "AddAuthorityMember") {
       //   trx = this.governance.addProposalToAddMember(
@@ -354,47 +351,47 @@ class ProposalForm extends React.Component {
       //     memo,
       //     votDuration
       //   );
-      //   //   // TODO contract method 추가
-      //   //   // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      //   // } else if (this.data.selectedTopic === "ReplaceAuthorityMember") {
-      //   //   trx = this.governance.addProposalToChangeMember(
-      //   //     [formData.oldAddr, formData.newAddr],
-      //   //     formData.newName,
-      //   //     formData.newNode.node,
-      //   //     formData.newNode.ip,
-      //   //     [formData.newNode.port, formData.newLockAmount],
-      //   //     formData.memo
-      //   //   );
-      //   // } else if (this.data.selectedTopic === "RemoveAuthorityMember") {
-      //   //   trx = this.governance.addProposalToRemoveMember(
-      //   //     formData.oldAddr,
-      //   //     formData.oldLockAmount,
-      //   //     formData.memo
-      //   //   );
-      //   //   // ! legacy code -> remove <Update Authority>
-      //   // } else if (this.data.selectedTopic === "UpdateAuthority") {
-      //   //   let myLockBalance = await this.staking.lockedBalanceOf(
-      //   //     web3Instance.defaultAccount
-      //   //   );
-      //   //   trx = this.governance.addProposalToChangeMember(
-      //   //     [web3Instance.defaultAccount, web3Instance.defaultAccount],
-      //   //     formData.newNode.node,
-      //   //     formData.newNode.ip,
-      //   //     [formData.newNode.port, myLockBalance],
-      //   //     formData.memo
-      //   //   );
-      //   // } else if (this.data.selectedTopic === "ChangeOfMaxPriorityFeePerGas") {
-      //   //   // trx =
-      //   //   // TODO envName, envType 맞는지 확인 필요
-      //   //   // TODO contract method 추가
-      //   //   // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      //   // } else if (this.data.selectedTopic === "GasLimit") {
-      //   //   trx = this.governance.addProposalToChangeEnv(
-      //   //     web3Instance.web3.utils.asciiToHex("GasLimit"), // envName
-      //   //     "2", // envType (uint)
-      //   //     formData.gasLimit,
-      //   //     formData.memo
-      //   // );
+      //   // TODO contract method 추가
+      //   // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
+      // } else if (this.data.selectedTopic === "ReplaceAuthorityMember") {
+      //   trx = this.governance.addProposalToChangeMember(
+      //     [formData.oldAddr, formData.newAddr],
+      //     formData.newName,
+      //     formData.newNode.node,
+      //     formData.newNode.ip,
+      //     [formData.newNode.port, formData.newLockAmount],
+      //     formData.memo
+      //   );
+      // } else if (this.data.selectedTopic === "RemoveAuthorityMember") {
+      //   trx = this.governance.addProposalToRemoveMember(
+      //     formData.oldAddr,
+      //     formData.oldLockAmount,
+      //     formData.memo
+      //   );
+      //   // ! legacy code -> remove <Update Authority>
+      // } else if (this.data.selectedTopic === "UpdateAuthority") {
+      //   let myLockBalance = await this.staking.lockedBalanceOf(
+      //     web3Instance.defaultAccount
+      //   );
+      //   trx = this.governance.addProposalToChangeMember(
+      //     [web3Instance.defaultAccount, web3Instance.defaultAccount],
+      //     formData.newNode.node,
+      //     formData.newNode.ip,
+      //     [formData.newNode.port, myLockBalance],
+      //     formData.memo
+      //   );
+      // } else if (this.data.selectedTopic === "ChangeOfMaxPriorityFeePerGas") {
+      //   // trx =
+      //   // TODO envName, envType 맞는지 확인 필요
+      //   // TODO contract method 추가
+      //   // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
+      // } else if (this.data.selectedTopic === "GasLimit") {
+      //   trx = this.governance.addProposalToChangeEnv(
+      //     web3Instance.web3.utils.asciiToHex("GasLimit"), // envName
+      //     "2", // envType (uint)
+      //     formData.gasLimit,
+      //     formData.memo
+      // );
       // } else return;
     } catch (err) {
       console.log(err);
@@ -534,8 +531,8 @@ class ProposalForm extends React.Component {
     switch (selectedTopic) {
       /* Add Authority Member */
       case "AddAuthorityMember": {
-        const { staker, newLockAmount } = refineData;
-        const newLockedAmount = Number(newLockAmount);
+        const { staker, lockAmount } = refineData;
+        const newLockedAmount = Number(lockAmount);
         // get the balance of staking address
         const balance = Number(await this.staking.availableBalanceOf(staker));
 
