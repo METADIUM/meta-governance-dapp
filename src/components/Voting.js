@@ -159,9 +159,7 @@ class Voting extends React.Component {
       case constants.ballotTypes.AddAuthorityMember:
         return (
           <p className="description flex-full">
-            Voting Address: {newMemberAddress}
-            <br />
-            Staking Address: {newStakerAddress}
+            Authority Address: {newStakerAddress}
             <br />
             WEMIX To be Locked: {lockAmount} WEMIX
           </p>
@@ -191,32 +189,32 @@ class Voting extends React.Component {
           </p>
         );
       }
-      case constants.ballotTypes.MemberRemoval:
-        return (
-          <p className="description flex-full">
-            Address To be Removed: {oldMemberAddress}
-            <br />
-            WEMIX Amount to be unlocked: {lockAmount} WEMIX
-          </p>
-        );
-      case constants.ballotTypes.MemberChange:
-        if (newMemberAddress === oldMemberAddress) {
-          return (
-            <p className="description flex-full">
-              WEMIX To be Locked: {lockAmount} WEMIX
-            </p>
-          );
-        } else {
-          return (
-            <p className="description flex-full">
-              Old Authority Address: {oldMemberAddress}
-              <br />
-              New Authority Address: {newMemberAddress}
-              <br />
-              WEMIX To be Locked: {lockAmount} WEMIX
-            </p>
-          );
-        }
+      //  case constants.ballotTypes.MemberRemoval:
+      //     return (
+      //       <p className="description flex-full">
+      //         Address To be Removed: {oldMemberAddress}
+      //         <br />
+      //         WEMIX Amount to be unlocked: {lockAmount} WEMIX
+      //       </p>
+      //     );
+      //   case constants.ballotTypes.MemberChange:
+      //     if (newMemberAddress === oldMemberAddress) {
+      //       return (
+      //         <p className="description flex-full">
+      //           WEMIX To be Locked: {lockAmount} WEMIX
+      //         </p>
+      //       );
+      //     } else {
+      //       return (
+      //         <p className="description flex-full">
+      //           Old Authority Address: {oldMemberAddress}
+      //           <br />
+      //           New Authority Address: {newMemberAddress}
+      //            <br />
+      //           WEMIX To be Locked: {lockAmount} WEMIX
+      //         </p>
+      //       );
+      //     }
       default:
         return (
           <p className="description flex-full">

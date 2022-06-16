@@ -204,7 +204,7 @@ export const AddProposalForm = ({
       <ProposalFormFooter
         netName={netName}
         loading={loading}
-        disabled={newLockAmountErr || newAddrErr || newNodeErr || newNameErr}
+        disabled={newLockAmountErr || newAddrErr || newNameErr || newNodeErr}
         votingDurationMin={votingDurationMin}
         votingDurationMax={votingDurationMax}
         handleChange={handleChange}

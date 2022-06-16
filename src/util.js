@@ -59,6 +59,17 @@ export const decodeParameters = (type, input) => {
 };
 
 // ---------- refine data ---------- //
+export const splitNodeInfo = (nodeInfo) => {
+  let node, ip, port, splitedStr;
+  splitedStr = nodeInfo.split("@");
+  node = "0x" + splitedStr[0];
+  splitedStr = splitedStr[1].split(":");
+  ip = web3Instance.web3.utils.asciiToHex(splitedStr[0]);
+  splitedStr = splitedStr[1].split("?");
+  port = parseInt(splitedStr[0]);
+  return { node, ip, port };
+};
+
 // up to 64 character, english and numbers only
 export const checkName = (name) => {
   return /^[A-Za-z0-9+]{1,64}$/.test(name);
@@ -141,24 +152,18 @@ export const refineSubmitData = (m) => {
     copy[key] = m[key];
   }
 
-  const splitNodeInfo = (nodeInfo) => {
-    let node, ip, port, splitedStr;
-    splitedStr = nodeInfo.split("@");
-    node = "0x" + splitedStr[0];
-    splitedStr = splitedStr[1].split(":");
-    ip = web3Instance.web3.utils.asciiToHex(splitedStr[0]);
-    splitedStr = splitedStr[1].split("?");
-    port = parseInt(splitedStr[0]);
-    return { node, ip, port };
-  };
-
   Object.keys(copy).forEach((key) => {
     if (!isNaN(key)) return delete copy[key];
     switch (key) {
+      // TODO newAddr oldAddr 확인
+      case "staker":
+      case "voter":
+      case "reward":
       case "newAddr":
       case "oldAddr":
         copy[key] = web3Instance.web3.utils.toChecksumAddress(copy[key]);
         break;
+      // TODO oldLockAmount newLockAmount gasLimit 확인
       case "lockAmount":
       case "oldLockAmount":
       case "newLockAmount":
@@ -168,15 +173,11 @@ export const refineSubmitData = (m) => {
           "ether"
         );
         break;
+      // TODO newName 확인
       case "memo":
+      case "name":
       case "newName":
         copy[key] = web3Instance.web3.utils.utf8ToHex(copy[key]);
-        break;
-      case "node":
-      case "newNode":
-      case "oldNode":
-        let { node, ip, port } = splitNodeInfo(copy[key]);
-        copy[key] = { node, ip, port };
         break;
       default:
         if (!copy[key]) copy[key] = "";
