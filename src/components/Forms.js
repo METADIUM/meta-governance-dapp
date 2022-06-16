@@ -503,9 +503,9 @@ export const GovernanceContractAddressForm = ({
 export const VotingDurationSettingForm = ({
   netName,
   loading,
-  votDurationErr,
   votDurationMin,
   votDurationMax,
+  votDurationErr,
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),

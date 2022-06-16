@@ -20,6 +20,10 @@ class ProposalForm extends React.Component {
     newNameErr: false,
     newNodeErr: false,
     newLockAmountErr: false,
+    // Governance Contract Address
+    newGovAddrErr: false,
+    // Voting Duration Setting
+    votDurationErr: null,
     // Replace Authority Member
     votingAddrErr: false,
     stakingAddrErr: false,
@@ -27,15 +31,13 @@ class ProposalForm extends React.Component {
     // Remove Authority Member
     oldLockAmountErr: false,
     showLockAmount: "",
-    // Governance Contract Address
-    newGovAddrErr: false,
+
     // MaxPriorityFeePerGas
     maxPriorityFeePerGasErr: false,
     // Gas Limit
     gasLimitErr: false,
     baseFeeDenominatorErr: false,
     ElasticityErr: false,
-    votDurationErr: null,
     blockCreationErr: false,
     blockRewardErr: false,
     numbers: {
@@ -129,31 +131,11 @@ class ProposalForm extends React.Component {
         this.setState({ newNodeErr: !util.checkNode(e.target.value) });
         break;
 
-      // Replace Authority Member
-      case "votingAddr":
-        this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
-        break;
-      case "stakingAddr":
-        this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) });
-        break;
-      case "rewardAddr":
-        this.setState({ rewardAddrErr: !util.checkAddress(e.target.value) });
-        break;
-
       // Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !util.checkAddress(e.target.value) });
         break;
 
-      case "oldLockAmount":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        this.setState({ oldLockAmountErr: e.target.value === "" });
-        break;
-      // !legacy code
-      case "oldAddr":
-        this.setState({ oldAddrErr: !util.checkAddress(e.target.value) });
-        break;
       // Voting Duration Setting
       case "votDurationMin":
         if (!/^([0-9]*)$/.test(e.target.value))
@@ -182,6 +164,26 @@ class ProposalForm extends React.Component {
             ),
           });
         }
+        break;
+
+      // Replace Authority Member
+      case "votingAddr":
+        this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      case "stakingAddr":
+        this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      case "rewardAddr":
+        this.setState({ rewardAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      case "oldLockAmount":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        this.setState({ oldLockAmountErr: e.target.value === "" });
+        break;
+      // !legacy code
+      case "oldAddr":
+        this.setState({ oldAddrErr: !util.checkAddress(e.target.value) });
         break;
       case "oldNode":
         this.setState({ oldNodeErr: !util.checkNode(e.target.value) });
@@ -314,44 +316,6 @@ class ProposalForm extends React.Component {
       if (trx !== undefined) {
         this.sendTransaction(trx);
       }
-      // /* Add Authority Member */
-      // if (selectedTopic === "AddAuthorityMember") {
-      //   trx = this.governance.addProposalToAddMember(
-      //     newAddr,
-      //     newAddr,
-      //     newAddr,
-      //     newName,
-      //     node,
-      //     ip,
-      //     port,
-      //     newLockAmount,
-      //     memo,
-      //     votDuration
-      //   );
-      //   /* Governance Contract Address */
-      // } else if (selectedTopic === "GovernanceContractAddress") {
-      //   const { newGovAddr, memo, votDuration } = formData;
-      //   trx = this.governance.addProposalToChangeGov(
-      //     newGovAddr,
-      //     memo,
-      //     votDuration
-      //   );
-      //   /* Voting Duration Setting */
-      // } else if (selectedTopic === "VotingDurationSetting") {
-      //   const { votDurationMin, votDurationMax, memo, votDuration } = formData;
-      //   // encode parameters
-      //   const envName = util.encodingStringToSha3(selectedTopic);
-      //   const envVal = util.encodeParameters(
-      //     ["uint256", "uint256"],
-      //     [votDurationMin, votDurationMax]
-      //   );
-      //   trx = this.governance.addProposalToChangeEnv(
-      //     envName,
-      //     String(2),
-      //     envVal,
-      //     memo,
-      //     votDuration
-      //   );
       //   // TODO contract method 추가
       //   // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
       // } else if (this.data.selectedTopic === "ReplaceAuthorityMember") {
@@ -462,6 +426,32 @@ class ProposalForm extends React.Component {
             newGovAddr,
             memo,
             duration: votDuration,
+          };
+          break;
+        }
+        case "VotingDurationSetting": {
+          const { votDurationMin, votDurationMax } = data;
+
+          const envName = util.encodingStringToSha3(selectedTopic);
+          const envVal = util.encodeParameters(
+            ["uint256", "uint256"],
+            [votDurationMin, votDurationMax]
+          );
+
+          // check undefined
+          if (votDurationMin === undefined) {
+            this.setState({ votDurationErr: !this.state.votDurationErr });
+            this.props.convertLoading(false);
+            return;
+          }
+
+          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          checkData = {
+            envName,
+            envType: String(2),
+            envVal,
+            memo,
+            votDuration,
           };
           break;
         }

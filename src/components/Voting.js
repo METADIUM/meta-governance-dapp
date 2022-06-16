@@ -148,15 +148,15 @@ class Voting extends React.Component {
   };
 
   setDescription = (type, id) => {
-    let { newMemberAddress, newStakerAddress, oldMemberAddress, lockAmount } =
-      this.props.ballotMemberOriginData[id];
+    let { lockAmount } = this.props.ballotMemberOriginData[id];
     lockAmount =
       typeof lockAmount === "undefined"
         ? 0
         : web3Instance.web3.utils.fromWei(lockAmount, "ether");
     switch (type) {
       /* Add Authority Member */
-      case constants.ballotTypes.AddAuthorityMember:
+      case constants.ballotTypes.AddAuthorityMember: {
+        const { newStakerAddress } = this.props.ballotMemberOriginData[id];
         return (
           <p className="description flex-full">
             Authority Address: {newStakerAddress}
@@ -164,6 +164,7 @@ class Voting extends React.Component {
             WEMIX To be Locked: {lockAmount} WEMIX
           </p>
         );
+      }
       /* Governance Contract Address */
       case constants.ballotTypes.GovernanceContractAddress: {
         const { oldGovernanceAddress, newGovernanceAddress } =
@@ -218,8 +219,6 @@ class Voting extends React.Component {
       default:
         return (
           <p className="description flex-full">
-            New Authority Address: {newMemberAddress}
-            <br />
             WEMIX To be Locked: {lockAmount} WEMIX
           </p>
         );
