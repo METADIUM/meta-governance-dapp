@@ -159,6 +159,7 @@ export const refineSubmitData = (m) => {
       case "staker":
       case "voter":
       case "reward":
+      case "newGovAddr":
       case "newAddr":
       case "oldAddr":
         copy[key] = web3Instance.web3.utils.toChecksumAddress(copy[key]);

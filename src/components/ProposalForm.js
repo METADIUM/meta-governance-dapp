@@ -144,6 +144,7 @@ class ProposalForm extends React.Component {
       case "newGovAddr":
         this.setState({ newGovAddrErr: !util.checkAddress(e.target.value) });
         break;
+
       case "oldLockAmount":
         if (!/^([0-9]*)$/.test(e.target.value))
           this.data.formData[e.target.name] = originStr;
@@ -403,56 +404,67 @@ class ProposalForm extends React.Component {
   // check the data error handling
   async checkSubmitData(data) {
     const { selectedTopic } = this.data;
+    const { memo, votDuration } = data;
     let checkData, refineData, trxFunction;
 
     try {
       switch (selectedTopic) {
-        case "AddAuthorityMember":
-          {
-            const {
-              newAddr,
-              newName,
-              newNode,
-              newLockAmount,
-              memo,
-              votDuration,
-            } = data;
+        case "AddAuthorityMember": {
+          const { newAddr, newName, newNode, newLockAmount } = data;
 
-            // check undefined
-            if (newAddr === undefined) {
-              this.setState({ newAddrErr: !this.state.newAddrErr });
-              this.props.convertLoading(false);
-              return;
-            }
-            if (newName === undefined) {
-              this.setState({ newNameErr: !this.state.newNameErr });
-              this.props.convertLoading(false);
-              return;
-            }
-            if (newNode === undefined) {
-              this.setState({ newNodeErr: !this.state.newNodeErr });
-              this.props.convertLoading(false);
-              return;
-            }
-
-            // get node information
-            const { node, ip, port } = util.splitNodeInfo(newNode);
-
-            trxFunction = (trx) => this.governance.addProposalToAddMember(trx);
-            checkData = {
-              staker: newAddr,
-              voter: newAddr,
-              reward: newAddr,
-              name: newName,
-              lockAmount: newLockAmount,
-              enode: node,
-              ip,
-              port,
-              memo,
-              duration: votDuration,
-            };
+          // check undefined
+          if (newAddr === undefined) {
+            this.setState({ newAddrErr: !this.state.newAddrErr });
+            this.props.convertLoading(false);
+            return;
           }
+          if (newName === undefined) {
+            this.setState({ newNameErr: !this.state.newNameErr });
+            this.props.convertLoading(false);
+            return;
+          }
+          if (newNode === undefined) {
+            this.setState({ newNodeErr: !this.state.newNodeErr });
+            this.props.convertLoading(false);
+            return;
+          }
+
+          // get node information
+          const { node, ip, port } = util.splitNodeInfo(newNode);
+
+          trxFunction = (trx) => this.governance.addProposalToAddMember(trx);
+          checkData = {
+            staker: newAddr,
+            voter: newAddr,
+            reward: newAddr,
+            name: newName,
+            lockAmount: newLockAmount,
+            enode: node,
+            ip,
+            port,
+            memo,
+            duration: votDuration,
+          };
           break;
+        }
+        case "GovernanceContractAddress": {
+          const { newGovAddr } = data;
+
+          // check undefined
+          if (newGovAddr === undefined) {
+            this.setState({ newGovAddrErr: !this.state.newGovAddrErr });
+            this.props.convertLoading(false);
+            return;
+          }
+
+          trxFunction = (trx) => this.governance.addProposalToChangeGov(trx);
+          checkData = {
+            newGovAddr,
+            memo,
+            duration: votDuration,
+          };
+          break;
+        }
         default:
           return;
       }
@@ -460,7 +472,7 @@ class ProposalForm extends React.Component {
       // sets the default value of memo, votDuration
       checkData = {
         ...checkData,
-        memo: checkData.memo || "0x",
+        memo: checkData.memo || "",
         duration: checkData.duration || this.props.votingDurationMin,
       };
 
@@ -471,10 +483,11 @@ class ProposalForm extends React.Component {
         this.props.convertLoading(false);
         return;
       }
-
       return trxFunction(refineData);
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.log(err);
+      this.props.getErrModal(err.message, err.name);
+      this.props.convertLoading(false);
     }
   }
 
