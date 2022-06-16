@@ -1,5 +1,11 @@
 const buildNetworkType = process.env.REACT_APP_NETWORK_TYPE;
 
+// envName
+export const ENV_NAMES = {
+  ENV_BALLOT_DURATION_MIN_MAX: "ballotDurationMinMax",
+  ENV_STAKING_MIN_MAX: "stakingMinMax",
+};
+
 const constants = {
   authorityRepo: {
     org: "METADIUM",

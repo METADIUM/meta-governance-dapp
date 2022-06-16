@@ -6,7 +6,7 @@ import { web3Instance } from "../web3";
 import * as PComponent from "./Forms";
 import * as util from "../util";
 
-import { constants } from "../constants";
+import { constants, ENV_NAMES } from "../constants";
 
 class ProposalForm extends React.Component {
   data = {
@@ -24,6 +24,8 @@ class ProposalForm extends React.Component {
     newGovAddrErr: false,
     // Voting Duration Setting
     votDurationErr: null,
+    // Authority Member Staking Amount
+    authMemSkAmountErr: false,
     // Replace Authority Member
     votingAddrErr: false,
     stakingAddrErr: false,
@@ -130,12 +132,10 @@ class ProposalForm extends React.Component {
       case "newNode":
         this.setState({ newNodeErr: !util.checkNode(e.target.value) });
         break;
-
       // Governance Contract Address
       case "newGovAddr":
         this.setState({ newGovAddrErr: !util.checkAddress(e.target.value) });
         break;
-
       // Voting Duration Setting
       case "votDurationMin":
         if (!/^([0-9]*)$/.test(e.target.value))
@@ -165,7 +165,36 @@ class ProposalForm extends React.Component {
           });
         }
         break;
-
+      //Authority Member Staking Amount
+      case "authMemSkAmountMin":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else {
+          const { authMemSkAmountMin, authMemSkAmountMax } = this.data.formData;
+          this.setState({
+            authMemSkAmountErr: util.checkDuration(
+              "min",
+              authMemSkAmountMin,
+              authMemSkAmountMax
+            ),
+          });
+        }
+        break;
+      case "authMemSkAmountMax":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else {
+          const { authMemSkAmountMin, authMemSkAmountMax } = this.data.formData;
+          this.setState({
+            authMemSkAmountErr:
+              util.checkDuration(
+                "max",
+                authMemSkAmountMin,
+                authMemSkAmountMax
+              ) || Number(e.target.value) > 4980000,
+          });
+        }
+        break;
       // Replace Authority Member
       case "votingAddr":
         this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
@@ -187,35 +216,6 @@ class ProposalForm extends React.Component {
         break;
       case "oldNode":
         this.setState({ oldNodeErr: !util.checkNode(e.target.value) });
-        break;
-      //Authority Member Staking Amount
-      case "AuthMemSkAmountMin":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else {
-          const { AuthMemSkAmountMin, AuthMemSkAmountMax } = this.data.formData;
-          this.setState({
-            AuthMemSkAmountErr: util.checkDuration(
-              "min",
-              AuthMemSkAmountMin,
-              AuthMemSkAmountMax
-            ),
-          });
-        }
-        break;
-      case "AuthMemSkAmountMax":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else {
-          const { AuthMemSkAmountMin, AuthMemSkAmountMax } = this.data.formData;
-          this.setState({
-            AuthMemSkAmountErr: util.checkDuration(
-              "min",
-              AuthMemSkAmountMin,
-              AuthMemSkAmountMax
-            ),
-          });
-        }
         break;
       case "newBlockCreation":
         this.setState({
@@ -375,7 +375,6 @@ class ProposalForm extends React.Component {
       switch (selectedTopic) {
         case "AddAuthorityMember": {
           const { newAddr, newName, newNode, newLockAmount } = data;
-
           // check undefined
           if (newAddr === undefined) {
             this.setState({ newAddrErr: !this.state.newAddrErr });
@@ -392,10 +391,8 @@ class ProposalForm extends React.Component {
             this.props.convertLoading(false);
             return;
           }
-
           // get node information
           const { node, ip, port } = util.splitNodeInfo(newNode);
-
           trxFunction = (trx) => this.governance.addProposalToAddMember(trx);
           checkData = {
             staker: newAddr,
@@ -413,14 +410,12 @@ class ProposalForm extends React.Component {
         }
         case "GovernanceContractAddress": {
           const { newGovAddr } = data;
-
           // check undefined
           if (newGovAddr === undefined) {
             this.setState({ newGovAddrErr: !this.state.newGovAddrErr });
             this.props.convertLoading(false);
             return;
           }
-
           trxFunction = (trx) => this.governance.addProposalToChangeGov(trx);
           checkData = {
             newGovAddr,
@@ -431,44 +426,69 @@ class ProposalForm extends React.Component {
         }
         case "VotingDurationSetting": {
           const { votDurationMin, votDurationMax } = data;
-
-          const envName = util.encodingStringToSha3(selectedTopic);
-          const envVal = util.encodeParameters(
-            ["uint256", "uint256"],
-            [votDurationMin, votDurationMax]
-          );
-
           // check undefined
           if (votDurationMin === undefined) {
             this.setState({ votDurationErr: !this.state.votDurationErr });
             this.props.convertLoading(false);
             return;
           }
-
+          // setting env variables
+          const envName = util.encodingStringToSha3(
+            ENV_NAMES.ENV_BALLOT_DURATION_MIN_MAX
+          );
+          const envVal = util.encodeParameters(
+            ["uint256", "uint256"],
+            [votDurationMin, votDurationMax]
+          );
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {
             envName,
             envType: String(2),
             envVal,
             memo,
-            votDuration,
+            duration: votDuration,
+          };
+          break;
+        }
+        case "AuthorityMemberStakingAmount": {
+          const { authMemSkAmountMin, authMemSkAmountMax } = data;
+          // check undefined
+          if (authMemSkAmountMin === undefined) {
+            this.setState({
+              authMemSkAmountErr: !this.state.authMemSkAmountErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          // setting env variables
+          const envName = util.encodingStringToSha3(
+            ENV_NAMES.ENV_STAKING_MIN_MAX
+          );
+          const envVal = util.encodeParameters(
+            ["uint256", "uint256"],
+            [authMemSkAmountMin, authMemSkAmountMax]
+          );
+          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          checkData = {
+            envName,
+            envType: String(2),
+            envVal,
+            memo,
+            duration: votDuration,
           };
           break;
         }
         default:
           return;
       }
-
       // sets the default value of memo, votDuration
       checkData = {
         ...checkData,
         memo: checkData.memo || "",
         duration: checkData.duration || this.props.votingDurationMin,
       };
-
       // override data for formatting
       refineData = util.refineSubmitData(checkData);
-
       if (typeof (await this.handleProposalError(refineData)) === "undefined") {
         this.props.convertLoading(false);
         return;
@@ -529,16 +549,13 @@ class ProposalForm extends React.Component {
         "Proposal Submit Error"
       );
     }
-
     const { selectedTopic } = this.data;
     switch (selectedTopic) {
-      /* Add Authority Member */
       case "AddAuthorityMember": {
         const { staker, lockAmount } = refineData;
         const newLockedAmount = Number(lockAmount);
         // get the balance of staking address
         const balance = Number(await this.staking.availableBalanceOf(staker));
-
         // check if addresses already exist
         const isMember = await this.governance.isMember(staker);
         if (isMember) {
@@ -547,7 +564,6 @@ class ProposalForm extends React.Component {
             "Proposal Submit Error"
           );
         }
-
         // check if addresses already voted
         const inBallotMember = this.props.newMemberaddr.some(
           (addr) => addr === staker
@@ -558,7 +574,6 @@ class ProposalForm extends React.Component {
             "Proposal Submit Error"
           );
         }
-
         // check if staking address has wemix
         if (balance < newLockedAmount) {
           return this.props.getErrModal(
@@ -568,10 +583,8 @@ class ProposalForm extends React.Component {
         }
         return false;
       }
-      /* Governance Contract Address */
       case "GovernanceContractAddress": {
         const { newGovAddr } = refineData;
-
         // check if address is contract code
         const code = await web3Instance.web3.eth.getCode(newGovAddr);
         if (code === "0x") {
@@ -582,6 +595,9 @@ class ProposalForm extends React.Component {
         }
         return false;
       }
+      case "VotingDurationSetting":
+      case "AuthorityMemberStakingAmount":
+        return false;
       // // ! legacy code -> remove <Replace Authority>
       // case "ReplaceAuthorityMember":
       //   const oldMemberLockedBalance = await this.staking.lockedBalanceOf(
@@ -658,9 +674,6 @@ class ProposalForm extends React.Component {
       //     );
       //   }
       //   break;
-      /* Governance Contract Address */
-      case "VotingDurationSetting":
-        return false;
       default:
         return this.props.getErrModal("Wrong Access.", "Proposal Submit Error");
     }
@@ -751,10 +764,10 @@ class ProposalForm extends React.Component {
           );
         case "AuthorityMemberStakingAmount":
           return (
-            <PComponent.AuthorityMemberStakingAmount
-              AuthMemSkAmountErr={this.state.AuthMemSkAmountErr}
-              AuthMemSkAmountMin={this.data.formData.AuthMemSkAmountMin}
-              AuthMemSkAmountMax={this.data.formData.AuthMemSkAmountMax}
+            <PComponent.AuthorityMemberStakingAmountForm
+              authMemSkAmountErr={this.state.authMemSkAmountErr}
+              authMemSkAmountMin={this.data.formData.authMemSkAmountMin}
+              authMemSkAmountMax={this.data.formData.authMemSkAmountMax}
             />
           );
         case "BlockCreationTime":
@@ -879,7 +892,7 @@ class ProposalForm extends React.Component {
                   Voting Duration Setting
                 </Select.Option>
                 <Select.Option value="AuthorityMemberStakingAmount">
-                  Authority Member Staking
+                  Authority Member Staking Amount
                 </Select.Option>
                 <Select.Option value="BlockCreationTime">
                   Block Creation Time

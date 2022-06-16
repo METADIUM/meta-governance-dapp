@@ -154,7 +154,7 @@ class Voting extends React.Component {
         ? 0
         : web3Instance.web3.utils.fromWei(lockAmount, "ether");
     switch (type) {
-      /* Add Authority Member */
+      // Add Authority Member
       case constants.ballotTypes.AddAuthorityMember: {
         const { newStakerAddress } = this.props.ballotMemberOriginData[id];
         return (
@@ -165,7 +165,7 @@ class Voting extends React.Component {
           </p>
         );
       }
-      /* Governance Contract Address */
+      // Governance Contract Address
       case constants.ballotTypes.GovernanceContractAddress: {
         const { oldGovernanceAddress, newGovernanceAddress } =
           this.props.ballotMemberOriginData[id];
@@ -177,7 +177,7 @@ class Voting extends React.Component {
           </p>
         );
       }
-      /* Voting Duration Setting */
+      // Voting Duration Setting
       case constants.ballotTypes.VotingDurationSetting: {
         const { envVariableValue } = this.props.ballotMemberOriginData[id];
         const decodeValue = util.decodeParameters(
