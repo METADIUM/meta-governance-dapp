@@ -560,12 +560,12 @@ class ProposalForm extends React.Component {
         }
 
         // check if staking address has wemix
-        // if (balance < newLockedAmount) {
-        //   return this.props.getErrModal(
-        //     "Not Enough WEMIX to Stake.",
-        //     "Proposal Submit Error"
-        //   );
-        // }
+        if (balance < newLockedAmount) {
+          return this.props.getErrModal(
+            "Not Enough WEMIX to Stake.",
+            "Proposal Submit Error"
+          );
+        }
         return false;
       }
       /* Governance Contract Address */
