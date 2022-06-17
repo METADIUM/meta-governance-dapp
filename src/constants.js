@@ -6,6 +6,20 @@ export const ENV_NAMES = {
   ENV_STAKING_MIN_MAX: "stakingMinMax",
 };
 
+// envName sha3
+export const ENV_NAMES_SHA3 = [
+  {
+    name: "Voting Duration Setting",
+    sha3Name:
+      "0xe10074dceffb75f13bf0ce50145afd35182d63796823f1280ce40e01c19109e7",
+  },
+  {
+    name: "Authority Member Staking Amount",
+    sha3Name:
+      "0x6c6f69f426081752a5d3e73746599acd2a4cb145d5de4203ca1e3473b281680b",
+  },
+];
+
 const constants = {
   authorityRepo: {
     org: "METADIUM",
@@ -35,7 +49,7 @@ const constants = {
     MemberRemoval: "2",
     MemberChange: "3",
     GovernanceContractAddress: "4",
-    VotingDurationSetting: "5",
+    ChangedEnv: "5",
   },
   ballotStateArr: [
     "Invalid",
@@ -51,7 +65,7 @@ const constants = {
     "MemberRemoval",
     "MemberChange",
     "Governance Contract Address",
-    "Voting Duration Setting",
+    "Changed Env",
   ],
   /* Debug */
   debugMode: false,

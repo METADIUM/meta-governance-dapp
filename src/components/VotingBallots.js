@@ -32,7 +32,12 @@ const VotingBallots = ({
       <div className="ballotInfoDiv flex">
         <div className="infoLeft flex-full">
           <p className="topic text-exlarge text-bold">
-            {setTopic(item.ballotType, newMemberAddress, oldMemberAddress)}
+            {setTopic(
+              item.ballotType,
+              ballotMemberOriginData.envVariableName,
+              newMemberAddress,
+              oldMemberAddress
+            )}
           </p>
           <p className="company text-small">{authorityName}</p>
           <p className="addr text-small">Proposal Address: {item.creator}</p>

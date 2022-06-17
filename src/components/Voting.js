@@ -141,10 +141,14 @@ class Voting extends React.Component {
     this.setState({ isBallotLoading: true });
   }
 
-  setTopic = (type, newAddr, oldAddr) => {
+  // show proposal name
+  setTopic = (type, name, newAddr, oldAddr) => {
     if (type === constants.ballotTypes.MemberChange && newAddr === oldAddr)
       return "MemberUpdate";
-    else return constants.ballotTypesArr[parseInt(type)];
+    if (type === constants.ballotTypes.ChangedEnv) {
+      return name;
+    }
+    return constants.ballotTypesArr[parseInt(type)];
   };
 
   setDescription = (type, id) => {
@@ -165,7 +169,7 @@ class Voting extends React.Component {
           </p>
         );
       }
-      // Governance Contract Address
+      //  Governance Contract Address
       case constants.ballotTypes.GovernanceContractAddress: {
         const { oldGovernanceAddress, newGovernanceAddress } =
           this.props.ballotMemberOriginData[id];
@@ -178,17 +182,24 @@ class Voting extends React.Component {
         );
       }
       // Voting Duration Setting
-      case constants.ballotTypes.VotingDurationSetting: {
-        const { envVariableValue } = this.props.ballotMemberOriginData[id];
+      case constants.ballotTypes.ChangedEnv: {
+        const { envVariableName, envVariableValue } =
+          this.props.ballotMemberOriginData[id];
+        // get variable value
         const decodeValue = util.decodeParameters(
           ["uint256", "uint256"],
           envVariableValue
         );
-        return (
-          <p className="description flex-full">
-            Voting Duration Setting: {decodeValue[0]}-{decodeValue[1]}day
-          </p>
-        );
+        // set description
+        let description = `${envVariableName}: `;
+        if (envVariableName === "Voting Duration Setting") {
+          description += `${decodeValue[0]}-${decodeValue[1]} day`;
+        } else if (envVariableName === "Authority Member Staking Amount") {
+          description += `${decodeValue[0]}-${decodeValue[1]} WEMIX`;
+        } else {
+          return "Wrong Proposal (This label is only test)";
+        }
+        return <p className="description flex-full">{description}</p>;
       }
       //  case constants.ballotTypes.MemberRemoval:
       //     return (

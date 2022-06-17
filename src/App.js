@@ -17,7 +17,7 @@ import {
   BaseLoader,
 } from "./components";
 import getWeb3Instance, { web3Instance } from "./web3";
-import { constants } from "./constants";
+import { constants, ENV_NAMES_SHA3 } from "./constants";
 import * as util from "./util";
 
 import "./App.css";
@@ -348,7 +348,6 @@ class App extends React.Component {
     let result = null;
 
     switch (ballotType) {
-      // TODO address
       case "4":
         result = {
           oldGovernanceAddress: await contracts.governance.implementation(),
@@ -357,10 +356,14 @@ class App extends React.Component {
           ),
         };
         break;
-      // TODO variable
-      case "5":
+      case "5": {
         result = await contracts.ballotStorage.getBallotVariable(i);
+        const type = ENV_NAMES_SHA3.filter((key) => {
+          return key.sha3Name === result.envVariableName;
+        })[0] || { name: "Wrong Proposal (This label is only test)" };
+        result.envVariableName = type.name;
         break;
+      }
       // TODO member
       case "1":
       default:
@@ -374,7 +377,6 @@ class App extends React.Component {
         if (!isNaN(key)) delete result[key];
       }
     }
-
     result.id = i; // add ballot id
     this.data.ballotMemberOriginData[i] = result;
     if (isUpdated) ballotMemberFinalizedData[i] = result;
