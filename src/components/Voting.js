@@ -185,17 +185,20 @@ class Voting extends React.Component {
       case constants.ballotTypes.ChangedEnv: {
         const { envVariableName, envVariableValue } =
           this.props.ballotMemberOriginData[id];
+        // TODO 좀 더 유연하게 변경할 필요가 있음
         // get variable value
-        const decodeValue = util.decodeParameters(
-          ["uint256", "uint256"],
-          envVariableValue
-        );
+        const decodeValue =
+          envVariableName === "Block Creation Time"
+            ? util.decodeParameters(["uint256"], envVariableValue)
+            : util.decodeParameters(["uint256", "uint256"], envVariableValue);
         // set description
         let description = `${envVariableName}: `;
         if (envVariableName === "Voting Duration Setting") {
           description += `${decodeValue[0]}-${decodeValue[1]} day`;
         } else if (envVariableName === "Authority Member Staking Amount") {
           description += `${decodeValue[0]}-${decodeValue[1]} WEMIX`;
+        } else if (envVariableName === "Block Creation Time") {
+          description += `${decodeValue[0] / 1000} s`;
         } else {
           return "Wrong Proposal (This label is only test)";
         }

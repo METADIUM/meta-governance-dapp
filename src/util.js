@@ -176,7 +176,7 @@ export const checkNode = (node) => {
 
 // at least 0.1
 export const checkBlockCreationTime = (time) => {
-  return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1,})?|0?\.[1-9]{1,})?$/.test(time);
+  return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1})?|0?\.[1-9]{1})?$/.test(time);
 };
 
 // check if value is greater than or less than

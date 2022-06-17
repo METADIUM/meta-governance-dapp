@@ -581,12 +581,17 @@ class ProposalForm extends React.Component {
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_BLOCK_CREATION_TIME
           );
+          // convert ms
+          const envVal = util.encodeParameters(
+            ["uint256"],
+            [blockCreation * 1000]
+          );
           // const envVal = util.encodeParameters(["uint256"], [blockCreation]);
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {
             envName,
             envType: String(2),
-            envVal: blockCreation,
+            envVal,
             memo,
             duration: votDuration,
           };
@@ -601,14 +606,12 @@ class ProposalForm extends React.Component {
         memo: checkData.memo || "",
         duration: checkData.duration || this.props.votingDurationMin,
       };
-      console.warn(checkData);
       // override data for formatting
       refineData = util.refineSubmitData(checkData);
       if (typeof (await this.handleProposalError(refineData)) === "undefined") {
         this.props.convertLoading(false);
         return;
       }
-      console.warn(refineData);
       return trxFunction(refineData);
     } catch (err) {
       console.log(err);
