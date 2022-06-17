@@ -23,9 +23,9 @@ const timeConverter = (timestamp) => {
 };
 
 // convert seconds -> day
-export const convertSecondsToDay = (seconds) => {
-  return seconds < secondsInDay ? 1 : seconds / secondsInDay;
-};
+// export const convertSecondsToDay = (seconds) => {
+//   return seconds < secondsInDay ? 1 : seconds / secondsInDay;
+// };
 
 // convert day -> seconds
 export const convertDayToSeconds = (day) => {
@@ -68,43 +68,6 @@ export const splitNodeInfo = (nodeInfo) => {
   splitedStr = splitedStr[1].split("?");
   port = parseInt(splitedStr[0]);
   return { node, ip, port };
-};
-
-// up to 64 character, english and numbers only
-export const checkName = (name) => {
-  return /^[A-Za-z0-9+]{1,64}$/.test(name);
-};
-
-// numbers only
-export const checkPrice = (price) => {
-  return /^[0-9]{1,}$/.test(price);
-};
-
-// start with 0x, hexadecimal only 40 characters
-export const checkAddress = (address) => {
-  return /^0x[a-fA-F0-9]{40}$/.test(address);
-};
-
-// up to 128 character hexadecimal, @ after that, ip:port
-export const checkNode = (node) => {
-  return /^([a-fA-F0-9]{128})+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})$/.test(
-    node
-  );
-};
-
-// check if value is greater than or less than
-export const checkDuration = (type, min, max) => {
-  const newMin = parseInt(min);
-  const newMax = parseInt(max);
-
-  // when no value
-  if (!(min && max)) return true;
-
-  if (type === "min") {
-    return newMin > newMax ? type : null;
-  } else if (type === "max") {
-    return newMax < newMin ? type : null;
-  } else return;
 };
 
 // override data format for save storage
@@ -186,6 +149,52 @@ export const refineSubmitData = (m) => {
     }
   });
   return copy;
+};
+
+// ---------- check data ---------- //
+// up to 64 character, english and numbers only
+export const checkName = (name) => {
+  return /^[A-Za-z0-9+]{1,64}$/.test(name);
+};
+
+// numbers only
+export const checkPrice = (price) => {
+  return /^[0-9]{1,}$/.test(price);
+};
+
+// start with 0x, hexadecimal only 40 characters
+export const checkAddress = (address) => {
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
+};
+
+// up to 128 character hexadecimal, @ after that, ip:port
+export const checkNode = (node) => {
+  return /^([a-fA-F0-9]{128})+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})$/.test(
+    node
+  );
+};
+
+// check if value is greater than or less than
+export const checkNumberRange = (type, min, max) => {
+  const newMin = parseInt(min);
+  const newMax = parseInt(max);
+
+  // when no value
+  if (!(min && max) || min < 1 || max < 1) return true;
+
+  if (type === "min") {
+    return newMin > newMax ? type : null;
+  } else if (type === "max") {
+    return newMax < newMin ? type : null;
+  } else return;
+};
+
+// check max member staking amount
+export const checkMemberStakingAmount = (min, max) => {
+  const newMin = parseInt(min);
+  const newMax = parseInt(max);
+
+  return !(newMin < newMax && newMax <= 4980000);
 };
 
 // ---------- etc ----------

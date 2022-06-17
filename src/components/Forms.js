@@ -75,7 +75,6 @@ const ProposalFormFooter = ({
       </div>
       <Form.Item>
         <div className="submitDiv flex">
-          {disabled}
           <Button
             name="submit"
             htmlType="submit"

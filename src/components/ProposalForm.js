@@ -143,7 +143,7 @@ class ProposalForm extends React.Component {
         else {
           const { votDurationMin, votDurationMax } = this.data.formData;
           this.setState({
-            votDurationErr: util.checkDuration(
+            votDurationErr: util.checkNumberRange(
               "min",
               votDurationMin,
               votDurationMax
@@ -157,7 +157,7 @@ class ProposalForm extends React.Component {
         } else {
           const { votDurationMin, votDurationMax } = this.data.formData;
           this.setState({
-            votDurationErr: util.checkDuration(
+            votDurationErr: util.checkNumberRange(
               "max",
               votDurationMin,
               votDurationMax
@@ -172,11 +172,16 @@ class ProposalForm extends React.Component {
         else {
           const { authMemSkAmountMin, authMemSkAmountMax } = this.data.formData;
           this.setState({
-            authMemSkAmountErr: util.checkDuration(
-              "min",
-              authMemSkAmountMin,
-              authMemSkAmountMax
-            ),
+            authMemSkAmountErr:
+              util.checkNumberRange(
+                "min",
+                authMemSkAmountMin,
+                authMemSkAmountMax
+              ) ||
+              util.checkMemberStakingAmount(
+                authMemSkAmountMin,
+                authMemSkAmountMax
+              ),
           });
         }
         break;
@@ -187,11 +192,15 @@ class ProposalForm extends React.Component {
           const { authMemSkAmountMin, authMemSkAmountMax } = this.data.formData;
           this.setState({
             authMemSkAmountErr:
-              util.checkDuration(
+              util.checkNumberRange(
                 "max",
                 authMemSkAmountMin,
                 authMemSkAmountMax
-              ) || Number(e.target.value) > 4980000,
+              ) ||
+              util.checkMemberStakingAmount(
+                authMemSkAmountMin,
+                authMemSkAmountMax
+              ),
           });
         }
         break;

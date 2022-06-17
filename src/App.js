@@ -184,12 +184,9 @@ class App extends React.Component {
   // set voting duration minium and maximum values
   async getVotingDuration() {
     if (["MAINNET", "TESTNET"].includes(web3Instance.netName)) {
-      this.data.votingDurationMin = util.convertSecondsToDay(
-        await contracts.ballotStorage.getMinVotingDuration()
-      );
-      this.data.votingDurationMax = util.convertSecondsToDay(
-        await contracts.ballotStorage.getMaxVotingDuration()
-      );
+      const duration = await contracts.envStorage.getBallotDurationMinMax();
+      this.data.votingDurationMin = duration[0];
+      this.data.votingDurationMax = duration[1];
     }
   }
 
