@@ -26,6 +26,8 @@ class ProposalForm extends React.Component {
     votDurationErr: null,
     // Authority Member Staking Amount
     authMemSkAmountErr: false,
+    // Block Creation Time
+    blockCreationErr: false,
     // Replace Authority Member
     votingAddrErr: false,
     stakingAddrErr: false,
@@ -33,14 +35,13 @@ class ProposalForm extends React.Component {
     // Remove Authority Member
     oldLockAmountErr: false,
     showLockAmount: "",
-
     // MaxPriorityFeePerGas
     maxPriorityFeePerGasErr: false,
     // Gas Limit
     gasLimitErr: false,
     baseFeeDenominatorErr: false,
     ElasticityErr: false,
-    blockCreationErr: false,
+
     blockRewardErr: false,
     numbers: {
       blockRate1: 0,
@@ -62,6 +63,52 @@ class ProposalForm extends React.Component {
     this.staking = this.props.contracts.staking;
   }
 
+  getLockAmount = async (value) => {
+    if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
+      this.props.getErrModal("Invalid Adress", "Proposal Submit Error");
+      this.setState({ showLockAmount: "" });
+      return;
+    } else if (!web3Instance.web3.utils.checkAddressChecksum(value)) {
+      value = web3Instance.web3.utils.toChecksumAddress(value);
+    }
+    if (!(await this.governance.isMember(value))) {
+      this.props.getErrModal(
+        "Non-existing Member Address (Old)",
+        "Proposal Submit Error"
+      );
+      this.setState({ showLockAmount: "" });
+      return;
+    }
+
+    try {
+      let lockedBalance = await this.staking.lockedBalanceOf(value);
+      this.setState({
+        showLockAmount: web3Instance.web3.utils.fromWei(lockedBalance),
+      });
+    } catch (err) {
+      console.log(err);
+      this.props.getErrModal(err.message, err.name);
+      this.props.convertLoading(false);
+      this.setState({ showLockAmount: "" });
+    }
+  };
+
+  resetForm() {
+    if (window.document.forms[0]) {
+      const elements = window.document.forms[0].elements;
+      Object.keys(elements).forEach((key) => {
+        switch (elements[key].name) {
+          case "newLockAmount":
+          case "oldLockAmount":
+            elements[key].value = this.props.stakingMin;
+            break;
+          default:
+            elements[key].value = "";
+        }
+      });
+    }
+  }
+
   // only, when the topic has changed
   handleSelectTopicChange = (topic) => {
     const { stakingMin, votingDurationMin, votingDurationMax } = this.props;
@@ -81,22 +128,6 @@ class ProposalForm extends React.Component {
       });
   };
 
-  resetForm() {
-    if (window.document.forms[0]) {
-      const elements = window.document.forms[0].elements;
-      Object.keys(elements).forEach((key) => {
-        switch (elements[key].name) {
-          case "newLockAmount":
-          case "oldLockAmount":
-            elements[key].value = this.props.stakingMin;
-            break;
-          default:
-            elements[key].value = "";
-        }
-      });
-    }
-  }
-
   // when the select option has changed
   handleSelectChange(e) {
     let [name, value] = e.split("_");
@@ -109,10 +140,8 @@ class ProposalForm extends React.Component {
       this.handleSelectChange(e);
       return;
     }
-
     const originStr = this.data.formData[e.target.name];
     this.data.formData[e.target.name] = e.target.value;
-
     switch (e.target.name) {
       // Add Authority Member
       case "newAddr":
@@ -204,6 +233,12 @@ class ProposalForm extends React.Component {
           });
         }
         break;
+      // Block Creation Time
+      case "blockCreation":
+        this.setState({
+          blockCreationErr: !util.checkBlockCreationTime(e.target.value),
+        });
+        break;
       // Replace Authority Member
       case "votingAddr":
         this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
@@ -225,11 +260,6 @@ class ProposalForm extends React.Component {
         break;
       case "oldNode":
         this.setState({ oldNodeErr: !util.checkNode(e.target.value) });
-        break;
-      case "newBlockCreation":
-        this.setState({
-          blockCreationErr: !this.checkBlockCreationTime(e.target.value),
-        });
         break;
       case "newBlockRewardAmount":
         this.setState({
@@ -293,12 +323,6 @@ class ProposalForm extends React.Component {
   }
 
   // TODO util file
-  // at least 0.1
-  checkBlockCreationTime(time) {
-    return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1,})?|0?\.[1-9]{1,})?$/.test(time);
-  }
-
-  // TODO util file
   // at least 1 and error with 18 decimal place or more
   checkRewardAmount(amount) {
     return /^[1-9]+\.?([0-9]{1,17})?$/.test(amount);
@@ -313,66 +337,122 @@ class ProposalForm extends React.Component {
     }, 0);
   };
 
-  // submit form data
-  handleSubmit = async (e) => {
-    e.preventDefault();
-    this.props.convertLoading(true);
-
-    try {
-      const trx = await this.checkSubmitData(this.data.formData);
-
-      // run only if there is data for sending transactions
-      if (trx !== undefined) {
-        this.sendTransaction(trx);
-      }
-      //   // TODO contract method 추가
-      //   // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      // } else if (this.data.selectedTopic === "ReplaceAuthorityMember") {
-      //   trx = this.governance.addProposalToChangeMember(
-      //     [formData.oldAddr, formData.newAddr],
-      //     formData.newName,
-      //     formData.newNode.node,
-      //     formData.newNode.ip,
-      //     [formData.newNode.port, formData.newLockAmount],
-      //     formData.memo
-      //   );
-      // } else if (this.data.selectedTopic === "RemoveAuthorityMember") {
-      //   trx = this.governance.addProposalToRemoveMember(
-      //     formData.oldAddr,
-      //     formData.oldLockAmount,
-      //     formData.memo
-      //   );
-      //   // ! legacy code -> remove <Update Authority>
-      // } else if (this.data.selectedTopic === "UpdateAuthority") {
-      //   let myLockBalance = await this.staking.lockedBalanceOf(
-      //     web3Instance.defaultAccount
-      //   );
-      //   trx = this.governance.addProposalToChangeMember(
-      //     [web3Instance.defaultAccount, web3Instance.defaultAccount],
-      //     formData.newNode.node,
-      //     formData.newNode.ip,
-      //     [formData.newNode.port, myLockBalance],
-      //     formData.memo
-      //   );
-      // } else if (this.data.selectedTopic === "ChangeOfMaxPriorityFeePerGas") {
-      //   // trx =
-      //   // TODO envName, envType 맞는지 확인 필요
-      //   // TODO contract method 추가
-      //   // TODO contract 단에서 voting duration 이 추가되면 추가해야 함
-      // } else if (this.data.selectedTopic === "GasLimit") {
-      //   trx = this.governance.addProposalToChangeEnv(
-      //     web3Instance.web3.utils.asciiToHex("GasLimit"), // envName
-      //     "2", // envType (uint)
-      //     formData.gasLimit,
-      //     formData.memo
-      // );
-      // } else return;
-    } catch (err) {
-      console.log(err);
-      this.props.getErrModal(err.message, err.name);
-      this.props.convertLoading(false);
+  // check before sending transaction
+  async handleProposalError(refineData) {
+    if (
+      !(await this.governance.isMember(web3Instance.defaultAccount)) &&
+      !constants.debugMode
+    ) {
+      return this.props.getErrModal(
+        "You are not Governance Member.",
+        "Proposal Submit Error"
+      );
     }
-  };
+    const { selectedTopic } = this.data;
+    switch (selectedTopic) {
+      case "AddAuthorityMember": {
+        const { staker, lockAmount } = refineData;
+        const newLockedAmount = Number(lockAmount);
+        // get the balance of staking address
+        const balance = Number(await this.staking.availableBalanceOf(staker));
+        // check if addresses already exist
+        const isMember = await this.governance.isMember(staker);
+        if (isMember) {
+          return this.props.getErrModal(
+            "Existing Member Address.",
+            "Proposal Submit Error"
+          );
+        }
+        // check if addresses already voted
+        const inBallotMember = this.props.newMemberaddr.some(
+          (addr) => addr === staker
+        );
+        if (inBallotMember) {
+          return this.props.getErrModal(
+            "Address with Existing Ballot.",
+            "Proposal Submit Error"
+          );
+        }
+        // check if staking address has wemix
+        if (balance < newLockedAmount) {
+          return this.props.getErrModal(
+            "Not Enough WEMIX to Stake.",
+            "Proposal Submit Error"
+          );
+        }
+        return false;
+      }
+      case "GovernanceContractAddress": {
+        const { newGovAddr } = refineData;
+        // check if address is contract code
+        const code = await web3Instance.web3.eth.getCode(newGovAddr);
+        if (code === "0x") {
+          return this.props.getErrModal(
+            "Address is not a Contract Address.",
+            "Proposal Submit Error"
+          );
+        }
+        return false;
+      }
+      case "VotingDurationSetting":
+      case "AuthorityMemberStakingAmount":
+      case "BlockCreationTime":
+        return false;
+      // // ! legacy code -> remove <Replace Authority>
+      // case "ReplaceAuthorityMember":
+      //   const oldMemberLockedBalance = await this.staking.lockedBalanceOf(
+      //     formData.oldAddr
+      //   );
+      //   const newMemberBalance = Number(
+      //     await this.staking.availableBalanceOf(formData.newAddr)
+      //   );
+      //   if (await this.governance.isMember(formData.newAddr)) {
+      //     return this.props.getErrModal(
+      //       "Existing Member Address (New)",
+      //       "Proposal Submit Error"
+      //     );
+      //   } else if (!(await this.governance.isMember(formData.oldAddr))) {
+      //     return this.props.getErrModal(
+      //       "Non-existing Member Address (Old)",
+      //       "Proposal Submit Error"
+      //     );
+      //   } else if (
+      //     this.props.newMemberaddr.some((item) => item === formData.newAddr)
+      //   ) {
+      //     return this.props.getErrModal(
+      //       "Address with existing ballot (New)",
+      //       "Proposal Submit Error"
+      //     );
+      //   } else if (
+      //     this.props.oldMemberaddr.some((item) => item === formData.oldAddr)
+      //   ) {
+      //     return this.props.getErrModal(
+      //       "Address with existing ballot (Old)",
+      //       "Proposal Submit Error"
+      //     );
+      //   } else if (Number(oldMemberLockedBalance) !== newLockedAmount) {
+      //     return this.props.getErrModal(
+      //       [
+      //         "Invalid Replace WEMIX Amount",
+      //         <br />,
+      //         `(Old Address: ${web3Instance.web3.utils.fromWei(
+      //           oldMemberLockedBalance,
+      //           "ether"
+      //         )} WEMIX Locked)`,
+      //       ],
+      //       "Proposal Submit Error"
+      //     );
+      //   } // } else if (newMemberBalance < newLockedAmount) {
+      //   //   return this.props.getErrModal(
+      //   //     "Not Enough WEMIX Stake (New)",
+      //   //     "Proposal Submit Error"
+      //   //   );
+      //   // }
+      //   break;
+      default:
+        return this.props.getErrModal("Wrong Access.", "Proposal Submit Error");
+    }
+  }
 
   // check the data error handling
   async checkSubmitData(data) {
@@ -487,6 +567,31 @@ class ProposalForm extends React.Component {
           };
           break;
         }
+        case "BlockCreationTime": {
+          const { blockCreation } = data;
+          // check undefined
+          if (blockCreation === undefined) {
+            this.setState({
+              blockCreationErr: !this.state.blockCreationErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          // setting env variables
+          const envName = util.encodeStringToSha3(
+            ENV_NAMES.ENV_BLOCK_CREATION_TIME
+          );
+          // const envVal = util.encodeParameters(["uint256"], [blockCreation]);
+          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          checkData = {
+            envName,
+            envType: String(2),
+            envVal: blockCreation,
+            memo,
+            duration: votDuration,
+          };
+          break;
+        }
         default:
           return;
       }
@@ -496,12 +601,14 @@ class ProposalForm extends React.Component {
         memo: checkData.memo || "",
         duration: checkData.duration || this.props.votingDurationMin,
       };
+      console.warn(checkData);
       // override data for formatting
       refineData = util.refineSubmitData(checkData);
       if (typeof (await this.handleProposalError(refineData)) === "undefined") {
         this.props.convertLoading(false);
         return;
       }
+      console.warn(refineData);
       return trxFunction(refineData);
     } catch (err) {
       console.log(err);
@@ -509,6 +616,23 @@ class ProposalForm extends React.Component {
       this.props.convertLoading(false);
     }
   }
+
+  // submit form data
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    this.props.convertLoading(true);
+    try {
+      const trx = await this.checkSubmitData(this.data.formData);
+      // run only if there is data for sending transactions
+      if (trx !== undefined) {
+        this.sendTransaction(trx);
+      }
+    } catch (err) {
+      console.log(err);
+      this.props.getErrModal(err.message, err.name);
+      this.props.convertLoading(false);
+    }
+  };
 
   // send transaction
   async sendTransaction(trx) {
@@ -546,177 +670,6 @@ class ProposalForm extends React.Component {
       this.props.convertLoading(false);
     }
   }
-
-  // check before sending transaction
-  async handleProposalError(refineData) {
-    if (
-      !(await this.governance.isMember(web3Instance.defaultAccount)) &&
-      !constants.debugMode
-    ) {
-      return this.props.getErrModal(
-        "You are not Governance Member.",
-        "Proposal Submit Error"
-      );
-    }
-    const { selectedTopic } = this.data;
-    switch (selectedTopic) {
-      case "AddAuthorityMember": {
-        const { staker, lockAmount } = refineData;
-        const newLockedAmount = Number(lockAmount);
-        // get the balance of staking address
-        const balance = Number(await this.staking.availableBalanceOf(staker));
-        // check if addresses already exist
-        const isMember = await this.governance.isMember(staker);
-        if (isMember) {
-          return this.props.getErrModal(
-            "Existing Member Address.",
-            "Proposal Submit Error"
-          );
-        }
-        // check if addresses already voted
-        const inBallotMember = this.props.newMemberaddr.some(
-          (addr) => addr === staker
-        );
-        if (inBallotMember) {
-          return this.props.getErrModal(
-            "Address with Existing Ballot.",
-            "Proposal Submit Error"
-          );
-        }
-        // check if staking address has wemix
-        if (balance < newLockedAmount) {
-          return this.props.getErrModal(
-            "Not Enough WEMIX to Stake.",
-            "Proposal Submit Error"
-          );
-        }
-        return false;
-      }
-      case "GovernanceContractAddress": {
-        const { newGovAddr } = refineData;
-        // check if address is contract code
-        const code = await web3Instance.web3.eth.getCode(newGovAddr);
-        if (code === "0x") {
-          return this.props.getErrModal(
-            "Address is not a Contract Address.",
-            "Proposal Submit Error"
-          );
-        }
-        return false;
-      }
-      case "VotingDurationSetting":
-      case "AuthorityMemberStakingAmount":
-        return false;
-      // // ! legacy code -> remove <Replace Authority>
-      // case "ReplaceAuthorityMember":
-      //   const oldMemberLockedBalance = await this.staking.lockedBalanceOf(
-      //     formData.oldAddr
-      //   );
-      //   const newMemberBalance = Number(
-      //     await this.staking.availableBalanceOf(formData.newAddr)
-      //   );
-      //   if (await this.governance.isMember(formData.newAddr)) {
-      //     return this.props.getErrModal(
-      //       "Existing Member Address (New)",
-      //       "Proposal Submit Error"
-      //     );
-      //   } else if (!(await this.governance.isMember(formData.oldAddr))) {
-      //     return this.props.getErrModal(
-      //       "Non-existing Member Address (Old)",
-      //       "Proposal Submit Error"
-      //     );
-      //   } else if (
-      //     this.props.newMemberaddr.some((item) => item === formData.newAddr)
-      //   ) {
-      //     return this.props.getErrModal(
-      //       "Address with existing ballot (New)",
-      //       "Proposal Submit Error"
-      //     );
-      //   } else if (
-      //     this.props.oldMemberaddr.some((item) => item === formData.oldAddr)
-      //   ) {
-      //     return this.props.getErrModal(
-      //       "Address with existing ballot (Old)",
-      //       "Proposal Submit Error"
-      //     );
-      //   } else if (Number(oldMemberLockedBalance) !== newLockedAmount) {
-      //     return this.props.getErrModal(
-      //       [
-      //         "Invalid Replace WEMIX Amount",
-      //         <br />,
-      //         `(Old Address: ${web3Instance.web3.utils.fromWei(
-      //           oldMemberLockedBalance,
-      //           "ether"
-      //         )} WEMIX Locked)`,
-      //       ],
-      //       "Proposal Submit Error"
-      //     );
-      //   } // } else if (newMemberBalance < newLockedAmount) {
-      //   //   return this.props.getErrModal(
-      //   //     "Not Enough WEMIX Stake (New)",
-      //   //     "Proposal Submit Error"
-      //   //   );
-      //   // }
-      //   break;
-      // case "RemoveAuthorityMember":
-      //   const oldMemberBalance = Number(
-      //     await this.staking.lockedBalanceOf(formData.oldAddr)
-      //   );
-      //   const oldLockedAmount = Number(formData.oldLockAmount);
-
-      //   if (!(await this.governance.isMember(formData.oldAddr))) {
-      //     return this.props.getErrModal(
-      //       "Non-existing Member Address (Old)",
-      //       "Proposal Submit Error"
-      //     );
-      //   } else if (
-      //     this.props.oldMemberaddr.some((item) => item === formData.oldAddr)
-      //   ) {
-      //     return this.props.getErrModal(
-      //       "Address with existing ballot (Old)",
-      //       "Proposal Submit Error"
-      //     );
-      //   } else if (oldMemberBalance < oldLockedAmount) {
-      //     return this.props.getErrModal(
-      //       "Invalid WEMIX Unlock Amount",
-      //       "Proposal Submit Error"
-      //     );
-      //   }
-      //   break;
-      default:
-        return this.props.getErrModal("Wrong Access.", "Proposal Submit Error");
-    }
-  }
-
-  getLockAmount = async (value) => {
-    if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
-      this.props.getErrModal("Invalid Adress", "Proposal Submit Error");
-      this.setState({ showLockAmount: "" });
-      return;
-    } else if (!web3Instance.web3.utils.checkAddressChecksum(value)) {
-      value = web3Instance.web3.utils.toChecksumAddress(value);
-    }
-    if (!(await this.governance.isMember(value))) {
-      this.props.getErrModal(
-        "Non-existing Member Address (Old)",
-        "Proposal Submit Error"
-      );
-      this.setState({ showLockAmount: "" });
-      return;
-    }
-
-    try {
-      let lockedBalance = await this.staking.lockedBalanceOf(value);
-      this.setState({
-        showLockAmount: web3Instance.web3.utils.fromWei(lockedBalance),
-      });
-    } catch (err) {
-      console.log(err);
-      this.props.getErrModal(err.message, err.name);
-      this.props.convertLoading(false);
-      this.setState({ showLockAmount: "" });
-    }
-  };
 
   // show components that follow selected topic
   showProposalForm() {
@@ -782,7 +735,7 @@ class ProposalForm extends React.Component {
         case "BlockCreationTime":
           return (
             <PComponent.BlockCreationTime
-              newBlockCreation={this.data.formData.newBlockCreation}
+              blockCreation={this.data.formData.blockCreation}
               blockCreationErr={this.state.blockCreationErr}
             />
           );

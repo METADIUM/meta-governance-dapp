@@ -4,7 +4,6 @@ import { Button, Input, Form, Icon, Select } from "antd";
 import { shouldPass } from "../util";
 
 const { TextArea } = Input;
-const { Option } = Select;
 
 // components for communicating common props
 export const PassesCommonProps = ({
@@ -694,10 +693,11 @@ export const AuthorityMemberStakingAmountForm = ({
   </div>
 );
 
+// Block Creation Time
 export const BlockCreationTime = ({
   netName,
   loading,
-  newBlockCreation,
+  blockCreation,
   blockCreationErr,
   votingDurationMin,
   votingDurationMax,
@@ -715,8 +715,8 @@ export const BlockCreationTime = ({
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="newBlockCreation"
-                  value={newBlockCreation}
+                  name="blockCreation"
+                  value={blockCreation}
                   onChange={handleChange}
                   className={
                     "w-180 mg-rl-15 ml-0" +
@@ -748,28 +748,6 @@ export const BlockCreationTime = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
       <ProposalFormFooter
         netName={netName}
         loading={loading}

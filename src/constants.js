@@ -4,6 +4,7 @@ const buildNetworkType = process.env.REACT_APP_NETWORK_TYPE;
 export const ENV_NAMES = {
   ENV_BALLOT_DURATION_MIN_MAX: "ballotDurationMinMax",
   ENV_STAKING_MIN_MAX: "stakingMinMax",
+  ENV_BLOCK_CREATION_TIME: "blockCreationTime",
 };
 
 // envName sha3
@@ -17,6 +18,11 @@ export const ENV_NAMES_SHA3 = [
     name: "Authority Member Staking Amount",
     sha3Name:
       "0x6c6f69f426081752a5d3e73746599acd2a4cb145d5de4203ca1e3473b281680b",
+  },
+  {
+    name: "Block Creation Time",
+    sha3Name:
+      "0x8086da5becff4dfac91a3105821b361078d2d4abba0ccc2401b974cf0dcf05c1",
   },
 ];
 
