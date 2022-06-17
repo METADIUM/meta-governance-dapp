@@ -44,7 +44,7 @@ export const decodeHexToString = (input) => {
 };
 
 // encode string -> sha3
-export const encodingStringToSha3 = (input) => {
+export const encodeStringToSha3 = (input) => {
   return web3Instance.web3.utils.sha3(input);
 };
 

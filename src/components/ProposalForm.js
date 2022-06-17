@@ -442,7 +442,7 @@ class ProposalForm extends React.Component {
             return;
           }
           // setting env variables
-          const envName = util.encodingStringToSha3(
+          const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_BALLOT_DURATION_MIN_MAX
           );
           const envVal = util.encodeParameters(
@@ -470,7 +470,7 @@ class ProposalForm extends React.Component {
             return;
           }
           // setting env variables
-          const envName = util.encodingStringToSha3(
+          const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_STAKING_MIN_MAX
           );
           const envVal = util.encodeParameters(
