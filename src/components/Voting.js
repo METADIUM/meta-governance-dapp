@@ -181,14 +181,15 @@ class Voting extends React.Component {
           </p>
         );
       }
-      // Voting Duration Setting
+      // Env Variables
       case constants.ballotTypes.ChangedEnv: {
         const { envVariableName, envVariableValue } =
           this.props.ballotMemberOriginData[id];
         // TODO 좀 더 유연하게 변경할 필요가 있음
         // get variable value
         const decodeValue =
-          envVariableName === "Block Creation Time"
+          envVariableName === "Block Creation Time" ||
+          envVariableName === "Block Reward Amount"
             ? util.decodeParameters(["uint256"], envVariableValue)
             : util.decodeParameters(["uint256", "uint256"], envVariableValue);
         // set description
@@ -199,6 +200,8 @@ class Voting extends React.Component {
           description += `${decodeValue[0]}-${decodeValue[1]} WEMIX`;
         } else if (envVariableName === "Block Creation Time") {
           description += `${decodeValue[0] / 1000} s`;
+        } else if (envVariableName === "Block Reward Amount") {
+          description += `${decodeValue[0]} WEMIX/Block`;
         } else {
           return "Wrong Proposal (This label is only test)";
         }

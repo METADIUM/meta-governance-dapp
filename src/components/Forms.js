@@ -760,11 +760,12 @@ export const BlockCreationTime = ({
   </div>
 );
 
+// Block Reward Amount
 export const BlockRewardAmount = ({
   netName,
   loading,
-  newBlockRewardAmount,
-  blockRewardErr,
+  blockRewardAmount,
+  blockRewardAmountErr,
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
@@ -781,18 +782,19 @@ export const BlockRewardAmount = ({
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="newBlockRewardAmount"
-                  value={newBlockRewardAmount}
+                  name="blockRewardAmount"
+                  value={blockRewardAmount}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" + (blockRewardErr ? " errInput" : "")
+                    "w-180 mg-rl-15 ml-0" +
+                    (blockRewardAmountErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
                 <span>WEMIX/Block</span>
               </div>
             </div>
-            <p className={blockRewardErr ? "errHint" : "errHint-hide"}>
+            <p className={blockRewardAmountErr ? "errHint" : "errHint-hide"}>
               Invalid Block Reward Amount
             </p>
           </Form.Item>
@@ -816,7 +818,7 @@ export const BlockRewardAmount = ({
       <ProposalFormFooter
         netName={netName}
         loading={loading}
-        disabled={blockRewardErr}
+        disabled={blockRewardAmountErr}
         votingDurationMin={votingDurationMin}
         votingDurationMax={votingDurationMax}
         handleChange={handleChange}
