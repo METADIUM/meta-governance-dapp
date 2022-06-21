@@ -30,6 +30,8 @@ class ProposalForm extends React.Component {
     blockCreationErr: false,
     // Block Reward Amonut
     blockRewardAmountErr: false,
+    // MaxPriorityFeePerGas
+    maxPriorityFeePerGasErr: false,
 
     // Replace Authority Member
     votingAddrErr: false,
@@ -38,8 +40,6 @@ class ProposalForm extends React.Component {
     // Remove Authority Member
     oldLockAmountErr: false,
     showLockAmount: "",
-    // MaxPriorityFeePerGas
-    maxPriorityFeePerGasErr: false,
     // Gas Limit
     gasLimitErr: false,
     baseFeeDenominatorErr: false,
@@ -251,6 +251,16 @@ class ProposalForm extends React.Component {
             blockRewardAmountErr: !util.checkRewardAmount(e.target.value),
           });
         break;
+      // maxPriorityFeePerGas
+      case "maxPriorityFeePerGas":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else
+          this.setState({
+            maxPriorityFeePerGasErr: !util.checkPrice(e.target.value),
+          });
+        break;
+
       // Replace Authority Member
       // case "votingAddr":
       //   this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
@@ -296,12 +306,6 @@ class ProposalForm extends React.Component {
             };
           });
         }
-        break;
-      // Change Of MaxPriorityFeePerGas
-      case "maxPriorityFeePerGas":
-        this.setState({
-          maxPriorityFeePerGasErr: !util.checkPrice(e.target.value),
-        });
         break;
       // Gas Limit
       case "gasLimit":
@@ -399,6 +403,7 @@ class ProposalForm extends React.Component {
       case "AuthorityMemberStakingAmount":
       case "BlockCreationTime":
       case "BlockRewardAmount":
+      case "MaxPriorityFeePerGas":
         return false;
       // // ! legacy code -> remove <Replace Authority>
       // case "ReplaceAuthorityMember":
@@ -627,6 +632,37 @@ class ProposalForm extends React.Component {
           };
           break;
         }
+        case "MaxPriorityFeePerGas": {
+          const { maxPriorityFeePerGas } = data;
+          // check undefined
+          if (
+            maxPriorityFeePerGas === undefined ||
+            !Number(maxPriorityFeePerGas)
+          ) {
+            this.setState({
+              maxPriorityFeePerGasErr: !this.state.maxPriorityFeePerGasErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          // setting env variables
+          const envName = util.encodeStringToSha3(
+            ENV_NAMES.ENV_MAXPRIORITYFEEPERGAS
+          );
+          const envVal = util.encodeParameters(
+            ["uint256"],
+            [util.convertGWeiToWei(maxPriorityFeePerGas)]
+          );
+          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          checkData = {
+            envName,
+            envType: String(2),
+            envVal,
+            memo,
+            duration: votDuration,
+          };
+          break;
+        }
         default:
           return;
       }
@@ -790,9 +826,10 @@ class ProposalForm extends React.Component {
               blockRewardDisMthErr={this.state.blockRewardDisMthErr}
             />
           );
-        case "ChangeOfMaxPriorityFeePerGas":
+        case "MaxPriorityFeePerGas":
           return (
-            <PComponent.ChangeOfMaxPriorityFeePerGas
+            <PComponent.MaxPriorityFeePerGasForm
+              maxPriorityFeePerGas={this.data.formData.maxPriorityFeePerGas}
               maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}
             />
           );
@@ -898,7 +935,7 @@ class ProposalForm extends React.Component {
                 <Select.Option value="BlockRewardDistributionMethod">
                   Block Reward Distribution Method
                 </Select.Option>
-                <Select.Option value="ChangeOfMaxPriorityFeePerGas">
+                <Select.Option value="MaxPriorityFeePerGas">
                   MaxPriorityFeePerGas
                 </Select.Option>
                 <Select.Option value="GasLimit">
