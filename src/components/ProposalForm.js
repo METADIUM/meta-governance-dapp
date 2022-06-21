@@ -240,15 +240,15 @@ class ProposalForm extends React.Component {
         });
         break;
       // Replace Authority Member
-      case "votingAddr":
-        this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
-        break;
+      // case "votingAddr":
+      //   this.setState({ votingAddrErr: !util.checkAddress(e.target.value) });
+      //   break;
       case "stakingAddr":
         this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) });
         break;
-      case "rewardAddr":
-        this.setState({ rewardAddrErr: !util.checkAddress(e.target.value) });
-        break;
+      // case "rewardAddr":
+      //   this.setState({ rewardAddrErr: !util.checkAddress(e.target.value) });
+      //   break;
       case "oldLockAmount":
         if (!/^([0-9]*)$/.test(e.target.value))
           this.data.formData[e.target.name] = originStr;
