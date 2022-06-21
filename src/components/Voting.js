@@ -141,32 +141,35 @@ class Voting extends React.Component {
     this.setState({ isBallotLoading: true });
   }
 
-  setTopic = (type, newAddr, oldAddr) => {
+  // show proposal name
+  setTopic = (type, name, newAddr, oldAddr) => {
     if (type === constants.ballotTypes.MemberChange && newAddr === oldAddr)
       return "MemberUpdate";
-    else return constants.ballotTypesArr[parseInt(type)];
+    if (type === constants.ballotTypes.ChangedEnv) {
+      return name;
+    }
+    return constants.ballotTypesArr[parseInt(type)];
   };
 
   setDescription = (type, id) => {
-    let { newMemberAddress, newStakerAddress, oldMemberAddress, lockAmount } =
-      this.props.ballotMemberOriginData[id];
+    let { lockAmount } = this.props.ballotMemberOriginData[id];
     lockAmount =
       typeof lockAmount === "undefined"
         ? 0
         : web3Instance.web3.utils.fromWei(lockAmount, "ether");
     switch (type) {
-      /* Add Authority Member */
-      case constants.ballotTypes.AddAuthorityMember:
+      // Add Authority Member
+      case constants.ballotTypes.AddAuthorityMember: {
+        const { newStakerAddress } = this.props.ballotMemberOriginData[id];
         return (
           <p className="description flex-full">
-            Voting Address: {newMemberAddress}
-            <br />
-            Staking Address: {newStakerAddress}
+            Authority Address: {newStakerAddress}
             <br />
             WEMIX To be Locked: {lockAmount} WEMIX
           </p>
         );
-      /* Governance Contract Address */
+      }
+      //  Governance Contract Address
       case constants.ballotTypes.GovernanceContractAddress: {
         const { oldGovernanceAddress, newGovernanceAddress } =
           this.props.ballotMemberOriginData[id];
@@ -178,50 +181,58 @@ class Voting extends React.Component {
           </p>
         );
       }
-      /* Voting Duration Setting */
-      case constants.ballotTypes.VotingDurationSetting: {
-        const { envVariableValue } = this.props.ballotMemberOriginData[id];
-        const decodeValue = util.decodeParameters(
-          ["uint256", "uint256"],
-          envVariableValue
-        );
-        return (
-          <p className="description flex-full">
-            Voting Duration Setting: {decodeValue[0]}-{decodeValue[1]}day
-          </p>
-        );
-      }
-      case constants.ballotTypes.MemberRemoval:
-        return (
-          <p className="description flex-full">
-            Address To be Removed: {oldMemberAddress}
-            <br />
-            WEMIX Amount to be unlocked: {lockAmount} WEMIX
-          </p>
-        );
-      case constants.ballotTypes.MemberChange:
-        if (newMemberAddress === oldMemberAddress) {
-          return (
-            <p className="description flex-full">
-              WEMIX To be Locked: {lockAmount} WEMIX
-            </p>
-          );
+      // Voting Duration Setting
+      case constants.ballotTypes.ChangedEnv: {
+        const { envVariableName, envVariableValue } =
+          this.props.ballotMemberOriginData[id];
+        // TODO 좀 더 유연하게 변경할 필요가 있음
+        // get variable value
+        const decodeValue =
+          envVariableName === "Block Creation Time"
+            ? util.decodeParameters(["uint256"], envVariableValue)
+            : util.decodeParameters(["uint256", "uint256"], envVariableValue);
+        // set description
+        let description = `${envVariableName}: `;
+        if (envVariableName === "Voting Duration Setting") {
+          description += `${decodeValue[0]}-${decodeValue[1]} day`;
+        } else if (envVariableName === "Authority Member Staking Amount") {
+          description += `${decodeValue[0]}-${decodeValue[1]} WEMIX`;
+        } else if (envVariableName === "Block Creation Time") {
+          description += `${decodeValue[0] / 1000} s`;
         } else {
-          return (
-            <p className="description flex-full">
-              Old Authority Address: {oldMemberAddress}
-              <br />
-              New Authority Address: {newMemberAddress}
-              <br />
-              WEMIX To be Locked: {lockAmount} WEMIX
-            </p>
-          );
+          return "Wrong Proposal (This label is only test)";
         }
+        return <p className="description flex-full">{description}</p>;
+      }
+      //  case constants.ballotTypes.MemberRemoval:
+      //     return (
+      //       <p className="description flex-full">
+      //         Address To be Removed: {oldMemberAddress}
+      //         <br />
+      //         WEMIX Amount to be unlocked: {lockAmount} WEMIX
+      //       </p>
+      //     );
+      //   case constants.ballotTypes.MemberChange:
+      //     if (newMemberAddress === oldMemberAddress) {
+      //       return (
+      //         <p className="description flex-full">
+      //           WEMIX To be Locked: {lockAmount} WEMIX
+      //         </p>
+      //       );
+      //     } else {
+      //       return (
+      //         <p className="description flex-full">
+      //           Old Authority Address: {oldMemberAddress}
+      //           <br />
+      //           New Authority Address: {newMemberAddress}
+      //            <br />
+      //           WEMIX To be Locked: {lockAmount} WEMIX
+      //         </p>
+      //       );
+      //     }
       default:
         return (
           <p className="description flex-full">
-            New Authority Address: {newMemberAddress}
-            <br />
             WEMIX To be Locked: {lockAmount} WEMIX
           </p>
         );

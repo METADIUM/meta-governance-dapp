@@ -4,7 +4,6 @@ import { Button, Input, Form, Icon, Select } from "antd";
 import { shouldPass } from "../util";
 
 const { TextArea } = Input;
-const { Option } = Select;
 
 // components for communicating common props
 export const PassesCommonProps = ({
@@ -75,7 +74,6 @@ const ProposalFormFooter = ({
       </div>
       <Form.Item>
         <div className="submitDiv flex">
-          {disabled}
           <Button
             name="submit"
             htmlType="submit"
@@ -204,7 +202,7 @@ export const AddProposalForm = ({
       <ProposalFormFooter
         netName={netName}
         loading={loading}
-        disabled={newLockAmountErr || newAddrErr || newNodeErr || newNameErr}
+        disabled={newLockAmountErr || newAddrErr || newNameErr || newNodeErr}
         votingDurationMin={votingDurationMin}
         votingDurationMax={votingDurationMax}
         handleChange={handleChange}
@@ -499,13 +497,13 @@ export const GovernanceContractAddressForm = ({
   </div>
 );
 
-/* Voting Duration Setting Form */
+// Voting Duration Setting
 export const VotingDurationSettingForm = ({
   netName,
   loading,
-  votDurationErr,
   votDurationMin,
   votDurationMax,
+  votDurationErr,
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
@@ -598,12 +596,13 @@ export const VotingDurationSettingForm = ({
   </div>
 );
 
-export const AuthorityMemberStakingAmount = ({
+// Authority Member Staking Amount
+export const AuthorityMemberStakingAmountForm = ({
   netName,
   loading,
-  AuthMemSkAmountErr,
-  AuthMemSkAmountMin,
-  AuthMemSkAmountMax,
+  authMemSkAmountMin,
+  authMemSkAmountMax,
+  authMemSkAmountErr,
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
@@ -623,11 +622,11 @@ export const AuthorityMemberStakingAmount = ({
                   Min
                 </label>
                 <Input
-                  name="AuthMemSkAmountMin"
-                  value={AuthMemSkAmountMin}
+                  name="authMemSkAmountMin"
+                  value={authMemSkAmountMin}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15" + (AuthMemSkAmountErr ? " errInput" : "")
+                    "w-180 mg-rl-15" + (authMemSkAmountErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -640,11 +639,11 @@ export const AuthorityMemberStakingAmount = ({
                   Max
                 </label>
                 <Input
-                  name="AuthMemSkAmountMax"
-                  value={AuthMemSkAmountMax}
+                  name="authMemSkAmountMax"
+                  value={authMemSkAmountMax}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15" + (AuthMemSkAmountErr ? " errInput" : "")
+                    "w-180 mg-rl-15" + (authMemSkAmountErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
@@ -654,13 +653,13 @@ export const AuthorityMemberStakingAmount = ({
           </div>
           <p
             className={
-              "mt-5 ml-40" + (AuthMemSkAmountErr ? " errHint" : " errHint-hide")
+              "mt-5 ml-40" + (authMemSkAmountErr ? " errHint" : " errHint-hide")
             }
           >
             {`${
-              AuthMemSkAmountErr === "min"
+              authMemSkAmountErr === "min"
                 ? "Invalid Min Amount"
-                : AuthMemSkAmountErr === "max"
+                : authMemSkAmountErr === "max"
                 ? "Invalid Max Amout"
                 : "Invalid Staking Amount"
             }`}
@@ -682,32 +681,10 @@ export const AuthorityMemberStakingAmount = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
       <ProposalFormFooter
         netName={netName}
         loading={loading}
-        disabled={AuthMemSkAmountErr}
+        disabled={authMemSkAmountErr}
         votingDurationMin={votingDurationMin}
         votingDurationMax={votingDurationMax}
         handleChange={handleChange}
@@ -716,10 +693,11 @@ export const AuthorityMemberStakingAmount = ({
   </div>
 );
 
+// Block Creation Time
 export const BlockCreationTime = ({
   netName,
   loading,
-  newBlockCreation,
+  blockCreation,
   blockCreationErr,
   votingDurationMin,
   votingDurationMax,
@@ -737,8 +715,8 @@ export const BlockCreationTime = ({
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="newBlockCreation"
-                  value={newBlockCreation}
+                  name="blockCreation"
+                  value={blockCreation}
                   onChange={handleChange}
                   className={
                     "w-180 mg-rl-15 ml-0" +
@@ -770,28 +748,6 @@ export const BlockCreationTime = ({
           disabled={loading}
         />
       </Form.Item>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={3}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-            </Select>
-            <span>day</span>
-          </Form.Item>
-        </div>
-      </div>
       <ProposalFormFooter
         netName={netName}
         loading={loading}

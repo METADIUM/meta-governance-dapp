@@ -1,5 +1,31 @@
 const buildNetworkType = process.env.REACT_APP_NETWORK_TYPE;
 
+// envName
+export const ENV_NAMES = {
+  ENV_BALLOT_DURATION_MIN_MAX: "ballotDurationMinMax",
+  ENV_STAKING_MIN_MAX: "stakingMinMax",
+  ENV_BLOCK_CREATION_TIME: "blockCreationTime",
+};
+
+// envName sha3
+export const ENV_NAMES_SHA3 = [
+  {
+    name: "Voting Duration Setting",
+    sha3Name:
+      "0xe10074dceffb75f13bf0ce50145afd35182d63796823f1280ce40e01c19109e7",
+  },
+  {
+    name: "Authority Member Staking Amount",
+    sha3Name:
+      "0x6c6f69f426081752a5d3e73746599acd2a4cb145d5de4203ca1e3473b281680b",
+  },
+  {
+    name: "Block Creation Time",
+    sha3Name:
+      "0x8086da5becff4dfac91a3105821b361078d2d4abba0ccc2401b974cf0dcf05c1",
+  },
+];
+
 const constants = {
   authorityRepo: {
     org: "METADIUM",
@@ -29,7 +55,7 @@ const constants = {
     MemberRemoval: "2",
     MemberChange: "3",
     GovernanceContractAddress: "4",
-    VotingDurationSetting: "5",
+    ChangedEnv: "5",
   },
   ballotStateArr: [
     "Invalid",
@@ -45,7 +71,7 @@ const constants = {
     "MemberRemoval",
     "MemberChange",
     "Governance Contract Address",
-    "Voting Duration Setting",
+    "Changed Env",
   ],
   /* Debug */
   debugMode: false,
