@@ -5,6 +5,7 @@ export const ENV_NAMES = {
   ENV_BALLOT_DURATION_MIN_MAX: "ballotDurationMinMax",
   ENV_STAKING_MIN_MAX: "stakingMinMax",
   ENV_BLOCK_CREATION_TIME: "blockCreationTime",
+  ENV_BLOCK_REWARD_AMOUNT: "blockRewardAmount",
 };
 
 // envName sha3
@@ -23,6 +24,11 @@ export const ENV_NAMES_SHA3 = [
     name: "Block Creation Time",
     sha3Name:
       "0x8086da5becff4dfac91a3105821b361078d2d4abba0ccc2401b974cf0dcf05c1",
+  },
+  {
+    name: "Block Reward Amount",
+    sha3Name:
+      "0x89dd490ecaf395283ed4ff2fd9557ca767fc425dce063451a9b0da6d72f600c3",
   },
 ];
 

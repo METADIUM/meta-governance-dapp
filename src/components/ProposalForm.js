@@ -28,6 +28,9 @@ class ProposalForm extends React.Component {
     authMemSkAmountErr: false,
     // Block Creation Time
     blockCreationErr: false,
+    // Block Reward Amonut
+    blockRewardAmountErr: false,
+
     // Replace Authority Member
     votingAddrErr: false,
     stakingAddrErr: false,
@@ -41,8 +44,6 @@ class ProposalForm extends React.Component {
     gasLimitErr: false,
     baseFeeDenominatorErr: false,
     ElasticityErr: false,
-
-    blockRewardErr: false,
     numbers: {
       blockRate1: 0,
       blockRate2: 0,
@@ -51,7 +52,6 @@ class ProposalForm extends React.Component {
     },
     blockRateTotal: 0,
     blockRewardDisMthErr: false,
-
     // !legacy code
     oldAddrErr: false,
     oldNodeErr: false,
@@ -235,9 +235,21 @@ class ProposalForm extends React.Component {
         break;
       // Block Creation Time
       case "blockCreation":
-        this.setState({
-          blockCreationErr: !util.checkBlockCreationTime(e.target.value),
-        });
+        if (!/^([0-9.]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else
+          this.setState({
+            blockCreationErr: !util.checkBlockCreationTime(e.target.value),
+          });
+        break;
+      // Block Reward Amount
+      case "blockRewardAmount":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else
+          this.setState({
+            blockRewardAmountErr: !util.checkRewardAmount(e.target.value),
+          });
         break;
       // Replace Authority Member
       // case "votingAddr":
@@ -260,11 +272,6 @@ class ProposalForm extends React.Component {
         break;
       case "oldNode":
         this.setState({ oldNodeErr: !util.checkNode(e.target.value) });
-        break;
-      case "newBlockRewardAmount":
-        this.setState({
-          blockRewardErr: !this.checkRewardAmount(e.target.value),
-        });
         break;
       // Block Reward Distribution Method
       case "blockRate1":
@@ -320,12 +327,6 @@ class ProposalForm extends React.Component {
       Number(amount) <= this.props.stakingMax &&
       Number(amount) >= this.props.stakingMin
     );
-  }
-
-  // TODO util file
-  // at least 1 and error with 18 decimal place or more
-  checkRewardAmount(amount) {
-    return /^[1-9]+\.?([0-9]{1,17})?$/.test(amount);
   }
 
   calculateTotal = (numbers) => {
@@ -397,6 +398,7 @@ class ProposalForm extends React.Component {
       case "VotingDurationSetting":
       case "AuthorityMemberStakingAmount":
       case "BlockCreationTime":
+      case "BlockRewardAmount":
         return false;
       // // ! legacy code -> remove <Replace Authority>
       // case "ReplaceAuthorityMember":
@@ -570,7 +572,7 @@ class ProposalForm extends React.Component {
         case "BlockCreationTime": {
           const { blockCreation } = data;
           // check undefined
-          if (blockCreation === undefined) {
+          if (blockCreation === undefined || !Number(blockCreation)) {
             this.setState({
               blockCreationErr: !this.state.blockCreationErr,
             });
@@ -587,6 +589,34 @@ class ProposalForm extends React.Component {
             [blockCreation * 1000]
           );
           // const envVal = util.encodeParameters(["uint256"], [blockCreation]);
+          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          checkData = {
+            envName,
+            envType: String(2),
+            envVal,
+            memo,
+            duration: votDuration,
+          };
+          break;
+        }
+        case "BlockRewardAmount": {
+          const { blockRewardAmount } = data;
+          // check undefined
+          if (blockRewardAmount === undefined) {
+            this.setState({
+              blockRewardAmountErr: !this.state.blockRewardAmountErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          // setting env variables
+          const envName = util.encodeStringToSha3(
+            ENV_NAMES.ENV_BLOCK_REWARD_AMOUNT
+          );
+          const envVal = util.encodeParameters(
+            ["uint256"],
+            [blockRewardAmount]
+          );
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {
             envName,
@@ -745,8 +775,8 @@ class ProposalForm extends React.Component {
         case "BlockRewardAmount":
           return (
             <PComponent.BlockRewardAmount
-              newBlockRewardAmount={this.data.formData.newBlockRewardAmount}
-              blockRewardErr={this.state.blockRewardErr}
+              blockRewardAmount={this.data.formData.blockRewardAmount}
+              blockRewardAmountErr={this.state.blockRewardAmountErr}
             />
           );
         case "BlockRewardDistributionMethod":
