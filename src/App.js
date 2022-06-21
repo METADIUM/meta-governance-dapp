@@ -434,8 +434,7 @@ class App extends React.Component {
             loading={this.state.loading}
             convertLoading={this.convertLoading}
             showProposal={this.state.showProposal}
-            // isMember={this.data.isMember}
-            isMember={true}
+            isMember={this.data.isMember}
             stakingMax={this.data.stakingMax}
             stakingMin={this.data.stakingMin}
             votingDurationMax={this.data.votingDurationMax}

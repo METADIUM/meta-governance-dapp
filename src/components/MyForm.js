@@ -3,8 +3,6 @@ import { Input, Form, Icon, Button } from "antd";
 
 import { shouldPass } from "../util";
 
-const { TextArea } = Input;
-
 // components for communicating common props
 export const PassesCommonProps = ({
   netName,
@@ -28,7 +26,71 @@ export const PassesCommonProps = ({
 export const VotingAddress = ({
   netName,
   loading,
-  disabled,
+  oldVotingAddrErr,
+  newVotingAddrErr,
+  handleChange = shouldPass(),
+}) => (
+  <div className="proposalBody">
+    <Form>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Old Voting Address <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <Input
+              name="oldVotingAddr"
+              className={oldVotingAddrErr ? "errInput" : ""}
+              disabled={loading}
+              onChange={handleChange}
+            />
+            <p className={oldVotingAddrErr ? "errHint" : "errHint-hide"}>
+              Invalid Address
+            </p>
+          </Form.Item>
+          <p className="subtitle">
+            New Voting Address <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <Input
+              name="newVotingAddr"
+              className={newVotingAddrErr ? "errInput" : ""}
+              disabled={loading}
+              onChange={handleChange}
+            />
+            <p className={newVotingAddrErr ? "errHint" : "errHint-hide"}>
+              Invalid Address
+            </p>
+          </Form.Item>
+        </div>
+      </div>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>
+          Enter the old Voting Address and the new Voting Address to change the
+          Reward Address.
+        </p>
+      </div>
+      <Form.Item>
+        <div className="submitDiv flex">
+          <Button
+            name="submit"
+            htmlType="submit"
+            className={"submit_Btn btn-fill-primary text-large " + netName}
+            disabled={oldVotingAddrErr || newVotingAddrErr}
+            loading={loading}
+          >
+            Submit
+          </Button>
+        </div>
+      </Form.Item>
+    </Form>
+  </div>
+);
+
+export const RewardAddress = ({
+  netName,
+  loading,
   oldRewardAddrErr,
   newRewardAddrErr,
   handleChange = shouldPass(),
@@ -89,8 +151,4 @@ export const VotingAddress = ({
       </Form.Item>
     </Form>
   </div>
-);
-
-export const RewardAddress = ({ netName, loading }) => (
-  <div>reward Address</div>
 );

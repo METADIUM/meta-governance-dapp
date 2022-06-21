@@ -12,6 +12,8 @@ class Myinfo extends React.Component {
   };
   state = {
     selectedTopic: "",
+    oldVotingAddrErr: false,
+    newVotingAddrErr: false,
     oldRewardAddrErr: false,
     newRewardAddrErr: false,
   };
@@ -49,6 +51,12 @@ class Myinfo extends React.Component {
     // const originStr = this.data.formData[e.target.name];
     this.data.formData[e.target.name] = e.target.value;
     switch (e.target.name) {
+      case "oldVotingAddr":
+        this.setState({ oldVotingAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      case "newVotingAddr":
+        this.setState({ newVotingAddrErr: !util.checkAddress(e.target.value) });
+        break;
       case "oldRewardAddr":
         this.setState({ oldRewardAddrErr: !util.checkAddress(e.target.value) });
         break;
@@ -67,12 +75,17 @@ class Myinfo extends React.Component {
         case "VotingAddress":
           return (
             <MComponent.VotingAddress
-              oldRewardAddrErr={this.state.oldRewardAddrErr}
-              newRewardAddrErr={this.state.newRewardAddrErr}
+              oldVotingAddrErr={this.state.oldVotingAddrErr}
+              newVotingAddrErr={this.state.newVotingAddrErr}
             />
           );
         case "RewardAddress":
-          return <MComponent.RewardAddress></MComponent.RewardAddress>;
+          return (
+            <MComponent.RewardAddress
+              oldRewardAddrErr={this.state.oldRewardAddrErr}
+              newRewardAddrErr={this.state.newRewardAddrErr}
+            ></MComponent.RewardAddress>
+          );
         default:
           return <></>;
       }
