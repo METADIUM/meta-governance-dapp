@@ -48,6 +48,17 @@ export const encodeStringToSha3 = (input) => {
   return web3Instance.web3.utils.sha3(input);
 };
 
+// ---------- refine data ---------- //
+// convert wei -> gwei
+export const convertWeiToGWei = (amount) => {
+  return web3Instance.web3.utils.fromWei(amount, "gwei");
+};
+
+// convert gwei -> wei
+export const convertGWeiToWei = (amount) => {
+  return web3Instance.web3.utils.toWei(amount, "gwei");
+};
+
 // encode parameters (type, name - only string[])
 export const encodeParameters = (type, name) => {
   return web3Instance.web3.eth.abi.encodeParameters(type, name);
@@ -58,7 +69,6 @@ export const decodeParameters = (type, input) => {
   return web3Instance.web3.eth.abi.decodeParameters(type, input);
 };
 
-// ---------- refine data ---------- //
 export const splitNodeInfo = (nodeInfo) => {
   let node, ip, port, splitedStr;
   splitedStr = nodeInfo.split("@");

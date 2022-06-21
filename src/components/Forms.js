@@ -959,9 +959,11 @@ export const BlockRewardDistributionMethod = ({
   </div>
 );
 
-export const ChangeOfMaxPriorityFeePerGas = ({
+// MaxPriorityFeePerGas
+export const MaxPriorityFeePerGasForm = ({
   netName,
   loading,
+  maxPriorityFeePerGas,
   maxPriorityFeePerGasErr,
   votingDurationMin,
   votingDurationMax,
@@ -980,6 +982,7 @@ export const ChangeOfMaxPriorityFeePerGas = ({
               <div className="flex-full flex-row">
                 <Input
                   name="maxPriorityFeePerGas"
+                  value={maxPriorityFeePerGas}
                   onChange={handleChange}
                   className={
                     "w-180 mg-rl-15 ml-0" +

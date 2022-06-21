@@ -189,7 +189,8 @@ class Voting extends React.Component {
         // get variable value
         const decodeValue =
           envVariableName === "Block Creation Time" ||
-          envVariableName === "Block Reward Amount"
+          envVariableName === "Block Reward Amount" ||
+          envVariableName === "MaxPriorityFeePerGas"
             ? util.decodeParameters(["uint256"], envVariableValue)
             : util.decodeParameters(["uint256", "uint256"], envVariableValue);
         // set description
@@ -202,6 +203,8 @@ class Voting extends React.Component {
           description += `${decodeValue[0] / 1000} s`;
         } else if (envVariableName === "Block Reward Amount") {
           description += `${decodeValue[0]} WEMIX/Block`;
+        } else if (envVariableName === "MaxPriorityFeePerGas") {
+          description += `${util.convertWeiToGWei(decodeValue[0])} GWei`;
         } else {
           return "Wrong Proposal (This label is only test)";
         }
