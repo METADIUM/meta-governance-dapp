@@ -23,7 +23,7 @@ export const PassesCommonProps = ({
   );
 };
 
-export const VotingAddress = ({
+export const myVotingAddress = ({
   netName,
   loading,
   oldVotingAddrErr,
@@ -88,7 +88,7 @@ export const VotingAddress = ({
   </div>
 );
 
-export const RewardAddress = ({
+export const myRewardAddress = ({
   netName,
   loading,
   oldRewardAddrErr,

@@ -23,7 +23,6 @@ class Myinfo extends React.Component {
     // this.data.selectedTopic = topic;
     // this.data.formData = {};
     this.resetForm();
-    console.log(this.state);
 
     this.setState({ selectedTopic: topic });
 
@@ -74,17 +73,17 @@ class Myinfo extends React.Component {
       switch (topic) {
         case "VotingAddress":
           return (
-            <MComponent.VotingAddress
+            <MComponent.myVotingAddress
               oldVotingAddrErr={this.state.oldVotingAddrErr}
               newVotingAddrErr={this.state.newVotingAddrErr}
             />
           );
         case "RewardAddress":
           return (
-            <MComponent.RewardAddress
+            <MComponent.myRewardAddress
               oldRewardAddrErr={this.state.oldRewardAddrErr}
               newRewardAddrErr={this.state.newRewardAddrErr}
-            ></MComponent.RewardAddress>
+            ></MComponent.myRewardAddress>
           );
         default:
           return <></>;
