@@ -234,6 +234,10 @@ p {
   margin-left: 40px;
 }
 
+.mr-8 {
+  margin-right: 8px;
+}
+
 .mg-rl-5 {
   margin-right: 5px;
   margin-left: 5px;

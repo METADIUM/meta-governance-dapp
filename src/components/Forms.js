@@ -215,13 +215,12 @@ export const ReplaceProposalForm = ({
   netName,
   loading,
   stakingMin,
-  votingAddrErr,
   stakingAddrErr,
-  rewardAddrErr,
   newAddrErr,
   newNameErr,
   newLockAmountErr,
   newLockAmount,
+  newNodeErr,
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
@@ -234,18 +233,6 @@ export const ReplaceProposalForm = ({
       </p>
       <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
         <Form.Item className="mt-0">
-          <p className="subtitle mt-0">Voting Address</p>
-          <Input
-            name="votingAddr"
-            className={"mt-5" + (votingAddrErr ? " errInput" : "")}
-            disabled={loading}
-            onChange={handleChange}
-          />
-          <p className={votingAddrErr ? "errHint" : "errHint-hide"}>
-            Invalid Address
-          </p>
-        </Form.Item>
-        <Form.Item>
           <p className="subtitle mt-0">Staking Address</p>
           <Input
             name="stakingAddr"
@@ -254,18 +241,6 @@ export const ReplaceProposalForm = ({
             onChange={handleChange}
           />
           <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
-            Invaild Address
-          </p>
-        </Form.Item>
-        <Form.Item>
-          <p className="subtitle mt-0">Reward Address</p>
-          <Input
-            name="rewardAddr"
-            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
-            disabled={loading}
-            onChange={handleChange}
-          />
-          <p className={rewardAddrErr ? "errHint" : "errHint-hide"}>
             Invaild Address
           </p>
         </Form.Item>
@@ -321,6 +296,28 @@ export const ReplaceProposalForm = ({
           </Form.Item>
         </div>
       </div>
+      <p className="subtitle">
+        New Authority Node Description <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          name="newNode"
+          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
+          className={newNodeErr ? "errInput" : ""}
+          disabled={loading}
+          onChange={handleChange}
+        />
+        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
+      </Form.Item>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>
+          The hexadecimal node ID is encoded in the username portion of the URL,
+          separated from the host by an @ sign. The hostname can only be given
+          as an IP address, DNS domain names are not allowed. The port in the
+          host name section is the TCP listening port.
+        </p>
+      </div>
       <p className="subtitle">Description </p>
       <Form.Item>
         <TextArea
@@ -336,12 +333,11 @@ export const ReplaceProposalForm = ({
         netName={netName}
         loading={loading}
         disabled={
-          votingAddrErr ||
           stakingAddrErr ||
-          rewardAddrErr ||
           newLockAmountErr ||
           newAddrErr ||
-          newNameErr
+          newNameErr ||
+          newNodeErr
         }
         votingDurationMin={votingDurationMin}
         votingDurationMax={votingDurationMax}
@@ -719,8 +715,7 @@ export const BlockCreationTime = ({
                   value={blockCreation}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" +
-                    (blockCreationErr ? " errInput" : "")
+                    "w-180 mr-8" + (blockCreationErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
