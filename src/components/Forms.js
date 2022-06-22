@@ -1026,12 +1026,16 @@ export const MaxPriorityFeePerGasForm = ({
   </div>
 );
 
-export const GasLimitForm = ({
+// Gas Limit & baseFee
+export const GasLimitBaseFeeForm = ({
   netName,
   loading,
+  gasLimit,
   gasLimitErr,
+  baseFeeDenominator,
   baseFeeDenominatorErr,
-  ElasticityErr,
+  ElasticityMultiplier,
+  ElasticityMultiplierErr,
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
@@ -1049,6 +1053,7 @@ export const GasLimitForm = ({
               <div className="flex-full flex-row">
                 <Input
                   name="gasLimit"
+                  value={gasLimit}
                   onChange={handleChange}
                   className={
                     "w-180 mg-rl-15 ml-0" + (gasLimitErr ? " errInput" : "")
@@ -1070,6 +1075,7 @@ export const GasLimitForm = ({
               <div className="flex-full flex-row">
                 <Input
                   name="baseFeeDenominator"
+                  value={baseFeeDenominator}
                   onChange={handleChange}
                   className={
                     "w-180 mg-rl-15 ml-0" +
@@ -1098,16 +1104,18 @@ export const GasLimitForm = ({
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="Elasticity"
+                  name="ElasticityMultiplier"
+                  value={ElasticityMultiplier}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" + (ElasticityErr ? " errInput" : "")
+                    "w-180 mg-rl-15 ml-0" +
+                    (ElasticityMultiplierErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
               </div>
             </div>
-            <p className={ElasticityErr ? "errHint" : "errHint-hide"}>
+            <p className={ElasticityMultiplierErr ? "errHint" : "errHint-hide"}>
               Invalid value
             </p>
           </Form.Item>
@@ -1135,7 +1143,9 @@ export const GasLimitForm = ({
       <ProposalFormFooter
         netName={netName}
         loading={loading}
-        disabled={gasLimitErr || baseFeeDenominatorErr || ElasticityErr}
+        disabled={
+          gasLimitErr || baseFeeDenominatorErr || ElasticityMultiplierErr
+        }
         votingDurationMin={votingDurationMin}
         votingDurationMax={votingDurationMax}
         handleChange={handleChange}

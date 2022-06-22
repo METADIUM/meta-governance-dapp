@@ -32,6 +32,10 @@ class ProposalForm extends React.Component {
     blockRewardAmountErr: false,
     // MaxPriorityFeePerGas
     maxPriorityFeePerGasErr: false,
+    // Gas Limit & baseFee
+    gasLimitErr: false,
+    baseFeeDenominatorErr: false,
+    ElasticityMultiplierErr: false,
 
     // Replace Authority Member
     votingAddrErr: false,
@@ -40,10 +44,6 @@ class ProposalForm extends React.Component {
     // Remove Authority Member
     oldLockAmountErr: false,
     showLockAmount: "",
-    // Gas Limit
-    gasLimitErr: false,
-    baseFeeDenominatorErr: false,
-    ElasticityErr: false,
     numbers: {
       blockRate1: 0,
       blockRate2: 0,
@@ -260,6 +260,28 @@ class ProposalForm extends React.Component {
             maxPriorityFeePerGasErr: !util.checkPrice(e.target.value),
           });
         break;
+      // Gas Limit & baseFee
+      case "gasLimit":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else this.setState({ gasLimitErr: !util.checkPrice(e.target.value) });
+        break;
+      case "baseFeeDenominator":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else
+          this.setState({
+            baseFeeDenominatorErr: !util.checkPrice(e.target.value),
+          });
+        break;
+      case "ElasticityMultiplier":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else
+          this.setState({
+            ElasticityMultiplierErr: !util.checkPrice(e.target.value),
+          });
+        break;
 
       // Replace Authority Member
       // case "votingAddr":
@@ -306,20 +328,6 @@ class ProposalForm extends React.Component {
             };
           });
         }
-        break;
-      // Gas Limit
-      case "gasLimit":
-        this.setState({ gasLimitErr: !util.checkPrice(e.target.value) });
-        break;
-      // 단위 확인
-      case "baseFeeDenominator":
-        this.setState({
-          baseFeeDenominatorErr: !util.checkPrice(e.target.value),
-        });
-        break;
-      // percentage
-      case "Elasticity":
-        this.setState({ ElasticityErr: !util.checkPrice(e.target.value) });
         break;
       default:
         break;
@@ -399,11 +407,7 @@ class ProposalForm extends React.Component {
         }
         return false;
       }
-      case "VotingDurationSetting":
-      case "AuthorityMemberStakingAmount":
-      case "BlockCreationTime":
-      case "BlockRewardAmount":
-      case "MaxPriorityFeePerGas":
+      default:
         return false;
       // // ! legacy code -> remove <Replace Authority>
       // case "ReplaceAuthorityMember":
@@ -456,8 +460,6 @@ class ProposalForm extends React.Component {
       //   //   );
       //   // }
       //   break;
-      default:
-        return this.props.getErrModal("Wrong Access.", "Proposal Submit Error");
     }
   }
 
@@ -647,11 +649,57 @@ class ProposalForm extends React.Component {
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
-            ENV_NAMES.ENV_MAXPRIORITYFEEPERGAS
+            ENV_NAMES.ENV_MAX_PRIORITY_FEE_PER_GAS
           );
           const envVal = util.encodeParameters(
             ["uint256"],
             [util.convertGWeiToWei(maxPriorityFeePerGas)]
+          );
+          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          checkData = {
+            envName,
+            envType: String(2),
+            envVal,
+            memo,
+            duration: votDuration,
+          };
+          break;
+        }
+        case "GasLimitBaseFee": {
+          const { gasLimit, baseFeeDenominator, ElasticityMultiplier } = data;
+          // check undefined
+          if (gasLimit === undefined) {
+            this.setState({
+              gasLimitErr: !this.state.gasLimitErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          if (baseFeeDenominator === undefined) {
+            this.setState({
+              baseFeeDenominatorErr: !this.state.baseFeeDenominatorErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          if (ElasticityMultiplier === undefined) {
+            this.setState({
+              ElasticityMultiplierErr: !this.state.ElasticityMultiplierErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          // setting env variables
+          const envName = util.encodeStringToSha3(
+            ENV_NAMES.ENV_GASLIMIT_AND_BASE_FEE
+          );
+          const envVal = util.encodeParameters(
+            ["uint256", "uint256", "uint256"],
+            [
+              util.convertGWeiToWei(gasLimit),
+              baseFeeDenominator,
+              ElasticityMultiplier,
+            ]
           );
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {
@@ -833,12 +881,15 @@ class ProposalForm extends React.Component {
               maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}
             />
           );
-        case "GasLimit":
+        case "GasLimitBaseFee":
           return (
-            <PComponent.GasLimitForm
+            <PComponent.GasLimitBaseFeeForm
+              gasLimit={this.data.formData.gasLimit}
               gasLimitErr={this.state.gasLimitErr}
+              baseFeeDenominator={this.data.formData.baseFeeDenominator}
               baseFeeDenominatorErr={this.state.baseFeeDenominatorErr}
-              ElasticityErr={this.state.ElasticityErr}
+              ElasticityMultiplier={this.data.formData.ElasticityMultiplier}
+              ElasticityMultiplierErr={this.state.ElasticityMultiplierErr}
             />
           );
 
@@ -938,7 +989,7 @@ class ProposalForm extends React.Component {
                 <Select.Option value="MaxPriorityFeePerGas">
                   MaxPriorityFeePerGas
                 </Select.Option>
-                <Select.Option value="GasLimit">
+                <Select.Option value="GasLimitBaseFee">
                   Gas Limit &amp; baseFee
                 </Select.Option>
               </Select>
