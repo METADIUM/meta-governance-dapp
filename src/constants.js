@@ -6,7 +6,8 @@ export const ENV_NAMES = {
   ENV_STAKING_MIN_MAX: "stakingMinMax",
   ENV_BLOCK_CREATION_TIME: "blockCreationTime",
   ENV_BLOCK_REWARD_AMOUNT: "blockRewardAmount",
-  ENV_MAXPRIORITYFEEPERGAS: "maxPriorityFeePerGas",
+  ENV_MAX_PRIORITY_FEE_PER_GAS: "maxPriorityFeePerGas",
+  ENV_GASLIMIT_AND_BASE_FEE: "gasLimitAndBaseFee",
 };
 
 // envName sha3
@@ -35,6 +36,11 @@ export const ENV_NAMES_SHA3 = [
     name: "MaxPriorityFeePerGas",
     sha3Name:
       "0xbe90e461bbdb9a95a694f7796912ea04244caf7f5b60ad7ded17e16821d3e44c",
+  },
+  {
+    name: "Gas Limit & baseFee",
+    sha3Name:
+      "0x04f7b94450bbcad85f37ea47cd1062728f884bb2040e357738f8fd53056134bc",
   },
 ];
 

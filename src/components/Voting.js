@@ -185,14 +185,20 @@ class Voting extends React.Component {
       case constants.ballotTypes.ChangedEnv: {
         const { envVariableName, envVariableValue } =
           this.props.ballotMemberOriginData[id];
-        // TODO 좀 더 유연하게 변경할 필요가 있음
         // get variable value
-        const decodeValue =
-          envVariableName === "Block Creation Time" ||
-          envVariableName === "Block Reward Amount" ||
-          envVariableName === "MaxPriorityFeePerGas"
-            ? util.decodeParameters(["uint256"], envVariableValue)
-            : util.decodeParameters(["uint256", "uint256"], envVariableValue);
+        let paramsArr = [];
+        // number of parameters
+        let paramsCnt =
+          envVariableName === "Voting Duration Setting" ||
+          envVariableName === "Authority Member Staking Amount"
+            ? 2
+            : envVariableName === "Gas Limit & baseFee"
+            ? 3
+            : 1;
+        for (let i = 1; i <= paramsCnt; i++) {
+          paramsArr.push("uint256");
+        }
+        const decodeValue = util.decodeParameters(paramsArr, envVariableValue);
         // set description
         let description = `${envVariableName}: `;
         if (envVariableName === "Voting Duration Setting") {
@@ -205,10 +211,27 @@ class Voting extends React.Component {
           description += `${decodeValue[0]} WEMIX/Block`;
         } else if (envVariableName === "MaxPriorityFeePerGas") {
           description += `${util.convertWeiToGWei(decodeValue[0])} GWei`;
+        } else if (envVariableName === "Gas Limit & baseFee") {
+          description = `Gas Limit: ${util.convertWeiToGWei(
+            decodeValue[0]
+          )} GWei\nBaseFee Max Change Denominator: ${
+            decodeValue[1]
+          }\nElasticity Multiplier: ${decodeValue[2]}`;
         } else {
           return "Wrong Proposal (This label is only test)";
         }
-        return <p className="description flex-full">{description}</p>;
+        return (
+          <p className="description flex-full">
+            {description.split("\n").map((line, i) => {
+              return (
+                <span key={i}>
+                  {line}
+                  <br />
+                </span>
+              );
+            })}
+          </p>
+        );
       }
       //  case constants.ballotTypes.MemberRemoval:
       //     return (
