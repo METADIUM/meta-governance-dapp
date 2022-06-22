@@ -348,14 +348,15 @@ export const ReplaceProposalForm = ({
   </div>
 );
 
-export const RmoveProposalForm = ({
+// Remove Authority Member
+export const RemoveProposalForm = ({
   netName,
   loading,
+  stakingAddrErr,
   showLockAmount,
   stakingMin,
-  stakingAddrErr,
-  oldLockAmountErr,
   oldLockAmount,
+  oldLockAmountErr,
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
@@ -381,7 +382,7 @@ export const RmoveProposalForm = ({
                 <span> Check Balance</span>
               </span>
             }
-            onSearch={(value) => getLockAmount(value)}
+            onSearch={(addr) => getLockAmount(addr)}
           />
           <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
             Invalid Address
@@ -434,7 +435,7 @@ export const RmoveProposalForm = ({
       <ProposalFormFooter
         netName={netName}
         loading={loading}
-        disabled={stakingAddrErr}
+        disabled={stakingAddrErr || oldLockAmountErr}
         votingDurationMin={votingDurationMin}
         votingDurationMax={votingDurationMax}
         handleChange={handleChange}
