@@ -78,16 +78,15 @@ class Voting extends React.Component {
       return;
     let list = [];
     // Use origin data in contract
-
     Object.values(this.props.ballotBasicOriginData).forEach((item, index) => {
-      const { newMemberAddress, oldMemberAddress } =
+      const { newStakerAddress, oldStakerAddress } =
         this.props.ballotMemberOriginData[item.id];
       if (
         item.state === constants.ballotState.Ready ||
         item.state === constants.ballotState.InProgress
       ) {
-        this.data.existBallotNewMember.push(newMemberAddress);
-        this.data.existBallotOldMember.push(oldMemberAddress);
+        this.data.existBallotNewMember.push(newStakerAddress);
+        this.data.existBallotOldMember.push(oldStakerAddress);
       }
 
       list.push(
@@ -143,7 +142,10 @@ class Voting extends React.Component {
 
   // show proposal name
   setTopic = (type, name, newAddr, oldAddr) => {
-    if (type === constants.ballotTypes.MemberChange && newAddr === oldAddr)
+    if (
+      type === constants.ballotTypes.ReplaceAuthorityMember &&
+      newAddr === oldAddr
+    )
       return "MemberUpdate";
     if (type === constants.ballotTypes.ChangedEnv) {
       return name;
@@ -168,6 +170,24 @@ class Voting extends React.Component {
             WEMIX To be Locked: {lockAmount} WEMIX
           </p>
         );
+      }
+      // Replace Authority Member
+      case constants.ballotTypes.ReplaceAuthorityMember: {
+        const { oldStakerAddress, newStakerAddress } =
+          this.props.ballotMemberOriginData[id];
+        // TODO myInfo 변경됐을 때 (address 같을 때)
+        if (oldStakerAddress !== newStakerAddress) {
+          return (
+            <p className="description flex-full">
+              Old Authority Address: {oldStakerAddress}
+              <br />
+              New Authority Address: {newStakerAddress}
+              <br />
+              WEMIX To be Locked: {lockAmount} WEMIX
+            </p>
+          );
+        }
+        break;
       }
       //  Governance Contract Address
       case constants.ballotTypes.GovernanceContractAddress: {
@@ -241,13 +261,6 @@ class Voting extends React.Component {
       //         WEMIX Amount to be unlocked: {lockAmount} WEMIX
       //       </p>
       //     );
-      //   case constants.ballotTypes.MemberChange:
-      //     if (newMemberAddress === oldMemberAddress) {
-      //       return (
-      //         <p className="description flex-full">
-      //           WEMIX To be Locked: {lockAmount} WEMIX
-      //         </p>
-      //       );
       //     } else {
       //       return (
       //         <p className="description flex-full">

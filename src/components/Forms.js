@@ -211,15 +211,16 @@ export const AddProposalForm = ({
   </div>
 );
 
+// Replace Authority Member
 export const ReplaceProposalForm = ({
   netName,
   loading,
-  stakingMin,
   stakingAddrErr,
   newAddrErr,
   newNameErr,
-  newLockAmountErr,
+  stakingMin,
   newLockAmount,
+  newLockAmountErr,
   newNodeErr,
   votingDurationMin,
   votingDurationMax,
