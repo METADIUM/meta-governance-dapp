@@ -20,7 +20,7 @@ const VotingBallots = ({
   setDescription = shouldPass(),
   onClickUpdateProposal = shouldPass(),
 }) => {
-  const { newMemberAddress, oldMemberAddress } = ballotMemberOriginData;
+  const { newStakerAddress, oldStakerAddress } = ballotMemberOriginData;
   return (
     <div
       className={`ballotDiv ${btArr[parseInt(item.ballotType)]} ${
@@ -35,8 +35,8 @@ const VotingBallots = ({
             {setTopic(
               item.ballotType,
               ballotMemberOriginData.envVariableName,
-              newMemberAddress,
-              oldMemberAddress
+              newStakerAddress,
+              oldStakerAddress
             )}
           </p>
           <p className="company text-small">{authorityName}</p>
@@ -127,8 +127,8 @@ const VotingBallots = ({
                         "change",
                         item.id,
                         item.duration,
-                        newMemberAddress,
-                        oldMemberAddress
+                        newStakerAddress,
+                        oldStakerAddress
                       )
                     }
                   >
@@ -152,8 +152,8 @@ const VotingBallots = ({
                   "revoke",
                   item.id,
                   item.duration,
-                  newMemberAddress,
-                  oldMemberAddress
+                  newStakerAddress,
+                  oldStakerAddress
                 )
               }
             >
