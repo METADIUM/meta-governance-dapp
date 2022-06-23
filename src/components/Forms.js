@@ -828,7 +828,6 @@ export const BlockRewardAmount = ({
 export const BlockRewardDistributionMethod = ({
   netName,
   loading,
-  blockRates,
   blockRate1,
   blockRate2,
   blockRate3,
@@ -1037,10 +1036,12 @@ export const GasLimitBaseFeeForm = ({
   loading,
   gasLimit,
   gasLimitErr,
-  baseFeeDenominator,
-  baseFeeDenominatorErr,
-  ElasticityMultiplier,
-  ElasticityMultiplierErr,
+  maxBaseFee,
+  maxBaseFeeErr,
+  baseFeeMaxChangeRate,
+  baseFeeMaxChangeRateErr,
+  gasTargetPercentage,
+  gasTargetPercentageErr,
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
@@ -1069,59 +1070,99 @@ export const GasLimitBaseFeeForm = ({
               </div>
             </div>
             <p className={gasLimitErr ? "errHint" : "errHint-hide"}>
-              Invalid Limit
-            </p>
-          </Form.Item>
-          <p className="subtitle">
-            BaseFee Max Change Denominator <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Input
-                  name="baseFeeDenominator"
-                  value={baseFeeDenominator}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15 ml-0" +
-                    (baseFeeDenominatorErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-              </div>
-            </div>
-            <p className={baseFeeDenominatorErr ? "errHint" : "errHint-hide"}>
-              Invalid value
+              Invalid Gas Limit
             </p>
           </Form.Item>
         </div>
       </div>
       <div className="helpDescription">
         <Icon type="question-circle" />
-        <p>Specifies how full the block must ne to increase the basefee.</p>
+        <p>
+          Gas Limit is the maximum amount of gas to be consumed when processing
+          a transaction.
+        </p>
       </div>
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">
-            Elasticity Multiplier <span className="required">*</span>
+            Max baseFee <span className="required">*</span>
           </p>
           <Form.Item>
             <div className="flex-column">
               <div className="flex-full flex-row">
                 <Input
-                  name="ElasticityMultiplier"
-                  value={ElasticityMultiplier}
+                  name="maxBaseFee"
+                  value={maxBaseFee}
                   onChange={handleChange}
                   className={
-                    "w-180 mg-rl-15 ml-0" +
-                    (ElasticityMultiplierErr ? " errInput" : "")
+                    "w-180 mg-rl-15 ml-0" + (maxBaseFeeErr ? " errInput" : "")
                   }
                   disabled={loading}
                 />
               </div>
             </div>
-            <p className={ElasticityMultiplierErr ? "errHint" : "errHint-hide"}>
-              Invalid value
+            <p className={maxBaseFeeErr ? "errHint" : "errHint-hide"}>
+              Invalid Max baseFee
+            </p>
+          </Form.Item>
+        </div>
+      </div>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>MAX baseFee is the maximum to which baseFee can be increased.</p>
+      </div>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            BaseFee Max Change Rate <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <div className="flex-column">
+              <div className="flex-full flex-row">
+                <Input
+                  name="baseFeeMaxChangeRate"
+                  value={baseFeeMaxChangeRate}
+                  onChange={handleChange}
+                  className={
+                    "w-180 mg-rl-15 ml-0" +
+                    (baseFeeMaxChangeRateErr ? " errInput" : "")
+                  }
+                  disabled={loading}
+                />
+              </div>
+            </div>
+            <p className={baseFeeMaxChangeRateErr ? "errHint" : "errHint-hide"}>
+              Invalid BaseFee Max Change Rate
+            </p>
+          </Form.Item>
+        </div>
+      </div>
+      <div className="helpDescription">
+        <Icon type="question-circle" />
+        <p>Specifies how full the block must be to increase the baseFee.</p>
+      </div>
+      <div className="divider flex">
+        <div className="flex-full">
+          <p className="subtitle">
+            Gas Target Percentage <span className="required">*</span>
+          </p>
+          <Form.Item>
+            <div className="flex-column">
+              <div className="flex-full flex-row">
+                <Input
+                  name="gasTargetPercentage"
+                  value={gasTargetPercentage}
+                  onChange={handleChange}
+                  className={
+                    "w-180 mg-rl-15 ml-0" +
+                    (gasTargetPercentageErr ? " errInput" : "")
+                  }
+                  disabled={loading}
+                />
+              </div>
+            </div>
+            <p className={gasTargetPercentageErr ? "errHint" : "errHint-hide"}>
+              Invalid Gas Target Percentage
             </p>
           </Form.Item>
         </div>
@@ -1131,7 +1172,7 @@ export const GasLimitBaseFeeForm = ({
         <p>
           Determines what percentage to increase when baseFee is increased.
           <br />
-          ex&#41; x&rarr; 1/8 = 12.5%
+          ex&#41; 8&rarr; 1/8 = 12.5%
         </p>
       </div>
       <p className="subtitle">Description</p>
@@ -1149,7 +1190,10 @@ export const GasLimitBaseFeeForm = ({
         netName={netName}
         loading={loading}
         disabled={
-          gasLimitErr || baseFeeDenominatorErr || ElasticityMultiplierErr
+          gasLimitErr ||
+          maxBaseFeeErr ||
+          baseFeeMaxChangeRateErr ||
+          gasTargetPercentageErr
         }
         votingDurationMin={votingDurationMin}
         votingDurationMax={votingDurationMax}
