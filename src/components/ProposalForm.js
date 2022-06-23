@@ -79,7 +79,7 @@ class ProposalForm extends React.Component {
     try {
       let lockedBalance = await this.staking.lockedBalanceOf(addr);
       this.setState({
-        showLockAmount: web3Instance.web3.utils.fromWei(lockedBalance),
+        showLockAmount: util.convertWeiToEther(lockedBalance),
       });
     } catch (err) {
       console.log(err);
@@ -432,7 +432,7 @@ class ProposalForm extends React.Component {
             [
               "Invalid Replace WEMIX Amount",
               <br />,
-              `(Old Address: ${web3Instance.web3.utils.fromWei(
+              `(Old Address: ${util.convertWeiToEther(
                 oldMemberBalance,
                 "ether"
               )} WEMIX Locked)`,
@@ -658,7 +658,10 @@ class ProposalForm extends React.Component {
           );
           const envVal = util.encodeParameters(
             ["uint256", "uint256"],
-            [authMemSkAmountMin, authMemSkAmountMax]
+            [
+              util.convertEtherToWei(authMemSkAmountMin),
+              util.convertEtherToWei(authMemSkAmountMax),
+            ]
           );
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {
@@ -715,7 +718,7 @@ class ProposalForm extends React.Component {
           );
           const envVal = util.encodeParameters(
             ["uint256"],
-            [blockRewardAmount]
+            [util.convertEtherToWei(blockRewardAmount)]
           );
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {
