@@ -739,6 +739,17 @@ class ProposalForm extends React.Component {
             blockRate3 = 0,
             blockRate4 = 0,
           } = data;
+          // check undefined
+          if (
+            this.state.blockRateTotal !== 100 ||
+            (!blockRate1 && !blockRate2 && !blockRate3 && !blockRate4)
+          ) {
+            this.setState({
+              blockRewardDisMthErr: !this.state.blockRewardDisMthErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
           // setting env variables
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_BLOCK_REWARD_DISTRIBUTION
