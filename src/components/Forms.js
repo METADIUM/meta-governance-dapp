@@ -824,9 +824,11 @@ export const BlockRewardAmount = ({
   </div>
 );
 
+// Block Reward Distribution Method
 export const BlockRewardDistributionMethod = ({
   netName,
   loading,
+  blockRates,
   blockRate1,
   blockRate2,
   blockRate3,
@@ -843,7 +845,8 @@ export const BlockRewardDistributionMethod = ({
       <div className="divider flex">
         <div className="flex-full mr-0">
           <p className="subtitle">
-            Distribution Rate <span className="required">*</span>
+            Distribution Rate {blockRates}
+            <span className="required">*</span>
           </p>
           <div className="bor-box pd-rl-24 pd-tb-24">
             <div className="flex-full flex-row">
@@ -1152,79 +1155,6 @@ export const GasLimitBaseFeeForm = ({
         votingDurationMax={votingDurationMax}
         handleChange={handleChange}
       />
-    </Form>
-  </div>
-);
-
-// ! legacy code -> remove <Update Authority>
-export const UpdateProposalForm = ({
-  netName,
-  loading,
-  newNameErr,
-  newNodeErr,
-  handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
-}) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
-        New Node Name <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newName"
-          onChange={handleChange}
-          className={newNameErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={newNameErr ? "errHint" : "errHint-hide"}>Invalid Name</p>
-      </Form.Item>
-      <p className="subtitle">
-        New Node Description <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          type="primary"
-          name="newNode"
-          onChange={handleChange}
-          className={newNodeErr ? "errInput" : ""}
-          disabled={loading}
-          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-        />
-        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
-      </Form.Item>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          The hexadecimal node ID is encoded in the username portion of the URL,
-          separated from the host by an @ sign. The hostname can only be given
-          as an IP address, DNS domain names are not allowed. The port in the
-          host name section is the TCP listening port.
-        </p>
-      </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            htmlType="submit"
-            disabled={newNodeErr || newNameErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
     </Form>
   </div>
 );

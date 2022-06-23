@@ -1,11 +1,23 @@
 const buildNetworkType = process.env.REACT_APP_NETWORK_TYPE;
 
+// parameter count
+export const ENV_PARAMETER_COUNT = {
+  "Voting Duration Setting": 2,
+  "Authority Member Staking Amount": 2,
+  "Block Creation Time": 1,
+  "Block Reward Amount": 1,
+  "Block Reward Distribution Method": 4,
+  MaxPriorityFeePerGas: 1,
+  "Gas Limit & baseFee": 3,
+};
+
 // envName
 export const ENV_NAMES = {
   ENV_BALLOT_DURATION_MIN_MAX: "ballotDurationMinMax",
   ENV_STAKING_MIN_MAX: "stakingMinMax",
   ENV_BLOCK_CREATION_TIME: "blockCreationTime",
   ENV_BLOCK_REWARD_AMOUNT: "blockRewardAmount",
+  ENV_BLOCK_REWARD_DISTRIBUTION: "blockRewardDistrbution",
   ENV_MAX_PRIORITY_FEE_PER_GAS: "maxPriorityFeePerGas",
   ENV_GASLIMIT_AND_BASE_FEE: "gasLimitAndBaseFee",
 };
@@ -31,6 +43,11 @@ export const ENV_NAMES_SHA3 = [
     name: "Block Reward Amount",
     sha3Name:
       "0x89dd490ecaf395283ed4ff2fd9557ca767fc425dce063451a9b0da6d72f600c3",
+  },
+  {
+    name: "Block Reward Distribution Method",
+    sha3Name:
+      "0x3a9129cf69b4fa0fbe5d48e0d50863014e21ae09ffabcd72cebe10b1835251b9",
   },
   {
     name: "MaxPriorityFeePerGas",
