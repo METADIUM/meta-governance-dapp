@@ -31,6 +31,15 @@ class ProposalForm extends React.Component {
     blockCreationErr: false,
     // Block Reward Amonut
     blockRewardAmountErr: false,
+    // Block Reward Distribution Method
+    blockRates: {
+      blockRate1: 0,
+      blockRate2: 0,
+      blockRate3: 0,
+      blockRate4: 0,
+    },
+    blockRateTotal: 0,
+    blockRewardDisMthErr: false,
     // MaxPriorityFeePerGas
     maxPriorityFeePerGasErr: false,
     // Gas Limit & baseFee
@@ -42,15 +51,6 @@ class ProposalForm extends React.Component {
     // Remove Authority Member
     oldLockAmountErr: false,
     showLockAmount: "",
-
-    numbers: {
-      blockRate1: 0,
-      blockRate2: 0,
-      blockRate3: 0,
-      blockRate4: 0,
-    },
-    blockRateTotal: 0,
-    blockRewardDisMthErr: false,
   };
 
   constructor(props) {
@@ -251,6 +251,33 @@ class ProposalForm extends React.Component {
             blockCreationErr: !util.checkBlockCreationTime(e.target.value),
           });
         break;
+      // Block Reward Distribution Method
+      case "blockRate1":
+      case "blockRate2":
+      case "blockRate3":
+      case "blockRate4":
+        if (!/^[0-9]*\.?([0-9]{1,2})?$/.test(e.target.value)) {
+          this.data.formData[e.target.name] = originStr;
+        } else {
+          const { value, name } = e.target;
+          const parsedValue = Number(value) || 0;
+          this.setState((prevState) => {
+            const updatedBlockRates = {
+              ...prevState.blockRates,
+              [name]: parsedValue,
+            };
+            // get total
+            const newTotal = Object.values(updatedBlockRates).reduce(
+              (p, c) => p + c
+            );
+            return {
+              blockRates: updatedBlockRates,
+              blockRateTotal: newTotal,
+              blockRewardDisMthErr: newTotal !== 100,
+            };
+          });
+        }
+        break;
       // Block Reward Amount
       case "blockRewardAmount":
         if (!/^([0-9]*)$/.test(e.target.value))
@@ -291,31 +318,6 @@ class ProposalForm extends React.Component {
             ElasticityMultiplierErr: !util.checkPrice(e.target.value),
           });
         break;
-
-      // Block Reward Distribution Method
-      case "blockRate1":
-      case "blockRate2":
-      case "blockRate3":
-      case "blockRate4":
-        if (!/^[0-9]*\.?([0-9]{1,2})?$/.test(e.target.value)) {
-          this.data.formData[e.target.name] = originStr;
-        } else {
-          const { value, name } = e.target;
-          const parsedValue = value === "" ? "" : parseFloat(value);
-          this.setState((prevState) => {
-            const updatedNumbers = {
-              ...prevState.numbers,
-              [name]: parsedValue,
-            };
-            const newTotal = this.calculateTotal(updatedNumbers);
-            return {
-              numbers: updatedNumbers,
-              blockRateTotal: newTotal,
-              blockRewardDisMthErr: newTotal !== 100 ? true : false,
-            };
-          });
-        }
-        break;
       default:
         break;
     }
@@ -327,15 +329,6 @@ class ProposalForm extends React.Component {
       Number(amount) >= this.props.stakingMin
     );
   }
-
-  calculateTotal = (numbers) => {
-    return Object.entries(numbers).reduce((finalValue, [key, value]) => {
-      if (value === "") {
-        return finalValue;
-      }
-      return finalValue + value;
-    }, 0);
-  };
 
   // check before sending transaction
   async handleProposalError(refineData) {
@@ -719,6 +712,45 @@ class ProposalForm extends React.Component {
           const envVal = util.encodeParameters(
             ["uint256"],
             [util.convertEtherToWei(blockRewardAmount)]
+          );
+          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          checkData = {
+            envName,
+            envType: String(2),
+            envVal,
+            memo,
+            duration: votDuration,
+          };
+          break;
+        }
+        case "BlockRewardDistributionMethod": {
+          const {
+            blockRate1 = 0,
+            blockRate2 = 0,
+            blockRate3 = 0,
+            blockRate4 = 0,
+          } = data;
+          // check undefined
+          if (blockRate1 === undefined) {
+            this.setState({
+              blockRewardDisMthErr: !this.state.blockRewardDisMthErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          // setting env variables
+          const envName = util.encodeStringToSha3(
+            ENV_NAMES.ENV_BLOCK_REWARD_DISTRIBUTION
+          );
+          // remove decimals
+          const envVal = util.encodeParameters(
+            ["uint256", "uint256", "uint256", "uint256"],
+            [
+              Number(blockRate1) * 100,
+              Number(blockRate2) * 100,
+              Number(blockRate3) * 100,
+              Number(blockRate4) * 100,
+            ]
           );
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {

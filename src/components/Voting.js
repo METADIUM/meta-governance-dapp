@@ -12,7 +12,7 @@ import {
 
 import * as util from "../util";
 import { web3Instance } from "../web3";
-import { constants } from "../constants";
+import { constants, ENV_PARAMETER_COUNT } from "../constants";
 
 // import "./style/style.css";
 
@@ -208,13 +208,7 @@ class Voting extends React.Component {
         // get variable value
         let paramsArr = [];
         // number of parameters
-        let paramsCnt =
-          envVariableName === "Voting Duration Setting" ||
-          envVariableName === "Authority Member Staking Amount"
-            ? 2
-            : envVariableName === "Gas Limit & baseFee"
-            ? 3
-            : 1;
+        let paramsCnt = ENV_PARAMETER_COUNT[envVariableName];
         for (let i = 1; i <= paramsCnt; i++) {
           paramsArr.push("uint256");
         }
@@ -233,6 +227,12 @@ class Voting extends React.Component {
           description += `${util.convertWeiToEther(
             decodeValue[0]
           )} WEMIX/Block`;
+        } else if (envVariableName === "Block Reward Distribution Method") {
+          description = `Transaction Fee: ${1} WEMIX\nDistribution Rate: ${
+            decodeValue[0] / 100
+          }%, Staking Reward: ${decodeValue[1] / 100}%, Ecosystem: ${
+            decodeValue[2] / 100
+          }%, Maintenance: ${decodeValue[3] / 100}%`;
         } else if (envVariableName === "MaxPriorityFeePerGas") {
           description += `${util.convertWeiToGWei(decodeValue[0])} GWei`;
         } else if (envVariableName === "Gas Limit & baseFee") {
