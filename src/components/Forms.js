@@ -845,7 +845,7 @@ export const BlockRewardDistributionMethod = ({
       <div className="divider flex">
         <div className="flex-full mr-0">
           <p className="subtitle">
-            Distribution Rate {blockRates}
+            Distribution Rate
             <span className="required">*</span>
           </p>
           <div className="bor-box pd-rl-24 pd-tb-24">
