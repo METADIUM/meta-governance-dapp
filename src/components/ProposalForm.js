@@ -37,14 +37,12 @@ class ProposalForm extends React.Component {
     gasLimitErr: false,
     baseFeeDenominatorErr: false,
     ElasticityMultiplierErr: false,
-
     // Replace Authority Member
-    votingAddrErr: false,
     stakingAddrErr: false,
-    rewardAddrErr: false,
     // Remove Authority Member
     oldLockAmountErr: false,
     showLockAmount: "",
+
     numbers: {
       blockRate1: 0,
       blockRate2: 0,
@@ -53,9 +51,6 @@ class ProposalForm extends React.Component {
     },
     blockRateTotal: 0,
     blockRewardDisMthErr: false,
-    // !legacy code
-    oldAddrErr: false,
-    oldNodeErr: false,
   };
 
   constructor(props) {
@@ -64,17 +59,17 @@ class ProposalForm extends React.Component {
     this.staking = this.props.contracts.staking;
   }
 
-  getLockAmount = async (value) => {
-    if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
+  getLockAmount = async (addr) => {
+    if (!/^0x[a-fA-F0-9]{40}$/.test(addr)) {
       this.props.getErrModal("Invalid Adress", "Proposal Submit Error");
       this.setState({ showLockAmount: "" });
       return;
-    } else if (!web3Instance.web3.utils.checkAddressChecksum(value)) {
-      value = web3Instance.web3.utils.toChecksumAddress(value);
+    } else if (!web3Instance.web3.utils.checkAddressChecksum(addr)) {
+      addr = web3Instance.web3.utils.toChecksumAddress(addr);
     }
-    if (!(await this.governance.isMember(value))) {
+    if (!(await this.governance.isMember(addr))) {
       this.props.getErrModal(
-        "Non-existing Member Address (Old)",
+        "Non-existing Member Address.",
         "Proposal Submit Error"
       );
       this.setState({ showLockAmount: "" });
@@ -82,9 +77,9 @@ class ProposalForm extends React.Component {
     }
 
     try {
-      let lockedBalance = await this.staking.lockedBalanceOf(value);
+      let lockedBalance = await this.staking.lockedBalanceOf(addr);
       this.setState({
-        showLockAmount: web3Instance.web3.utils.fromWei(lockedBalance),
+        showLockAmount: util.convertWeiToEther(lockedBalance),
       });
     } catch (err) {
       console.log(err);
@@ -165,6 +160,15 @@ class ProposalForm extends React.Component {
       // Replace Authority Member
       case "stakingAddr":
         this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      // Remove Authority Member
+      case "oldLockAmount":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else
+          this.setState({
+            oldLockAmountErr: !this.checkLockAmount(e.target.value),
+          });
         break;
       // Governance Contract Address
       case "newGovAddr":
@@ -288,18 +292,6 @@ class ProposalForm extends React.Component {
           });
         break;
 
-      case "oldLockAmount":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        this.setState({ oldLockAmountErr: e.target.value === "" });
-        break;
-      // !legacy code
-      case "oldAddr":
-        this.setState({ oldAddrErr: !util.checkAddress(e.target.value) });
-        break;
-      case "oldNode":
-        this.setState({ oldNodeErr: !util.checkNode(e.target.value) });
-        break;
       // Block Reward Distribution Method
       case "blockRate1":
       case "blockRate2":
@@ -440,7 +432,7 @@ class ProposalForm extends React.Component {
             [
               "Invalid Replace WEMIX Amount",
               <br />,
-              `(Old Address: ${web3Instance.web3.utils.fromWei(
+              `(Old Address: ${util.convertWeiToEther(
                 oldMemberBalance,
                 "ether"
               )} WEMIX Locked)`,
@@ -452,6 +444,38 @@ class ProposalForm extends React.Component {
         if (newMemberBalance < newLockedAmount) {
           return this.props.getErrModal(
             "Not Enough WEMIX Stake (New)",
+            "Proposal Submit Error"
+          );
+        }
+        return false;
+      }
+      case "RemoveAuthorityMember": {
+        const { staker, lockAmount } = refineData;
+        const balance = await this.staking.lockedBalanceOf(staker);
+        const lockedAmount = Number(lockAmount);
+
+        // check if addresses already exist
+        const isMember = await this.governance.isMember(staker);
+        if (!isMember) {
+          return this.props.getErrModal(
+            "Non-existing Member Address.",
+            "Proposal Submit Error"
+          );
+        }
+        // check if new address already voted
+        const isBallotMember = this.props.newMemberaddr.some(
+          (addr) => addr === staker
+        );
+        if (isBallotMember) {
+          return this.props.getErrModal(
+            "Address with Existing Ballot.",
+            "Proposal Submit Error"
+          );
+        }
+        // check if the balance is small
+        if (balance < lockedAmount) {
+          return this.props.getErrModal(
+            "Locked Amount must be less than or equal to Unlocked Amount.",
             "Proposal Submit Error"
           );
         }
@@ -559,6 +583,23 @@ class ProposalForm extends React.Component {
           };
           break;
         }
+        case "RemoveAuthorityMember": {
+          const { stakingAddr, oldLockAmount } = data;
+          // check undefined
+          if (stakingAddr === undefined) {
+            this.setState({ stakingAddrErr: !this.state.stakingAddrErr });
+            this.props.convertLoading(false);
+            return;
+          }
+          trxFunction = (trx) => this.governance.addProposalToRemoveMember(trx);
+          checkData = {
+            staker: stakingAddr,
+            lockAmount: oldLockAmount,
+            memo,
+            duration: votDuration,
+          };
+          break;
+        }
         case "GovernanceContractAddress": {
           const { newGovAddr } = data;
           // check undefined
@@ -617,7 +658,10 @@ class ProposalForm extends React.Component {
           );
           const envVal = util.encodeParameters(
             ["uint256", "uint256"],
-            [authMemSkAmountMin, authMemSkAmountMax]
+            [
+              util.convertEtherToWei(authMemSkAmountMin),
+              util.convertEtherToWei(authMemSkAmountMax),
+            ]
           );
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {
@@ -648,7 +692,6 @@ class ProposalForm extends React.Component {
             ["uint256"],
             [blockCreation * 1000]
           );
-          // const envVal = util.encodeParameters(["uint256"], [blockCreation]);
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {
             envName,
@@ -675,7 +718,7 @@ class ProposalForm extends React.Component {
           );
           const envVal = util.encodeParameters(
             ["uint256"],
-            [blockRewardAmount]
+            [util.convertEtherToWei(blockRewardAmount)]
           );
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {
@@ -870,12 +913,12 @@ class ProposalForm extends React.Component {
           );
         case "RemoveAuthorityMember":
           return (
-            <PComponent.RmoveProposalForm
-              newAddrErr={this.state.newAddrErr}
+            <PComponent.RemoveProposalForm
+              stakingAddrErr={this.state.stakingAddrErr}
               showLockAmount={this.state.showLockAmount}
               stakingMin={this.props.stakingMin}
-              oldLockAmountErr={this.state.oldLockAmountErr}
               oldLockAmount={this.data.formData.oldLockAmount}
+              oldLockAmountErr={this.state.oldLockAmountErr}
               getLockAmount={this.getLockAmount}
             />
           );
@@ -942,15 +985,6 @@ class ProposalForm extends React.Component {
               baseFeeDenominatorErr={this.state.baseFeeDenominatorErr}
               ElasticityMultiplier={this.data.formData.ElasticityMultiplier}
               ElasticityMultiplierErr={this.state.ElasticityMultiplierErr}
-            />
-          );
-
-        // ! legacy code -> remove <Update Authority>
-        case "UpdateAuthority":
-          return (
-            <PComponent.UpdateProposalForm
-              newNameErr={this.state.newNameErr}
-              newNodeErr={this.state.newNodeErr}
             />
           );
         default:

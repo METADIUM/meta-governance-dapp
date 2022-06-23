@@ -59,6 +59,16 @@ export const convertGWeiToWei = (amount) => {
   return web3Instance.web3.utils.toWei(amount, "gwei");
 };
 
+// convert wei -> ether
+export const convertWeiToEther = (amount) => {
+  return web3Instance.web3.utils.fromWei(amount, "ether");
+};
+
+// convert ether -> wei
+export const convertEtherToWei = (amount) => {
+  return web3Instance.web3.utils.toWei(amount, "ether");
+};
+
 // encode parameters (type, name - only string[])
 export const encodeParameters = (type, name) => {
   return web3Instance.web3.eth.abi.encodeParameters(type, name);
@@ -128,29 +138,17 @@ export const refineSubmitData = (m) => {
   Object.keys(copy).forEach((key) => {
     if (!isNaN(key)) return delete copy[key];
     switch (key) {
-      // TODO newAddr oldAddr 확인
       case "staker":
       case "voter":
       case "reward":
       case "newGovAddr":
-      case "newAddr":
-      case "oldAddr":
         copy[key] = web3Instance.web3.utils.toChecksumAddress(copy[key]);
         break;
-      // TODO oldLockAmount newLockAmount gasLimit 확인
       case "lockAmount":
-      case "oldLockAmount":
-      case "newLockAmount":
-      case "gasLimit":
-        copy[key] = web3Instance.web3.utils.toWei(
-          copy[key].toString(),
-          "ether"
-        );
+        copy[key] = convertEtherToWei(copy[key]);
         break;
-      // TODO newName 확인
       case "memo":
       case "name":
-      case "newName":
         copy[key] = web3Instance.web3.utils.utf8ToHex(copy[key]);
         break;
       default:

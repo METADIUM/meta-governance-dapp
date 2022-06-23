@@ -158,7 +158,7 @@ class Voting extends React.Component {
     lockAmount =
       typeof lockAmount === "undefined"
         ? 0
-        : web3Instance.web3.utils.fromWei(lockAmount, "ether");
+        : util.convertWeiToEther(lockAmount, "ether");
     switch (type) {
       // Add Authority Member
       case constants.ballotTypes.AddAuthorityMember: {
@@ -224,11 +224,15 @@ class Voting extends React.Component {
         if (envVariableName === "Voting Duration Setting") {
           description += `${decodeValue[0]}-${decodeValue[1]} day`;
         } else if (envVariableName === "Authority Member Staking Amount") {
-          description += `${decodeValue[0]}-${decodeValue[1]} WEMIX`;
+          description += `${util.convertWeiToEther(
+            decodeValue[0]
+          )}-${util.convertWeiToEther(decodeValue[1])} WEMIX`;
         } else if (envVariableName === "Block Creation Time") {
           description += `${decodeValue[0] / 1000} s`;
         } else if (envVariableName === "Block Reward Amount") {
-          description += `${decodeValue[0]} WEMIX/Block`;
+          description += `${util.convertWeiToEther(
+            decodeValue[0]
+          )} WEMIX/Block`;
         } else if (envVariableName === "MaxPriorityFeePerGas") {
           description += `${util.convertWeiToGWei(decodeValue[0])} GWei`;
         } else if (envVariableName === "Gas Limit & baseFee") {
