@@ -364,7 +364,6 @@ class App extends React.Component {
         result.envVariableName = type.name;
         break;
       }
-      // TODO member
       case "1":
       default:
         result = await contracts.ballotStorage.getBallotMember(i);

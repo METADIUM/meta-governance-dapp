@@ -33,7 +33,7 @@ export const convertDayToSeconds = (day) => {
 };
 
 // ---------- string ---------- //
-// TODO 테스트 용으로 입력했던 기존 값이 잘못된 값일 경우 나오는 에러 처리를 위해 함수로 뺐는데 추후 수정이 필요할 수 있음
+// TODO 테스트 용으로 입력했던 기존 값이 잘못된 값일 경우 나오는 에러 핸들링
 // decode hex -> string
 export const decodeHexToString = (input) => {
   try {

@@ -212,6 +212,9 @@ class Voting extends React.Component {
         for (let i = 1; i <= paramsCnt; i++) {
           paramsArr.push("uint256");
         }
+        // TODO 기획서 v1.33 이전 데이터 형식과 맞지 않아 발생하는 에러 핸들링
+        if (this.props.ballotMemberOriginData[id].id === 40) paramsArr.pop();
+
         const decodeValue = util.decodeParameters(paramsArr, envVariableValue);
         // set description
         let description = `${envVariableName}: `;
@@ -238,9 +241,9 @@ class Voting extends React.Component {
         } else if (envVariableName === "Gas Limit & baseFee") {
           description = `Gas Limit: ${util.convertWeiToGWei(
             decodeValue[0]
-          )} GWei\nBaseFee Max Change Denominator: ${
-            decodeValue[1]
-          }\nElasticity Multiplier: ${decodeValue[2]}`;
+          )} GWei\nMax baseFee: ${decodeValue[1]}\nBaseFee Max Change Rate: ${
+            decodeValue[2]
+          }\nGas Target Percentage: ${decodeValue[3]}`;
         } else {
           return "Wrong Proposal (This label is only test)";
         }

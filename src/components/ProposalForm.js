@@ -44,8 +44,9 @@ class ProposalForm extends React.Component {
     maxPriorityFeePerGasErr: false,
     // Gas Limit & baseFee
     gasLimitErr: false,
-    baseFeeDenominatorErr: false,
-    ElasticityMultiplierErr: false,
+    maxBaseFeeErr: false,
+    baseFeeMaxChangeRateErr: false,
+    gasTargetPercentageErr: false,
     // Replace Authority Member
     stakingAddrErr: false,
     // Remove Authority Member
@@ -302,20 +303,28 @@ class ProposalForm extends React.Component {
           this.data.formData[e.target.name] = originStr;
         else this.setState({ gasLimitErr: !util.checkPrice(e.target.value) });
         break;
-      case "baseFeeDenominator":
+      case "maxBaseFee":
         if (!/^([0-9]*)$/.test(e.target.value))
           this.data.formData[e.target.name] = originStr;
         else
           this.setState({
-            baseFeeDenominatorErr: !util.checkPrice(e.target.value),
+            maxBaseFeeErr: !util.checkPrice(e.target.value),
           });
         break;
-      case "ElasticityMultiplier":
+      case "baseFeeMaxChangeRate":
         if (!/^([0-9]*)$/.test(e.target.value))
           this.data.formData[e.target.name] = originStr;
         else
           this.setState({
-            ElasticityMultiplierErr: !util.checkPrice(e.target.value),
+            baseFeeMaxChangeRateErr: !util.checkPrice(e.target.value),
+          });
+        break;
+      case "gasTargetPercentage":
+        if (!/^([0-9]*)$/.test(e.target.value))
+          this.data.formData[e.target.name] = originStr;
+        else
+          this.setState({
+            gasTargetPercentageErr: !util.checkPrice(e.target.value),
           });
         break;
       default:
@@ -786,7 +795,12 @@ class ProposalForm extends React.Component {
           break;
         }
         case "GasLimitBaseFee": {
-          const { gasLimit, baseFeeDenominator, ElasticityMultiplier } = data;
+          const {
+            gasLimit,
+            maxBaseFee,
+            baseFeeMaxChangeRate,
+            gasTargetPercentage,
+          } = data;
           // check undefined
           if (gasLimit === undefined) {
             this.setState({
@@ -795,16 +809,23 @@ class ProposalForm extends React.Component {
             this.props.convertLoading(false);
             return;
           }
-          if (baseFeeDenominator === undefined) {
+          if (maxBaseFee === undefined) {
             this.setState({
-              baseFeeDenominatorErr: !this.state.baseFeeDenominatorErr,
+              maxBaseFeeErr: !this.state.maxBaseFeeErr,
             });
             this.props.convertLoading(false);
             return;
           }
-          if (ElasticityMultiplier === undefined) {
+          if (baseFeeMaxChangeRate === undefined) {
             this.setState({
-              ElasticityMultiplierErr: !this.state.ElasticityMultiplierErr,
+              baseFeeMaxChangeRateErr: !this.state.baseFeeMaxChangeRateErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          if (gasTargetPercentage === undefined) {
+            this.setState({
+              gasTargetPercentageErr: !this.state.gasTargetPercentageErr,
             });
             this.props.convertLoading(false);
             return;
@@ -814,11 +835,12 @@ class ProposalForm extends React.Component {
             ENV_NAMES.ENV_GASLIMIT_AND_BASE_FEE
           );
           const envVal = util.encodeParameters(
-            ["uint256", "uint256", "uint256"],
+            ["uint256", "uint256", "uint256", "uint256"],
             [
               util.convertGWeiToWei(gasLimit),
-              baseFeeDenominator,
-              ElasticityMultiplier,
+              maxBaseFee,
+              baseFeeMaxChangeRate,
+              gasTargetPercentage,
             ]
           );
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
@@ -1005,10 +1027,12 @@ class ProposalForm extends React.Component {
             <PComponent.GasLimitBaseFeeForm
               gasLimit={this.data.formData.gasLimit}
               gasLimitErr={this.state.gasLimitErr}
-              baseFeeDenominator={this.data.formData.baseFeeDenominator}
-              baseFeeDenominatorErr={this.state.baseFeeDenominatorErr}
-              ElasticityMultiplier={this.data.formData.ElasticityMultiplier}
-              ElasticityMultiplierErr={this.state.ElasticityMultiplierErr}
+              maxBaseFee={this.data.formData.maxBaseFee}
+              maxBaseFeeErr={this.state.maxBaseFeeErr}
+              baseFeeMaxChangeRate={this.data.formData.baseFeeMaxChangeRate}
+              baseFeeMaxChangeRateErr={this.state.baseFeeMaxChangeRateErr}
+              gasTargetPercentage={this.data.formData.gasTargetPercentage}
+              gasTargetPercentageErr={this.state.gasTargetPercentageErr}
             />
           );
         default:
