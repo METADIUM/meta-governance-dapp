@@ -228,7 +228,7 @@ class Voting extends React.Component {
             decodeValue[0]
           )} WEMIX/Block`;
         } else if (envVariableName === "Block Reward Distribution Method") {
-          description = `Transaction Fee: ${1} WEMIX\nDistribution Rate: ${
+          description = `Distribution Rate: ${
             decodeValue[0] / 100
           }%, Staking Reward: ${decodeValue[1] / 100}%, Ecosystem: ${
             decodeValue[2] / 100

@@ -828,7 +828,6 @@ export const BlockRewardAmount = ({
 export const BlockRewardDistributionMethod = ({
   netName,
   loading,
-  blockRates,
   blockRate1,
   blockRate2,
   blockRate3,
