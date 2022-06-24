@@ -141,12 +141,24 @@ class Voting extends React.Component {
   }
 
   // show proposal name
-  setTopic = (type, name, newAddr, oldAddr) => {
+  setTopic = (
+    type,
+    name,
+    oldStakerAddr,
+    newStakerAddr,
+    newVotingAddr,
+    newRewardAddr
+  ) => {
     if (
       type === constants.ballotTypes.ReplaceAuthorityMember &&
-      newAddr === oldAddr
-    )
-      return "MemberUpdate";
+      oldStakerAddr === newStakerAddr
+    ) {
+      if (newStakerAddr !== newVotingAddr) {
+        return "Voting Address";
+      } else if (newStakerAddr !== newRewardAddr) {
+        return "Reward Address";
+      }
+    }
     if (type === constants.ballotTypes.ChangedEnv) {
       return name;
     }
@@ -173,10 +185,36 @@ class Voting extends React.Component {
       }
       // Replace Authority Member
       case constants.ballotTypes.ReplaceAuthorityMember: {
-        const { oldStakerAddress, newStakerAddress } =
-          this.props.ballotMemberOriginData[id];
-        // TODO myInfo 변경됐을 때 (address 같을 때)
-        if (oldStakerAddress !== newStakerAddress) {
+        const {
+          oldStakerAddress,
+          newStakerAddress,
+          newVoterAddress,
+          newRewardAddress,
+        } = this.props.ballotMemberOriginData[id];
+        if (oldStakerAddress === newStakerAddress) {
+          if (newStakerAddress !== newVoterAddress) {
+            return (
+              <p className="description flex-full">
+                New Voting Address: {newVoterAddress}
+              </p>
+            );
+          } else if (newStakerAddress !== newRewardAddress) {
+            return (
+              <p className="description flex-full">
+                New Reward Address: {newRewardAddress}
+              </p>
+            );
+            // TODO else 문은 거의 나타나지 않는 부분이지만 테스트 용도의 에러 핸들링
+          } else {
+            return (
+              <p className="description flex-full">
+                Old Authority Address: {oldStakerAddress}
+                <br />
+                New Authority Address: {newStakerAddress}
+              </p>
+            );
+          }
+        } else {
           return (
             <p className="description flex-full">
               Old Authority Address: {oldStakerAddress}
@@ -187,7 +225,6 @@ class Voting extends React.Component {
             </p>
           );
         }
-        break;
       }
       //  Governance Contract Address
       case constants.ballotTypes.GovernanceContractAddress: {
@@ -213,7 +250,11 @@ class Voting extends React.Component {
           paramsArr.push("uint256");
         }
         // TODO 기획서 v1.33 이전 데이터 형식과 맞지 않아 발생하는 에러 핸들링
-        if (this.props.ballotMemberOriginData[id].id === 40) paramsArr.pop();
+        if (
+          this.props.ballotMemberOriginData[id].id === 39 ||
+          this.props.ballotMemberOriginData[id].id === 40
+        )
+          paramsArr.pop();
 
         const decodeValue = util.decodeParameters(paramsArr, envVariableValue);
         // set description
@@ -260,25 +301,6 @@ class Voting extends React.Component {
           </p>
         );
       }
-      //  case constants.ballotTypes.MemberRemoval:
-      //     return (
-      //       <p className="description flex-full">
-      //         Address To be Removed: {oldMemberAddress}
-      //         <br />
-      //         WEMIX Amount to be unlocked: {lockAmount} WEMIX
-      //       </p>
-      //     );
-      //     } else {
-      //       return (
-      //         <p className="description flex-full">
-      //           Old Authority Address: {oldMemberAddress}
-      //           <br />
-      //           New Authority Address: {newMemberAddress}
-      //            <br />
-      //           WEMIX To be Locked: {lockAmount} WEMIX
-      //         </p>
-      //       );
-      //     }
       default:
         return (
           <p className="description flex-full">
@@ -454,7 +476,9 @@ class Voting extends React.Component {
       let topic = this.setTopic(
         value.props.item.ballotType,
         value.props.newMemberAddress,
-        value.props.oldMemberAddress
+        value.props.oldMemberAddress,
+        value.props.newVotingAddress,
+        value.props.newRewardAddress
       );
       return [
         topic,
@@ -462,6 +486,8 @@ class Voting extends React.Component {
         value.props.item.creator,
         value.props.newMemberAddress,
         value.props.oldMemberAddress,
+        value.props.newVotingAddress,
+        value.props.newRewardAddress,
       ].some((elem) => elem.toLowerCase().indexOf(str) !== -1);
     });
   }
@@ -533,6 +559,7 @@ class Voting extends React.Component {
             stakingMin={this.props.stakingMin}
             votingDurationMax={this.props.votingDurationMax}
             votingDurationMin={this.props.votingDurationMin}
+            selectedMenu={this.props.selectedMenu}
           />
         )}
       </div>

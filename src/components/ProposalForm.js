@@ -4,17 +4,24 @@ import { Button, Select, Icon } from "antd";
 import { web3Instance } from "../web3";
 
 import * as PComponent from "./Forms";
+import * as MComponent from "./MyForm";
 import * as util from "../util";
 
-import { constants, ENV_NAMES } from "../constants";
+import {
+  constants,
+  ENV_MY_INFO_PROPOSAL_LIST,
+  ENV_NAMES,
+  ENV_VOTING_PROPOSAL_LIST,
+} from "../constants";
 
 class ProposalForm extends React.Component {
   data = {
-    selectedTopic: "",
     formData: {},
+    selectedTopic: "",
   };
 
   state = {
+    selectedTopic: "",
     // Add Authority Member
     // Replace Authority Member
     newAddrErr: false,
@@ -52,12 +59,31 @@ class ProposalForm extends React.Component {
     // Remove Authority Member
     oldLockAmountErr: false,
     showLockAmount: "",
+    // Voting Address
+    oldVotingAddr: "",
+    newVotingAddrErr: false,
+    // Reward Address
+    oldRewardAddr: "",
+    newRewardAddrErr: false,
   };
 
   constructor(props) {
     super(props);
     this.governance = this.props.contracts.governance;
     this.staking = this.props.contracts.staking;
+  }
+
+  async componentDidMount() {
+    await this.getMyInfo();
+  }
+
+  componentDidUpdate(props) {
+    // changes due to the use of the same component
+    if (props.selectedMenu === "2" && this.props.selectedMenu === "3") {
+      // setting select default value (Myinfo)
+      this.data.selectedTopic = "";
+      this.setState({ selectedTopic: "" });
+    }
   }
 
   getLockAmount = async (addr) => {
@@ -110,7 +136,9 @@ class ProposalForm extends React.Component {
   handleSelectTopicChange = (topic) => {
     const { stakingMin, votingDurationMin, votingDurationMax } = this.props;
     this.data.selectedTopic = topic;
+    this.setState({ selectedTopic: topic });
     this.data.formData = {
+      ...this.data.formData,
       newLockAmount: stakingMin,
       oldLockAmount: stakingMin,
       votingDurationMin,
@@ -327,6 +355,14 @@ class ProposalForm extends React.Component {
             gasTargetPercentageErr: !util.checkPrice(e.target.value),
           });
         break;
+      // Voting Address
+      case "newVotingAddr":
+        this.setState({ newVotingAddrErr: !util.checkAddress(e.target.value) });
+        break;
+      // Reward Address
+      case "newRewardAddr":
+        this.setState({ newRewardAddrErr: !util.checkAddress(e.target.value) });
+        break;
       default:
         break;
     }
@@ -350,7 +386,7 @@ class ProposalForm extends React.Component {
         "Proposal Submit Error"
       );
     }
-    const { selectedTopic } = this.data;
+    const { selectedTopic } = this.state;
     switch (selectedTopic) {
       case "AddAuthorityMember": {
         const { staker, lockAmount } = refineData;
@@ -495,6 +531,7 @@ class ProposalForm extends React.Component {
         }
         return false;
       }
+      // TODO voting address, reward address 확인 해아할 것 같기도 함
       default:
         return false;
     }
@@ -502,7 +539,7 @@ class ProposalForm extends React.Component {
 
   // check the data error handling
   async checkSubmitData(data) {
-    const { selectedTopic } = this.data;
+    const { selectedTopic } = this.state;
     const { memo, votDuration } = data;
     let checkData, refineData, trxFunction;
 
@@ -864,6 +901,59 @@ class ProposalForm extends React.Component {
           };
           break;
         }
+        case "VotingAddress": {
+          const { staker, name, lockAmount, enode, ip, port, newVotingAddr } =
+            data;
+          console.warn(data);
+          // check undefined
+          if (newVotingAddr === undefined) {
+            this.setState({
+              newVotingAddrErr: !this.state.newVotingAddrErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          trxFunction = (trx) => this.governance.addProposalToChangeMember(trx);
+          checkData = {
+            staker,
+            voter: newVotingAddr,
+            reward: staker,
+            name,
+            lockAmount,
+            enode,
+            ip,
+            port,
+            memo,
+            oldStaker: staker,
+          };
+          break;
+        }
+        case "RewardAddress": {
+          const { staker, name, lockAmount, enode, ip, port, newRewardAddr } =
+            data;
+          // check undefined
+          if (newRewardAddr === undefined) {
+            this.setState({
+              newRewardAddrErr: !this.state.newRewardAddrErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          trxFunction = (trx) => this.governance.addProposalToChangeMember(trx);
+          checkData = {
+            staker,
+            voter: staker,
+            reward: newRewardAddr,
+            name,
+            lockAmount,
+            enode,
+            ip,
+            port,
+            memo,
+            oldStaker: staker,
+          };
+          break;
+        }
         default:
           return;
       }
@@ -892,6 +982,10 @@ class ProposalForm extends React.Component {
     e.preventDefault();
     this.props.convertLoading(true);
     try {
+      // const { selectedMenu } = this.props;
+      // if (selectedMenu === "3") {
+      //   await this.getMyInfo();
+      // }
       const trx = await this.checkSubmitData(this.data.formData);
       // run only if there is data for sending transactions
       if (trx !== undefined) {
@@ -922,6 +1016,7 @@ class ProposalForm extends React.Component {
             this.props.waitForReceipt(hash, async (receipt) => {
               // console.log("Updated :", receipt);
               if (receipt.status) {
+                // TODO Myinfo 변경의 경우 voting tab으로 넘겨야 함
                 await this.props.convertComponent("voting");
               } else {
                 this.props.getErrModal(
@@ -941,9 +1036,47 @@ class ProposalForm extends React.Component {
     }
   }
 
+  // get information for send transaction (Myinfo)
+  async getMyInfo() {
+    try {
+      const { defaultAccount } = web3Instance;
+      const memberLength = await this.governance.getMemberLength();
+      let memberIdx = 0;
+      let oldVotingAddr = "";
+      for (let i = 1; i <= memberLength; i++) {
+        oldVotingAddr = await this.governance.getMember(i);
+        if (oldVotingAddr === defaultAccount) {
+          memberIdx = i;
+          break;
+        }
+      }
+      // get member info
+      const oldRewardAddr = await this.governance.getReward(memberIdx);
+      const { name, enode, ip, port } = await this.governance.getNode(
+        memberIdx
+      );
+      const lockAmount = await this.staking.lockedBalanceOf(defaultAccount);
+      this.data.formData = {
+        staker: defaultAccount,
+        name: util.decodeHexToString(name),
+        enode,
+        ip,
+        port,
+        lockAmount: util.convertWeiToEther(lockAmount),
+        oldStaker: defaultAccount,
+      };
+      this.setState({ oldVotingAddr: oldVotingAddr });
+      this.setState({ oldRewardAddr: oldRewardAddr });
+    } catch (err) {
+      console.log(err);
+      this.props.getErrModal(err.message, err.name);
+      this.props.convertLoading(false);
+    }
+  }
+
   // show components that follow selected topic
   showProposalForm() {
-    const { selectedTopic } = this.data;
+    const { selectedTopic } = this.state;
     const TopicComponent = (topic) => {
       switch (topic) {
         case "AddAuthorityMember":
@@ -1046,6 +1179,20 @@ class ProposalForm extends React.Component {
               gasTargetPercentageErr={this.state.gasTargetPercentageErr}
             />
           );
+        case "VotingAddress":
+          return (
+            <MComponent.VotingAddress
+              oldVotingAddr={this.state.oldVotingAddr}
+              newVotingAddrErr={this.state.newVotingAddrErr}
+            />
+          );
+        case "RewardAddress":
+          return (
+            <MComponent.RewardAddress
+              oldRewardAddr={this.state.oldRewardAddr}
+              newRewardAddrErr={this.state.newRewardAddrErr}
+            />
+          );
         default:
           return <></>;
       }
@@ -1069,93 +1216,82 @@ class ProposalForm extends React.Component {
   }
 
   render() {
-    const { convertComponent, buttonLoading } = this.props;
-    const { selectedTopic } = this.data;
-
+    const { convertComponent, buttonLoading, selectedMenu } = this.props;
+    const { selectedTopic } = this.state;
+    const options =
+      selectedMenu === "3"
+        ? ENV_MY_INFO_PROPOSAL_LIST
+        : ENV_VOTING_PROPOSAL_LIST;
     return (
       <div>
         <div className="contentDiv container">
           <div className="backBtnDiv">
-            <Button
-              className={
-                "btn-fill-white flex flex-center-horizontal text-large " +
-                web3Instance.netName
-              }
-              onClick={(e) => convertComponent("voting")}
-              loading={buttonLoading}
-            >
-              <span>
-                <Icon type="left" />
-              </span>
-              <span className="text_btn">Back to Voting</span>
-            </Button>
+            {selectedMenu === "3" ? null : (
+              <Button
+                className={
+                  "btn-fill-white flex flex-center-horizontal text-large " +
+                  web3Instance.netName
+                }
+                onClick={() => convertComponent("voting")}
+                loading={buttonLoading}
+              >
+                <span>
+                  <Icon type="left" />
+                </span>
+                <span className="text_btn">Back to Voting</span>
+              </Button>
+            )}
           </div>
           <div className="contentVotingDiv">
             <div className="proposalHead">
               <div className="title flex">
-                <p className="flex-full text-heavy">New Proposal</p>
+                <p className="flex-full text-heavy">
+                  {selectedMenu === "3" ? "MyInfo" : "New Proposal"}
+                </p>
                 <p>* Mandatory</p>
               </div>
               <p className="subtitle">
-                Topic for voting <span className="required">*</span>
+                {selectedMenu === "3" ? (
+                  "Replace List"
+                ) : (
+                  <>
+                    Topic for voting <span className="required">*</span>
+                  </>
+                )}
               </p>
               <Select
                 showArrow
+                value={this.data.selectedTopic}
+                filterOption={false}
                 onChange={this.handleSelectTopicChange}
                 disabled={buttonLoading}
               >
-                <Select.Option value="AddAuthorityMember">
-                  Add Authority Member
-                </Select.Option>
-                <Select.Option value="ReplaceAuthorityMember">
-                  Replace Authority Member
-                </Select.Option>
-                <Select.Option value="RemoveAuthorityMember">
-                  Remove Authority Member
-                </Select.Option>
-                <Select.Option value="GovernanceContractAddress">
-                  Governance Contract Address
-                </Select.Option>
-                <Select.Option value="VotingDurationSetting">
-                  Voting Duration Setting
-                </Select.Option>
-                <Select.Option value="AuthorityMemberStakingAmount">
-                  Authority Member Staking Amount
-                </Select.Option>
-                <Select.Option value="BlockCreationTime">
-                  Block Creation Time
-                </Select.Option>
-                <Select.Option value="BlockRewardAmount">
-                  Block Reward Amount
-                </Select.Option>
-                <Select.Option value="BlockRewardDistributionMethod">
-                  Block Reward Distribution Method
-                </Select.Option>
-                <Select.Option value="MaxPriorityFeePerGas">
-                  MaxPriorityFeePerGas
-                </Select.Option>
-                <Select.Option value="GasLimitBaseFee">
-                  Gas Limit &amp; baseFee
-                </Select.Option>
+                {options.map((item, i) => (
+                  <Select.Option value={item.value} key={i}>
+                    {item.id}
+                  </Select.Option>
+                ))}
               </Select>
             </div>
             {selectedTopic !== "" && <div>{this.showProposalForm()}</div>}
           </div>
           {/* reference memo */}
-          <div className="contentRefDiv">
-            <p>[Reference]</p>
-            <ol>
-              <li>
-                Even within the voting duration, if more than 50% of opinions
-                are expressed for or against, voting ends and follow-up work is
-                carried out.
-              </li>
-              <li>
-                Basically, only one voting is conducted at a time, so if there
-                is already voting in progress, you cannot start a new voting.
-              </li>
-            </ol>
-          </div>
+          {selectedMenu === "3" ? null : (
+            <div className="contentRefDiv">
+              <p>[Reference]</p>
+              <ol>
+                <li>
+                  Even within the voting duration, if more than 50% of opinions
+                  are expressed for or against, voting ends and follow-up work
+                  is carried out.
+                </li>
+                <li>
+                  Basically, only one voting is conducted at a time, so if there
+                  is already voting in progress, you cannot start a new voting.
+                </li>
+              </ol>
+            </div>
+          )}
         </div>
       </div>
     );

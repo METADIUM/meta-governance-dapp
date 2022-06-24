@@ -1,5 +1,30 @@
 const buildNetworkType = process.env.REACT_APP_NETWORK_TYPE;
 
+// proposal list
+export const ENV_VOTING_PROPOSAL_LIST = [
+  { id: "Add Authority Member", value: "AddAuthorityMember" },
+  { id: "Replace Authority Member", value: "ReplaceAuthorityMember" },
+  { id: "Remove Authority Member", value: "RemoveAuthorityMember" },
+  { id: "Governance Contract Address", value: "GovernanceContractAddress" },
+  { id: "Voting Duration Setting", value: "VotingDurationSetting" },
+  {
+    id: "Authority Member Staking Amount",
+    value: "AuthorityMemberStakingAmount",
+  },
+  { id: "Block Creation Time", value: "BlockCreationTime" },
+  { id: "Block Reward Amount", value: "BlockRewardAmount" },
+  {
+    id: "Block Reward Distribution Method",
+    value: "BlockRewardDistributionMethod",
+  },
+  { id: "MaxPriorityFeePerGas", value: "MaxPriorityFeePerGas" },
+  { id: "GasLimit & BaseFee", value: "GasLimitBaseFee" },
+];
+export const ENV_MY_INFO_PROPOSAL_LIST = [
+  { id: "Voting Address", value: "VotingAddress" },
+  { id: "Reward Address", value: "RewardAddress" },
+];
+
 // parameter count
 export const ENV_PARAMETER_COUNT = {
   "Voting Duration Setting": 2,
