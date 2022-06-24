@@ -14,6 +14,7 @@ import {
   AccessFailedModal,
   Voting,
   Authority,
+  Myinfo,
   BaseLoader,
 } from "./components";
 import getWeb3Instance, { web3Instance } from "./web3";
@@ -59,6 +60,8 @@ class App extends React.Component {
     errModalVisible: false,
     errStakging: false,
     loading: false,
+    activeMenu: "Authority",
+    // true - voting / false - authority
     showProposal: false,
   };
 
@@ -381,13 +384,9 @@ class App extends React.Component {
     if (isUpdated) ballotMemberFinalizedData[i] = result;
   }
 
-  // called when menu clicked
+  // Called when TapNav menu clicked
   onMenuClick = ({ key }) => {
-    if (this.state.showProposal && this.state.nav === "2" && key === "2") {
-      this.convertVotingComponent("voting");
-    } else {
-      this.setState({ nav: key });
-    }
+    this.setState({ nav: key });
   };
 
   onClickFootIcon = (e) => {
@@ -441,23 +440,18 @@ class App extends React.Component {
             votingDurationMin={this.data.votingDurationMin}
           />
         );
+      case "3":
+        return <Myinfo title="Myinfo" />;
       default:
     }
     this.setState({ selectedMenu: true });
   }
 
-  // called when voting menu is clicked
+  // Called when New Proposal button is clicked in Voting Menu
   convertVotingComponent = (component) => {
-    switch (component) {
-      case "voting":
-        this.setState({ showProposal: false });
-        break;
-      case "proposal":
-        this.setState({ showProposal: true });
-        break;
-      default:
-        break;
-    }
+    if (component === "proposal") {
+      this.setState({ showProposal: true });
+    } else this.setState({ showProposal: false });
   };
 
   convertLoading = (state) => {

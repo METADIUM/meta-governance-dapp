@@ -28,6 +28,9 @@ const TopNav = ({
         <Menu.Item key="2" className={"text-large text-bold " + netName}>
           Voting
         </Menu.Item>
+        <Menu.Item key="3" className={"text-large text-bold " + netName}>
+          MyInfo
+        </Menu.Item>
       </Menu>
     </div>
     <div className="header-staking flex flex-center-horizontal flex-end-vertical flex-full">
