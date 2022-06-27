@@ -1,6 +1,8 @@
 import React from "react";
 import { Button, Modal, Input, Select, Icon, Slider } from "antd";
 
+import { convertSecondsToDay } from "../util";
+
 import "./style/style.css";
 
 const Option = Select.Option;
@@ -135,27 +137,39 @@ const AccessFailedModal = ({ visible, message }) => (
 const ChangeModal = ({
   updateModal,
   ballotUpdateDuration,
+  votingDurationMin,
+  votingDurationMax,
   completeModal = (f) => f,
   hideChangeModal = (f) => f,
   sliderChange = (f) => f,
-}) => (
-  <Modal
-    title="Voting Duration Change"
-    visible={updateModal}
-    onOk={completeModal}
-    onCancel={hideChangeModal}
-  >
-    <p className="changeDay flex flex-center-vertical">
-      {ballotUpdateDuration}days
-    </p>
-    <Slider
-      marks={{ 0: "0 days", 60: "3 days", 100: "5days" }}
-      step={20}
-      value={ballotUpdateDuration * 20}
-      tooltipVisible={false}
-      onChange={sliderChange}
-    />
-  </Modal>
-);
+}) => {
+  const min = convertSecondsToDay(votingDurationMin);
+  const max = convertSecondsToDay(votingDurationMax);
+
+  return (
+    <Modal
+      title="Voting Duration Change"
+      visible={updateModal}
+      onOk={completeModal}
+      onCancel={hideChangeModal}
+    >
+      <p className="changeDay flex flex-center-vertical">
+        {ballotUpdateDuration} days
+      </p>
+      <Slider
+        marks={{
+          [min]: min + " days",
+          [ballotUpdateDuration]: ballotUpdateDuration + " days",
+          [max]: max + " days",
+        }}
+        min={min}
+        max={max}
+        defaultValue={ballotUpdateDuration}
+        tooltipVisible={false}
+        onChange={sliderChange}
+      />
+    </Modal>
+  );
+};
 
 export { StakingModal, ErrModal, AccessFailedModal, ChangeModal };

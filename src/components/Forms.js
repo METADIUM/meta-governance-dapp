@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Input, Form, Icon, Select } from "antd";
 
-import { shouldPass } from "../util";
+import { convertSecondsToDay, shouldPass } from "../util";
 
 const { TextArea } = Input;
 
@@ -38,10 +38,12 @@ const ProposalFormFooter = ({
   votingDurationMax,
   handleChange = shouldPass(),
 }) => {
+  const min = convertSecondsToDay(votingDurationMin);
+  const max = convertSecondsToDay(votingDurationMax);
   // option component
   const selectOption = () => {
     let comp = [];
-    for (let op = votingDurationMin; op <= votingDurationMax; op++) {
+    for (let op = min; op <= max; op++) {
       comp.push(
         <Select.Option key={op} value={`votDuration_${op}`}>
           {op}
@@ -59,7 +61,7 @@ const ProposalFormFooter = ({
               Voting Duration
             </label>
             <Select
-              defaultValue={votingDurationMin}
+              defaultValue={min}
               name="votDuration"
               disabled={loading}
               className="mg-rl-15"

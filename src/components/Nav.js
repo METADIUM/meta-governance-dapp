@@ -98,7 +98,7 @@ const SubNav = ({ position, onClickSubMenu = (f) => f }) => (
 
 const FootNav = ({ netName, onClickFootIcon }) => (
   <Row className="container flex">
-    <p>Copyright © Since 2019 Metadium Technology, Inc. All rights reserved</p>
+    <p>WEMIX PTE. LTD. © WEMIX PTE. LTD. All Rights Reserved.</p>
     <div className="flex flex-full">
       <Button className="btn-img" onClick={onClickFootIcon}>
         <img src="/img/wemix_footer.png" alt="wemix" key="wemix" />

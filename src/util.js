@@ -22,14 +22,14 @@ const timeConverter = (timestamp) => {
   );
 };
 
-// convert seconds -> day
-// export const convertSecondsToDay = (seconds) => {
-//   return seconds < secondsInDay ? 1 : seconds / secondsInDay;
-// };
-
 // convert day -> seconds
 export const convertDayToSeconds = (day) => {
   return day * secondsInDay;
+};
+
+// convert seconds -> day
+export const convertSecondsToDay = (second) => {
+  return second ? second / secondsInDay : 0;
 };
 
 // ---------- string ---------- //

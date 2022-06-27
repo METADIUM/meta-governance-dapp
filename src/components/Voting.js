@@ -35,7 +35,7 @@ class Voting extends React.Component {
 
   state = {
     isBallotLoading: false,
-    ballotUpdateDuration: 2,
+    ballotUpdateDuration: 1,
     ballotUpdateMemo: "new memo",
     position: "active",
     updateModal: false,
@@ -260,7 +260,9 @@ class Voting extends React.Component {
         // set description
         let description = `${envVariableName}: `;
         if (envVariableName === "Voting Duration Setting") {
-          description += `${decodeValue[0]}-${decodeValue[1]} day`;
+          description += `${util.convertSecondsToDay(
+            decodeValue[0]
+          )}-${util.convertSecondsToDay(decodeValue[1])} day`;
         } else if (envVariableName === "Authority Member Staking Amount") {
           description += `${util.convertWeiToEther(
             decodeValue[0]
@@ -447,7 +449,7 @@ class Voting extends React.Component {
   };
 
   sliderChange = (value) => {
-    this.setState({ ballotUpdateDuration: value / 20 });
+    this.setState({ ballotUpdateDuration: value });
   };
 
   searchBallot = (e) => {
@@ -520,6 +522,8 @@ class Voting extends React.Component {
             <ChangeModal
               updateModal={this.state.updateModal}
               ballotUpdateDuration={this.state.ballotUpdateDuration}
+              votingDurationMin={this.props.votingDurationMin}
+              votingDurationMax={this.props.votingDurationMax}
               completeModal={this.completeModal}
               hideChangeModal={this.hideChangeModal}
               sliderChange={this.sliderChange}

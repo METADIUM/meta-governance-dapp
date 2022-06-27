@@ -6,7 +6,7 @@ var web3Instance;
 let getWeb3Instance = () => {
   if (web3Instance) return web3Instance;
 
-  // Get METADIUM network data
+  // Get WEMIX network data
   const chainId = process.env.REACT_APP_NETWORK_CHAIN_ID;
   const chainName = process.env.REACT_APP_NETWORK_CHAIN_NAME;
   const rpcUrls = process.env.REACT_APP_NETWORK_RPC_URLS;
@@ -17,8 +17,8 @@ let getWeb3Instance = () => {
   );
   const symbol = process.env.REACT_APP_NETWORK_NATIVE_CURRENCY_SYMBOL;
 
-  // Adding METADIUM network to the Metamask
-  const addMetadiumNetwork = async () => {
+  // Adding WEMIX network to the Metamask
+  const addWemixNetwork = async () => {
     await window.ethereum.request({
       method: "wallet_addEthereumChain",
       params: [
@@ -33,9 +33,9 @@ let getWeb3Instance = () => {
     });
   };
 
-  // Switch Metamask network to METADIUM network
+  // Switch Metamask network to WEMIX network
   // eslint-disable-next-line
-  const switchMetadiumNetwork = async () => {
+  const switchWemixNetwork = async () => {
     await window.ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId }],
@@ -49,14 +49,12 @@ let getWeb3Instance = () => {
       // Checking if Web3 has been injected by the browser
       if (window.ethereum) {
         try {
-          await addMetadiumNetwork();
-          // await switchMetadiumNetwork();
+          await addWemixNetwork();
+          // await switchWemixNetwork();
 
           web3 = new Web3(window.ethereum);
         } catch (e) {
-          reject(
-            new Error(`${e.message || "Please use the METADIUM networks."}`)
-          );
+          reject(new Error(`${e.message || "Please use the WEMIX networks."}`));
         }
       } else if (typeof window.web3 !== "undefined") {
         web3 = new Web3(window.web3.currentProvider);
@@ -68,7 +66,7 @@ let getWeb3Instance = () => {
       if (web3) {
         // Distingush between mainnet and testnet
         const buildNetworkType = process.env.REACT_APP_NETWORK_TYPE;
-        let errMsg = `Unknown network. Please access to METADIUM ${buildNetworkType}`;
+        let errMsg = `Unknown network. Please access to WEMIX ${buildNetworkType}`;
         netId = await web3.eth.net.getId();
         network = await web3.eth.net.getNetworkType();
 
