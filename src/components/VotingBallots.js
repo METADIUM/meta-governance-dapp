@@ -131,7 +131,7 @@ const VotingBallots = ({
                   <div className="flex">
                     <span>duration</span>
                     <span className="days">
-                      {item.duration === 0 ? 1 : item.duration}days
+                      {item.duration === 0 ? 1 : item.duration} days
                     </span>
                   </div>
                   <Button

@@ -669,7 +669,10 @@ class ProposalForm extends React.Component {
           );
           const envVal = util.encodeParameters(
             ["uint256", "uint256"],
-            [votDurationMin, votDurationMax]
+            [
+              util.convertDayToSeconds(votDurationMin),
+              util.convertDayToSeconds(votDurationMax),
+            ]
           );
           trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
           checkData = {
@@ -960,7 +963,9 @@ class ProposalForm extends React.Component {
       checkData = {
         ...checkData,
         memo: checkData.memo || "",
-        duration: checkData.duration || this.props.votingDurationMin,
+        duration:
+          util.convertDayToSeconds(checkData.duration) ||
+          this.props.votingDurationMin,
       };
       // override data for formatting
       refineData = util.refineSubmitData(checkData);
