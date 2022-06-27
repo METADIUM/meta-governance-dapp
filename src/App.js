@@ -14,7 +14,6 @@ import {
   AccessFailedModal,
   Voting,
   Authority,
-  Myinfo,
   BaseLoader,
 } from "./components";
 import getWeb3Instance, { web3Instance } from "./web3";

@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Form, Icon, Button } from "antd";
+import { Input, Form, Icon } from "antd";
 
 import { SubmitForm } from "./Forms";
 import { shouldPass } from "../util";

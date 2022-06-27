@@ -904,7 +904,6 @@ class ProposalForm extends React.Component {
         case "VotingAddress": {
           const { staker, name, lockAmount, enode, ip, port, newVotingAddr } =
             data;
-          console.warn(data);
           // check undefined
           if (newVotingAddr === undefined) {
             this.setState({
@@ -982,10 +981,6 @@ class ProposalForm extends React.Component {
     e.preventDefault();
     this.props.convertLoading(true);
     try {
-      // const { selectedMenu } = this.props;
-      // if (selectedMenu === "3") {
-      //   await this.getMyInfo();
-      // }
       const trx = await this.checkSubmitData(this.data.formData);
       // run only if there is data for sending transactions
       if (trx !== undefined) {
