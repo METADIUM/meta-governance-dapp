@@ -20,7 +20,12 @@ const VotingBallots = ({
   setDescription = shouldPass(),
   onClickUpdateProposal = shouldPass(),
 }) => {
-  const { newStakerAddress, oldStakerAddress } = ballotMemberOriginData;
+  const {
+    newStakerAddress,
+    oldStakerAddress,
+    newVoterAddress,
+    newRewardAddress,
+  } = ballotMemberOriginData;
   return (
     <div
       className={`ballotDiv ${btArr[parseInt(item.ballotType)]} ${
@@ -36,7 +41,9 @@ const VotingBallots = ({
               item.ballotType,
               ballotMemberOriginData.envVariableName,
               newStakerAddress,
-              oldStakerAddress
+              oldStakerAddress,
+              newVoterAddress,
+              newRewardAddress
             )}
           </p>
           <p className="company text-small">{authorityName}</p>
@@ -53,49 +60,57 @@ const VotingBallots = ({
             />
           )}
           <p className="status text-small">
-            Status : {btArr[parseInt(item.state)]}
+            Status :
+            {item.state === "3" && oldStakerAddress === newStakerAddress ? (
+              "Changed"
+            ) : (
+              <>{btArr[parseInt(item.state)]} </>
+            )}
           </p>
         </div>
       </div>
       <div className="ballotContentDiv">
         <div className="voteDiv">
-          <div className="imageContent flex">
-            <Button
-              disabled={![bs.Ready, bs.InProgress].includes(item.state)}
-              className="text-large"
-              id="yesVotingBtn"
-              onClick={() =>
-                onClickVote("Y", item.id, item.endTime, item.state)
-              }
-            >
-              Yes
-            </Button>
-            <div className="chart flex-column flex-full">
-              <div className="number flex">
-                <span className="text-bold">
-                  {item.powerOfAccepts === 0 ? "0" : item.powerOfAccepts}%
-                </span>
-                <span className="text-bold">
-                  {item.powerOfRejects === 0 ? "0" : item.powerOfRejects}%
-                </span>
+          {item.ballotType === "3" &&
+          oldStakerAddress === newStakerAddress ? null : (
+            <div className="imageContent flex">
+              <Button
+                disabled={![bs.Ready, bs.InProgress].includes(item.state)}
+                className="text-large"
+                id="yesVotingBtn"
+                onClick={() =>
+                  onClickVote("Y", item.id, item.endTime, item.state)
+                }
+              >
+                Yes
+              </Button>
+              <div className="chart flex-column flex-full">
+                <div className="number flex">
+                  <span className="text-bold">
+                    {item.powerOfAccepts === 0 ? "0" : item.powerOfAccepts}%
+                  </span>
+                  <span className="text-bold">
+                    {item.powerOfRejects === 0 ? "0" : item.powerOfRejects}%
+                  </span>
+                </div>
+                <Progress
+                  percent={item.powerOfAccepts}
+                  status="active"
+                  showInfo={false}
+                />
               </div>
-              <Progress
-                percent={item.powerOfAccepts}
-                status="active"
-                showInfo={false}
-              />
+              <Button
+                disabled={![bs.Ready, bs.InProgress].includes(item.state)}
+                className="text-large"
+                id="noVotingBtn"
+                onClick={() =>
+                  onClickVote("N", item.id, item.endTime, item.state)
+                }
+              >
+                No
+              </Button>
             </div>
-            <Button
-              disabled={![bs.Ready, bs.InProgress].includes(item.state)}
-              className="text-large"
-              id="noVotingBtn"
-              onClick={() =>
-                onClickVote("N", item.id, item.endTime, item.state)
-              }
-            >
-              No
-            </Button>
-          </div>
+          )}
           <div className="textContent flex">
             {setDescription(item.ballotType, item.id)}
             <div className="duration">

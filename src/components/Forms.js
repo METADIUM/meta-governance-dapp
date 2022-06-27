@@ -72,22 +72,27 @@ const ProposalFormFooter = ({
           </Form.Item>
         </div>
       </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            htmlType="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            disabled={disabled}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <SubmitForm netName={netName} disabled={disabled} loading={loading} />
     </>
   );
 };
+
+// submit button component
+export const SubmitForm = ({ netName, disabled, loading }) => (
+  <Form.Item>
+    <div className="submitDiv flex">
+      <Button
+        name="submit"
+        htmlType="submit"
+        className={"submit_Btn btn-fill-primary text-large " + netName}
+        disabled={disabled}
+        loading={loading}
+      >
+        Submit
+      </Button>
+    </div>
+  </Form.Item>
+);
 
 // Add Authority Member
 export const AddProposalForm = ({

@@ -14,7 +14,6 @@ import {
   AccessFailedModal,
   Voting,
   Authority,
-  Myinfo,
   BaseLoader,
 } from "./components";
 import getWeb3Instance, { web3Instance } from "./web3";
@@ -384,8 +383,12 @@ class App extends React.Component {
     if (isUpdated) ballotMemberFinalizedData[i] = result;
   }
 
-  // Called when TapNav menu clicked
+  // called when tabnav menu clicked
   onMenuClick = ({ key }) => {
+    // to return to the voting menu when proposing
+    if (this.state.showProposal && key === "2") {
+      this.convertVotingComponent("voting");
+    }
     this.setState({ nav: key });
   };
 
@@ -407,7 +410,9 @@ class App extends React.Component {
   getContent() {
     if (!this.state.loadWeb3) return;
     this.refreshContractData();
-    switch (this.state.nav) {
+
+    const { nav } = this.state;
+    switch (nav) {
       case "1":
         return (
           <Authority
@@ -419,6 +424,7 @@ class App extends React.Component {
           />
         );
       case "2":
+      case "3":
         return (
           <Voting
             title="Voting"
@@ -432,26 +438,24 @@ class App extends React.Component {
             convertVotingComponent={this.convertVotingComponent}
             loading={this.state.loading}
             convertLoading={this.convertLoading}
-            showProposal={this.state.showProposal}
+            showProposal={nav === "3" ? true : this.state.showProposal}
             isMember={this.data.isMember}
             stakingMax={this.data.stakingMax}
             stakingMin={this.data.stakingMin}
             votingDurationMax={this.data.votingDurationMax}
             votingDurationMin={this.data.votingDurationMin}
+            selectedMenu={nav}
           />
         );
-      case "3":
-        return <Myinfo title="Myinfo" />;
       default:
     }
     this.setState({ selectedMenu: true });
   }
 
-  // Called when New Proposal button is clicked in Voting Menu
+  // called when New Proposal button is clicked in Voting Menu
   convertVotingComponent = (component) => {
-    if (component === "proposal") {
-      this.setState({ showProposal: true });
-    } else this.setState({ showProposal: false });
+    if (component === "proposal") this.setState({ showProposal: true });
+    else this.setState({ showProposal: false });
   };
 
   convertLoading = (state) => {

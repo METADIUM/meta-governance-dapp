@@ -1,52 +1,27 @@
 import React from "react";
-import { Input, Form, Icon, Button } from "antd";
+import { Input, Form, Icon } from "antd";
 
+import { SubmitForm } from "./Forms";
 import { shouldPass } from "../util";
 
-// components for communicating common props
-export const PassesCommonProps = ({
+// Voting Address
+export const VotingAddress = ({
   netName,
   loading,
-  handleSubmit,
-  handleChange,
-  children,
-}) => {
-  return (
-    <>
-      {React.cloneElement(children, {
-        netName,
-        loading,
-        handleChange,
-        handleSubmit,
-      })}
-    </>
-  );
-};
-
-export const myVotingAddress = ({
-  netName,
-  loading,
-  oldVotingAddrErr,
+  oldVotingAddr,
   newVotingAddrErr,
   handleChange = shouldPass(),
+  handleSubmit = shouldPass(),
 }) => (
   <div className="proposalBody">
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">
             Old Voting Address <span className="required">*</span>
           </p>
           <Form.Item>
-            <Input
-              name="oldVotingAddr"
-              className={oldVotingAddrErr ? "errInput" : ""}
-              disabled={loading}
-              onChange={handleChange}
-            />
-            <p className={oldVotingAddrErr ? "errHint" : "errHint-hide"}>
-              Invalid Address
-            </p>
+            <Input name="oldVotingAddr" value={oldVotingAddr} disabled />
           </Form.Item>
           <p className="subtitle">
             New Voting Address <span className="required">*</span>
@@ -68,50 +43,37 @@ export const myVotingAddress = ({
         <Icon type="question-circle" />
         <p>
           Enter the old Voting Address and the new Voting Address to change the
-          Reward Address.
+          Voting Address.
         </p>
       </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            htmlType="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            disabled={oldVotingAddrErr || newVotingAddrErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <SubmitForm
+        netName={netName}
+        disabled={newVotingAddrErr}
+        loading={loading}
+        handleSubmit={handleSubmit}
+      />
     </Form>
   </div>
 );
 
-export const myRewardAddress = ({
+// Reward Address
+export const RewardAddress = ({
   netName,
   loading,
-  oldRewardAddrErr,
+  oldRewardAddr,
   newRewardAddrErr,
   handleChange = shouldPass(),
+  handleSubmit = shouldPass(),
 }) => (
   <div className="proposalBody">
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <div className="divider flex">
         <div className="flex-full">
           <p className="subtitle">
             Old Reward Address <span className="required">*</span>
           </p>
           <Form.Item>
-            <Input
-              name="oldRewardAddr"
-              className={oldRewardAddrErr ? "errInput" : ""}
-              disabled={loading}
-              onChange={handleChange}
-            />
-            <p className={oldRewardAddrErr ? "errHint" : "errHint-hide"}>
-              Invalid Address
-            </p>
+            <Input name="oldRewardAddr" value={oldRewardAddr} disabled />
           </Form.Item>
           <p className="subtitle">
             New Reward Address <span className="required">*</span>
@@ -136,19 +98,12 @@ export const myRewardAddress = ({
           Reward Address.
         </p>
       </div>
-      <Form.Item>
-        <div className="submitDiv flex">
-          <Button
-            name="submit"
-            htmlType="submit"
-            className={"submit_Btn btn-fill-primary text-large " + netName}
-            disabled={oldRewardAddrErr || newRewardAddrErr}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form.Item>
+      <SubmitForm
+        netName={netName}
+        disabled={newRewardAddrErr}
+        loading={loading}
+        handleSubmit={handleSubmit}
+      />
     </Form>
   </div>
 );
