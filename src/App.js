@@ -582,7 +582,7 @@ class App extends React.Component {
                 <div> {this.getContent()} </div>
               ) : (
                 this.getErrModal(
-                  "This is an unknown network. Please connect to Metadium network",
+                  "This is an unknown network. Please connect to WEMIX network",
                   "Connecting Error"
                 )
               )}
