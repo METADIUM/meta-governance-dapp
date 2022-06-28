@@ -15,30 +15,26 @@ export const VotingAddress = ({
 }) => (
   <div className="proposalBody">
     <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Old Voting Address <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input name="oldVotingAddr" value={oldVotingAddr} disabled />
-          </Form.Item>
-          <p className="subtitle">
-            New Voting Address <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              name="newVotingAddr"
-              className={newVotingAddrErr ? "errInput" : ""}
-              disabled={loading}
-              onChange={handleChange}
-            />
-            <p className={newVotingAddrErr ? "errHint" : "errHint-hide"}>
-              Invalid Address
-            </p>
-          </Form.Item>
-        </div>
-      </div>
+      <p className="subtitle">
+        Old Voting Address <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input name="oldVotingAddr" value={oldVotingAddr} disabled />
+      </Form.Item>
+      <p className="subtitle">
+        New Voting Address <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          name="newVotingAddr"
+          className={newVotingAddrErr ? "errInput" : ""}
+          disabled={loading}
+          onChange={handleChange}
+        />
+        <p className={newVotingAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
+      </Form.Item>
       <div className="helpDescription">
         <Icon type="question-circle" />
         <p>
@@ -67,30 +63,26 @@ export const RewardAddress = ({
 }) => (
   <div className="proposalBody">
     <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Old Reward Address <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input name="oldRewardAddr" value={oldRewardAddr} disabled />
-          </Form.Item>
-          <p className="subtitle">
-            New Reward Address <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              name="newRewardAddr"
-              className={newRewardAddrErr ? "errInput" : ""}
-              disabled={loading}
-              onChange={handleChange}
-            />
-            <p className={newRewardAddrErr ? "errHint" : "errHint-hide"}>
-              Invalid Address
-            </p>
-          </Form.Item>
-        </div>
-      </div>
+      <p className="subtitle">
+        Old Reward Address <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input name="oldRewardAddr" value={oldRewardAddr} disabled />
+      </Form.Item>
+      <p className="subtitle">
+        New Reward Address <span className="required">*</span>
+      </p>
+      <Form.Item>
+        <Input
+          name="newRewardAddr"
+          className={newRewardAddrErr ? "errInput" : ""}
+          disabled={loading}
+          onChange={handleChange}
+        />
+        <p className={newRewardAddrErr ? "errHint" : "errHint-hide"}>
+          Invalid Address
+        </p>
+      </Form.Item>
       <div className="helpDescription">
         <Icon type="question-circle" />
         <p>
