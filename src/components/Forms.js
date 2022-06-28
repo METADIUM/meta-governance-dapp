@@ -199,6 +199,7 @@ export const AddProposalForm = ({
       <Form.Item>
         <TextArea
           name="memo"
+          maxLength={256}
           placeholder="Max. 256 bytes"
           rows={4}
           autoSize={{ minRows: 4, maxRows: 4 }}
@@ -333,6 +334,7 @@ export const ReplaceProposalForm = ({
           placeholder="Max. 256 bytes"
           autoSize={{ minRows: 4, maxRows: 4 }}
           name="memo"
+          maxLength={256}
           onChange={handleChange}
           disabled={loading}
         />
@@ -435,6 +437,7 @@ export const RemoveProposalForm = ({
           placeholder="Max. 256 bytes"
           autoSize={{ minRows: 4, maxRows: 4 }}
           name="memo"
+          maxLength={256}
           onChange={handleChange}
           disabled={loading}
         />
@@ -585,6 +588,7 @@ export const VotingDurationSettingForm = ({
           placeholder="Max. 256 bytes"
           autoSize={{ minRows: 4, maxRows: 4 }}
           name="memo"
+          maxLength={256}
           onChange={handleChange}
           disabled={loading}
         />
@@ -682,6 +686,7 @@ export const AuthorityMemberStakingAmountForm = ({
           placeholder="Max. 256 bytes"
           autoSize={{ minRows: 4, maxRows: 4 }}
           name="memo"
+          maxLength={256}
           onChange={handleChange}
           disabled={loading}
         />
@@ -748,6 +753,7 @@ export const BlockCreationTime = ({
           placeholder="Max. 256 bytes"
           autoSize={{ minRows: 4, maxRows: 4 }}
           name="memo"
+          maxLength={256}
           onChange={handleChange}
           disabled={loading}
         />
@@ -815,6 +821,7 @@ export const BlockRewardAmount = ({
           placeholder="Max. 256 bytes"
           autoSize={{ minRows: 4, maxRows: 4 }}
           name="memo"
+          maxLength={256}
           onChange={handleChange}
           disabled={loading}
         />
@@ -954,6 +961,7 @@ export const BlockRewardDistributionMethod = ({
           placeholder="Max. 256 bytes"
           autoSize={{ minRows: 4, maxRows: 4 }}
           name="memo"
+          maxLength={256}
           onChange={handleChange}
           disabled={loading}
         />
@@ -1021,6 +1029,7 @@ export const MaxPriorityFeePerGasForm = ({
           placeholder="Max. 256 bytes"
           autoSize={{ minRows: 4, maxRows: 4 }}
           name="memo"
+          maxLength={256}
           onChange={handleChange}
           disabled={loading}
         />
@@ -1189,6 +1198,7 @@ export const GasLimitBaseFeeForm = ({
           placeholder="Max. 256 bytes"
           autoSize={{ minRows: 4, maxRows: 4 }}
           name="memo"
+          maxLength={256}
           onChange={handleChange}
           disabled={loading}
         />

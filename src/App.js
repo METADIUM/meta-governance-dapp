@@ -395,13 +395,13 @@ class App extends React.Component {
   onClickFootIcon = (e) => {
     switch (e.target.alt) {
       case "wemix":
-        window.open("", "_blank");
+        window.open("https://www.wemix.com/", "_blank");
         break;
       case "explorer":
         window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER);
         break;
       case "github":
-        window.open("https://github.com/nxtmeta/", "_blank");
+        window.open("https://github.com/wemix3", "_blank");
         break;
       default:
     }
@@ -541,6 +541,7 @@ class App extends React.Component {
                 nav={this.state.nav}
                 myBalance={this.data.myBalance}
                 myLockedBalance={this.data.myLockedBalance}
+                isMember={this.data.isMember}
                 onMenuClick={this.onMenuClick}
                 getStakingModal={this.getStakingModal}
               />
