@@ -531,7 +531,6 @@ class ProposalForm extends React.Component {
         }
         return false;
       }
-      // TODO voting address, reward address 확인 해아할 것 같기도 함
       default:
         return false;
     }
@@ -1016,8 +1015,9 @@ class ProposalForm extends React.Component {
             this.props.waitForReceipt(hash, async (receipt) => {
               // console.log("Updated :", receipt);
               if (receipt.status) {
-                // TODO Myinfo 변경의 경우 voting tab으로 넘겨야 함
-                await this.props.convertComponent("voting");
+                // TODO 다른 좋은 방법이 있으면 사용
+                window.location.reload();
+                // await this.props.convertComponent("voting");
               } else {
                 this.props.getErrModal(
                   "You don't have proposal submit authority",
@@ -1197,8 +1197,6 @@ class ProposalForm extends React.Component {
           return <></>;
       }
     };
-
-    // TODO add stakingMin
     return (
       /* component for only common props pass */
       <PComponent.PassesCommonProps

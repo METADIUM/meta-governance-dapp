@@ -204,7 +204,6 @@ class Voting extends React.Component {
                 New Reward Address: {newRewardAddress}
               </p>
             );
-            // TODO else 문은 거의 나타나지 않는 부분이지만 테스트 용도의 에러 핸들링
           } else {
             return (
               <p className="description flex-full">

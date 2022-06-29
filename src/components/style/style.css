@@ -427,7 +427,7 @@
 }
 
 .ballotContentDiv .voteDiv {
-  padding: 24px 16px 24px 16px;
+  padding: 16px;
   border-top: #eeeef0 solid 2px;
   border-bottom: #eeeef0 solid 2px;
 }
@@ -494,7 +494,7 @@
 }
 
 .ballotContentDiv .voteDiv .textContent {
-  margin-top: 24px;
+  margin-top: 8px;
 }
 
 .ballotContentDiv .voteDiv .description {
@@ -522,7 +522,7 @@
 }
 
 .ballotContentDiv .memoDiv {
-  padding: 24px 16px 24px 16px;
+  padding: 16px 16px 24px 16px;
 }
 
 .ballotContentDiv .memoDiv p:first-child {
