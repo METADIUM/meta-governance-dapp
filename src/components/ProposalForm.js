@@ -1015,9 +1015,11 @@ class ProposalForm extends React.Component {
             this.props.waitForReceipt(hash, async (receipt) => {
               // console.log("Updated :", receipt);
               if (receipt.status) {
-                // TODO 다른 좋은 방법이 있으면 사용
-                window.location.reload();
-                // await this.props.convertComponent("voting");
+                if (this.props.selectedMenu === "3") {
+                  window.location.reload();
+                } else {
+                  await this.props.convertComponent("voting");
+                }
               } else {
                 this.props.getErrModal(
                   "You don't have proposal submit authority",
