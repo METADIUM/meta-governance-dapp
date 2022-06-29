@@ -318,7 +318,7 @@ class Voting extends React.Component {
       // console.log('getTransactionReceipt: ', receipt)
       if (err) console.log("err: ", err);
 
-      if (receipt === undefined || receipt === null) {
+      if (util.checkUndefined(receipt) || receipt === null) {
         // Try again in 1 second
         window.setTimeout(() => {
           this.waitForReceipt(hash, cb);

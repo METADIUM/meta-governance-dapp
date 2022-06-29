@@ -43,6 +43,9 @@ export const decodeHexToString = (input) => {
   }
 };
 
+// check undefined
+export const checkUndefined = (param) => param === undefined;
+
 // encode string -> sha3
 export const encodeStringToSha3 = (input) => {
   return web3Instance.web3.utils.sha3(input);

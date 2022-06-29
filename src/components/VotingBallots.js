@@ -61,7 +61,9 @@ const VotingBallots = ({
           )}
           <p className="status text-small">
             Status :
-            {item.state === "3" && oldStakerAddress === newStakerAddress ? (
+            {item.ballotType === "3" &&
+            item.state === "3" &&
+            oldStakerAddress === newStakerAddress ? (
               "Changed"
             ) : (
               <>{btArr[parseInt(item.state)]} </>
