@@ -202,9 +202,9 @@ class App extends React.Component {
     const updatedTime = forced ? 0 : util.getUpdatedTimeFromLocal.value;
     if (updatedTime + constants.expirationTime > Date.now()) return;
     Promise.all([
-      this.getAuthorityData(),
-      this.getBallotData(),
-      this.modifyBallotData(),
+      await this.getAuthorityData(),
+      await this.getBallotData(),
+      await this.modifyBallotData(),
     ]).then(() => util.setUpdatedTimeToLocal(new Date()));
   }
 
@@ -239,7 +239,7 @@ class App extends React.Component {
     if (!voteLength || voteLength === this.data.voteLength) return;
 
     for (
-      this.data.voteLength += 1;
+      this.data.voteLength;
       this.data.voteLength <= voteLength;
       this.data.voteLength++
     ) {
