@@ -401,7 +401,7 @@ class App extends React.Component {
         window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER);
         break;
       case "github":
-        window.open("https://github.com/wemix3", "_blank");
+        window.open("https://github.com/wemixarchive", "_blank");
         break;
       default:
     }
