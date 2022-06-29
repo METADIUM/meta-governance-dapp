@@ -98,7 +98,7 @@ class App extends React.Component {
       // detect when the MetaMask account is changed
       window.ethereum.on("accountsChanged", async (chagedAccounts) => {
         // disconnect MetaMask
-        if (chagedAccounts[0] === undefined) {
+        if (util.checkUndefined(chagedAccounts[0])) {
           console.error("MetaMask connection is broken!");
           window.location.reload();
           return;

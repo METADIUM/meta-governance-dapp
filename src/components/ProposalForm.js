@@ -548,17 +548,17 @@ class ProposalForm extends React.Component {
         case "AddAuthorityMember": {
           const { newAddr, newName, newNode, newLockAmount } = data;
           // check undefined
-          if (newAddr === undefined) {
+          if (util.checkUndefined(newAddr)) {
             this.setState({ newAddrErr: !this.state.newAddrErr });
             this.props.convertLoading(false);
             return;
           }
-          if (newName === undefined) {
+          if (util.checkUndefined(newName)) {
             this.setState({ newNameErr: !this.state.newNameErr });
             this.props.convertLoading(false);
             return;
           }
-          if (newNode === undefined) {
+          if (util.checkUndefined(newNode)) {
             this.setState({ newNodeErr: !this.state.newNodeErr });
             this.props.convertLoading(false);
             return;
@@ -584,22 +584,22 @@ class ProposalForm extends React.Component {
           const { stakingAddr, newAddr, newName, newNode, newLockAmount } =
             data;
           // check undefined
-          if (stakingAddr === undefined) {
+          if (util.checkUndefined(stakingAddr)) {
             this.setState({ stakingAddrErr: !this.state.stakingAddrErr });
             this.props.convertLoading(false);
             return;
           }
-          if (newAddr === undefined) {
+          if (util.checkUndefined(newAddr)) {
             this.setState({ newAddrErr: !this.state.newAddrErr });
             this.props.convertLoading(false);
             return;
           }
-          if (newName === undefined) {
+          if (util.checkUndefined(newName)) {
             this.setState({ newNameErr: !this.state.newNameErr });
             this.props.convertLoading(false);
             return;
           }
-          if (newNode === undefined) {
+          if (util.checkUndefined(newNode)) {
             this.setState({ newNodeErr: !this.state.newNodeErr });
             this.props.convertLoading(false);
             return;
@@ -625,7 +625,7 @@ class ProposalForm extends React.Component {
         case "RemoveAuthorityMember": {
           const { stakingAddr, oldLockAmount } = data;
           // check undefined
-          if (stakingAddr === undefined) {
+          if (util.checkUndefined(stakingAddr)) {
             this.setState({ stakingAddrErr: !this.state.stakingAddrErr });
             this.props.convertLoading(false);
             return;
@@ -642,7 +642,7 @@ class ProposalForm extends React.Component {
         case "GovernanceContractAddress": {
           const { newGovAddr } = data;
           // check undefined
-          if (newGovAddr === undefined) {
+          if (util.checkUndefined(newGovAddr)) {
             this.setState({ newGovAddrErr: !this.state.newGovAddrErr });
             this.props.convertLoading(false);
             return;
@@ -658,7 +658,7 @@ class ProposalForm extends React.Component {
         case "VotingDurationSetting": {
           const { votDurationMin, votDurationMax } = data;
           // check undefined
-          if (votDurationMin === undefined) {
+          if (util.checkUndefined(votDurationMin)) {
             this.setState({ votDurationErr: !this.state.votDurationErr });
             this.props.convertLoading(false);
             return;
@@ -687,7 +687,7 @@ class ProposalForm extends React.Component {
         case "AuthorityMemberStakingAmount": {
           const { authMemSkAmountMin, authMemSkAmountMax } = data;
           // check undefined
-          if (authMemSkAmountMin === undefined) {
+          if (util.checkUndefined(authMemSkAmountMin)) {
             this.setState({
               authMemSkAmountErr: !this.state.authMemSkAmountErr,
             });
@@ -718,7 +718,7 @@ class ProposalForm extends React.Component {
         case "BlockCreationTime": {
           const { blockCreation } = data;
           // check undefined
-          if (blockCreation === undefined || !Number(blockCreation)) {
+          if (util.checkUndefined(blockCreation) || !Number(blockCreation)) {
             this.setState({
               blockCreationErr: !this.state.blockCreationErr,
             });
@@ -747,7 +747,7 @@ class ProposalForm extends React.Component {
         case "BlockRewardAmount": {
           const { blockRewardAmount } = data;
           // check undefined
-          if (blockRewardAmount === undefined) {
+          if (util.checkUndefined(blockRewardAmount)) {
             this.setState({
               blockRewardAmountErr: !this.state.blockRewardAmountErr,
             });
@@ -818,7 +818,7 @@ class ProposalForm extends React.Component {
           const { maxPriorityFeePerGas } = data;
           // check undefined
           if (
-            maxPriorityFeePerGas === undefined ||
+            util.checkUndefined(maxPriorityFeePerGas) ||
             !Number(maxPriorityFeePerGas)
           ) {
             this.setState({
@@ -853,28 +853,28 @@ class ProposalForm extends React.Component {
             gasTargetPercentage,
           } = data;
           // check undefined
-          if (gasLimit === undefined) {
+          if (util.checkUndefined(gasLimit)) {
             this.setState({
               gasLimitErr: !this.state.gasLimitErr,
             });
             this.props.convertLoading(false);
             return;
           }
-          if (maxBaseFee === undefined) {
+          if (util.checkUndefined(maxBaseFee)) {
             this.setState({
               maxBaseFeeErr: !this.state.maxBaseFeeErr,
             });
             this.props.convertLoading(false);
             return;
           }
-          if (baseFeeMaxChangeRate === undefined) {
+          if (util.checkUndefined(baseFeeMaxChangeRate)) {
             this.setState({
               baseFeeMaxChangeRateErr: !this.state.baseFeeMaxChangeRateErr,
             });
             this.props.convertLoading(false);
             return;
           }
-          if (gasTargetPercentage === undefined) {
+          if (util.checkUndefined(gasTargetPercentage)) {
             this.setState({
               gasTargetPercentageErr: !this.state.gasTargetPercentageErr,
             });
@@ -908,7 +908,7 @@ class ProposalForm extends React.Component {
           const { staker, name, lockAmount, enode, ip, port, newVotingAddr } =
             data;
           // check undefined
-          if (newVotingAddr === undefined) {
+          if (util.checkUndefined(newVotingAddr)) {
             this.setState({
               newVotingAddrErr: !this.state.newVotingAddrErr,
             });
@@ -934,7 +934,7 @@ class ProposalForm extends React.Component {
           const { staker, name, lockAmount, enode, ip, port, newRewardAddr } =
             data;
           // check undefined
-          if (newRewardAddr === undefined) {
+          if (util.checkUndefined(newRewardAddr)) {
             this.setState({
               newRewardAddrErr: !this.state.newRewardAddrErr,
             });
