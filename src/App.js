@@ -106,6 +106,9 @@ class App extends React.Component {
         await this.updateDefaultAccount(chagedAccounts[0]);
       });
 
+      // detect when the MetaMask network is changed
+      window.ethereum.on("chainChanged", () => window.location.reload());
+
       this.setStakingEventsWatch();
       // check if account is a proposalable member
       this.data.isMember = await contracts.governance.isMember(
