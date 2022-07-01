@@ -424,6 +424,7 @@ class App extends React.Component {
             getErrModal={this.getErrModal}
             authorityOriginData={this.data.authorityOriginData}
             netName={web3Instance.netName}
+            selectedMenu={nav}
           />
         );
       case "2":

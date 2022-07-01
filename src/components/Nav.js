@@ -52,12 +52,13 @@ const TopNav = ({
   </Row>
 );
 
-// TODO Wemix apply form 생기면 추가할 예정
+// TODO Wemix apply form 생기면 아래 코드 수정 필요
 const SubHeader = ({
   netName,
   placeholder,
   condition = true,
   btnText,
+  selectedMenu,
   btnIcon = null,
   loading = false,
   searchFunction = (f) => f,
@@ -71,15 +72,17 @@ const SubHeader = ({
         onChange={searchFunction}
         enterButton
       />
-      {/* <Button
-        className="apply_proposal_Btn flex flex-center-horizontal"
-        disabled={!condition}
-        onClick={(e) => btnFunction()}
-        loading={loading}
-      >
-        <span>{btnIcon}</span>
-        <span className="text_btn">{btnText}</span>
-      </Button> */}
+      {selectedMenu !== "1" && (
+        <Button
+          className="apply_proposal_Btn flex flex-center-horizontal"
+          disabled={!condition}
+          onClick={(e) => btnFunction()}
+          loading={loading}
+        >
+          <span>{btnIcon}</span>
+          <span className="text_btn">{btnText}</span>
+        </Button>
+      )}
     </div>
   </div>
 );
