@@ -1,6 +1,5 @@
 import { web3Instance } from "./web3";
 
-const fetch = require("node-fetch");
 const secondsInDay = 86400;
 
 // ---------- time ---------- //
@@ -223,12 +222,6 @@ export const checkMemberStakingAmount = (min, max) => {
 export const shouldPass = () => {
   // eslint-disable-next-line
   throw "Function should be passed";
-};
-
-// get authority list with static file
-export const getAuthorityLists = (org, repo, branch, source) => {
-  const URL = `https://raw.githubusercontent.com/${org}/${repo}/${branch}/${source}`;
-  return fetch(URL).then((response) => response.json());
 };
 
 // serialize and deserialize object at local storage
