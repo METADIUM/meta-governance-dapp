@@ -20,6 +20,8 @@ import getWeb3Instance, { web3Instance } from "./web3";
 import { constants, ENV_NAMES_SHA3 } from "./constants";
 import * as util from "./util";
 
+import AuthorityList from "./static/AuthorityList.json";
+
 import "./App.css";
 import "./components/style/style.css";
 
@@ -68,7 +70,6 @@ class App extends React.Component {
     super(props);
     this.initContractData = this.initContractData.bind(this);
     this.refreshContractData = this.refreshContractData.bind(this);
-
     // get web3 instance
     getWeb3Instance().then(
       async (web3Config) => {
@@ -257,15 +258,8 @@ class App extends React.Component {
 
   // get a static list for network status from github repository
   async initAuthorityData() {
-    let authorityOriginData = await util.getAuthorityLists(
-      constants.authorityRepo.org,
-      constants.authorityRepo.repo,
-      constants.authorityRepo.branch,
-      constants.authorityRepo.source
-    );
-    this.data.authorityOriginData = await this.refineAuthority(
-      authorityOriginData
-    );
+    const authorityList = AuthorityList[process.env.NODE_ENV] || [];
+    this.data.authorityOriginData = await this.refineAuthority(authorityList);
     util.setAuthorityToLocal(this.data.authorityOriginData);
   }
 
