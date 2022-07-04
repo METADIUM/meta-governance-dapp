@@ -89,7 +89,7 @@ const ErrModal = ({
               target="_blank"
               className="ant-btn"
             >
-              Checking on the Explore
+              Checking on the Explorer
             </a>,
             <Button
               type="primary"

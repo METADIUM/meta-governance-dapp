@@ -478,7 +478,9 @@ class App extends React.Component {
     this.data.errTitle = _title;
     this.data.errContent = _err;
     if (_link)
-      this.data.errLink = metaWeb3Constants.NETWORK[web3Instance.netId] + _link;
+      this.data.errLink = `${
+        metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER
+      }/${_link}`;
     else this.data.errLink = false;
     this.setState({ errModalVisible: true });
   };
