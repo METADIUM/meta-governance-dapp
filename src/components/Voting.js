@@ -387,27 +387,31 @@ class Voting extends React.Component {
   };
 
   sendTransaction(trx, type, init = false) {
-    trx.from = web3Instance.defaultAccount;
-    web3Instance.web3.eth.sendTransaction(trx, (err, hash) => {
-      if (err) {
-        console.log(err);
-        this.props.getErrModal(err.message, err.name);
-        this.props.convertLoading(false);
-      } else {
-        // console.log('hash: ', hash)
-        this.waitForReceipt(hash, (receipt) => {
-          // console.log('Updated :', receipt)
-          if (receipt.status) this.reloadVoting(false, init);
-          else {
-            this.props.getErrModal(
-              "You don't have " + type.toLowerCase + " authority",
-              type + " Error",
-              receipt.transactionHash
-            );
-          }
-        });
-      }
-    });
+    try {
+      trx.from = web3Instance.defaultAccount;
+      web3Instance.web3.eth.sendTransaction(trx, (err, hash) => {
+        if (err) {
+          throw err;
+        } else {
+          // console.log("hash: ", hash);
+          this.waitForReceipt(hash, (receipt) => {
+            // console.log("Updated :", receipt);
+            if (receipt.status) this.reloadVoting(false, init);
+            else {
+              this.props.getErrModal(
+                "Transaction has been reverted.",
+                type + " Error",
+                receipt.transactionHash
+              );
+            }
+          });
+        }
+      });
+    } catch (err) {
+      this.props.getErrModal(err.message, err.name);
+    } finally {
+      this.props.convertLoading(false);
+    }
   }
 
   onClickSubMenu = (e) => {
