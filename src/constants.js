@@ -93,7 +93,7 @@ export const TESTNET_CHAIN_INFO = {
   rpcUrls: "https://api.test.wemix.com",
   blockExplorerUrls: "https://microscope.test.wemix.com",
   name: "WEMIX",
-  decimals: "18",
+  decimals: 18,
   symbol: "WEMIX",
 };
 export const MAINNET_CHAIN_INFO = {
@@ -102,7 +102,7 @@ export const MAINNET_CHAIN_INFO = {
   rpcUrls: "https://api.wemix.com",
   blockExplorerUrls: "https://microscope.wemix.com",
   name: "WEMIX",
-  decimals: "18",
+  decimals: 18,
   symbol: "WEMIX",
 };
 
