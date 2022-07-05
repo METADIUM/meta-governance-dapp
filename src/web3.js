@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import { constants as metaWeb3Constants } from "meta-web3";
+import { MAINNET_CHAIN_INFO, TESTNET_CHAIN_INFO } from "./constants";
 
 var web3Instance;
 
@@ -7,15 +8,18 @@ let getWeb3Instance = () => {
   if (web3Instance) return web3Instance;
 
   // Get WEMIX network data
-  const chainId = process.env.REACT_APP_NETWORK_CHAIN_ID;
-  const chainName = process.env.REACT_APP_NETWORK_CHAIN_NAME;
-  const rpcUrls = process.env.REACT_APP_NETWORK_RPC_URLS;
-  const blockExplorerUrls = process.env.REACT_APP_NETWORK_BLOCK_EXPLORER_URLS;
-  const name = process.env.REACT_APP_NETWORK_NATIVE_CURRENCY_NAME;
-  const decimals = parseInt(
-    process.env.REACT_APP_NETWORK_NATIVE_CURRENCY_DECIMALS
-  );
-  const symbol = process.env.REACT_APP_NETWORK_NATIVE_CURRENCY_SYMBOL;
+  const {
+    chainId,
+    chainName,
+    rpcUrls,
+    blockExplorerUrls,
+    name,
+    decimals,
+    symbol,
+  } =
+    process.env.NODE_ENV === "production"
+      ? MAINNET_CHAIN_INFO
+      : TESTNET_CHAIN_INFO;
 
   // Adding WEMIX network to the Metamask
   const addWemixNetwork = async () => {
