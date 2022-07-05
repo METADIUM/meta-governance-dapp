@@ -86,6 +86,26 @@ export const ENV_NAMES_SHA3 = [
   },
 ];
 
+// wemix chain info
+export const TESTNET_CHAIN_INFO = {
+  chainId: "0x458",
+  chainName: "Wemix Testnet",
+  rpcUrls: "https://api.test.wemix.com",
+  blockExplorerUrls: "https://microscope.test.wemix.com",
+  name: "WEMIX",
+  decimals: "18",
+  symbol: "WEMIX",
+};
+export const MAINNET_CHAIN_INFO = {
+  chainId: "0x458",
+  chainName: "Wemix Mainnet",
+  rpcUrls: "https://api.wemix.com",
+  blockExplorerUrls: "https://microscope.wemix.com",
+  name: "WEMIX",
+  decimals: "18",
+  symbol: "WEMIX",
+};
+
 const constants = {
   authorityRepo: {
     org: "METADIUM",
