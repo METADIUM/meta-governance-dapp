@@ -13,7 +13,7 @@ import {
   BaseLoader,
 } from "./components";
 import getWeb3Instance, { web3Instance } from "./web3";
-import { constants, ENV_NAMES_SHA3 } from "./constants";
+import { constants, ENV_VOTING_PROPOSAL_LIST } from "./constants";
 import * as util from "./util";
 
 import AuthorityList from "./static/AuthorityList.json";
@@ -374,10 +374,10 @@ class App extends React.Component {
         result = await web3Instance.web3Contracts.BallotStorage.methods
           .getBallotVariable(i)
           .call();
-        const type = ENV_NAMES_SHA3.filter((key) => {
+        const type = ENV_VOTING_PROPOSAL_LIST.filter((key) => {
           return key.sha3Name === result.envVariableName;
-        })[0] || { name: "Wrong Proposal (This label is only test)" };
-        result.envVariableName = type.name;
+        })[0] || { id: "Wrong Proposal (This label is only test)" };
+        result.envVariableName = type.id;
         break;
       }
       case "1":
