@@ -1,10 +1,6 @@
 import React from "react";
 import { Layout } from "antd";
-import {
-  contracts,
-  initContractsByNames,
-  constants as metaWeb3Constants,
-} from "meta-web3";
+import { contracts, constants as metaWeb3Constants } from "meta-web3";
 
 import {
   TopNav,
@@ -68,12 +64,16 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.initContractData = this.initContractData.bind(this);
+    this.getContractAuthorityBallots =
+      this.getContractAuthorityBallots.bind(this);
     this.refreshContractData = this.refreshContractData.bind(this);
     // get web3 instance
     getWeb3Instance().then(
-      async (web3Config) => {
-        this.initContracts(web3Config);
+      async () => {
+        // get governance variables
+        await this.getGovernanceVariables();
+        // get authority list and ballot data
+        await this.getContractAuthorityBallots();
         console.log("debugMode: ", constants.debugMode);
         this.setState({ loadWeb3: true });
       },
@@ -84,119 +84,122 @@ class App extends React.Component {
     );
   }
 
-  // initial contract
-  async initContracts(web3Config) {
-    initContractsByNames({
-      web3: web3Config.web3,
-      branch: web3Config.branch,
-      names: web3Config.names,
-    }).then(async () => {
-      await this.getStakingRange();
-      await this.getVotingDuration();
-      await this.initContractData();
-      await this.updateAccountBalance();
+  // componentDidMount() {
+  //   // detect when the MetaMask account is changed
+  //   window.ethereum.on("accountsChanged", async (chagedAccounts) => {
+  //     // disconnect MetaMask
+  //     if (util.checkUndefined(chagedAccounts[0])) {
+  //       console.error("MetaMask connection is broken!");
+  //       window.location.reload();
+  //       return;
+  //     }
+  //     await this.updateDefaultAccount(chagedAccounts[0]);
+  //   });
 
-      // detect when the MetaMask account is changed
-      window.ethereum.on("accountsChanged", async (chagedAccounts) => {
-        // disconnect MetaMask
-        if (util.checkUndefined(chagedAccounts[0])) {
-          console.error("MetaMask connection is broken!");
-          window.location.reload();
-          return;
-        }
-        await this.updateDefaultAccount(chagedAccounts[0]);
-      });
+  //   // detect when the MetaMask network is changed
+  //   window.ethereum.on("chainChanged", () => window.location.reload());
+  // }
 
-      // detect when the MetaMask network is changed
-      window.ethereum.on("chainChanged", () => window.location.reload());
+  // get governance setting variables from contract data
+  async getGovernanceVariables() {
+    await this.getStakingRange();
+    await this.getVotingDuration();
+    // TODO
+    // await this.updateAccountBalance();
 
-      this.setStakingEventsWatch();
-      // check if account is a proposalable member
-      this.data.isMember = await contracts.governance.isMember(
-        web3Instance.defaultAccount
-      );
-      this.setState({ contractReady: true });
-    });
+    // TODO
+    // this.setStakingEventsWatch();
+    // check if account is a proposalable member
+    // this.data.isMember = await contracts.governance.isMember(
+    //   web3Instance.defaultAccount
+    // );
+    this.setState({ contractReady: true });
   }
 
   // set the balance of account
-  async updateAccountBalance() {
-    this.data.myBalance = await contracts.staking.balanceOf(
-      web3Instance.defaultAccount
-    );
-    this.data.myLockedBalance = await contracts.staking.lockedBalanceOf(
-      web3Instance.defaultAccount
-    );
-    this.data.myBalance = web3Instance.web3.utils.fromWei(
-      this.data.myBalance,
-      "ether"
-    );
-    this.data.myLockedBalance = web3Instance.web3.utils.fromWei(
-      this.data.myLockedBalance,
-      "ether"
-    );
-    this.setState({ stakingModalVisible: false, loading: false });
-  }
+  // async updateAccountBalance() {
+  //   this.data.myBalance = await contracts.staking.balanceOf(
+  //     web3Instance.defaultAccount
+  //   );
+  //   this.data.myLockedBalance = await contracts.staking.lockedBalanceOf(
+  //     web3Instance.defaultAccount
+  //   );
+  //   this.data.myBalance = web3Instance.web3.utils.fromWei(
+  //     this.data.myBalance,
+  //     "ether"
+  //   );
+  //   this.data.myLockedBalance = web3Instance.web3.utils.fromWei(
+  //     this.data.myLockedBalance,
+  //     "ether"
+  //   );
+  //   this.setState({ stakingModalVisible: false, loading: false });
+  // }
 
   // set the default account to MetaMask account
-  async updateDefaultAccount(account) {
-    if (web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase()) {
-      web3Instance.defaultAccount = account;
-      await this.updateAccountBalance();
-      this.setStakingEventsWatch();
-      this.data.isMember = await contracts.governance.isMember(
-        web3Instance.defaultAccount
-      );
-      this.setState({ showProposal: false });
-    }
-  }
+  // async updateDefaultAccount(account) {
+  //   if (web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase()) {
+  //     web3Instance.defaultAccount = account;
+  //     await this.updateAccountBalance();
+  //     this.setStakingEventsWatch();
+  //     this.data.isMember = await contracts.governance.isMember(
+  //       web3Instance.defaultAccount
+  //     );
+  //     this.setState({ showProposal: false });
+  //   }
+  // }
 
-  setStakingEventsWatch() {
-    if (this.data.eventsWatch) {
-      this.data.eventsWatch.unsubscribe((error, success) => {
-        if (error) console.log("Faild to unsubscribed!");
-        // else if (success) console.log('Successfully unsubscribed!')
-      });
-    }
-    var filteraddress = web3Instance.web3.eth.abi.encodeParameter(
-      "address",
-      web3Instance.defaultAccount
-    );
-    this.data.eventsWatch = contracts.staking.stakingInstance.events.allEvents(
-      {
-        fromBlock: "latest",
-        topics: [null, filteraddress],
-      },
-      (error, events) => {
-        // console.log(events)
-        if (error) console.log("error", error);
-        else this.updateAccountBalance();
-      }
-    );
-  }
+  // setStakingEventsWatch() {
+  //   if (this.data.eventsWatch) {
+  //     this.data.eventsWatch.unsubscribe((error, success) => {
+  //       if (error) console.log("Faild to unsubscribed!");
+  //       // else if (success) console.log('Successfully unsubscribed!')
+  //     });
+  //   }
+  //   var filteraddress = web3Instance.web3.eth.abi.encodeParameter(
+  //     "address",
+  //     web3Instance.defaultAccount
+  //   );
+  //   this.data.eventsWatch = contracts.staking.stakingInstance.events.allEvents(
+  //     {
+  //       fromBlock: "latest",
+  //       topics: [null, filteraddress],
+  //     },
+  //     (error, events) => {
+  //       // console.log(events)
+  //       if (error) console.log("error", error);
+  //       else this.updateAccountBalance();
+  //     }
+  //   );
+  // }
 
-  // set the minimum and maximum values that can be staked
+  // get the minimum and maximum values that can be staked
   async getStakingRange() {
-    if (["MAINNET", "TESTNET"].includes(web3Instance.netName)) {
+    try {
       this.data.stakingMin = web3Instance.web3.utils.fromWei(
-        await contracts.envStorage.getStakingMin()
+        await web3Instance.web3Contracts.EnvStorageImp.methods
+          .getStakingMin()
+          .call()
       );
       this.data.stakingMax = web3Instance.web3.utils.fromWei(
-        await contracts.envStorage.getStakingMax()
+        await web3Instance.web3Contracts.EnvStorageImp.methods
+          .getStakingMax()
+          .call()
       );
+    } catch (err) {
+      this.getErrModal(err.message, err.name);
     }
   }
 
-  // set voting duration minium and maximum values
+  // get voting duration minium and maximum values
   async getVotingDuration() {
-    if (["MAINNET", "TESTNET"].includes(web3Instance.netName)) {
-      const duration = await contracts.envStorage.getBallotDurationMinMax();
-      this.data.votingDurationMin = duration[0];
-      this.data.votingDurationMax = duration[1];
-    }
+    const duration = await web3Instance.web3Contracts.EnvStorageImp.methods
+      .getBallotDurationMinMax()
+      .call();
+    this.data.votingDurationMin = duration[0];
+    this.data.votingDurationMax = duration[1];
   }
 
-  async initContractData() {
+  async getContractAuthorityBallots() {
     await this.getAuthorityData();
     await this.initBallotData();
     util.setUpdatedTimeToLocal(new Date());
@@ -215,7 +218,9 @@ class App extends React.Component {
   // get the authority list stored in localStorage if modified block height is equal
   // or initalize new authority list
   async getAuthorityData() {
-    const modifiedBlock = await contracts.governance.getModifiedBlock();
+    const modifiedBlock = await web3Instance.web3Contracts.GovImp.methods
+      .modifiedBlock()
+      .call();
     if (
       modifiedBlock === util.getModifiedFromLocal() &&
       util.getAuthorityFromLocal()
@@ -290,8 +295,12 @@ class App extends React.Component {
       : {};
     let localDataUpdated = false;
 
-    this.data.voteLength = await contracts.governance.getVoteLength();
-    const ballotCnt = await contracts.governance.getBallotLength();
+    this.data.voteLength = await web3Instance.web3Contracts.Gov.methods
+      .voteLength()
+      .call();
+    const ballotCnt = await web3Instance.web3Contracts.Gov.methods
+      .ballotLength()
+      .call();
     if (!ballotCnt) return;
     for (var i = 1; i <= ballotCnt; i++) {
       if (i in ballotBasicFinalizedData) {
@@ -319,21 +328,24 @@ class App extends React.Component {
 
   async getBallotBasicOriginData(i, ballotBasicFinalizedData = {}) {
     let isUpdated = false;
-    await contracts.ballotStorage.getBallotBasic(i).then((ret) => {
-      this.data.ballotTypeData[i] = ret.ballotType; // for sorting ballot data
-      ret.id = i; // add ballot id
+    await web3Instance.web3Contracts.BallotStorage.methods
+      .getBallotBasic(i)
+      .call()
+      .then((ret) => {
+        this.data.ballotTypeData[i] = ret.ballotType; // for sorting ballot data
+        ret.id = i; // add ballot id
 
-      util.refineBallotBasic(ret);
-      this.data.ballotBasicOriginData[i] = ret;
+        util.refineBallotBasic(ret);
+        this.data.ballotBasicOriginData[i] = ret;
 
-      if (
-        ret.state === constants.ballotState.Accepted ||
-        ret.state === constants.ballotState.Rejected
-      ) {
-        ballotBasicFinalizedData[i] = ret;
-        isUpdated = true;
-      }
-    });
+        if (
+          ret.state === constants.ballotState.Accepted ||
+          ret.state === constants.ballotState.Rejected
+        ) {
+          ballotBasicFinalizedData[i] = ret;
+          isUpdated = true;
+        }
+      });
     return { isUpdated };
   }
 
@@ -349,14 +361,19 @@ class App extends React.Component {
     switch (ballotType) {
       case "4":
         result = {
-          oldGovernanceAddress: await contracts.governance.implementation(),
-          newGovernanceAddress: await contracts.ballotStorage.getBallotAddress(
-            i
-          ),
+          oldGovernanceAddress: await web3Instance.web3Contracts.Gov.methods
+            .implementation()
+            .call(),
+          newGovernanceAddress:
+            await web3Instance.web3Contracts.BallotStorage.methods
+              .getBallotAddress(i)
+              .call(),
         };
         break;
       case "5": {
-        result = await contracts.ballotStorage.getBallotVariable(i);
+        result = await web3Instance.web3Contracts.BallotStorage.methods
+          .getBallotVariable(i)
+          .call();
         const type = ENV_NAMES_SHA3.filter((key) => {
           return key.sha3Name === result.envVariableName;
         })[0] || { name: "Wrong Proposal (This label is only test)" };
@@ -365,7 +382,9 @@ class App extends React.Component {
       }
       case "1":
       default:
-        result = await contracts.ballotStorage.getBallotMember(i);
+        result = await web3Instance.web3Contracts.BallotStorage.methods
+          .getBallotMember(i)
+          .call();
         break;
     }
 
@@ -395,8 +414,14 @@ class App extends React.Component {
         window.open("https://www.wemix.com/", "_blank");
         break;
       case "explorer":
-        window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER);
+        window.open(
+          `https://microscope.${
+            process.env.NODE_ENV === "production" ? "" : "test."
+          }wemix.com`,
+          "_blank"
+        );
         break;
+
       case "github":
         window.open("https://github.com/wemixarchive", "_blank");
         break;
@@ -428,7 +453,7 @@ class App extends React.Component {
             title="Voting"
             contracts={contracts}
             getErrModal={this.getErrModal}
-            initContractData={this.initContractData}
+            getContractAuthorityBallots={this.getContractAuthorityBallots}
             refreshContractData={this.refreshContractData}
             authorityOriginData={this.data.authorityOriginData}
             ballotMemberOriginData={this.data.ballotMemberOriginData}
@@ -472,9 +497,9 @@ class App extends React.Component {
     this.data.errTitle = _title;
     this.data.errContent = _err;
     if (_link)
-      this.data.errLink = `${
-        metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER
-      }/${_link}`;
+      this.data.errLink = `https://microscope.${
+        process.env.NODE_ENV === "production" ? "" : "test."
+      }wemix.com/${_link}`;
     else this.data.errLink = false;
     this.setState({ errModalVisible: true });
   };

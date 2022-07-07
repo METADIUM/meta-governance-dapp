@@ -1,4 +1,54 @@
-const buildNetworkType = process.env.REACT_APP_NETWORK_TYPE;
+// contract addresses
+export const TESTNET_CONTRACTS = [
+  { name: "Registry", address: "0x31455db91Dc663c81d7062dFB662F59713c33e7d" },
+  {
+    name: "EnvStorageImp",
+    address: "0x33197Adc46D41ce816C2472E50ae702a8dB761cf",
+  },
+  { name: "EnvStorage", address: "0xdF19250B5D1Ebe6df05F7fdb169b0856297C5153" },
+  {
+    name: "BallotStorage",
+    address: "0xB96F108819425EBB5b3EF180e2B6CaC06f624D39",
+  },
+  { name: "Staking", address: "0x301584bd9aA6CEd0d617f7DeDF3912863C1d3cf7" },
+  { name: "GovImp", address: "0xF9572E0cDAc41a3ea178a9F793F7B22561b9bfE7" },
+  { name: "Gov", address: "0x6896239a6450355120646713C9296DC820E9041A" },
+];
+export const MAINNET_CONTRACTS = [
+  { name: "Registry", address: "0x31455db91Dc663c81d7062dFB662F59713c33e7d" },
+  {
+    name: "EnvStorageImp",
+    address: "0x33197Adc46D41ce816C2472E50ae702a8dB761cf",
+  },
+  { name: "EnvStorage", address: "0xdF19250B5D1Ebe6df05F7fdb169b0856297C5153" },
+  {
+    name: "BallotStorage",
+    address: "0xB96F108819425EBB5b3EF180e2B6CaC06f624D39",
+  },
+  { name: "Staking", address: "0x301584bd9aA6CEd0d617f7DeDF3912863C1d3cf7" },
+  { name: "GovImp", address: "0xF9572E0cDAc41a3ea178a9F793F7B22561b9bfE7" },
+  { name: "Gov", address: "0x6896239a6450355120646713C9296DC820E9041A" },
+];
+
+// wemix chain info
+export const TESTNET_CHAIN_INFO = {
+  chainId: "0x458",
+  chainName: "Wemix Testnet",
+  rpcUrls: "https://api.test.wemix.com",
+  blockExplorerUrls: "https://microscope.test.wemix.com",
+  name: "WEMIX",
+  decimals: 18,
+  symbol: "WEMIX",
+};
+export const MAINNET_CHAIN_INFO = {
+  chainId: "0x458",
+  chainName: "Wemix Mainnet",
+  rpcUrls: "https://api.wemix.com",
+  blockExplorerUrls: "https://microscope.wemix.com",
+  name: "WEMIX",
+  decimals: 18,
+  symbol: "WEMIX",
+};
 
 // proposal list
 export const ENV_VOTING_PROPOSAL_LIST = [
@@ -86,33 +136,7 @@ export const ENV_NAMES_SHA3 = [
   },
 ];
 
-// wemix chain info
-export const TESTNET_CHAIN_INFO = {
-  chainId: "0x458",
-  chainName: "Wemix Testnet",
-  rpcUrls: "https://api.test.wemix.com",
-  blockExplorerUrls: "https://microscope.test.wemix.com",
-  name: "WEMIX",
-  decimals: 18,
-  symbol: "WEMIX",
-};
-export const MAINNET_CHAIN_INFO = {
-  chainId: "0x458",
-  chainName: "Wemix Mainnet",
-  rpcUrls: "https://api.wemix.com",
-  blockExplorerUrls: "https://microscope.wemix.com",
-  name: "WEMIX",
-  decimals: 18,
-  symbol: "WEMIX",
-};
-
 const constants = {
-  authorityRepo: {
-    org: "METADIUM",
-    repo: "meta-authorities",
-    branch: buildNetworkType,
-    source: "authorities.json",
-  },
   /* ControlEnums */
   expirationTime: 300000,
   /* AuthorityEnums */
