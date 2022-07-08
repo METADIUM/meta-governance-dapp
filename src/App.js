@@ -216,13 +216,13 @@ class App extends React.Component {
   // or initalize new authority list
   async getAuthorityData() {
     const modifiedBlock = await contracts.governance.getModifiedBlock();
-    if (
-      modifiedBlock === util.getModifiedFromLocal() &&
-      util.getAuthorityFromLocal()
-    ) {
-      this.data.authorityOriginData = util.getAuthorityFromLocal();
-      return;
-    }
+    // if (
+    //   modifiedBlock === util.getModifiedFromLocal() &&
+    //   util.getAuthorityFromLocal()
+    // ) {
+    //   this.data.authorityOriginData = util.getAuthorityFromLocal();
+    //   return;
+    // }
     await this.initAuthorityData();
     util.setModifiedToLocal(modifiedBlock);
   }
