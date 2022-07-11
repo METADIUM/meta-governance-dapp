@@ -58,11 +58,11 @@ class Authority extends React.Component {
   onReadMoreClick = (index) => {
     const element = this.descriptions[index];
     const btn = this.readMoreBtns[index];
-    if (element.offsetHeight === constants.authoritieDescriptionHeight) {
-      element.style.height = "auto";
+    if (element.style.maxHeight !== "none") {
+      element.style.maxHeight = "none";
       btn.innerHTML = "- Read Less";
     } else {
-      element.style.height = constants.authoritieDescriptionHeightToPixel;
+      element.style.maxHeight = constants.authoritieDescriptionHeightToPixel;
       btn.innerHTML = "+ Read More";
     }
   };
@@ -112,10 +112,11 @@ class Authority extends React.Component {
       let readMoreBtn = this.readMoreBtns[index];
 
       if (!readMoreBtn || !readMoreBtn.style) {
-        // Cannot modify style
       } else if (
         description.scrollHeight > constants.authoritieDescriptionHeight
       ) {
+        description.style.maxHeight =
+          constants.authoritieDescriptionHeightToPixel;
         readMoreBtn.style.display = "block";
       } else {
         readMoreBtn.style.display = "none";

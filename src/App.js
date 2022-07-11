@@ -261,16 +261,14 @@ class App extends React.Component {
   // get the authority list stored in localStorage if modified block height is equal
   // or initalize new authority list
   async getAuthorityData() {
-    const modifiedBlock = await web3Instance.web3Contracts.GovImp.methods
-      .modifiedBlock()
-      .call();
-    if (
-      modifiedBlock === util.getModifiedFromLocal() &&
-      util.getAuthorityFromLocal()
-    ) {
-      this.data.authorityOriginData = util.getAuthorityFromLocal();
-      return;
-    }
+    const modifiedBlock = await contracts.governance.getModifiedBlock();
+    // if (
+    //   modifiedBlock === util.getModifiedFromLocal() &&
+    //   util.getAuthorityFromLocal()
+    // ) {
+    //   this.data.authorityOriginData = util.getAuthorityFromLocal();
+    //   return;
+    // }
     await this.initAuthorityData();
     util.setModifiedToLocal(modifiedBlock);
   }
