@@ -14,6 +14,7 @@ const TopNav = ({
   getStakingModal = (f) => f,
   isLogin,
   onLogout,
+  connectWallet,
 }) => (
   <Row className="container flex">
     <div className="header-logo flex flex-center-horizontal">
@@ -40,21 +41,28 @@ const TopNav = ({
       </Menu>
     </div>
     <div className="header-staking flex flex-center-horizontal flex-end-vertical flex-full">
-      <div className="flex flex-full flex-column flex-center-vertical">
-        <p className={"staked " + netName}>Staked {myBalance} WEMIX</p>
-        <p className={"wemix " + netName}>(Locked {myLockedBalance} WEMIX)</p>
-      </div>
-      <Button
-        className={"btn-grid-primary " + netName}
-        type="primary"
-        onClick={getStakingModal}
-      >
-        WEMIX Staking
-      </Button>
+      {isLogin && (
+        <>
+          {" "}
+          <div className="flex flex-full flex-column flex-center-vertical">
+            <p className={"staked " + netName}>Staked {myBalance} WEMIX</p>
+            <p className={"wemix " + netName}>
+              (Locked {myLockedBalance} WEMIX)
+            </p>
+          </div>
+          <Button
+            className={"btn-grid-primary " + netName}
+            type="primary"
+            onClick={getStakingModal}
+          >
+            WEMIX Staking
+          </Button>
+        </>
+      )}
       <WalletButton
         isLogin={isLogin}
         onLogout={onLogout}
-        onMenuClick={onMenuClick}
+        connectWallet={connectWallet}
       />
     </div>
   </Row>

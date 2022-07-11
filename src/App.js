@@ -21,6 +21,7 @@ import AuthorityList from "./static/AuthorityList.json";
 import "./App.css";
 import "./components/style/style.css";
 import WalletPage from "./components/WalletPage";
+import { getWeb3Modal } from "./web3Modal";
 
 const { Header, Content, Footer } = Layout;
 
@@ -47,6 +48,7 @@ class App extends React.Component {
     // voting duration
     votingDurationMin: null,
     votingDurationMax: null,
+    redirectNav: "1",
   };
 
   state = {
@@ -69,9 +71,9 @@ class App extends React.Component {
     this.getContractAuthorityBallots =
       this.getContractAuthorityBallots.bind(this);
     this.refreshContractData = this.refreshContractData.bind(this);
-    this.onLogin = this.onLogin.bind(this);
-    this.onLogout = this.onLogout.bind(this);
 
+    // get web3Modal instance
+    getWeb3Modal();
     // get web3 instance
     getWeb3Instance().then(
       async () => {
@@ -108,12 +110,21 @@ class App extends React.Component {
   onLogin = () => {
     this.setState({
       isLogin: true,
+      nav: this.data.redirectNav,
     });
   };
   onLogout = () => {
     this.setState({
       isLogin: false,
+      nav: "1",
+      showProposal: false,
     });
+  };
+  connectWallet = () => {
+    if (this.state.nav !== "0") {
+      this.data.redirectNav = this.state.nav; // save redirect page
+      this.onMenuClick({ key: "0" }); // route connect wallet page
+    }
   };
 
   // get governance setting variables from contract data
@@ -452,7 +463,7 @@ class App extends React.Component {
     const { nav } = this.state;
     switch (nav) {
       case "0":
-        return <WalletPage />;
+        return <WalletPage onLogin={this.onLogin} />;
       case "1":
         return (
           <Authority
@@ -589,6 +600,7 @@ class App extends React.Component {
                 getStakingModal={this.getStakingModal}
                 isLogin={this.state.isLogin}
                 onLogout={this.onLogout}
+                connectWallet={this.connectWallet}
               />
             </Header>
 
