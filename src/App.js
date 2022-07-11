@@ -556,6 +556,7 @@ class App extends React.Component {
 
   submitWemixStaking = () => {
     const { web3Contracts } = web3Instance;
+    const amount = util.convertEtherToWei(this.data.stakingAmount);
 
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
       this.setState({ errStakging: true });
@@ -564,15 +565,18 @@ class App extends React.Component {
 
     this.setState({ loading: true });
     let trx = {};
-    // 수정 필요
-    if (this.data.stakingTopic === "deposit")
-      trx = web3Contracts.Staking.methods
-        .deposit(this.data.stakingAmount)
-        .call();
-    else
-      trx = web3Contracts.Staking.methods
-        .withdraw(this.data.stakingAmount)
-        .call();
+    if (this.data.stakingTopic === "deposit") {
+      // TODO contract address
+      trx = {
+        to: "0x301584bd9aA6CEd0d617f7DeDF3912863C1d3cf7",
+        value: amount,
+        data: web3Contracts.Staking.methods.deposit().encodeABI(),
+      };
+    } else
+      trx = {
+        to: "0x301584bd9aA6CEd0d617f7DeDF3912863C1d3cf7",
+        data: web3Contracts.Staking.methods.withdraw(amount).encodeABI(),
+      };
     this.sendStakingTransaction(trx);
   };
 
