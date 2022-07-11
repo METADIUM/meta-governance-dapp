@@ -20,6 +20,7 @@ import AuthorityList from "./static/AuthorityList.json";
 
 import "./App.css";
 import "./components/style/style.css";
+import WalletPage from "./components/WalletPage";
 
 const { Header, Content, Footer } = Layout;
 
@@ -60,6 +61,7 @@ class App extends React.Component {
     activeMenu: "Authority",
     // true - voting / false - authority
     showProposal: false,
+    isLogin: false,
   };
 
   constructor(props) {
@@ -67,6 +69,9 @@ class App extends React.Component {
     this.getContractAuthorityBallots =
       this.getContractAuthorityBallots.bind(this);
     this.refreshContractData = this.refreshContractData.bind(this);
+    this.onLogin = this.onLogin.bind(this);
+    this.onLogout = this.onLogout.bind(this);
+
     // get web3 instance
     getWeb3Instance().then(
       async () => {
@@ -99,6 +104,17 @@ class App extends React.Component {
   //   // detect when the MetaMask network is changed
   //   window.ethereum.on("chainChanged", () => window.location.reload());
   // }
+
+  onLogin = () => {
+    this.setState({
+      isLogin: true,
+    });
+  };
+  onLogout = () => {
+    this.setState({
+      isLogin: false,
+    });
+  };
 
   // get governance setting variables from contract data
   async getGovernanceVariables() {
@@ -435,6 +451,8 @@ class App extends React.Component {
 
     const { nav } = this.state;
     switch (nav) {
+      case "0":
+        return <WalletPage />;
       case "1":
         return (
           <Authority
@@ -569,6 +587,8 @@ class App extends React.Component {
                 isMember={this.data.isMember}
                 onMenuClick={this.onMenuClick}
                 getStakingModal={this.getStakingModal}
+                isLogin={this.state.isLogin}
+                onLogout={this.onLogout}
               />
             </Header>
 

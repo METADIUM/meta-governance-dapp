@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Row, Menu, Input, Affix } from "antd";
 
 import "./style/style.css";
+import WalletButton from "./WalletButton";
 
 const TopNav = ({
   netName,
@@ -11,6 +12,8 @@ const TopNav = ({
   myLockedBalance,
   onMenuClick = (f) => f,
   getStakingModal = (f) => f,
+  isLogin,
+  onLogout,
 }) => (
   <Row className="container flex">
     <div className="header-logo flex flex-center-horizontal">
@@ -48,6 +51,11 @@ const TopNav = ({
       >
         WEMIX Staking
       </Button>
+      <WalletButton
+        isLogin={isLogin}
+        onLogout={onLogout}
+        onMenuClick={onMenuClick}
+      />
     </div>
   </Row>
 );
