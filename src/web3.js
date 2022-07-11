@@ -10,7 +10,7 @@ import * as abis from "./abis/index";
 const isDev = process.env.NODE_ENV === "development";
 
 // get network deploy informations
-const chainInfo = isDev ? TESTNET_CHAIN_INFO : MAINNET_CHAIN_INFO;
+export const chainInfo = isDev ? TESTNET_CHAIN_INFO : MAINNET_CHAIN_INFO;
 const contracts = isDev ? TESTNET_CONTRACTS : MAINNET_CONTRACTS;
 
 // set contracts

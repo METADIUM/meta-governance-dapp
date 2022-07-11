@@ -50,7 +50,7 @@ const WalletPage = ({ onLogin }) => {
     const newProvider = await getProvider(walletType);
 
     web3Instance.web3.setProvider(newProvider);
-    onLogin();
+    await onLogin();
     console.log("Set new Provider!", newProvider);
   };
 

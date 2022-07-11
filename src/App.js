@@ -12,7 +12,7 @@ import {
   Authority,
   BaseLoader,
 } from "./components";
-import getWeb3Instance, { web3Instance } from "./web3";
+import getWeb3Instance, { chainInfo, web3Instance } from "./web3";
 import { constants, ENV_VOTING_PROPOSAL_LIST } from "./constants";
 import * as util from "./util";
 
@@ -64,6 +64,7 @@ class App extends React.Component {
     // true - voting / false - authority
     showProposal: false,
     isLogin: false,
+    defaultAccount: null,
   };
 
   constructor(props) {
@@ -107,17 +108,24 @@ class App extends React.Component {
   //   window.ethereum.on("chainChanged", () => window.location.reload());
   // }
 
-  onLogin = () => {
+  onLogin = async () => {
+    const accounts = await web3Instance.web3.eth.requestAccounts();
+    this.updateAccountData(accounts[0]);
+
     this.setState({
       isLogin: true,
       nav: this.data.redirectNav,
+      defaultAccount: accounts[0],
     });
   };
   onLogout = () => {
+    web3Instance.web3.setProvider(chainInfo.rpcUrls);
+
     this.setState({
       isLogin: false,
       nav: "1",
       showProposal: false,
+      defaultAccount: null,
     });
   };
   connectWallet = () => {
@@ -126,6 +134,15 @@ class App extends React.Component {
       this.onMenuClick({ key: "0" }); // route connect wallet page
     }
   };
+
+  // update data related to new account
+  async updateAccountData(newAccount) {
+    await this.updateAccountBalance(newAccount);
+    this.setStakingEventsWatch(newAccount);
+    this.data.isMember = await web3Instance.web3Contracts.GovImp.methods
+      .isMember(newAccount)
+      .call();
+  }
 
   // get governance setting variables from contract data
   async getGovernanceVariables() {
@@ -138,66 +155,65 @@ class App extends React.Component {
     // this.setStakingEventsWatch();
     // check if account is a proposalable member
     // this.data.isMember = await contracts.governance.isMember(
-    //   web3Instance.defaultAccount
+    //   this.state.defaultAccount
     // );
     this.setState({ contractReady: true });
   }
 
   // set the balance of account
-  // async updateAccountBalance() {
-  //   this.data.myBalance = await contracts.staking.balanceOf(
-  //     web3Instance.defaultAccount
-  //   );
-  //   this.data.myLockedBalance = await contracts.staking.lockedBalanceOf(
-  //     web3Instance.defaultAccount
-  //   );
-  //   this.data.myBalance = web3Instance.web3.utils.fromWei(
-  //     this.data.myBalance,
-  //     "ether"
-  //   );
-  //   this.data.myLockedBalance = web3Instance.web3.utils.fromWei(
-  //     this.data.myLockedBalance,
-  //     "ether"
-  //   );
-  //   this.setState({ stakingModalVisible: false, loading: false });
-  // }
+  async updateAccountBalance(defaultAccount = this.state.defaultAccount) {
+    const { web3, web3Contracts } = web3Instance;
+
+    this.data.myBalance = await web3Contracts.Staking.methods
+      .balanceOf(defaultAccount)
+      .call();
+    this.data.myLockedBalance = await web3Contracts.Staking.methods
+      .lockedBalanceOf(defaultAccount)
+      .call();
+
+    this.data.myBalance = web3.utils.fromWei(this.data.myBalance, "ether");
+    this.data.myLockedBalance = web3.utils.fromWei(
+      this.data.myLockedBalance,
+      "ether"
+    );
+    this.setState({ stakingModalVisible: false, loading: false });
+  }
 
   // set the default account to MetaMask account
   // async updateDefaultAccount(account) {
-  //   if (web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase()) {
-  //     web3Instance.defaultAccount = account;
+  //   if (this.state.defaultAccount.toLowerCase() !== account.toLowerCase()) {
+  //     this.state.defaultAccount = account;
   //     await this.updateAccountBalance();
   //     this.setStakingEventsWatch();
   //     this.data.isMember = await contracts.governance.isMember(
-  //       web3Instance.defaultAccount
+  //       this.state.defaultAccount
   //     );
   //     this.setState({ showProposal: false });
   //   }
   // }
 
-  // setStakingEventsWatch() {
-  //   if (this.data.eventsWatch) {
-  //     this.data.eventsWatch.unsubscribe((error, success) => {
-  //       if (error) console.log("Faild to unsubscribed!");
-  //       // else if (success) console.log('Successfully unsubscribed!')
-  //     });
-  //   }
-  //   var filteraddress = web3Instance.web3.eth.abi.encodeParameter(
-  //     "address",
-  //     web3Instance.defaultAccount
-  //   );
-  //   this.data.eventsWatch = contracts.staking.stakingInstance.events.allEvents(
-  //     {
-  //       fromBlock: "latest",
-  //       topics: [null, filteraddress],
-  //     },
-  //     (error, events) => {
-  //       // console.log(events)
-  //       if (error) console.log("error", error);
-  //       else this.updateAccountBalance();
-  //     }
-  //   );
-  // }
+  async setStakingEventsWatch(defaultAccount = this.state.defaultAccount) {
+    const { web3, web3Contracts } = web3Instance;
+
+    if (this.data.eventsWatch) {
+      this.data.eventsWatch.unsubscribe((error, success) => {
+        if (error) console.log("Faild to unsubscribed!");
+        // else if (success) console.log('Successfully unsubscribed!')
+      });
+    }
+    var filteraddress = web3.eth.abi.encodeParameter("address", defaultAccount);
+    this.data.eventsWatch = web3Contracts.Staking.events.allEvents(
+      {
+        fromBlock: "latest",
+        topics: [null, filteraddress],
+      },
+      (error, events) => {
+        // console.log(events)
+        if (error) console.log("error", error);
+        else this.updateAccountBalance();
+      }
+    );
+  }
 
   // get the minimum and maximum values that can be staked
   async getStakingRange() {
@@ -540,6 +556,8 @@ class App extends React.Component {
   };
 
   submitWemixStaking = () => {
+    const { web3Contracts } = web3Instance;
+
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
       this.setState({ errStakging: true });
       return;
@@ -547,14 +565,20 @@ class App extends React.Component {
 
     this.setState({ loading: true });
     let trx = {};
+    // 수정 필요
     if (this.data.stakingTopic === "deposit")
-      trx = contracts.staking.deposit(this.data.stakingAmount);
-    else trx = contracts.staking.withdraw(this.data.stakingAmount);
+      trx = web3Contracts.Staking.methods
+        .deposit(this.data.stakingAmount)
+        .call();
+    else
+      trx = web3Contracts.Staking.methods
+        .withdraw(this.data.stakingAmount)
+        .call();
     this.sendStakingTransaction(trx);
   };
 
   sendStakingTransaction(trx) {
-    trx.from = web3Instance.defaultAccount;
+    trx.from = this.state.defaultAccount;
     web3Instance.web3.eth.sendTransaction(trx, async (err, hash) => {
       if (err) {
         console.log(err);
