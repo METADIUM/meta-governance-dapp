@@ -295,7 +295,7 @@
 .authorityComp .authorityComp_contnet .img_container {
   width: 192px;
   height: 192px;
-  margin-right: 16px;
+  margin: auto 16px auto auto;
   overflow: hidden;
 }
 
