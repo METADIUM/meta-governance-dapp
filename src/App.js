@@ -109,7 +109,8 @@ class App extends React.Component {
   // }
 
   onLogin = async () => {
-    const accounts = await web3Instance.web3.eth.requestAccounts();
+    console.log(web3Instance.web3.eth);
+    const accounts = await web3Instance.web3.eth.getAccounts();
     this.updateAccountData(accounts[0]);
 
     this.setState({
