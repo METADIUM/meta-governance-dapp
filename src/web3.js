@@ -71,11 +71,11 @@ export const callContractMethod = async (
 };
 
 // encodeABI (value in method)
-export const encodeABIValueInMethod = (web3, contract, method, value) => {
+export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
   try {
     let trxData = {
       to: getContractAddr(contract),
-      data: web3.web3Contracts[contract].methods[method](value).encodeABI(),
+      data: web3.web3Contracts[contract].methods[method](...value).encodeABI(),
     };
 
     return trxData;
