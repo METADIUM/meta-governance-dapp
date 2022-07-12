@@ -12,7 +12,14 @@ import {
   Authority,
   BaseLoader,
 } from "./components";
-import getWeb3Instance, { chainInfo, web3Instance } from "./web3";
+import getWeb3Instance, {
+  callContractMethod,
+  chainInfo,
+  encodeABIValueInMethod,
+  encodeABIValueInTrx,
+  onlyCallContractMethod,
+  web3Instance,
+} from "./web3";
 import { constants, ENV_VOTING_PROPOSAL_LIST } from "./constants";
 import * as util from "./util";
 
@@ -140,9 +147,12 @@ class App extends React.Component {
   async updateAccountData(newAccount) {
     await this.updateAccountBalance(newAccount);
     this.setStakingEventsWatch(newAccount);
-    this.data.isMember = await web3Instance.web3Contracts.GovImp.methods
-      .isMember(newAccount)
-      .call();
+    this.data.isMember = await callContractMethod(
+      web3Instance,
+      "GovImp",
+      "isMember",
+      newAccount
+    );
   }
 
   // get governance setting variables from contract data
@@ -219,15 +229,19 @@ class App extends React.Component {
   // get the minimum and maximum values that can be staked
   async getStakingRange() {
     try {
-      this.data.stakingMin = web3Instance.web3.utils.fromWei(
-        await web3Instance.web3Contracts.EnvStorageImp.methods
-          .getStakingMin()
-          .call()
+      this.data.stakingMin = util.convertWeiToEther(
+        await onlyCallContractMethod(
+          web3Instance,
+          "EnvStorageImp",
+          "getStakingMin"
+        )
       );
-      this.data.stakingMax = web3Instance.web3.utils.fromWei(
-        await web3Instance.web3Contracts.EnvStorageImp.methods
-          .getStakingMax()
-          .call()
+      this.data.stakingMax = util.convertWeiToEther(
+        await onlyCallContractMethod(
+          web3Instance,
+          "EnvStorageImp",
+          "getStakingMax"
+        )
       );
     } catch (err) {
       this.getErrModal(err.message, err.name);
@@ -236,9 +250,11 @@ class App extends React.Component {
 
   // get voting duration minium and maximum values
   async getVotingDuration() {
-    const duration = await web3Instance.web3Contracts.EnvStorageImp.methods
-      .getBallotDurationMinMax()
-      .call();
+    const duration = await onlyCallContractMethod(
+      web3Instance,
+      "EnvStorageImp",
+      "getBallotDurationMinMax"
+    );
     this.data.votingDurationMin = duration[0];
     this.data.votingDurationMax = duration[1];
   }
@@ -337,12 +353,16 @@ class App extends React.Component {
       : {};
     let localDataUpdated = false;
 
-    this.data.voteLength = await web3Instance.web3Contracts.Gov.methods
-      .voteLength()
-      .call();
-    const ballotCnt = await web3Instance.web3Contracts.Gov.methods
-      .ballotLength()
-      .call();
+    this.data.voteLength = await onlyCallContractMethod(
+      web3Instance,
+      "Gov",
+      "voteLength"
+    );
+    const ballotCnt = await onlyCallContractMethod(
+      web3Instance,
+      "Gov",
+      "ballotLength"
+    );
     if (!ballotCnt) return;
     for (var i = 1; i <= ballotCnt; i++) {
       if (i in ballotBasicFinalizedData) {
@@ -370,24 +390,26 @@ class App extends React.Component {
 
   async getBallotBasicOriginData(i, ballotBasicFinalizedData = {}) {
     let isUpdated = false;
-    await web3Instance.web3Contracts.BallotStorage.methods
-      .getBallotBasic(i)
-      .call()
-      .then((ret) => {
-        this.data.ballotTypeData[i] = ret.ballotType; // for sorting ballot data
-        ret.id = i; // add ballot id
+    await callContractMethod(
+      web3Instance,
+      "BallotStorage",
+      "getBallotBasic",
+      i
+    ).then((ret) => {
+      this.data.ballotTypeData[i] = ret.ballotType; // for sorting ballot data
+      ret.id = i; // add ballot id
 
-        util.refineBallotBasic(ret);
-        this.data.ballotBasicOriginData[i] = ret;
+      util.refineBallotBasic(ret);
+      this.data.ballotBasicOriginData[i] = ret;
 
-        if (
-          ret.state === constants.ballotState.Accepted ||
-          ret.state === constants.ballotState.Rejected
-        ) {
-          ballotBasicFinalizedData[i] = ret;
-          isUpdated = true;
-        }
-      });
+      if (
+        ret.state === constants.ballotState.Accepted ||
+        ret.state === constants.ballotState.Rejected
+      ) {
+        ballotBasicFinalizedData[i] = ret;
+        isUpdated = true;
+      }
+    });
     return { isUpdated };
   }
 
@@ -403,19 +425,27 @@ class App extends React.Component {
     switch (ballotType) {
       case "4":
         result = {
-          oldGovernanceAddress: await web3Instance.web3Contracts.Gov.methods
-            .implementation()
-            .call(),
-          newGovernanceAddress:
-            await web3Instance.web3Contracts.BallotStorage.methods
-              .getBallotAddress(i)
-              .call(),
+          oldGovernanceAddress: await onlyCallContractMethod(
+            web3Instance,
+            "Gov",
+            "implementation"
+          ),
+          newGovernanceAddress: await callContractMethod(
+            web3Instance,
+            "BallotStorage",
+            "getBallotAddress",
+            i
+          ),
         };
         break;
       case "5": {
-        result = await web3Instance.web3Contracts.BallotStorage.methods
-          .getBallotVariable(i)
-          .call();
+        result = await callContractMethod(
+          web3Instance,
+          "BallotStorage",
+          "getBallotVariable",
+          i
+        );
+
         const type = ENV_VOTING_PROPOSAL_LIST.filter((key) => {
           return key.sha3Name === result.envVariableName;
         })[0] || { id: "Wrong Proposal (This label is only test)" };
@@ -424,9 +454,12 @@ class App extends React.Component {
       }
       case "1":
       default:
-        result = await web3Instance.web3Contracts.BallotStorage.methods
-          .getBallotMember(i)
-          .call();
+        result = await callContractMethod(
+          web3Instance,
+          "BallotStorage",
+          "getBallotMember",
+          i
+        );
         break;
     }
 
@@ -555,28 +588,20 @@ class App extends React.Component {
   };
 
   submitWemixStaking = () => {
-    const { web3Contracts } = web3Instance;
-    const amount = util.convertEtherToWei(this.data.stakingAmount);
-
+    this.setState({ loading: true });
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
       this.setState({ errStakging: true });
       return;
     }
 
-    this.setState({ loading: true });
     let trx = {};
+    const amount = util.convertEtherToWei(this.data.stakingAmount);
+
     if (this.data.stakingTopic === "deposit") {
-      // TODO contract address
-      trx = {
-        to: "0x301584bd9aA6CEd0d617f7DeDF3912863C1d3cf7",
-        value: amount,
-        data: web3Contracts.Staking.methods.deposit().encodeABI(),
-      };
-    } else
-      trx = {
-        to: "0x301584bd9aA6CEd0d617f7DeDF3912863C1d3cf7",
-        data: web3Contracts.Staking.methods.withdraw(amount).encodeABI(),
-      };
+      trx = encodeABIValueInTrx(web3Instance, "deposit", amount);
+    } else {
+      trx = encodeABIValueInMethod(web3Instance, "Staking", "withdraw", amount);
+    }
     this.sendStakingTransaction(trx);
   };
 
