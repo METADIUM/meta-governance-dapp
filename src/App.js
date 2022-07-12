@@ -1,6 +1,5 @@
 import React from "react";
 import { Layout } from "antd";
-import { contracts, constants as metaWeb3Constants } from "meta-web3";
 
 import {
   TopNav,
@@ -544,7 +543,6 @@ class App extends React.Component {
         return (
           <Authority
             title="Authority"
-            contracts={contracts}
             getErrModal={this.getErrModal}
             authorityOriginData={this.data.authorityOriginData}
             netName={web3Instance.netName}
