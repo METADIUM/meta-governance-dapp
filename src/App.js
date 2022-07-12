@@ -528,7 +528,6 @@ class App extends React.Component {
         return (
           <Voting
             title="Voting"
-            contracts={contracts}
             getErrModal={this.getErrModal}
             getContractAuthorityBallots={this.getContractAuthorityBallots}
             refreshContractData={this.refreshContractData}
