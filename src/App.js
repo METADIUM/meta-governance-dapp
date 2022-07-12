@@ -165,7 +165,10 @@ class App extends React.Component {
     // TODO
     // this.setStakingEventsWatch();
     // check if account is a proposalable member
-    // this.data.isMember = await contracts.governance.isMember(
+    // this.data.isMember = await callContractMethod(
+    //   web3Instance,
+    //   "GovImp",
+    //   "isMember",
     //   this.state.defaultAccount
     // );
     this.setState({ contractReady: true });
@@ -173,20 +176,23 @@ class App extends React.Component {
 
   // set the balance of account
   async updateAccountBalance(defaultAccount = this.state.defaultAccount) {
-    const { web3, web3Contracts } = web3Instance;
-
-    this.data.myBalance = await web3Contracts.Staking.methods
-      .balanceOf(defaultAccount)
-      .call();
-    this.data.myLockedBalance = await web3Contracts.Staking.methods
-      .lockedBalanceOf(defaultAccount)
-      .call();
-
-    this.data.myBalance = web3.utils.fromWei(this.data.myBalance, "ether");
-    this.data.myLockedBalance = web3.utils.fromWei(
-      this.data.myLockedBalance,
-      "ether"
+    this.data.myBalance = await callContractMethod(
+      web3Instance,
+      "Staking",
+      "balanceOf",
+      defaultAccount
     );
+    this.data.myLockedBalance = await callContractMethod(
+      web3Instance,
+      "Staking",
+      "lockedBalanceOf",
+      defaultAccount
+    );
+    this.data.myBalance = util.convertWeiToEther(this.data.myBalance);
+    this.data.myLockedBalance = util.convertWeiToEther(
+      this.data.myLockedBalance
+    );
+
     this.setState({ stakingModalVisible: false, loading: false });
   }
 
@@ -196,9 +202,7 @@ class App extends React.Component {
   //     this.state.defaultAccount = account;
   //     await this.updateAccountBalance();
   //     this.setStakingEventsWatch();
-  //     this.data.isMember = await contracts.governance.isMember(
-  //       this.state.defaultAccount
-  //     );
+  //     this.data.isMember = await callContractMethod(web3Instance, "GovImp", "isMember", this.state.defaultAccount)
   //     this.setState({ showProposal: false });
   //   }
   // }
@@ -278,7 +282,11 @@ class App extends React.Component {
   // get the authority list stored in localStorage if modified block height is equal
   // or initalize new authority list
   async getAuthorityData() {
-    const modifiedBlock = await contracts.governance.getModifiedBlock();
+    const modifiedBlock = await onlyCallContractMethod(
+      web3Instance,
+      "GovImp",
+      "modifiedBlock"
+    );
     // if (
     //   modifiedBlock === util.getModifiedFromLocal() &&
     //   util.getAuthorityFromLocal()
@@ -291,7 +299,11 @@ class App extends React.Component {
   }
 
   async getBallotData() {
-    const ballotCnt = await contracts.governance.getBallotLength();
+    const ballotCnt = await onlyCallContractMethod(
+      web3Instance,
+      "GovImp",
+      "ballotLength"
+    );
     let localBallotCnt = Object.keys(this.data.ballotBasicOriginData).length;
     if (!ballotCnt || ballotCnt === localBallotCnt) return;
 
@@ -302,7 +314,11 @@ class App extends React.Component {
   }
 
   async modifyBallotData() {
-    let voteLength = await contracts.governance.getVoteLength();
+    let voteLength = await onlyCallContractMethod(
+      web3Instance,
+      "GovImp",
+      "voteLength"
+    );
     if (!voteLength || voteLength === this.data.voteLength) return;
 
     for (
@@ -311,7 +327,12 @@ class App extends React.Component {
       this.data.voteLength++
     ) {
       const ballotId = (
-        await contracts.ballotStorage.getVote(this.data.voteLength)
+        await callContractMethod(
+          web3Instance,
+          "BallotStorage",
+          "getVote",
+          this.data.voteLength
+        )
       ).ballotId;
       await this.getBallotBasicOriginData(ballotId);
       await this.getBallotMemberOriginData(ballotId);
@@ -331,7 +352,14 @@ class App extends React.Component {
     let memberAuthority = {};
     let index = 0;
     for (let i = 0; i < Object.keys(authorityList).length; i++) {
-      if (await contracts.governance.isMember(authorityList[i].addr)) {
+      if (
+        await callContractMethod(
+          web3Instance,
+          "GovImp",
+          "isMember",
+          authorityList[i].addr
+        )
+      ) {
         memberAuthority[index] = authorityList[i];
         memberAuthority[index].addr = web3Instance.web3.utils.toChecksumAddress(
           memberAuthority[index].addr
@@ -597,7 +625,7 @@ class App extends React.Component {
     const amount = util.convertEtherToWei(this.data.stakingAmount);
 
     if (this.data.stakingTopic === "deposit") {
-      trx = encodeABIValueInTrx(web3Instance, "deposit", amount);
+      trx = encodeABIValueInTrx(web3Instance, "Staking", "deposit", amount);
     } else {
       trx = encodeABIValueInMethod(web3Instance, "Staking", "withdraw", amount);
     }
