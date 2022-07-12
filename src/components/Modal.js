@@ -45,7 +45,7 @@ const StakingModal = ({
       onChange={handleSelectChange}
       disabled={loading}
     >
-      <Option value="deposit">Deposit Staking</Option>
+      <Option value="deposit">Additional Staking</Option>
       <Option value="withdraw">Withdraw Staking</Option>
     </Select>
     <Input
