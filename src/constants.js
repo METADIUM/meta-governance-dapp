@@ -132,7 +132,7 @@ const constants = {
   ballotTypes: {
     Invalid: "0",
     AddAuthorityMember: "1",
-    MemberRemoval: "2",
+    RemoveAuthorityMember: "2",
     ReplaceAuthorityMember: "3",
     GovernanceContractAddress: "4",
     ChangedEnv: "5",
@@ -148,7 +148,7 @@ const constants = {
   ballotTypesArr: [
     "Invalid",
     "Add Authority Member",
-    "MemberRemoval",
+    "Remove Authority Member",
     "Replace Authority Member",
     "Governance Contract Address",
     "Changed Env",
