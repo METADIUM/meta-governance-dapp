@@ -126,6 +126,12 @@ export const ENV_NAMES = {
   ENV_GASLIMIT_AND_BASE_FEE: "gasLimitAndBaseFee",
 };
 
+export const walletTypes = {
+  META_MASK: "metamask",
+  WALLET_CONNECT: "walletconnect",
+  COIN_BASE: "walletlink",
+};
+
 const constants = {
   /* ControlEnums */
   expirationTime: 300000,

@@ -16,6 +16,7 @@ import getWeb3Instance, {
   chainInfo,
   encodeABIValueInMethod,
   encodeABIValueInTrx,
+  getAccounts,
   onlyCallContractMethod,
   web3Instance,
 } from "./web3";
@@ -55,6 +56,7 @@ class App extends React.Component {
     votingDurationMin: null,
     votingDurationMax: null,
     redirectNav: "1",
+    nowWalletType: null,
   };
 
   state = {
@@ -114,15 +116,15 @@ class App extends React.Component {
   //   window.ethereum.on("chainChanged", () => window.location.reload());
   // }
 
-  onLogin = async () => {
-    console.log(web3Instance.web3.eth);
-    const accounts = await web3Instance.web3.eth.getAccounts();
-    this.updateAccountData(accounts[0]);
+  onLogin = async (walletType) => {
+    this.data.nowWalletType = walletType;
+    const account = await getAccounts(walletType);
+    this.updateAccountData(account);
 
     this.setState({
       isLogin: true,
       nav: this.data.redirectNav,
-      defaultAccount: accounts[0],
+      defaultAccount: account,
     });
   };
   onLogout = () => {

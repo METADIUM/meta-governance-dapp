@@ -4,6 +4,7 @@ import {
   TESTNET_CHAIN_INFO,
   MAINNET_CONTRACTS,
   TESTNET_CONTRACTS,
+  walletTypes,
 } from "./constants";
 import * as abis from "./abis/index";
 
@@ -107,6 +108,23 @@ const getContractAddr = (contract) => {
   })[0].address;
 
   return address;
+};
+
+// get accounts
+export const getAccounts = async (walletType) => {
+  const { META_MASK, WALLET_CONNECT, COIN_BASE } = walletTypes;
+  let account;
+
+  switch (walletType) {
+    case META_MASK:
+      account = await web3Instance.web3.eth.requestAccounts();
+      return account[0];
+    case WALLET_CONNECT:
+    case COIN_BASE:
+      account = await web3Instance.web3.eth.getAccounts();
+      return account[0];
+    default:
+  }
 };
 
 export { web3Instance };
