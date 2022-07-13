@@ -49,7 +49,6 @@ class App extends React.Component {
     errContent: null,
     errLink: null,
     errAccessFail: null,
-    isMember: false,
     // for getting ballot data
     ballotTypeData: [],
     // voting duration
@@ -73,6 +72,7 @@ class App extends React.Component {
     showProposal: false,
     isLogin: false,
     defaultAccount: null,
+    isMember: false,
   };
 
   constructor(props) {
@@ -135,6 +135,7 @@ class App extends React.Component {
       nav: "1",
       showProposal: false,
       defaultAccount: null,
+      isMember: false,
     });
   };
   connectWallet = () => {
@@ -148,12 +149,13 @@ class App extends React.Component {
   async updateAccountData(newAccount) {
     await this.updateAccountBalance(newAccount);
     this.setStakingEventsWatch(newAccount);
-    this.data.isMember = await callContractMethod(
+    const isMember = await callContractMethod(
       web3Instance,
       "GovImp",
       "isMember",
       newAccount
     );
+    this.setState({ isMember });
   }
 
   // get governance setting variables from contract data
@@ -166,13 +168,16 @@ class App extends React.Component {
     // TODO
     // this.setStakingEventsWatch();
     // check if account is a proposalable member
-    // this.data.isMember = await callContractMethod(
+    // const isMember = await callContractMethod(
     //   web3Instance,
     //   "GovImp",
     //   "isMember",
     //   this.state.defaultAccount
     // );
-    this.setState({ contractReady: true });
+    this.setState({
+      contractReady: true,
+      // isMember
+    });
   }
 
   // set the balance of account
@@ -196,17 +201,6 @@ class App extends React.Component {
 
     this.setState({ stakingModalVisible: false, loading: false });
   }
-
-  // set the default account to MetaMask account
-  // async updateDefaultAccount(account) {
-  //   if (this.state.defaultAccount.toLowerCase() !== account.toLowerCase()) {
-  //     this.state.defaultAccount = account;
-  //     await this.updateAccountBalance();
-  //     this.setStakingEventsWatch();
-  //     this.data.isMember = await callContractMethod(web3Instance, "GovImp", "isMember", this.state.defaultAccount)
-  //     this.setState({ showProposal: false });
-  //   }
-  // }
 
   async setStakingEventsWatch(defaultAccount = this.state.defaultAccount) {
     const { web3, web3Contracts } = web3Instance;
@@ -566,12 +560,13 @@ class App extends React.Component {
             loading={this.state.loading}
             convertLoading={this.convertLoading}
             showProposal={nav === "3" ? true : this.state.showProposal}
-            isMember={this.data.isMember}
+            isMember={this.state.isMember}
             stakingMax={this.data.stakingMax}
             stakingMin={this.data.stakingMin}
             votingDurationMax={this.data.votingDurationMax}
             votingDurationMin={this.data.votingDurationMin}
             selectedMenu={nav}
+            defaultAccount={this.state.defaultAccount}
           />
         );
       default:
@@ -674,7 +669,7 @@ class App extends React.Component {
                 nav={this.state.nav}
                 myBalance={this.data.myBalance}
                 myLockedBalance={this.data.myLockedBalance}
-                isMember={this.data.isMember}
+                isMember={this.state.isMember}
                 onMenuClick={this.onMenuClick}
                 getStakingModal={this.getStakingModal}
                 isLogin={this.state.isLogin}

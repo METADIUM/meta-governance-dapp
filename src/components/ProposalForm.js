@@ -386,7 +386,7 @@ class ProposalForm extends React.Component {
         web3Instance,
         "GovImp",
         "isMember",
-        web3Instance.defaultAccount
+        this.props.defaultAccount
       )) &&
       !constants.debugMode
     ) {
@@ -1131,7 +1131,7 @@ class ProposalForm extends React.Component {
     try {
       web3Instance.web3.eth.sendTransaction(
         {
-          from: web3Instance.defaultAccount,
+          from: this.props.defaultAccount,
           to: trx.to,
           data: trx.data,
         },
@@ -1171,7 +1171,7 @@ class ProposalForm extends React.Component {
   // get information for send transaction (Myinfo)
   async getMyInfo() {
     try {
-      const { defaultAccount } = web3Instance;
+      const { defaultAccount } = this.props;
       const memberLength = await onlyCallContractMethod(
         web3Instance,
         "Gov",

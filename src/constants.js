@@ -11,7 +11,7 @@ export const TESTNET_CONTRACTS = [
     address: "0xB96F108819425EBB5b3EF180e2B6CaC06f624D39",
   },
   { name: "Staking", address: "0x301584bd9aA6CEd0d617f7DeDF3912863C1d3cf7" },
-  { name: "GovImp", address: "0xF9572E0cDAc41a3ea178a9F793F7B22561b9bfE7" },
+  { name: "GovImp", address: "0x6896239a6450355120646713C9296DC820E9041A" },
   { name: "Gov", address: "0x6896239a6450355120646713C9296DC820E9041A" },
 ];
 export const MAINNET_CONTRACTS = [

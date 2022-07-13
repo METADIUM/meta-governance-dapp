@@ -399,7 +399,7 @@ class Voting extends React.Component {
 
   sendTransaction(trx, type, init = false) {
     try {
-      trx.from = web3Instance.defaultAccount;
+      trx.from = this.props.defaultAccount;
       web3Instance.web3.eth.sendTransaction(trx, (err, hash) => {
         if (err) {
           throw err;
@@ -577,6 +577,7 @@ class Voting extends React.Component {
             votingDurationMax={this.props.votingDurationMax}
             votingDurationMin={this.props.votingDurationMin}
             selectedMenu={this.props.selectedMenu}
+            defaultAccount={this.props.defaultAccount}
           />
         )}
       </div>
