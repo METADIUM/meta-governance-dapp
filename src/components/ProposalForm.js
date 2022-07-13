@@ -88,7 +88,10 @@ class ProposalForm extends React.Component {
 
   getLockAmount = async (addr) => {
     if (!/^0x[a-fA-F0-9]{40}$/.test(addr)) {
-      this.props.getErrModal("Invalid Adress", "Proposal Submit Error");
+      this.props.getErrModal(
+        "Voting Address is Invalid",
+        "Proposal Submit Error"
+      );
       this.setState({ showLockAmount: "" });
       return;
     } else if (!web3Instance.web3.utils.checkAddressChecksum(addr)) {

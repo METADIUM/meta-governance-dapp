@@ -149,14 +149,17 @@ class Voting extends React.Component {
     newVotingAddr,
     newRewardAddr
   ) => {
-    if (
-      type === constants.ballotTypes.ReplaceAuthorityMember &&
-      oldStakerAddr === newStakerAddr
-    ) {
-      if (newStakerAddr !== newVotingAddr) {
-        return "Voting Address";
-      } else if (newStakerAddr !== newRewardAddr) {
-        return "Reward Address";
+    // to distinguish whether it came from a search
+    if (oldStakerAddr && newStakerAddr && newVotingAddr && newRewardAddr) {
+      if (
+        type === constants.ballotTypes.ReplaceAuthorityMember &&
+        oldStakerAddr === newStakerAddr
+      ) {
+        if (newStakerAddr !== newVotingAddr) {
+          return "Voting Address";
+        } else if (newStakerAddr !== newRewardAddr) {
+          return "Reward Address";
+        }
       }
     }
     if (type === constants.ballotTypes.ChangedEnv) {
@@ -480,20 +483,15 @@ class Voting extends React.Component {
     return ballots.filter((value) => {
       let topic = this.setTopic(
         value.props.item.ballotType,
-        value.props.newMemberAddress,
-        value.props.oldMemberAddress,
-        value.props.newVotingAddress,
-        value.props.newRewardAddress
+        value.props.ballotMemberOriginData.envVariableName,
+        value.props.ballotMemberOriginData.newMemberAddress,
+        value.props.ballotMemberOriginData.oldMemberAddress,
+        value.props.ballotMemberOriginData.newVotingAddress,
+        value.props.ballotMemberOriginData.newRewardAddress
       );
-      return [
-        topic,
-        value.props.authorityName,
-        value.props.item.creator,
-        value.props.newMemberAddress,
-        value.props.oldMemberAddress,
-        value.props.newVotingAddress,
-        value.props.newRewardAddress,
-      ].some((elem) => elem.toLowerCase().indexOf(str) !== -1);
+      return [topic, value.props.item.creator].some((elem) => {
+        return elem.toLowerCase().indexOf(str) !== -1;
+      });
     });
   }
 
