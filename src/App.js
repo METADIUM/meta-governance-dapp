@@ -4,7 +4,7 @@ import {
   contracts,
   initContractsByNames,
   constants as metaWeb3Constants,
-} from "meta-web3";
+} from "wemix-web3";
 
 import {
   TopNav,

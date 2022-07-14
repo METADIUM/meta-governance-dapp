@@ -1,5 +1,5 @@
 import Web3 from "web3";
-import { constants as metaWeb3Constants } from "meta-web3";
+import { constants as metaWeb3Constants } from "wemix-web3";
 import { MAINNET_CHAIN_INFO, TESTNET_CHAIN_INFO } from "./constants";
 
 var web3Instance;
