@@ -312,7 +312,7 @@ class ProposalForm extends React.Component {
         break;
       // Block Reward Amount
       case "blockRewardAmount":
-        if (!/^([0-9]*)$/.test(e.target.value))
+        if (!/^([0-9.]*)$/.test(e.target.value))
           this.data.formData[e.target.name] = originStr;
         else
           this.setState({

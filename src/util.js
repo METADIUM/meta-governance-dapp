@@ -191,7 +191,7 @@ export const checkBlockCreationTime = (time) => {
 
 // at least 1 and error with 18 decimal place or more
 export const checkRewardAmount = (amount) => {
-  return /^[1-9]+\.?([0-9]{1,17})?$/.test(amount);
+  return /^[1-9]\.?([0-9]{1,18})?$/.test(amount);
 };
 
 // check if value is greater than or less than
