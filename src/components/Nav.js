@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Row, Menu, Input, Affix } from "antd";
 
 import "./style/style.css";
 import WalletButton from "./WalletButton";
+import { ConnectWalletModal } from "./Modal";
+import WalletPage from "./WalletPage";
 
 const TopNav = ({
   netName,
@@ -13,8 +15,10 @@ const TopNav = ({
   onMenuClick = (f) => f,
   getStakingModal = (f) => f,
   isLogin,
+  onLogin,
   onLogout,
-  connectWallet,
+  walletVisible,
+  setWalletModal,
 }) => (
   <Row className="container flex">
     <div className="header-logo flex flex-center-horizontal">
@@ -43,7 +47,6 @@ const TopNav = ({
     <div className="header-staking flex flex-center-horizontal flex-end-vertical flex-full">
       {isLogin && (
         <>
-          {" "}
           <div className="flex flex-full flex-column flex-center-vertical">
             <p className={"staked " + netName}>Staked {myBalance} WEMIX</p>
             <p className={"wemix " + netName}>
@@ -62,8 +65,14 @@ const TopNav = ({
       <WalletButton
         isLogin={isLogin}
         onLogout={onLogout}
-        connectWallet={connectWallet}
+        setWalletModal={setWalletModal}
       />
+      <ConnectWalletModal
+        visible={walletVisible}
+        setWalletModal={setWalletModal}
+      >
+        <WalletPage onLogin={onLogin} setWalletModal={setWalletModal} />
+      </ConnectWalletModal>
     </div>
   </Row>
 );

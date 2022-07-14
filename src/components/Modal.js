@@ -172,4 +172,24 @@ const ChangeModal = ({
   );
 };
 
-export { StakingModal, ErrModal, AccessFailedModal, ChangeModal };
+const ConnectWalletModal = ({ children, visible, SetWalletModal }) => {
+  return (
+    <Modal
+      visible={visible}
+      // onOk={}
+      closable={false}
+      onCancel={SetWalletModal}
+      footer={null}
+    >
+      {children}
+    </Modal>
+  );
+};
+
+export {
+  StakingModal,
+  ErrModal,
+  AccessFailedModal,
+  ChangeModal,
+  ConnectWalletModal,
+};

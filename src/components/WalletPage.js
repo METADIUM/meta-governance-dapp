@@ -4,7 +4,7 @@ import { web3Instance } from "../web3";
 import { web3Modal } from "../web3Modal";
 import { walletTypes } from "../constants";
 
-const WalletPage = ({ onLogin }) => {
+const WalletPage = ({ onLogin, setWalletModal }) => {
   const alertInstall = () => {
     alert("Metamask extension required");
   };
@@ -66,6 +66,7 @@ const WalletPage = ({ onLogin }) => {
       <Button onClick={() => setProvider(walletTypes.COIN_BASE)}>
         Coinbase Wallet
       </Button>
+      <Button onClick={() => setWalletModal()}>Close</Button>
     </div>
   );
 };

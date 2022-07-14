@@ -54,7 +54,6 @@ class App extends React.Component {
     // voting duration
     votingDurationMin: null,
     votingDurationMax: null,
-    redirectNav: "1",
     nowWalletType: null,
   };
 
@@ -73,6 +72,7 @@ class App extends React.Component {
     isLogin: false,
     defaultAccount: null,
     isMember: false,
+    walletVisible: false,
   };
 
   constructor(props) {
@@ -123,8 +123,8 @@ class App extends React.Component {
 
     this.setState({
       isLogin: true,
-      nav: this.data.redirectNav,
       defaultAccount: account,
+      walletVisible: false,
     });
   };
   onLogout = () => {
@@ -138,11 +138,10 @@ class App extends React.Component {
       isMember: false,
     });
   };
-  connectWallet = () => {
-    if (this.state.nav !== "0") {
-      this.data.redirectNav = this.state.nav; // save redirect page
-      this.onMenuClick({ key: "0" }); // route connect wallet page
-    }
+  setWalletModal = () => {
+    this.setState({
+      walletVisible: !this.state.walletVisible,
+    });
   };
 
   // update data related to new account
@@ -673,8 +672,10 @@ class App extends React.Component {
                 onMenuClick={this.onMenuClick}
                 getStakingModal={this.getStakingModal}
                 isLogin={this.state.isLogin}
+                onLogin={this.onLogin}
                 onLogout={this.onLogout}
-                connectWallet={this.connectWallet}
+                walletVisible={this.state.walletVisible}
+                setWalletModal={this.setWalletModal}
               />
             </Header>
 

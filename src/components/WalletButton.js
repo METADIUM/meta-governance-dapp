@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "antd";
 import { web3Modal } from "../web3Modal";
 
-export default ({ isLogin, onLogout, connectWallet }) => {
+export default ({ isLogin, onLogout, setWalletModal }) => {
   const disConnect = () => {
     web3Modal.clearCachedProvider();
     localStorage.clear();
@@ -15,7 +15,7 @@ export default ({ isLogin, onLogout, connectWallet }) => {
         <Button
           type="primary"
           style={{ marginLeft: "10px" }}
-          onClick={connectWallet}
+          onClick={setWalletModal}
         >
           Connect Wallet
         </Button>
