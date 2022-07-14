@@ -9,6 +9,7 @@ const Option = Select.Option;
 
 const StakingModal = ({
   netName,
+  isMember,
   accountBalance,
   stakingModalVisible,
   loading,
@@ -45,7 +46,9 @@ const StakingModal = ({
       onChange={handleSelectChange}
       disabled={loading}
     >
-      <Option value="deposit">Additional Staking</Option>
+      <Option value="deposit">
+        {isMember ? "Additional" : "Deposit"} Staking
+      </Option>
       <Option value="withdraw">Withdraw Staking</Option>
     </Select>
     <Input

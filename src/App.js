@@ -549,6 +549,7 @@ class App extends React.Component {
 
             <StakingModal
               netName={web3Instance.netName}
+              isMember={this.data.isMember}
               accountBalance={{
                 balance: this.data.myBalance,
                 lockedBalance: this.data.myLockedBalance,
