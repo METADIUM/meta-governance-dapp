@@ -140,10 +140,13 @@ export const refineSubmitData = (m) => {
   Object.keys(copy).forEach((key) => {
     if (!isNaN(key)) return delete copy[key];
     switch (key) {
+      case "oldStaker":
       case "staker":
       case "voter":
       case "reward":
       case "newGovAddr":
+      case "newVotingAddr":
+      case "newRewardAddr":
         copy[key] = web3Instance.web3.utils.toChecksumAddress(copy[key]);
         break;
       case "lockAmount":
