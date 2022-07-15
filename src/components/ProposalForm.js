@@ -909,8 +909,16 @@ class ProposalForm extends React.Component {
         case "VotingAddress": {
           const { staker, name, lockAmount, enode, ip, port, newVotingAddr } =
             data;
+          const { oldVotingAddr } = this.state;
           // check undefined
           if (util.checkUndefined(newVotingAddr)) {
+            this.setState({
+              newVotingAddrErr: !this.state.newVotingAddrErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          if (oldVotingAddr === newVotingAddr) {
             this.setState({
               newVotingAddrErr: !this.state.newVotingAddrErr,
             });
@@ -935,8 +943,16 @@ class ProposalForm extends React.Component {
         case "RewardAddress": {
           const { staker, name, lockAmount, enode, ip, port, newRewardAddr } =
             data;
+          const { oldRewardAddr } = this.state;
           // check undefined
           if (util.checkUndefined(newRewardAddr)) {
+            this.setState({
+              newRewardAddrErr: !this.state.newRewardAddrErr,
+            });
+            this.props.convertLoading(false);
+            return;
+          }
+          if (oldRewardAddr === newRewardAddr) {
             this.setState({
               newRewardAddrErr: !this.state.newRewardAddrErr,
             });
@@ -1048,15 +1064,15 @@ class ProposalForm extends React.Component {
       const { defaultAccount } = web3Instance;
       const memberLength = await this.governance.getMemberLength();
       let memberIdx = 0;
-      let oldVotingAddr = "";
       for (let i = 1; i <= memberLength; i++) {
-        oldVotingAddr = await this.governance.getMember(i);
-        if (oldVotingAddr === defaultAccount) {
+        const staker = await this.governance.getMember(i);
+        if (staker === defaultAccount) {
           memberIdx = i;
           break;
         }
       }
       // get member info
+      const oldVotingAddr = await this.governance.getVoter(memberIdx);
       const oldRewardAddr = await this.governance.getReward(memberIdx);
       const { name, enode, ip, port } = await this.governance.getNode(
         memberIdx
