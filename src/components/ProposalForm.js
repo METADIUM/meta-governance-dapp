@@ -1038,6 +1038,7 @@ class ProposalForm extends React.Component {
                   window.location.reload();
                 } else {
                   await this.props.convertComponent("voting");
+                  this.props.convertLoading(false);
                 }
               } else {
                 this.props.getErrModal(
@@ -1045,6 +1046,7 @@ class ProposalForm extends React.Component {
                   "Proposal Submit Error",
                   receipt.transactionHash
                 );
+                this.props.convertLoading(false);
               }
             });
           }
@@ -1053,7 +1055,6 @@ class ProposalForm extends React.Component {
     } catch (err) {
       console.log(err);
       this.props.getErrModal(err.message, err.name);
-    } finally {
       this.props.convertLoading(false);
     }
   }
