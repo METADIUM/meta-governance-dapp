@@ -3,12 +3,9 @@ import { Button } from "antd";
 import { web3Instance } from "../web3";
 import { web3Modal } from "../web3Modal";
 import { walletTypes } from "../constants";
-import { map } from "underscore";
 
 const WalletPage = ({ onLogin, setWalletModal }) => {
   const wallets = web3Modal.userOptions;
-  console.log(wallets);
-  console.log(1, window.ethereum);
 
   const alertInstall = () => {
     alert("Metamask extension required");
