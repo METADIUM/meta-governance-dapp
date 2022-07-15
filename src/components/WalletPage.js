@@ -3,8 +3,13 @@ import { Button } from "antd";
 import { web3Instance } from "../web3";
 import { web3Modal } from "../web3Modal";
 import { walletTypes } from "../constants";
+import { map } from "underscore";
 
 const WalletPage = ({ onLogin, setWalletModal }) => {
+  const wallets = web3Modal.userOptions;
+  console.log(wallets);
+  console.log(1, window.ethereum);
+
   const alertInstall = () => {
     alert("Metamask extension required");
   };
@@ -49,23 +54,52 @@ const WalletPage = ({ onLogin, setWalletModal }) => {
 
   const setProvider = async (walletType) => {
     const newProvider = await getProvider(walletType);
+    if (!newProvider) {
+      console.log("Can't set a new Provider!");
+      return;
+    }
+
+    newProvider.on("accountsChanged", function (accounts) {
+      alert("A change", accounts);
+    });
+    newProvider.on("chainChanged", function (chainId) {
+      alert("chain change", chainId);
+    });
+    newProvider.on("disconnect", function (code, reason) {
+      alert("disconnect", code, reason);
+    });
 
     web3Instance.web3.setProvider(newProvider);
     await onLogin(walletType);
-    console.log("Set new Provider!", newProvider);
+    console.log("Set a new Provider!", newProvider);
+  };
+
+  const ConnectButton = ({ wallet, index, size = "30px" }) => {
+    if (
+      index === 0 &&
+      wallet.name !== "MetaMask" &&
+      wallet.name !== "WalletConnect"
+    ) {
+      return <></>;
+    }
+
+    return (
+      <Button size={"large"} onClick={() => setProvider(wallet.id)}>
+        <img
+          src={wallet.logo}
+          alt="wallet img"
+          style={{ width: size, height: size, marginRight: "10px" }}
+        />
+        <p>{wallet.name}</p>
+      </Button>
+    );
   };
 
   return (
     <div>
-      <Button onClick={() => setProvider(walletTypes.META_MASK)}>
-        MetaMask
-      </Button>
-      <Button onClick={() => setProvider(walletTypes.WALLET_CONNECT)}>
-        WalletConnect
-      </Button>
-      <Button onClick={() => setProvider(walletTypes.COIN_BASE)}>
-        Coinbase Wallet
-      </Button>
+      {wallets.map((wallet, index) => (
+        <ConnectButton key={index} wallet={wallet} index={index} />
+      ))}
       <Button onClick={() => setWalletModal()}>Close</Button>
     </div>
   );

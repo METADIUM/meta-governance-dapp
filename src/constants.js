@@ -127,7 +127,7 @@ export const ENV_NAMES = {
 };
 
 export const walletTypes = {
-  META_MASK: "metamask",
+  META_MASK: "injected",
   WALLET_CONNECT: "walletconnect",
   COIN_BASE: "walletlink",
 };
