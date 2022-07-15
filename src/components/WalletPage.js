@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "antd";
 import { web3Instance } from "../web3";
 import { web3Modal } from "../web3Modal";
 import { walletTypes } from "../constants";
+import { ErrModal } from "./Modal";
 
 const WalletPage = ({ onLogin, setWalletModal }) => {
   const wallets = web3Modal.userOptions;
 
-  const alertInstall = () => {
-    alert("Metamask extension required");
+  const [errVisible, setErrVisible] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const [errTitle, setErrTitle] = useState("Error");
+
+  const closeErrModal = () => {
+    setErrVisible(false);
+    setErrMsg("");
   };
 
   const getProvider = async (walletType) => {
@@ -16,30 +22,17 @@ const WalletPage = ({ onLogin, setWalletModal }) => {
 
     switch (walletType) {
       case walletTypes.META_MASK:
-        // check for installed extension
-        if (window.ethereum) {
-          // check if there are multiple extensions
-          if (window.ethereum.providers) {
-            // search metamask provider
-            let noMetaMask = true;
-            window.ethereum.providers.forEach((item) => {
-              if (item.isMetaMask) {
-                provider = item;
-                noMetaMask = false;
-              }
-            });
-            if (noMetaMask) alertInstall();
-          } else {
-            // There is only one extension
-            // check if it is a metamask
-            if (window.ethereum.isMetaMask) {
-              provider = window.ethereum;
-            } else {
-              alertInstall();
+        // check if there are multiple extensions
+        if (window.ethereum.providers) {
+          // search metamask provider
+          window.ethereum.providers.forEach((item) => {
+            if (item.isMetaMask) {
+              provider = item;
             }
-          }
+          });
         } else {
-          alertInstall();
+          // There is only one extension
+          provider = window.ethereum;
         }
         break;
       default:
@@ -98,6 +91,14 @@ const WalletPage = ({ onLogin, setWalletModal }) => {
         <ConnectButton key={index} wallet={wallet} index={index} />
       ))}
       <Button onClick={() => setWalletModal()}>Close</Button>
+
+      <ErrModal
+        netName={web3Instance.netName}
+        title={errTitle}
+        err={errMsg}
+        visible={errVisible}
+        coloseErrModal={closeErrModal}
+      />
     </div>
   );
 };
