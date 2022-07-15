@@ -142,6 +142,7 @@ class Voting extends React.Component {
 
   // show proposal name
   setTopic = (
+    creator,
     type,
     name,
     oldStakerAddr,
@@ -150,14 +151,20 @@ class Voting extends React.Component {
     newRewardAddr
   ) => {
     // to distinguish whether it came from a search
-    if (oldStakerAddr && newStakerAddr && newVotingAddr && newRewardAddr) {
+    if (
+      creator &&
+      oldStakerAddr &&
+      newStakerAddr &&
+      newVotingAddr &&
+      newRewardAddr
+    ) {
       if (
         type === constants.ballotTypes.ReplaceAuthorityMember &&
-        oldStakerAddr === newStakerAddr
+        creator === oldStakerAddr
       ) {
-        if (newStakerAddr !== newVotingAddr) {
+        if (oldStakerAddr !== newVotingAddr) {
           return "Voting Address";
-        } else if (newStakerAddr !== newRewardAddr) {
+        } else if (oldStakerAddr !== newRewardAddr) {
           return "Reward Address";
         }
       }
@@ -482,6 +489,7 @@ class Voting extends React.Component {
   filteringBallot(ballots, str) {
     return ballots.filter((value) => {
       let topic = this.setTopic(
+        value.props.item.creator,
         value.props.item.ballotType,
         value.props.ballotMemberOriginData.envVariableName,
         value.props.ballotMemberOriginData.newMemberAddress,

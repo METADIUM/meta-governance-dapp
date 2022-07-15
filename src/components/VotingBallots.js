@@ -38,6 +38,7 @@ const VotingBallots = ({
         <div className="infoLeft flex-full">
           <p className="topic text-exlarge text-bold">
             {setTopic(
+              item.creator,
               item.ballotType,
               ballotMemberOriginData.envVariableName,
               newStakerAddress,
