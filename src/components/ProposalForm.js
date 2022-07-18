@@ -89,7 +89,7 @@ class ProposalForm extends React.Component {
   getLockAmount = async (addr) => {
     if (!/^0x[a-fA-F0-9]{40}$/.test(addr)) {
       this.props.getErrModal(
-        "Voting Address is Invalid",
+        "Staking Address is Invalid.",
         "Proposal Submit Error"
       );
       this.setState({ showLockAmount: "" });
