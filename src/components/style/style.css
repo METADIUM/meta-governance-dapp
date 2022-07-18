@@ -532,6 +532,8 @@
 
 .ballotContentDiv .memoDiv p:last-child {
   color: rgba(0, 0, 0, 0.6);
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .ballotContentDiv .revokeDiv {

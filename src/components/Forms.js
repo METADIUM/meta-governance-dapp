@@ -250,7 +250,7 @@ export const ReplaceProposalForm = ({
             onChange={handleChange}
           />
           <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
-            Invaild Address
+            Invalid Address
           </p>
         </Form.Item>
       </div>
