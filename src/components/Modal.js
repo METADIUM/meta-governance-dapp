@@ -172,16 +172,41 @@ const ChangeModal = ({
   );
 };
 
-const ConnectWalletModal = ({ children, visible, SetWalletModal }) => {
+const ConnectWalletModal = ({ children, visible, setWalletModal }) => {
   return (
     <Modal
       visible={visible}
-      // onOk={}
-      closable={false}
-      onCancel={SetWalletModal}
+      title={"Wallet Connect"}
+      onCancel={setWalletModal}
       footer={null}
     >
       {children}
+    </Modal>
+  );
+};
+
+const DisConnectWalletModal = ({
+  children,
+  visible,
+  logoutHandler,
+  disConnected,
+}) => {
+  return (
+    <Modal
+      visible={visible}
+      title={"Disconnect"}
+      onCancel={logoutHandler}
+      onOk={disConnected}
+      footer={[
+        <Button className="discon-cancel-btn" key="1" onClick={logoutHandler}>
+          Cancel
+        </Button>,
+        <Button className="discon-ok-btn" key="2" onClick={disConnected}>
+          Okay
+        </Button>,
+      ]}
+    >
+      <p className="modal-disconnect-title">Disconnect your Wallet?</p>
     </Modal>
   );
 };
@@ -192,4 +217,5 @@ export {
   AccessFailedModal,
   ChangeModal,
   ConnectWalletModal,
+  DisConnectWalletModal,
 };

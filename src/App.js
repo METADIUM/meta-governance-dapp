@@ -377,12 +377,12 @@ class App extends React.Component {
 
     this.data.voteLength = await onlyCallContractMethod(
       web3Instance,
-      "Gov",
+      "GovImp",
       "voteLength"
     );
     const ballotCnt = await onlyCallContractMethod(
       web3Instance,
-      "Gov",
+      "GovImp",
       "ballotLength"
     );
     if (!ballotCnt) return;
@@ -676,6 +676,8 @@ class App extends React.Component {
                 onLogout={this.onLogout}
                 walletVisible={this.state.walletVisible}
                 setWalletModal={this.setWalletModal}
+                defaultAccount={this.state.defaultAccount}
+                nowWalletType={this.data.nowWalletType}
               />
             </Header>
 

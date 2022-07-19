@@ -1194,13 +1194,13 @@ class ProposalForm extends React.Component {
       // get member info
       const oldRewardAddr = await callContractMethod(
         web3Instance,
-        "Gov",
+        "GovImp",
         "getReward",
         memberIdx
       );
       const { name, enode, ip, port } = await callContractMethod(
         web3Instance,
-        "Gov",
+        "GovImp",
         "getNode",
         memberIdx
       );
