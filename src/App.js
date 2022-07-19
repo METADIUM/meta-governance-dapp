@@ -54,7 +54,6 @@ class App extends React.Component {
     // voting duration
     votingDurationMin: null,
     votingDurationMax: null,
-    nowWalletType: null,
   };
 
   state = {
@@ -73,13 +72,16 @@ class App extends React.Component {
     defaultAccount: null,
     isMember: false,
     walletVisible: false,
+    nowWalletType: null,
   };
 
   constructor(props) {
     super(props);
+    localStorage.clear();
     this.getContractAuthorityBallots =
       this.getContractAuthorityBallots.bind(this);
     this.refreshContractData = this.refreshContractData.bind(this);
+    this.updateAccountData = this.updateAccountData.bind(this);
 
     // get web3Modal instance
     getWeb3Modal();
@@ -117,14 +119,13 @@ class App extends React.Component {
   // }
 
   onLogin = async (walletType) => {
-    this.data.nowWalletType = walletType;
     const account = await getAccounts(walletType);
     this.updateAccountData(account);
 
     this.setState({
       isLogin: true,
-      defaultAccount: account,
       walletVisible: false,
+      nowWalletType: walletType,
     });
   };
   onLogout = () => {
@@ -154,7 +155,7 @@ class App extends React.Component {
       "isMember",
       newAccount
     );
-    this.setState({ isMember });
+    this.setState({ isMember, defaultAccount: newAccount });
   }
 
   // get governance setting variables from contract data
@@ -377,12 +378,12 @@ class App extends React.Component {
 
     this.data.voteLength = await onlyCallContractMethod(
       web3Instance,
-      "Gov",
+      "GovImp",
       "voteLength"
     );
     const ballotCnt = await onlyCallContractMethod(
       web3Instance,
-      "Gov",
+      "GovImp",
       "ballotLength"
     );
     if (!ballotCnt) return;
@@ -676,6 +677,8 @@ class App extends React.Component {
                 onLogout={this.onLogout}
                 walletVisible={this.state.walletVisible}
                 setWalletModal={this.setWalletModal}
+                updateAccountData={this.updateAccountData}
+                nowWalletType={this.state.nowWalletType}
               />
             </Header>
 

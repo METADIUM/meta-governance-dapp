@@ -19,6 +19,8 @@ const TopNav = ({
   onLogout,
   walletVisible,
   setWalletModal,
+  updateAccountData,
+  nowWalletType,
 }) => (
   <Row className="container flex">
     <div className="header-logo flex flex-center-horizontal">
@@ -71,7 +73,13 @@ const TopNav = ({
         visible={walletVisible}
         setWalletModal={setWalletModal}
       >
-        <WalletPage onLogin={onLogin} setWalletModal={setWalletModal} />
+        <WalletPage
+          onLogin={onLogin}
+          onLogout={onLogout}
+          setWalletModal={setWalletModal}
+          updateAccountData={updateAccountData}
+          nowWalletType={nowWalletType}
+        />
       </ConnectWalletModal>
     </div>
   </Row>

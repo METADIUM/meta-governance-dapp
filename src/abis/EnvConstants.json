@@ -1,0 +1,297 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "EnvConstants",
+  "sourceName": "contracts/abstract/EnvConstants.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "BALLOT_DURATION_MAX_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BALLOT_DURATION_MIN_MAX_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BALLOT_DURATION_MIN_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BASE_FEE_MAX_CHANGE_RATE_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BLOCKS_PER_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BLOCK_CREATION_TIME_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BLOCK_GASLIMIT_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BLOCK_REWARD_AMOUNT_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BLOCK_REWARD_DISTRIBUTION_BLOCK_PRODUCER_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BLOCK_REWARD_DISTRIBUTION_ECOSYSTEM_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BLOCK_REWARD_DISTRIBUTION_MAINTANANCE_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BLOCK_REWARD_DISTRIBUTION_METHOD_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BLOCK_REWARD_DISTRIBUTION_STAKING_REWARD_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "DENOMINATOR",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "GASLIMIT_AND_BASE_FEE_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "GAS_TARGET_PERCENTAGE_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_BASE_FEE_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_IDLE_BLOCK_INTERVAL_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_PRIORITY_FEE_PER_GAS_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "STAKING_MAX_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "STAKING_MIN_MAX_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "STAKING_MIN_NAME",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b506104ca806100206000396000f3fe608060405234801561001057600080fd5b50600436106101415760003560e01c80637b2bfb01116100b8578063c00ace6c1161007c578063c00ace6c146103aa578063c0b4fe15146103d1578063c42a0abc146103f8578063c6713baf1461041f578063c7d3da3414610446578063f38ecf471461046d57600080fd5b80637b2bfb0114610305578063918f86741461032c578063a6868b7d14610335578063a9b629b21461035c578063b128f8801461038357600080fd5b80633f35c8fe1161010a5780633f35c8fe1461021b5780634d273e28146102425780636167eb4514610269578063656e3052146102905780636d583ca7146102b75780636fde207a146102de57600080fd5b806215a73b146101465780630b1d39b81461017f578063238737b6146101a6578063278bb12a146101cd57806338294419146101f4575b600080fd5b61016d7f0c4fbe9dc9de15dd7c0d064975ee1a2f2f9b954fa0e65d4f6cddba94884bdc3e81565b60405190815260200160405180910390f35b61016d7fdd5a41a7fc01f5c6d30816b17f638d6531625f1e1eaa599673ab2f6079f2dd9d81565b61016d7f1d36f8ce53f59e624857e1d8dc7932d19981a2ea1b8faa4eb8ff843fc3e5a27881565b61016d7f9b2e0c7fdae148f225bae7deb92d7e7bd24bb77edb12956e8fa7204900dd8a2281565b61016d7fbe90e461bbdb9a95a694f7796912ea04244caf7f5b60ad7ded17e16821d3e44c81565b61016d7f2a268972a70c8c688b62366bdfdd9bb09cf19d3e5b6e7e7bb158e671ffdcedd281565b61016d7f77884798208df1e64f70968be41ef2d3211ec53613397ca59313416813df088881565b61016d7f9f1de481f899d76889aa8a2b44cc7b604d42691aa93d4ba618a1a1fd439f505081565b61016d7fe10074dceffb75f13bf0ce50145afd35182d63796823f1280ce40e01c19109e781565b61016d7fc69fc6b7d0efc934fd5a3581c7253a7107a952526bb6dbcd814ef8d8dae1f44a81565b61016d7f0b09c9badbbeb6c813a598ee910770a39ccda797a1940439bb6e47fc6c87548b81565b61016d7f9346226931826838eedd13d9677fa33551e7c81f604b171ef3fac355458da9aa81565b61016d61271081565b61016d7f6c6f69f426081752a5d3e73746599acd2a4cb145d5de4203ca1e3473b281680b81565b61016d7f89dd490ecaf395283ed4ff2fd9557ca767fc425dce063451a9b0da6d72f600c381565b61016d7f829561ab7af084b7efc6600518d2df79b8d95f3f4c3a550f54f8f7ec7d2b805781565b61016d7f18ad4415ef4a621ce1a136395c51ab6c3712bb2e24b79d526059925cea58dcb881565b61016d7f8086da5becff4dfac91a3105821b361078d2d4abba0ccc2401b974cf0dcf05c181565b61016d7fb38b2c133e931937bd95337c65c8aefa7040ed64bbed732e3e29a4944c65747381565b61016d7fc9e15e34073efbcd0328740feaf503caac9124b55b38c73d1a97b53da80a2f6081565b61016d7f04f7b94450bbcad85f37ea47cd1062728f884bb2040e357738f8fd53056134bc81565b61016d7f7c1150f0e1a39ff55552d52764f97e6c387e2a247e1df344369f122c4254be2f8156fea2646970667358221220535e596f0f1bb2ff50740c29ad3c14301441f6b600c973a3dc54032df7bfd78364736f6c63430008060033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101415760003560e01c80637b2bfb01116100b8578063c00ace6c1161007c578063c00ace6c146103aa578063c0b4fe15146103d1578063c42a0abc146103f8578063c6713baf1461041f578063c7d3da3414610446578063f38ecf471461046d57600080fd5b80637b2bfb0114610305578063918f86741461032c578063a6868b7d14610335578063a9b629b21461035c578063b128f8801461038357600080fd5b80633f35c8fe1161010a5780633f35c8fe1461021b5780634d273e28146102425780636167eb4514610269578063656e3052146102905780636d583ca7146102b75780636fde207a146102de57600080fd5b806215a73b146101465780630b1d39b81461017f578063238737b6146101a6578063278bb12a146101cd57806338294419146101f4575b600080fd5b61016d7f0c4fbe9dc9de15dd7c0d064975ee1a2f2f9b954fa0e65d4f6cddba94884bdc3e81565b60405190815260200160405180910390f35b61016d7fdd5a41a7fc01f5c6d30816b17f638d6531625f1e1eaa599673ab2f6079f2dd9d81565b61016d7f1d36f8ce53f59e624857e1d8dc7932d19981a2ea1b8faa4eb8ff843fc3e5a27881565b61016d7f9b2e0c7fdae148f225bae7deb92d7e7bd24bb77edb12956e8fa7204900dd8a2281565b61016d7fbe90e461bbdb9a95a694f7796912ea04244caf7f5b60ad7ded17e16821d3e44c81565b61016d7f2a268972a70c8c688b62366bdfdd9bb09cf19d3e5b6e7e7bb158e671ffdcedd281565b61016d7f77884798208df1e64f70968be41ef2d3211ec53613397ca59313416813df088881565b61016d7f9f1de481f899d76889aa8a2b44cc7b604d42691aa93d4ba618a1a1fd439f505081565b61016d7fe10074dceffb75f13bf0ce50145afd35182d63796823f1280ce40e01c19109e781565b61016d7fc69fc6b7d0efc934fd5a3581c7253a7107a952526bb6dbcd814ef8d8dae1f44a81565b61016d7f0b09c9badbbeb6c813a598ee910770a39ccda797a1940439bb6e47fc6c87548b81565b61016d7f9346226931826838eedd13d9677fa33551e7c81f604b171ef3fac355458da9aa81565b61016d61271081565b61016d7f6c6f69f426081752a5d3e73746599acd2a4cb145d5de4203ca1e3473b281680b81565b61016d7f89dd490ecaf395283ed4ff2fd9557ca767fc425dce063451a9b0da6d72f600c381565b61016d7f829561ab7af084b7efc6600518d2df79b8d95f3f4c3a550f54f8f7ec7d2b805781565b61016d7f18ad4415ef4a621ce1a136395c51ab6c3712bb2e24b79d526059925cea58dcb881565b61016d7f8086da5becff4dfac91a3105821b361078d2d4abba0ccc2401b974cf0dcf05c181565b61016d7fb38b2c133e931937bd95337c65c8aefa7040ed64bbed732e3e29a4944c65747381565b61016d7fc9e15e34073efbcd0328740feaf503caac9124b55b38c73d1a97b53da80a2f6081565b61016d7f04f7b94450bbcad85f37ea47cd1062728f884bb2040e357738f8fd53056134bc81565b61016d7f7c1150f0e1a39ff55552d52764f97e6c387e2a247e1df344369f122c4254be2f8156fea2646970667358221220535e596f0f1bb2ff50740c29ad3c14301441f6b600c973a3dc54032df7bfd78364736f6c63430008060033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

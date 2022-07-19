@@ -1174,7 +1174,7 @@ class ProposalForm extends React.Component {
       const { defaultAccount } = this.props;
       const memberLength = await onlyCallContractMethod(
         web3Instance,
-        "Gov",
+        "GovImp",
         "getMemberLength"
       );
       let memberIdx = 0;
@@ -1182,7 +1182,7 @@ class ProposalForm extends React.Component {
       for (let i = 1; i <= memberLength; i++) {
         oldVotingAddr = await callContractMethod(
           web3Instance,
-          "Gov",
+          "GovImp",
           "getMember",
           i
         );
@@ -1194,13 +1194,13 @@ class ProposalForm extends React.Component {
       // get member info
       const oldRewardAddr = await callContractMethod(
         web3Instance,
-        "Gov",
+        "GovImp",
         "getReward",
         memberIdx
       );
       const { name, enode, ip, port } = await callContractMethod(
         web3Instance,
-        "Gov",
+        "GovImp",
         "getNode",
         memberIdx
       );

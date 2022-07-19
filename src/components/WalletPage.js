@@ -1,66 +1,101 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "antd";
-import { web3Instance } from "../web3";
+import { chainInfo, web3Instance } from "../web3";
 import { web3Modal } from "../web3Modal";
 import { walletTypes } from "../constants";
 import { ErrModal } from "./Modal";
 
-const WalletPage = ({ onLogin, setWalletModal }) => {
+const WalletPage = ({
+  onLogin,
+  onLogout,
+  setWalletModal,
+  updateAccountData,
+  nowWalletType,
+}) => {
   const wallets = web3Modal.userOptions;
+  const {
+    chainId,
+    chainName,
+    rpcUrls,
+    blockExplorerUrls,
+    name,
+    decimals,
+    symbol,
+  } = chainInfo;
 
+  const [provider, setProvider] = useState(null);
   const [errVisible, setErrVisible] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [errTitle, setErrTitle] = useState("Error");
+
+  const openErrModal = (err) => {
+    setErrVisible(true);
+    setErrMsg(err);
+  };
 
   const closeErrModal = () => {
     setErrVisible(false);
     setErrMsg("");
   };
 
-  const getProvider = async (walletType) => {
-    let provider;
-
-    switch (walletType) {
-      case walletTypes.META_MASK:
-        // check if there are multiple extensions
-        if (window.ethereum.providers) {
-          // search metamask provider
-          window.ethereum.providers.forEach((item) => {
-            if (item.isMetaMask) {
-              provider = item;
-            }
-          });
-        } else {
-          // There is only one extension
-          provider = window.ethereum;
-        }
-        break;
-      default:
-        provider = await web3Modal.connectTo(walletType);
-    }
-
-    return provider;
+  // Adding WEMIX network to wallet
+  // Also includes network change when the current network is different
+  const addWemixNetwork = async (provider) => {
+    await provider.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId,
+          chainName,
+          rpcUrls: [rpcUrls],
+          blockExplorerUrls: [blockExplorerUrls],
+          nativeCurrency: { name, decimals, symbol },
+        },
+      ],
+    });
   };
 
-  const setProvider = async (walletType) => {
+  const getProvider = async (walletType) => {
+    let provider_tmp;
+    try {
+      switch (walletType) {
+        case walletTypes.META_MASK:
+          // check if there are multiple extensions
+          if (window.ethereum.providers) {
+            // search metamask provider
+            window.ethereum.providers.forEach((item) => {
+              if (item.isMetaMask) {
+                provider_tmp = item;
+              }
+            });
+          } else {
+            // There is only one extension
+            provider_tmp = window.ethereum;
+          }
+          break;
+        default:
+          provider_tmp = await web3Modal.connectTo(walletType);
+      }
+
+      await addWemixNetwork(provider_tmp);
+    } catch (err) {
+      openErrModal(err.message);
+      return;
+    }
+
+    return provider_tmp;
+  };
+
+  const changeProvider = async (walletType = nowWalletType) => {
     const newProvider = await getProvider(walletType);
     if (!newProvider) {
       console.log("Can't set a new Provider!");
       return;
     }
 
-    newProvider.on("accountsChanged", function (accounts) {
-      alert("A change", accounts);
-    });
-    newProvider.on("chainChanged", function (chainId) {
-      alert("chain change", chainId);
-    });
-    newProvider.on("disconnect", function (code, reason) {
-      alert("disconnect", code, reason);
-    });
-
     web3Instance.web3.setProvider(newProvider);
     await onLogin(walletType);
+    setProvider(newProvider);
     console.log("Set a new Provider!", newProvider);
   };
 
@@ -74,7 +109,7 @@ const WalletPage = ({ onLogin, setWalletModal }) => {
     }
 
     return (
-      <Button size={"large"} onClick={() => setProvider(wallet.id)}>
+      <Button size={"large"} onClick={() => changeProvider(wallet.id)}>
         <img
           src={wallet.logo}
           alt="wallet img"
@@ -84,6 +119,41 @@ const WalletPage = ({ onLogin, setWalletModal }) => {
       </Button>
     );
   };
+
+  const handleAccountsChanged = async (accounts) => {
+    await updateAccountData(accounts[0]);
+  };
+
+  const handleChainChanged = async (chainId) => {
+    const nowChainId = web3Instance.web3.utils.hexToNumber(chainId);
+
+    if (chainInfo.chainId == nowChainId) {
+      await changeProvider();
+    } else {
+      openErrModal("Your wallet is not on the right network.");
+      onLogout();
+    }
+  };
+
+  const handleDisconnect = () => {
+    alert("disconnect");
+  };
+
+  useEffect(() => {
+    if (provider && provider.on) {
+      provider.on("accountsChanged", handleAccountsChanged);
+      provider.on("chainChanged", handleChainChanged);
+      provider.on("disconnect", handleDisconnect);
+
+      return () => {
+        if (provider.removeListener) {
+          provider.removeListener("accountsChanged", handleAccountsChanged);
+          provider.removeListener("chainChanged", handleChainChanged);
+          provider.removeListener("disconnect", handleDisconnect);
+        }
+      };
+    }
+  }, [provider]);
 
   return (
     <div>
