@@ -838,7 +838,7 @@
   border-top: none !important;
 } */
 
-.ant-modal-footer {
+.dis-connect-foot .ant-modal-footer {
   border-top: none !important;
   display: flex;
   justify-content: space-between;

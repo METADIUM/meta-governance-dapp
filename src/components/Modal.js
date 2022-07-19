@@ -192,19 +192,20 @@ const DisConnectWalletModal = ({
 }) => {
   return (
     <Modal
+      className="dis-connect-foot"
       visible={visible}
       title={"Disconnect"}
       onCancel={() => setDisConnectView(false)}
       onOk={onDisConnect}
       footer={[
         <Button
+          key="cancel"
           className="discon-cancel-btn"
-          key="1"
           onClick={() => setDisConnectView(false)}
         >
           Cancel
         </Button>,
-        <Button className="discon-ok-btn" key="2" onClick={onDisConnect}>
+        <Button key="ok" className="discon-ok-btn" onClick={onDisConnect}>
           Okay
         </Button>,
       ]}
