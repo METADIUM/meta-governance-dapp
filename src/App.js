@@ -35,7 +35,6 @@ class App extends React.Component {
     stakingAmount: "",
     stakingMax: null,
     stakingMin: null,
-    eventsWatch: null,
     ballotMemberOriginData: {},
     ballotBasicOriginData: {},
     voteLength: 0,
@@ -110,7 +109,7 @@ class App extends React.Component {
       // detect when the MetaMask network is changed
       window.ethereum.on("chainChanged", () => window.location.reload());
 
-      this.setStakingEventsWatch();
+      this.stakingEventsWatch();
       // check if account is a proposalable member
       this.data.isMember = await contracts.governance.isMember(
         web3Instance.defaultAccount
@@ -143,7 +142,7 @@ class App extends React.Component {
     if (web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase()) {
       web3Instance.defaultAccount = account;
       await this.updateAccountBalance();
-      this.setStakingEventsWatch();
+      this.stakingEventsWatch();
       this.data.isMember = await contracts.governance.isMember(
         web3Instance.defaultAccount
       );
@@ -151,28 +150,28 @@ class App extends React.Component {
     }
   }
 
-  setStakingEventsWatch() {
-    if (this.data.eventsWatch) {
-      this.data.eventsWatch.unsubscribe((error, success) => {
-        if (error) console.log("Faild to unsubscribed!");
-        // else if (success) console.log('Successfully unsubscribed!')
-      });
-    }
-    var filteraddress = web3Instance.web3.eth.abi.encodeParameter(
-      "address",
-      web3Instance.defaultAccount
-    );
-    this.data.eventsWatch = contracts.staking.stakingInstance.events.allEvents(
-      {
-        fromBlock: "latest",
-        topics: [null, filteraddress],
-      },
-      (error, events) => {
-        // console.log(events)
-        if (error) console.log("error", error);
-        else this.updateAccountBalance();
+  // update balance (after send transaction, changed account)
+  async stakingEventsWatch() {
+    try {
+      // for getting only default accounts event
+      const filteraddress = web3Instance.web3.eth.abi.encodeParameter(
+        "address",
+        web3Instance.defaultAccount
+      );
+      const result = await contracts.staking.stakingInstance.getPastEvents(
+        "allEvents",
+        {
+          fromBlock: "latest",
+          topics: [null, filteraddress],
+        }
+      );
+      if (result) {
+        // update balance
+        this.updateAccountBalance();
       }
-    );
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   // set the minimum and maximum values that can be staked
@@ -499,17 +498,17 @@ class App extends React.Component {
     this.sendStakingTransaction(trx);
   };
 
-  sendStakingTransaction(trx) {
-    trx.from = web3Instance.defaultAccount;
-    web3Instance.web3.eth.sendTransaction(trx, async (err, hash) => {
-      if (err) {
-        console.log(err);
-        this.getErrModal(err.message, "Staking Error");
-      } else {
-        console.log("hash: ", hash);
+  async sendStakingTransaction(trx) {
+    try {
+      trx.from = web3Instance.defaultAccount;
+      const result = await web3Instance.web3.eth.sendTransaction(trx);
+      if (result) {
+        this.stakingEventsWatch();
+        this.setState({ stakingModalVisible: false, loading: false });
       }
-      this.setState({ stakingModalVisible: false, loading: false });
-    });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   handleSelectChange = (topic) => {
