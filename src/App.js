@@ -679,6 +679,7 @@ class App extends React.Component {
                 setWalletModal={this.setWalletModal}
                 updateAccountData={this.updateAccountData}
                 nowWalletType={this.state.nowWalletType}
+                defaultAccount={this.state.defaultAccount}
               />
             </Header>
 

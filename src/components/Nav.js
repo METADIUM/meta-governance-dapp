@@ -3,10 +3,13 @@ import { Button, Row, Menu, Input, Affix } from "antd";
 
 import "./style/style.css";
 import WalletButton from "./WalletButton";
-import { ConnectWalletModal } from "./Modal";
+import { ConnectWalletModal, DisConnectWalletModal } from "./Modal";
 import WalletPage from "./WalletPage";
+import { web3Modal } from "../web3Modal";
 
 const TopNav = ({
+  defaultAccount,
+  nowWalletType,
   netName,
   nav,
   isMember,
@@ -20,70 +23,86 @@ const TopNav = ({
   walletVisible,
   setWalletModal,
   updateAccountData,
-  nowWalletType,
-}) => (
-  <Row className="container flex">
-    <div className="header-logo flex flex-center-horizontal">
-      <img src={`/img/logo_header_${netName}.png`} alt="" />
-    </div>
-    <div className={"header-menu center-vertical " + netName}>
-      <Menu
-        className="flex flex-center-horizontal"
-        onClick={onMenuClick}
-        selectedKeys={[nav]}
-        mode={"horizontal"}
-      >
-        <Menu.Item key="1" className={"text-large text-bold " + netName}>
-          Authority
-        </Menu.Item>
-        <Menu.Item key="2" className={"text-large text-bold " + netName}>
-          Voting
-        </Menu.Item>
-        {isMember && (
-          <Menu.Item key="3" className={"text-large text-bold " + netName}>
-            MyInfo
+}) => {
+  const [disConnectView, setDisConnectView] = useState(false);
+
+  const onDisConnect = () => {
+    web3Modal.clearCachedProvider();
+    localStorage.clear();
+    setDisConnectView(false);
+    onLogout();
+  };
+  return (
+    <Row className="container flex">
+      <div className="header-logo flex flex-center-horizontal">
+        <img src={`/img/logo_header_${netName}.png`} alt="" />
+      </div>
+      <div className={"header-menu center-vertical " + netName}>
+        <Menu
+          className="flex flex-center-horizontal"
+          onClick={onMenuClick}
+          selectedKeys={[nav]}
+          mode={"horizontal"}
+        >
+          <Menu.Item key="1" className={"text-large text-bold " + netName}>
+            Authority
           </Menu.Item>
+          <Menu.Item key="2" className={"text-large text-bold " + netName}>
+            Voting
+          </Menu.Item>
+          {isMember && (
+            <Menu.Item key="3" className={"text-large text-bold " + netName}>
+              MyInfo
+            </Menu.Item>
+          )}
+        </Menu>
+      </div>
+      <div className="header-staking flex flex-center-horizontal flex-end-vertical flex-full">
+        {isLogin && (
+          <>
+            <div className="flex flex-full flex-column flex-center-vertical">
+              <p className={"staked " + netName}>Staked {myBalance} WEMIX</p>
+              <p className={"wemix " + netName}>
+                (Locked {myLockedBalance} WEMIX)
+              </p>
+            </div>
+            <Button
+              className={"btn-grid-primary " + netName}
+              type="primary"
+              onClick={getStakingModal}
+            >
+              WEMIX Staking
+            </Button>
+          </>
         )}
-      </Menu>
-    </div>
-    <div className="header-staking flex flex-center-horizontal flex-end-vertical flex-full">
-      {isLogin && (
-        <>
-          <div className="flex flex-full flex-column flex-center-vertical">
-            <p className={"staked " + netName}>Staked {myBalance} WEMIX</p>
-            <p className={"wemix " + netName}>
-              (Locked {myLockedBalance} WEMIX)
-            </p>
-          </div>
-          <Button
-            className={"btn-grid-primary " + netName}
-            type="primary"
-            onClick={getStakingModal}
-          >
-            WEMIX Staking
-          </Button>
-        </>
-      )}
-      <WalletButton
-        isLogin={isLogin}
-        onLogout={onLogout}
-        setWalletModal={setWalletModal}
-      />
-      <ConnectWalletModal
-        visible={walletVisible}
-        setWalletModal={setWalletModal}
-      >
-        <WalletPage
-          onLogin={onLogin}
-          onLogout={onLogout}
+        <WalletButton
+          isLogin={isLogin}
           setWalletModal={setWalletModal}
-          updateAccountData={updateAccountData}
+          defaultAccount={defaultAccount}
           nowWalletType={nowWalletType}
+          setDisConnectView={setDisConnectView}
         />
-      </ConnectWalletModal>
-    </div>
-  </Row>
-);
+        <ConnectWalletModal
+          visible={walletVisible}
+          setWalletModal={setWalletModal}
+        >
+          <WalletPage
+            onLogin={onLogin}
+            onLogout={onLogout}
+            setWalletModal={setWalletModal}
+            updateAccountData={updateAccountData}
+            nowWalletType={nowWalletType}
+          />
+        </ConnectWalletModal>
+        <DisConnectWalletModal
+          onDisConnect={onDisConnect}
+          visible={disConnectView}
+          setDisConnectView={setDisConnectView}
+        />
+      </div>
+    </Row>
+  );
+};
 
 // TODO Wemix apply form 생기면 아래 코드 수정 필요
 const SubHeader = ({
