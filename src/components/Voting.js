@@ -573,6 +573,9 @@ class Voting extends React.Component {
             votingDurationMax={this.props.votingDurationMax}
             votingDurationMin={this.props.votingDurationMin}
             selectedMenu={this.props.selectedMenu}
+            oldVotingAddr={this.props.oldVotingAddr}
+            oldRewardAddr={this.props.oldRewardAddr}
+            memberIdx={this.props.memberIdx}
           />
         )}
       </div>

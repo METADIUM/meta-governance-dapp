@@ -49,6 +49,9 @@ class App extends React.Component {
     // voting duration
     votingDurationMin: null,
     votingDurationMax: null,
+    oldVotingAddr: "",
+    oldRewardAddr: "",
+    memberIdx: "",
   };
 
   state = {
@@ -134,19 +137,48 @@ class App extends React.Component {
       this.data.myLockedBalance,
       "ether"
     );
+    // get voting, reward address
+    await this.getMyAddress();
     this.setState({ stakingModalVisible: false, loading: false });
   }
 
   // set the default account to MetaMask account
   async updateDefaultAccount(account) {
     if (web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase()) {
-      web3Instance.defaultAccount = account;
+      web3Instance.defaultAccount =
+        web3Instance.web3.utils.toChecksumAddress(account);
       await this.updateAccountBalance();
       this.stakingEventsWatch();
       this.data.isMember = await contracts.governance.isMember(
         web3Instance.defaultAccount
       );
       this.setState({ showProposal: false });
+    }
+  }
+
+  // get information for send transaction (Myinfo)
+  async getMyAddress() {
+    try {
+      const { defaultAccount } = web3Instance;
+      const memberLength = await contracts.governance.getMemberLength();
+      let memberIdx = 0;
+      for (let i = 1; i <= memberLength; i++) {
+        const staker = await contracts.governance.getMember(i);
+        if (staker === defaultAccount) {
+          memberIdx = i;
+          break;
+        }
+      }
+      // get member info
+      const oldVotingAddr = await contracts.governance.getVoter(memberIdx);
+      const oldRewardAddr = await contracts.governance.getReward(memberIdx);
+
+      this.data.memberIdx = memberIdx;
+      this.data.oldVotingAddr = oldVotingAddr;
+      this.data.oldRewardAddr = oldRewardAddr;
+    } catch (err) {
+      console.log(err);
+      this.getErrModal(err.message, err.name);
     }
   }
 
@@ -442,6 +474,9 @@ class App extends React.Component {
             votingDurationMax={this.data.votingDurationMax}
             votingDurationMin={this.data.votingDurationMin}
             selectedMenu={nav}
+            oldVotingAddr={this.data.oldVotingAddr}
+            oldRewardAddr={this.data.oldRewardAddr}
+            memberIdx={this.data.memberIdx}
           />
         );
       default:
