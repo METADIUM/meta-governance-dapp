@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Row, Menu, Input, Affix } from "antd";
 
 import "./style/style.css";
@@ -25,13 +25,19 @@ const TopNav = ({
   updateAccountData,
 }) => {
   const [disConnectView, setDisConnectView] = useState(false);
+  const [provider, setProvider] = useState(null);
 
   const onDisConnect = () => {
     web3Modal.clearCachedProvider();
     localStorage.clear();
     setDisConnectView(false);
+    setProvider("ddd");
     onLogout();
   };
+
+  useEffect(() => {
+    console.log("aa");
+  }, [provider]);
   return (
     <Row className="container flex">
       <div className="header-logo flex flex-center-horizontal">
@@ -92,6 +98,8 @@ const TopNav = ({
             setWalletModal={setWalletModal}
             updateAccountData={updateAccountData}
             nowWalletType={nowWalletType}
+            provider={provider}
+            setProvider={setProvider}
           />
         </ConnectWalletModal>
         <DisConnectWalletModal

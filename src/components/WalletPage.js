@@ -12,6 +12,8 @@ const WalletPage = ({
   setWalletModal,
   updateAccountData,
   nowWalletType,
+  provider,
+  setProvider,
 }) => {
   const wallets = web3Modal.userOptions;
   const {
@@ -24,7 +26,6 @@ const WalletPage = ({
     symbol,
   } = chainInfo;
 
-  const [provider, setProvider] = useState(null);
   const [errVisible, setErrVisible] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [errTitle, setErrTitle] = useState("Error");
@@ -122,10 +123,12 @@ const WalletPage = ({
   };
 
   const handleAccountsChanged = async (accounts) => {
+    alert("change account");
     await updateAccountData(accounts[0]);
   };
 
   const handleChainChanged = async (chainId) => {
+    alert("change chain");
     const nowChainId = web3Instance.web3.utils.hexToNumber(chainId);
 
     if (chainInfo.chainId == nowChainId) {
@@ -141,13 +144,17 @@ const WalletPage = ({
   };
 
   useEffect(() => {
+    console.log(1, provider);
     if (provider && provider.on) {
+      console.log(2, provider);
       provider.on("accountsChanged", handleAccountsChanged);
       provider.on("chainChanged", handleChainChanged);
       provider.on("disconnect", handleDisconnect);
 
       return () => {
+        console.log(3, provider);
         if (provider.removeListener) {
+          console.log(4, provider);
           provider.removeListener("accountsChanged", handleAccountsChanged);
           provider.removeListener("chainChanged", handleChainChanged);
           provider.removeListener("disconnect", handleDisconnect);
