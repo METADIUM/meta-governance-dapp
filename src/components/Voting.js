@@ -350,7 +350,8 @@ class Voting extends React.Component {
     }
   };
 
-  onClickVote = async (value, id, endTime, state) => {
+  onClickVote = async (value, item) => {
+    const { id, endTime, state } = item;
     // check voted
     const isVoted = await this.ballotStorage.hasAlreadyVoted(
       id,
@@ -379,7 +380,16 @@ class Voting extends React.Component {
     this.sendTransaction(trx, "Voting");
   };
 
-  onClickUpdateProposal = (topic, id, duration) => {
+  onClickUpdateProposal = (topic, item) => {
+    const { id, duration, creator } = item;
+    // only those who voted are allowed
+    if (creator !== web3Instance.defaultAccount) {
+      this.props.getErrModal(
+        "You don't have premission to Change or Revoke.",
+        "Voting Error"
+      );
+      return;
+    }
     if (topic === "change") {
       this.data.curBallotIdx = id;
       this.setState({
