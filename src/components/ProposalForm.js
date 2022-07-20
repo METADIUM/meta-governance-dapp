@@ -1045,7 +1045,7 @@ class ProposalForm extends React.Component {
                 }
               } else {
                 this.props.getErrModal(
-                  "You don't have proposal submit authority",
+                  "The transaction could not be sent normally.",
                   "Proposal Submit Error",
                   receipt.transactionHash
                 );
