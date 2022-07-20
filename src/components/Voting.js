@@ -350,7 +350,12 @@ class Voting extends React.Component {
     }
   };
 
-  onClickVote = (value, id, endTime, state) => {
+  onClickVote = async (value, id, endTime, state) => {
+    // check voted
+    const isVoted = await this.ballotStorage.hasAlreadyVoted(
+      id,
+      web3Instance.defaultAccount
+    );
     if (!web3Instance.web3) {
       this.props.getErrModal("web3 is not exist", "Voting Error");
       return;
@@ -363,6 +368,9 @@ class Voting extends React.Component {
     ) {
       this.props.getErrModal("This Ballot is timeouted", "Voting Error");
       this.reloadVoting(false);
+      return;
+    } else if (isVoted) {
+      this.props.getErrModal("You've already voted.", "Voting Error");
       return;
     }
 
