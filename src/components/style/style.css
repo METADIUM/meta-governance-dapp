@@ -799,14 +799,16 @@
 }
 .connect-btn.ant-btn-primary {
   margin-left: 12px;
-  border: #ffffff solid 2px;
+  border: #ffffff solid 2px !important;
   background: #000000;
 }
 .connect-btn.ant-btn-primary:hover {
-  margin-left: 12px;
-  background: #ffffff;
-  color: #000000;
-  border: #ffffff solid 2px;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+.connect-btn.ant-btn-primary:focus {
+  background: none;
+  outline: none;
 }
 
 .wallet-list {

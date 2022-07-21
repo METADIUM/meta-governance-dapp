@@ -185,7 +185,7 @@ class App extends React.Component {
 
   // set the balance of account
   async updateAccountBalance(defaultAccount = this.state.defaultAccount) {
-    this.data.myBalance = await callContractMethod(
+    const weiBalance = await callContractMethod(
       web3Instance,
       "Staking",
       "balanceOf",
@@ -197,7 +197,7 @@ class App extends React.Component {
       "lockedBalanceOf",
       defaultAccount
     );
-    this.data.myBalance = util.convertWeiToEther(this.data.myBalance);
+    this.data.myBalance = util.convertWeiToEther(weiBalance);
     this.data.myLockedBalance = util.convertWeiToEther(
       this.data.myLockedBalance
     );
@@ -207,7 +207,7 @@ class App extends React.Component {
 
   async setStakingEventsWatch(defaultAccount = this.state.defaultAccount) {
     const { web3, web3Contracts } = web3Instance;
-    console.log(1);
+
     if (this.data.eventsWatch) {
       this.data.eventsWatch.unsubscribe((error, success) => {
         if (error) console.log("Faild to unsubscribed!");
@@ -222,7 +222,6 @@ class App extends React.Component {
       },
       (error, events) => {
         // console.log(events)
-        console.log(33, events);
         if (error) console.log("error", error);
         else this.updateAccountBalance();
       }

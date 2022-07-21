@@ -115,7 +115,7 @@ const TopNav = ({
 
   const changeProvider = async (walletType = nowWalletType) => {
     const newProvider = await getProvider(walletType);
-    console.log(443, newProvider);
+
     if (!newProvider) {
       console.log("Can't set a new Provider!");
       return;
@@ -162,9 +162,7 @@ const TopNav = ({
     } else {
       openErrModal("Your wallet is not on the right network.");
       if (nowWalletType === "walletconnect") {
-        await provider.request({
-          method: "disconnect",
-        });
+        provider.close();
       } else {
         onLogout();
       }
