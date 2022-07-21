@@ -81,9 +81,7 @@ const VotingBallots = ({
                 disabled={![bs.Ready, bs.InProgress].includes(item.state)}
                 className="text-large"
                 id="yesVotingBtn"
-                onClick={() =>
-                  onClickVote("Y", item.id, item.endTime, item.state)
-                }
+                onClick={() => onClickVote("Y", item)}
               >
                 Yes
               </Button>
@@ -106,9 +104,7 @@ const VotingBallots = ({
                 disabled={![bs.Ready, bs.InProgress].includes(item.state)}
                 className="text-large"
                 id="noVotingBtn"
-                onClick={() =>
-                  onClickVote("N", item.id, item.endTime, item.state)
-                }
+                onClick={() => onClickVote("N", item)}
               >
                 No
               </Button>
@@ -140,15 +136,7 @@ const VotingBallots = ({
                   <Button
                     className="btn-fill-gray"
                     type="primary"
-                    onClick={() =>
-                      onClickUpdateProposal(
-                        "change",
-                        item.id,
-                        item.duration,
-                        newStakerAddress,
-                        oldStakerAddress
-                      )
-                    }
+                    onClick={() => onClickUpdateProposal("change", item)}
                   >
                     Change
                   </Button>
@@ -165,15 +153,7 @@ const VotingBallots = ({
           <div className="revokeDiv flex">
             <Button
               className="btn-fill-gray"
-              onClick={() =>
-                onClickUpdateProposal(
-                  "revoke",
-                  item.id,
-                  item.duration,
-                  newStakerAddress,
-                  oldStakerAddress
-                )
-              }
+              onClick={() => onClickUpdateProposal("revoke", item)}
             >
               Revoke
             </Button>

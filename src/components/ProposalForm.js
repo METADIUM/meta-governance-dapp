@@ -60,10 +60,8 @@ class ProposalForm extends React.Component {
     oldLockAmountErr: false,
     showLockAmount: "",
     // Voting Address
-    oldVotingAddr: "",
     newVotingAddrErr: false,
     // Reward Address
-    oldRewardAddr: "",
     newRewardAddrErr: false,
   };
 
@@ -71,10 +69,6 @@ class ProposalForm extends React.Component {
     super(props);
     this.governance = this.props.contracts.governance;
     this.staking = this.props.contracts.staking;
-  }
-
-  async componentDidMount() {
-    await this.getMyInfo();
   }
 
   componentDidUpdate(props) {
@@ -136,8 +130,17 @@ class ProposalForm extends React.Component {
   }
 
   // only, when the topic has changed
-  handleSelectTopicChange = (topic) => {
+  handleSelectTopicChange = async (topic) => {
     const { stakingMin, votingDurationMin, votingDurationMax } = this.props;
+
+    // for getting addresses
+    const isMyInfo = ENV_MY_INFO_PROPOSAL_LIST.filter(
+      (item) => item.value === topic
+    )[0];
+    if (isMyInfo) {
+      await this.getMyInfo();
+    }
+
     this.data.selectedTopic = topic;
     this.setState({ selectedTopic: topic });
     this.data.formData = {
@@ -909,7 +912,7 @@ class ProposalForm extends React.Component {
         case "VotingAddress": {
           const { staker, name, lockAmount, enode, ip, port, newVotingAddr } =
             data;
-          const { oldVotingAddr } = this.state;
+          const { oldVotingAddr } = this.props;
           // check undefined
           if (util.checkUndefined(newVotingAddr)) {
             this.setState({
@@ -943,7 +946,7 @@ class ProposalForm extends React.Component {
         case "RewardAddress": {
           const { staker, name, lockAmount, enode, ip, port, newRewardAddr } =
             data;
-          const { oldRewardAddr } = this.state;
+          const { oldRewardAddr } = this.props;
           // check undefined
           if (util.checkUndefined(newRewardAddr)) {
             this.setState({
@@ -1042,7 +1045,7 @@ class ProposalForm extends React.Component {
                 }
               } else {
                 this.props.getErrModal(
-                  "You don't have proposal submit authority",
+                  "The transaction could not be sent normally.",
                   "Proposal Submit Error",
                   receipt.transactionHash
                 );
@@ -1063,18 +1066,7 @@ class ProposalForm extends React.Component {
   async getMyInfo() {
     try {
       const { defaultAccount } = web3Instance;
-      const memberLength = await this.governance.getMemberLength();
-      let memberIdx = 0;
-      for (let i = 1; i <= memberLength; i++) {
-        const staker = await this.governance.getMember(i);
-        if (staker === defaultAccount) {
-          memberIdx = i;
-          break;
-        }
-      }
-      // get member info
-      const oldVotingAddr = await this.governance.getVoter(memberIdx);
-      const oldRewardAddr = await this.governance.getReward(memberIdx);
+      const { memberIdx } = this.props;
       const { name, enode, ip, port } = await this.governance.getNode(
         memberIdx
       );
@@ -1088,8 +1080,6 @@ class ProposalForm extends React.Component {
         lockAmount: util.convertWeiToEther(lockAmount),
         oldStaker: defaultAccount,
       };
-      this.setState({ oldVotingAddr: oldVotingAddr });
-      this.setState({ oldRewardAddr: oldRewardAddr });
     } catch (err) {
       console.log(err);
       this.props.getErrModal(err.message, err.name);
@@ -1205,14 +1195,14 @@ class ProposalForm extends React.Component {
         case "VotingAddress":
           return (
             <MComponent.VotingAddress
-              oldVotingAddr={this.state.oldVotingAddr}
+              oldVotingAddr={this.props.oldVotingAddr}
               newVotingAddrErr={this.state.newVotingAddrErr}
             />
           );
         case "RewardAddress":
           return (
             <MComponent.RewardAddress
-              oldRewardAddr={this.state.oldRewardAddr}
+              oldRewardAddr={this.props.oldRewardAddr}
               newRewardAddrErr={this.state.newRewardAddrErr}
             />
           );
