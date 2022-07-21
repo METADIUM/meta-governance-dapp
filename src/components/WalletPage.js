@@ -142,19 +142,14 @@ const WalletPage = ({
   const handleDisconnect = () => {
     alert("disconnect");
   };
-
   useEffect(() => {
-    console.log(1, provider);
     if (provider && provider.on) {
-      console.log(2, provider);
       provider.on("accountsChanged", handleAccountsChanged);
       provider.on("chainChanged", handleChainChanged);
       provider.on("disconnect", handleDisconnect);
 
       return () => {
-        console.log(3, provider);
         if (provider.removeListener) {
-          console.log(4, provider);
           provider.removeListener("accountsChanged", handleAccountsChanged);
           provider.removeListener("chainChanged", handleChainChanged);
           provider.removeListener("disconnect", handleDisconnect);

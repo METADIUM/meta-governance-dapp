@@ -3,9 +3,11 @@ import { Button, Row, Menu, Input, Affix } from "antd";
 
 import "./style/style.css";
 import WalletButton from "./WalletButton";
-import { ConnectWalletModal, DisConnectWalletModal } from "./Modal";
+import { ConnectWalletModal, DisConnectWalletModal, ErrModal } from "./Modal";
 import WalletPage from "./WalletPage";
 import { web3Modal } from "../web3Modal";
+import { chainInfo, web3Instance } from "../web3";
+import { walletTypes } from "../constants";
 
 const TopNav = ({
   defaultAccount,
@@ -23,21 +25,172 @@ const TopNav = ({
   walletVisible,
   setWalletModal,
   updateAccountData,
+  stakingWatch,
 }) => {
   const [disConnectView, setDisConnectView] = useState(false);
   const [provider, setProvider] = useState(null);
+  const [errVisible, setErrVisible] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const [errTitle, setErrTitle] = useState("Error");
+
+  const wallets = web3Modal.userOptions;
+  const {
+    chainId,
+    chainName,
+    rpcUrls,
+    blockExplorerUrls,
+    name,
+    decimals,
+    symbol,
+  } = chainInfo;
+
+  const openErrModal = (err) => {
+    setErrVisible(true);
+    setErrMsg(err);
+  };
+
+  const closeErrModal = () => {
+    setErrVisible(false);
+    setErrMsg("");
+  };
 
   const onDisConnect = () => {
     web3Modal.clearCachedProvider();
     localStorage.clear();
     setDisConnectView(false);
-    setProvider("ddd");
+    setProvider(null);
     onLogout();
   };
 
+  // Adding WEMIX network to wallet
+  // Also includes network change when the current network is different
+  const addWemixNetwork = async (provider) => {
+    await provider.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId,
+          chainName,
+          rpcUrls: [rpcUrls],
+          blockExplorerUrls: [blockExplorerUrls],
+          nativeCurrency: { name, decimals, symbol },
+        },
+      ],
+    });
+  };
+
+  const getProvider = async (walletType) => {
+    let provider_tmp;
+    try {
+      switch (walletType) {
+        case walletTypes.META_MASK:
+          // check if there are multiple extensions
+          if (window.ethereum.providers) {
+            // search metamask provider
+            window.ethereum.providers.forEach((item) => {
+              if (item.isMetaMask) {
+                provider_tmp = item;
+              }
+            });
+          } else {
+            // There is only one extension
+            provider_tmp = window.ethereum;
+          }
+          break;
+        default:
+          provider_tmp = await web3Modal.connectTo(walletType);
+      }
+
+      await addWemixNetwork(provider_tmp);
+    } catch (err) {
+      if (walletType === "walletconnect") {
+        provider_tmp.close();
+      }
+      openErrModal(err.message);
+      return;
+    }
+
+    return provider_tmp;
+  };
+
+  const changeProvider = async (walletType = nowWalletType) => {
+    const newProvider = await getProvider(walletType);
+    console.log(443, newProvider);
+    if (!newProvider) {
+      console.log("Can't set a new Provider!");
+      return;
+    }
+
+    web3Instance.web3.setProvider(newProvider);
+    await onLogin(walletType);
+    setProvider(newProvider);
+    console.log("Set a new Provider!", newProvider);
+  };
+
+  const ConnectButton = ({ wallet, index, size = "30px" }) => {
+    if (
+      index === 0 &&
+      wallet.name !== "MetaMask" &&
+      wallet.name !== "WalletConnect"
+    ) {
+      return <></>;
+    }
+
+    return (
+      <div className="wallet-list" onClick={() => changeProvider(wallet.id)}>
+        <img
+          src={wallet.logo}
+          alt="wallet img"
+          style={{ width: size, height: size, marginRight: "10px" }}
+        />
+        <p>{wallet.name}</p>
+      </div>
+    );
+  };
+
+  const handleAccountsChanged = async (accounts) => {
+    console.log("change account", accounts);
+    await updateAccountData(accounts[0]);
+  };
+
+  const handleChainChanged = async (chainId) => {
+    console.log("change chain");
+    const nowChainId = web3Instance.web3.utils.hexToNumber(chainId);
+
+    if (chainInfo.chainId == nowChainId) {
+      await changeProvider();
+    } else {
+      openErrModal("Your wallet is not on the right network.");
+      if (nowWalletType === "walletconnect") {
+        await provider.request({
+          method: "disconnect",
+        });
+      } else {
+        onLogout();
+      }
+    }
+  };
+
+  const handleDisconnect = () => {
+    console.log("disconnect");
+    if (isLogin) onLogout();
+  };
   useEffect(() => {
-    console.log("aa");
+    if (provider && provider.on) {
+      provider.on("accountsChanged", handleAccountsChanged);
+      provider.on("chainChanged", handleChainChanged);
+      provider.on("disconnect", handleDisconnect);
+
+      return () => {
+        if (provider.removeListener) {
+          provider.removeListener("accountsChanged", handleAccountsChanged);
+          provider.removeListener("chainChanged", handleChainChanged);
+          provider.removeListener("disconnect", handleDisconnect);
+        }
+      };
+    }
   }, [provider]);
+
   return (
     <Row className="container flex">
       <div className="header-logo flex flex-center-horizontal">
@@ -92,7 +245,28 @@ const TopNav = ({
           visible={walletVisible}
           setWalletModal={setWalletModal}
         >
-          <WalletPage
+          <div
+            style={{ display: "flex", flexDirection: "column", height: "100%" }}
+          >
+            {wallets.map((wallet, index) => (
+              <ConnectButton key={index} wallet={wallet} index={index} />
+            ))}
+            <div
+              style={{ marginTop: "48px", marginBottom: "40px", width: "100%" }}
+            >
+              <h3>Connectable with WEMIX Wallet App</h3>
+              <p>1. Select WalletConnect</p>
+              <p>2. Use the QR scan fuction of the WEMIX Wallet App main.</p>
+            </div>
+            <Button
+              className="walletlist-cancel-btn"
+              onClick={() => setWalletModal()}
+            >
+              Cancel
+            </Button>{" "}
+          </div>
+
+          {/* <WalletPage
             onLogin={onLogin}
             onLogout={onLogout}
             setWalletModal={setWalletModal}
@@ -100,12 +274,20 @@ const TopNav = ({
             nowWalletType={nowWalletType}
             provider={provider}
             setProvider={setProvider}
-          />
+          /> */}
         </ConnectWalletModal>
         <DisConnectWalletModal
           onDisConnect={onDisConnect}
           visible={disConnectView}
           setDisConnectView={setDisConnectView}
+        />
+
+        <ErrModal
+          netName={web3Instance.netName}
+          title={errTitle}
+          err={errMsg}
+          visible={errVisible}
+          coloseErrModal={closeErrModal}
         />
       </div>
     </Row>

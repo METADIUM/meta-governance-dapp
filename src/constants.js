@@ -1,18 +1,18 @@
 // contract addresses
 export const TESTNET_CONTRACTS = [
-  { name: "Registry", address: "0x56c489704EFDE22bc07938114217f797FE8a1dE7" },
+  { name: "Registry", address: "0x7A93c5d3A87929b99dA86D5b450838B47C3F0904" },
   {
     name: "EnvStorageImp",
-    address: "0x2afcF0d21C35D753219a8f1fc916f5F5dB0Bc313",
+    address: "0xCd53a3297eb4C5464a8Ee9292BEc3CBBFEb150ED",
   },
-  { name: "EnvStorage", address: "0x1b4517DDac64F1a09e24dF697CB54DE23F8EF058" },
+  { name: "EnvStorage", address: "0x14e17573BE5De74Ff3ed03f76433891aEe876d9D" },
   {
     name: "BallotStorage",
-    address: "0x92376498AdEfC18818583727f9d8752556bcf631",
+    address: "0x146fd0421B1C5Df01d7B9e9712557f10391AE8fc",
   },
-  { name: "Staking", address: "0x31455db91Dc663c81d7062dFB662F59713c33e7d" },
-  { name: "GovImp", address: "0xdF19250B5D1Ebe6df05F7fdb169b0856297C5153" },
-  { name: "Gov", address: "0xdF19250B5D1Ebe6df05F7fdb169b0856297C5153" },
+  { name: "Staking", address: "0x3091A4BA95e958466F1A5228CBf73D1D7c3BfecE" },
+  { name: "GovImp", address: "0x0CFA6f2cac0aD2755197550038ab063796c4FbB3" },
+  { name: "Gov", address: "0x0CFA6f2cac0aD2755197550038ab063796c4FbB3" },
 ];
 
 export const MAINNET_CONTRACTS = [

@@ -147,6 +147,9 @@ class App extends React.Component {
 
   // update data related to new account
   async updateAccountData(newAccount) {
+    if (web3Instance.web3.currentProvider.constructor.name === "HttpProvider")
+      return;
+
     await this.updateAccountBalance(newAccount);
     this.setStakingEventsWatch(newAccount);
     const isMember = await callContractMethod(
@@ -204,7 +207,7 @@ class App extends React.Component {
 
   async setStakingEventsWatch(defaultAccount = this.state.defaultAccount) {
     const { web3, web3Contracts } = web3Instance;
-
+    console.log(1);
     if (this.data.eventsWatch) {
       this.data.eventsWatch.unsubscribe((error, success) => {
         if (error) console.log("Faild to unsubscribed!");
@@ -219,6 +222,7 @@ class App extends React.Component {
       },
       (error, events) => {
         // console.log(events)
+        console.log(33, events);
         if (error) console.log("error", error);
         else this.updateAccountBalance();
       }
@@ -680,6 +684,7 @@ class App extends React.Component {
                 updateAccountData={this.updateAccountData}
                 nowWalletType={this.state.nowWalletType}
                 defaultAccount={this.state.defaultAccount}
+                stakingWatch={this.data.eventsWatch}
               />
             </Header>
 
