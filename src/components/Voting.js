@@ -352,26 +352,40 @@ class Voting extends React.Component {
 
   onClickVote = async (value, item) => {
     const { id, endTime, state } = item;
-    // check voted
+    if (!web3Instance.web3) {
+      this.props.getErrModal("web3 is not exist", "Voting Error");
+      return;
+    }
+    // check if you've already voted
     const isVoted = await this.ballotStorage.hasAlreadyVoted(
       id,
       web3Instance.defaultAccount
     );
-    if (!web3Instance.web3) {
-      this.props.getErrModal("web3 is not exist", "Voting Error");
+    if (isVoted) {
+      this.props.getErrModal("You've already voted.", "Voting Error");
       return;
-    } else if (!this.props.isMember) {
+    }
+    // check if there are items already being voted on
+    const isInVoting = await this.governance.getBallotInVoting();
+    if (isInVoting && isInVoting !== item.id.toString()) {
+      this.props.getErrModal(
+        "Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed.",
+        "Voting Error"
+      );
+      return;
+    }
+    // check if member
+    if (!this.props.isMember) {
       this.props.getErrModal("You are not member", "Voting Error");
       return;
-    } else if (
+    }
+    // check the voting time
+    if (
       state === constants.ballotState.InProgress &&
       new Date(endTime * 1000) < Date.now()
     ) {
       this.props.getErrModal("This Ballot is timeouted", "Voting Error");
       this.reloadVoting(false);
-      return;
-    } else if (isVoted) {
-      this.props.getErrModal("You've already voted.", "Voting Error");
       return;
     }
 
