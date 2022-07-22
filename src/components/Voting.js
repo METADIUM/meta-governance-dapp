@@ -11,7 +11,7 @@ import {
 } from "./";
 
 import * as util from "../util";
-import { web3Instance } from "../web3";
+import { encodeABIValueInMethod, web3Instance } from "../web3";
 import { constants, ENV_PARAMETER_COUNT } from "../constants";
 
 // import "./style/style.css";
@@ -47,9 +47,6 @@ class Voting extends React.Component {
     super(props);
     this.waitForReceipt = this.waitForReceipt.bind(this);
 
-    this.ballotStorage = this.props.contracts.ballotStorage;
-    this.governance = this.props.contracts.governance;
-
     this.titles = {
       activeTitle: null,
       proposalTitle: null,
@@ -67,7 +64,7 @@ class Voting extends React.Component {
 
   reloadVoting = async (component, init = false) => {
     if (component) this.props.convertVotingComponent(component);
-    if (init) await this.props.initContractData();
+    if (init) await this.props.getContractAuthorityBallots();
     else await this.props.refreshContractData(true);
     this.getBallotOriginItem();
     this.props.convertLoading(false);
@@ -390,7 +387,13 @@ class Voting extends React.Component {
     }
 
     this.props.convertLoading(true);
-    let trx = this.governance.vote(id, value === "Y");
+    let trx = encodeABIValueInMethod(
+      web3Instance,
+      "GovImp",
+      "vote",
+      id,
+      value === "Y"
+    );
     this.sendTransaction(trx, "Voting");
   };
 
@@ -414,13 +417,21 @@ class Voting extends React.Component {
     }
 
     this.props.convertLoading(true);
-    let trx = this.ballotStorage.cancelBallot(id);
+    let trx = encodeABIValueInMethod(
+      web3Instance,
+      "BallotStorage",
+      "cancelBallot",
+      id
+    );
     this.sendTransaction(trx, "Revoke", true);
   };
 
   completeModal = async (e) => {
     this.props.convertLoading(true);
-    let trx = await this.ballotStorage.updateBallotDuration(
+    let trx = await encodeABIValueInMethod(
+      web3Instance,
+      "BallotStorage",
+      "updateBallotDuration",
       this.data.curBallotIdx,
       util.convertDayToSeconds(this.state.ballotUpdateDuration)
     );
@@ -430,7 +441,7 @@ class Voting extends React.Component {
 
   sendTransaction(trx, type, init = false) {
     try {
-      trx.from = web3Instance.defaultAccount;
+      trx.from = this.props.defaultAccount;
       web3Instance.web3.eth.sendTransaction(trx, (err, hash) => {
         if (err) {
           throw err;
@@ -592,7 +603,6 @@ class Voting extends React.Component {
           </div>
         ) : (
           <ProposalForm
-            contracts={this.props.contracts}
             getErrModal={this.props.getErrModal}
             newMemberaddr={this.data.existBallotNewMember}
             oldMemberaddr={this.data.existBallotOldMember}
@@ -608,6 +618,7 @@ class Voting extends React.Component {
             oldVotingAddr={this.props.oldVotingAddr}
             oldRewardAddr={this.props.oldRewardAddr}
             memberIdx={this.props.memberIdx}
+            defaultAccount={this.props.defaultAccount}
           />
         )}
       </div>

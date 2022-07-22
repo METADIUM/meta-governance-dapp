@@ -76,54 +76,66 @@ const ErrModal = ({
   link,
   visible,
   coloseErrModal = (f) => f,
-}) => (
-  <Modal
-    className="errorModal"
-    title={title}
-    visible={visible}
-    onCancel={coloseErrModal}
-    footer={
-      link
-        ? [
-            <a
-              key="link"
-              href={link}
-              rel="noopener noreferrer"
-              target="_blank"
-              className="ant-btn"
-            >
-              Checking on the Explorer
-            </a>,
-            <Button
-              type="primary"
-              key="ok"
-              className={"btn-fill-primary " + netName}
-              onClick={coloseErrModal}
-            >
-              Okay
-            </Button>,
-          ]
-        : [
-            <Button
-              type="primary"
-              key="ok"
-              className={"btn-fill-primary " + netName}
-              onClick={coloseErrModal}
-            >
-              Okay
-            </Button>,
-          ]
-    }
-  >
-    <p className="text-bold">Please revises the following information!</p>
-    <div className="text-container">
-      <div className="flex error-icon">
-        <Icon type="exclamation-circle" />
-        <p>{err}</p>
-      </div>
+}) => {
+  const RPCErrorMSG = () => (
+    <div>
+      <p>Ensure the network has been added correctly.</p>
+      <p>Ensure you have enough coins to pay for gas.</p>
+      <p>
+        Ensure you are using the latest version of the app or the extension.
+      </p>
     </div>
-  </Modal>
-);
+  );
+
+  return (
+    <Modal
+      className="errorModal"
+      title={title}
+      visible={visible}
+      onCancel={coloseErrModal}
+      footer={
+        link
+          ? [
+              <a
+                key="link"
+                href={link}
+                rel="noopener noreferrer"
+                target="_blank"
+                className="ant-btn"
+              >
+                Checking on the Explorer
+              </a>,
+              <Button
+                type="primary"
+                key="ok"
+                className={"btn-fill-primary " + netName}
+                onClick={coloseErrModal}
+              >
+                Okay
+              </Button>,
+            ]
+          : [
+              <Button
+                type="primary"
+                key="ok"
+                className={"btn-fill-primary " + netName}
+                onClick={coloseErrModal}
+              >
+                Okay
+              </Button>,
+            ]
+      }
+    >
+      <p className="text-bold">Please revises the following information!</p>
+      <div className="text-container">
+        <div className="flex error-icon">
+          <Icon type="exclamation-circle" />
+          <div>{err === "RPC error" ? <RPCErrorMSG /> : err}</div>
+        </div>
+      </div>
+    </Modal>
+  );
+};
 
 const AccessFailedModal = ({ visible, message }) => (
   <Modal
@@ -175,4 +187,54 @@ const ChangeModal = ({
   );
 };
 
-export { StakingModal, ErrModal, AccessFailedModal, ChangeModal };
+const ConnectWalletModal = ({ children, visible, setWalletModal }) => {
+  return (
+    <Modal
+      visible={visible}
+      title={"Wallet Connect"}
+      onCancel={setWalletModal}
+      footer={null}
+    >
+      {children}
+    </Modal>
+  );
+};
+
+const DisConnectWalletModal = ({
+  onDisConnect,
+  visible,
+  setDisConnectView,
+}) => {
+  return (
+    <Modal
+      className="dis-connect-foot"
+      visible={visible}
+      title={"Disconnect"}
+      onCancel={() => setDisConnectView(false)}
+      onOk={onDisConnect}
+      footer={[
+        <Button
+          key="cancel"
+          className="discon-cancel-btn"
+          onClick={() => setDisConnectView(false)}
+        >
+          Cancel
+        </Button>,
+        <Button key="ok" className="discon-ok-btn" onClick={onDisConnect}>
+          Okay
+        </Button>,
+      ]}
+    >
+      <p className="modal-disconnect-title">Disconnect your Wallet?</p>
+    </Modal>
+  );
+};
+
+export {
+  StakingModal,
+  ErrModal,
+  AccessFailedModal,
+  ChangeModal,
+  ConnectWalletModal,
+  DisConnectWalletModal,
+};

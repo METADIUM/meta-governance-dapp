@@ -1,7 +1,12 @@
 import React from "react";
 import { Button, Select, Icon } from "antd";
 
-import { web3Instance } from "../web3";
+import {
+  callContractMethod,
+  encodeABIValueInMethod,
+  onlyCallContractMethod,
+  web3Instance,
+} from "../web3";
 
 import * as PComponent from "./Forms";
 import * as MComponent from "./MyForm";
@@ -65,10 +70,8 @@ class ProposalForm extends React.Component {
     newRewardAddrErr: false,
   };
 
-  constructor(props) {
-    super(props);
-    this.governance = this.props.contracts.governance;
-    this.staking = this.props.contracts.staking;
+  async componentDidMount() {
+    await this.getMyInfo();
   }
 
   componentDidUpdate(props) {
@@ -91,7 +94,7 @@ class ProposalForm extends React.Component {
     } else if (!web3Instance.web3.utils.checkAddressChecksum(addr)) {
       addr = web3Instance.web3.utils.toChecksumAddress(addr);
     }
-    if (!(await this.governance.isMember(addr))) {
+    if (!(await callContractMethod(web3Instance, "GovImp", "isMember", addr))) {
       this.props.getErrModal(
         "Non-existing Member Address.",
         "Proposal Submit Error"
@@ -101,7 +104,12 @@ class ProposalForm extends React.Component {
     }
 
     try {
-      let lockedBalance = await this.staking.lockedBalanceOf(addr);
+      let lockedBalance = await callContractMethod(
+        web3Instance,
+        "Staking",
+        "lockedBalanceOf",
+        addr
+      );
       this.setState({
         showLockAmount: util.convertWeiToEther(lockedBalance),
       });
@@ -384,7 +392,12 @@ class ProposalForm extends React.Component {
   // check before sending transaction
   async handleProposalError(refineData) {
     if (
-      !(await this.governance.isMember(web3Instance.defaultAccount)) &&
+      !(await callContractMethod(
+        web3Instance,
+        "GovImp",
+        "isMember",
+        this.props.defaultAccount
+      )) &&
       !constants.debugMode
     ) {
       return this.props.getErrModal(
@@ -398,9 +411,21 @@ class ProposalForm extends React.Component {
         const { staker, lockAmount } = refineData;
         const newLockedAmount = Number(lockAmount);
         // get the balance of staking address
-        const balance = Number(await this.staking.availableBalanceOf(staker));
+        const balance = Number(
+          await callContractMethod(
+            web3Instance,
+            "Staking",
+            "availableBalanceOf",
+            staker
+          )
+        );
         // check if addresses already exist
-        const isMember = await this.governance.isMember(staker);
+        const isMember = await callContractMethod(
+          web3Instance,
+          "GovImp",
+          "isMember",
+          staker
+        );
         if (isMember) {
           return this.props.getErrModal(
             "Existing Member Address.",
@@ -430,12 +455,27 @@ class ProposalForm extends React.Component {
         const { oldStaker, staker, lockAmount } = refineData;
         const newLockedAmount = Number(lockAmount);
         // get the balance of old, new addresses
-        const oldMemberBalance = await this.staking.lockedBalanceOf(oldStaker);
+        const oldMemberBalance = await callContractMethod(
+          web3Instance,
+          "Staking",
+          "lockedBalanceOf",
+          oldStaker
+        );
         const newMemberBalance = Number(
-          await this.staking.availableBalanceOf(staker)
+          await callContractMethod(
+            web3Instance,
+            "Staking",
+            "availableBalanceOf",
+            staker
+          )
         );
         // check if old address does not exist
-        const isMemberOldAddr = await this.governance.isMember(oldStaker);
+        const isMemberOldAddr = await callContractMethod(
+          web3Instance,
+          "GovImp",
+          "isMember",
+          oldStaker
+        );
         if (!isMemberOldAddr) {
           return this.props.getErrModal(
             "Non-existing Member Address (Old).",
@@ -443,7 +483,12 @@ class ProposalForm extends React.Component {
           );
         }
         // check if new addresses already exist
-        const isMemberNewAddr = await this.governance.isMember(staker);
+        const isMemberNewAddr = await callContractMethod(
+          web3Instance,
+          "GovImp",
+          "isMember",
+          staker
+        );
         if (isMemberNewAddr) {
           return this.props.getErrModal(
             "Existing Member Address.",
@@ -495,11 +540,21 @@ class ProposalForm extends React.Component {
       }
       case "RemoveAuthorityMember": {
         const { staker, lockAmount } = refineData;
-        const balance = await this.staking.lockedBalanceOf(staker);
+        const balance = await callContractMethod(
+          web3Instance,
+          "Staking",
+          "lockedBalanceOf",
+          staker
+        );
         const lockedAmount = Number(lockAmount);
 
         // check if addresses already exist
-        const isMember = await this.governance.isMember(staker);
+        const isMember = await callContractMethod(
+          web3Instance,
+          "GovImp",
+          "isMember",
+          staker
+        );
         if (!isMember) {
           return this.props.getErrModal(
             "Non-existing Member Address.",
@@ -570,7 +625,13 @@ class ProposalForm extends React.Component {
           }
           // get node information
           const { node, ip, port } = util.splitNodeInfo(newNode);
-          trxFunction = (trx) => this.governance.addProposalToAddMember(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToAddMember",
+              trx
+            );
           checkData = {
             staker: newAddr,
             voter: newAddr,
@@ -611,7 +672,13 @@ class ProposalForm extends React.Component {
           }
           // get node information
           const { node, ip, port } = util.splitNodeInfo(newNode);
-          trxFunction = (trx) => this.governance.addProposalToChangeMember(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeMember",
+              trx
+            );
           checkData = {
             staker: newAddr,
             voter: newAddr,
@@ -635,7 +702,13 @@ class ProposalForm extends React.Component {
             this.props.convertLoading(false);
             return;
           }
-          trxFunction = (trx) => this.governance.addProposalToRemoveMember(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToRemoveMember",
+              trx
+            );
           checkData = {
             staker: stakingAddr,
             lockAmount: oldLockAmount,
@@ -652,7 +725,13 @@ class ProposalForm extends React.Component {
             this.props.convertLoading(false);
             return;
           }
-          trxFunction = (trx) => this.governance.addProposalToChangeGov(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeGov",
+              trx
+            );
           checkData = {
             newGovAddr,
             memo,
@@ -679,7 +758,13 @@ class ProposalForm extends React.Component {
               util.convertDayToSeconds(votDurationMax),
             ]
           );
-          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeEnv",
+              trx
+            );
           checkData = {
             envName,
             envType: String(2),
@@ -710,7 +795,13 @@ class ProposalForm extends React.Component {
               util.convertEtherToWei(authMemSkAmountMax),
             ]
           );
-          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeEnv",
+              trx
+            );
           checkData = {
             envName,
             envType: String(2),
@@ -739,7 +830,13 @@ class ProposalForm extends React.Component {
             ["uint256"],
             [blockCreation * 1000]
           );
-          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeEnv",
+              trx
+            );
           checkData = {
             envName,
             envType: String(2),
@@ -767,7 +864,13 @@ class ProposalForm extends React.Component {
             ["uint256"],
             [util.convertEtherToWei(blockRewardAmount)]
           );
-          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeEnv",
+              trx
+            );
           checkData = {
             envName,
             envType: String(2),
@@ -809,7 +912,13 @@ class ProposalForm extends React.Component {
               Number(blockRate4) * 100,
             ]
           );
-          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeEnv",
+              trx
+            );
           checkData = {
             envName,
             envType: String(2),
@@ -840,7 +949,13 @@ class ProposalForm extends React.Component {
             ["uint256"],
             [util.convertGWeiToWei(maxPriorityFeePerGas)]
           );
-          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeEnv",
+              trx
+            );
           checkData = {
             envName,
             envType: String(2),
@@ -899,7 +1014,13 @@ class ProposalForm extends React.Component {
               gasTargetPercentage,
             ]
           );
-          trxFunction = (trx) => this.governance.addProposalToChangeEnv(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeEnv",
+              trx
+            );
           checkData = {
             envName,
             envType: String(2),
@@ -928,7 +1049,13 @@ class ProposalForm extends React.Component {
             this.props.convertLoading(false);
             return;
           }
-          trxFunction = (trx) => this.governance.addProposalToChangeMember(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeMember",
+              trx
+            );
           checkData = {
             staker,
             voter: newVotingAddr,
@@ -962,7 +1089,13 @@ class ProposalForm extends React.Component {
             this.props.convertLoading(false);
             return;
           }
-          trxFunction = (trx) => this.governance.addProposalToChangeMember(trx);
+          trxFunction = (trx) =>
+            encodeABIValueInMethod(
+              web3Instance,
+              "GovImp",
+              "addProposalToChangeMember",
+              trx
+            );
           checkData = {
             staker,
             voter: staker,
@@ -1024,7 +1157,7 @@ class ProposalForm extends React.Component {
     try {
       web3Instance.web3.eth.sendTransaction(
         {
-          from: web3Instance.defaultAccount,
+          from: this.props.defaultAccount,
           to: trx.to,
           data: trx.data,
         },
@@ -1067,10 +1200,18 @@ class ProposalForm extends React.Component {
     try {
       const { defaultAccount } = web3Instance;
       const { memberIdx } = this.props;
-      const { name, enode, ip, port } = await this.governance.getNode(
+      const { name, enode, ip, port } = await callContractMethod(
+        web3Instance,
+        "GovImp",
+        "getNode",
         memberIdx
       );
-      const lockAmount = await this.staking.lockedBalanceOf(defaultAccount);
+      const lockAmount = await callContractMethod(
+        web3Instance,
+        "Staking",
+        "lockedBalanceOf",
+        defaultAccount
+      );
       this.data.formData = {
         staker: defaultAccount,
         name: util.decodeHexToString(name),

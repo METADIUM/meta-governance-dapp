@@ -799,3 +799,64 @@
 .accessFail .ant-modal-body p {
   margin-top: 24px;
 }
+.connect-btn.ant-btn-primary {
+  margin-left: 12px;
+  border: #ffffff solid 2px !important;
+  background: #000000;
+}
+.connect-btn.ant-btn-primary:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+.connect-btn.ant-btn-primary:focus {
+  background: none;
+  outline: none;
+}
+
+.wallet-list {
+  display: flex;
+  border: 1px solid #e8e8e8;
+  align-items: center;
+  justify-content: center;
+  padding: 34px 0 34px 0;
+  cursor: pointer;
+}
+
+.ant-btn.walletlist-cancel-btn {
+  width: 181px;
+  min-width: 180px;
+  height: 60px;
+  left: 0;
+  top: 0;
+  margin: auto;
+}
+
+.modal-disconnect-title {
+  color: black;
+  font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* .disconnect-modal.ant-modal-footer {
+  border-top: none !important;
+} */
+
+.dis-connect-foot .ant-modal-footer {
+  border-top: none !important;
+  display: flex;
+  justify-content: space-between;
+  height: 80px;
+}
+
+.ant-btn.discon-cancel-btn {
+  flex: 1;
+  height: 100%;
+}
+.ant-btn.discon-ok-btn {
+  flex: 1;
+  color: #ffffff;
+  height: 100%;
+
+  background: #1a1a1a;
+}

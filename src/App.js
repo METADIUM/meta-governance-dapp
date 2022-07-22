@@ -1,12 +1,6 @@
 import React from "react";
 import { Layout } from "antd";
 import {
-  contracts,
-  initContractsByNames,
-  constants as metaWeb3Constants,
-} from "wemix-web3";
-
-import {
   TopNav,
   FootNav,
   StakingModal,
@@ -16,14 +10,23 @@ import {
   Authority,
   BaseLoader,
 } from "./components";
-import getWeb3Instance, { web3Instance } from "./web3";
-import { constants, ENV_NAMES_SHA3 } from "./constants";
+import getWeb3Instance, {
+  callContractMethod,
+  chainInfo,
+  encodeABIValueInMethod,
+  encodeABIValueInTrx,
+  getAccounts,
+  onlyCallContractMethod,
+  web3Instance,
+} from "./web3";
+import { constants, ENV_VOTING_PROPOSAL_LIST } from "./constants";
 import * as util from "./util";
 
 import AuthorityList from "./static/AuthorityList.json";
 
 import "./App.css";
 import "./components/style/style.css";
+import { getWeb3Modal } from "./web3Modal";
 
 const { Header, Content, Footer } = Layout;
 
@@ -43,7 +46,6 @@ class App extends React.Component {
     errContent: null,
     errLink: null,
     errAccessFail: null,
-    isMember: false,
     // for getting ballot data
     ballotTypeData: [],
     // voting duration
@@ -66,16 +68,30 @@ class App extends React.Component {
     activeMenu: "Authority",
     // true - voting / false - authority
     showProposal: false,
+    isLogin: false,
+    defaultAccount: null,
+    isMember: false,
+    walletVisible: false,
+    nowWalletType: null,
   };
 
   constructor(props) {
     super(props);
-    this.initContractData = this.initContractData.bind(this);
+    localStorage.clear();
+    this.getContractAuthorityBallots =
+      this.getContractAuthorityBallots.bind(this);
     this.refreshContractData = this.refreshContractData.bind(this);
+    this.updateAccountData = this.updateAccountData.bind(this);
+
+    // get web3Modal instance
+    getWeb3Modal();
     // get web3 instance
     getWeb3Instance().then(
-      async (web3Config) => {
-        this.initContracts(web3Config);
+      async () => {
+        // get governance variables
+        await this.getGovernanceVariables();
+        // get authority list and ballot data
+        await this.getContractAuthorityBallots();
         console.log("debugMode: ", constants.debugMode);
         this.setState({ loadWeb3: true });
       },
@@ -86,92 +102,145 @@ class App extends React.Component {
     );
   }
 
-  // initial contract
-  async initContracts(web3Config) {
-    initContractsByNames({
-      web3: web3Config.web3,
-      branch: web3Config.branch,
-      names: web3Config.names,
-    }).then(async () => {
-      await this.getStakingRange();
-      await this.getVotingDuration();
-      await this.initContractData();
-      await this.updateAccountBalance();
+  // componentDidMount() {
+  //   // detect when the MetaMask account is changed
+  //   window.ethereum.on("accountsChanged", async (chagedAccounts) => {
+  //     // disconnect MetaMask
+  //     if (util.checkUndefined(chagedAccounts[0])) {
+  //       console.error("MetaMask connection is broken!");
+  //       window.location.reload();
+  //       return;
+  //     }
+  //     await this.updateDefaultAccount(chagedAccounts[0]);
+  //   });
 
-      // detect when the MetaMask account is changed
-      window.ethereum.on("accountsChanged", async (chagedAccounts) => {
-        // disconnect MetaMask
-        if (util.checkUndefined(chagedAccounts[0])) {
-          console.error("MetaMask connection is broken!");
-          window.location.reload();
-          return;
-        }
-        await this.updateDefaultAccount(chagedAccounts[0]);
-      });
+  //   // detect when the MetaMask network is changed
+  //   window.ethereum.on("chainChanged", () => window.location.reload());
+  // }
 
-      // detect when the MetaMask network is changed
-      window.ethereum.on("chainChanged", () => window.location.reload());
+  onLogin = async (walletType) => {
+    const account = await getAccounts(walletType);
+    this.updateAccountData(account);
 
-      this.stakingEventsWatch();
-      // check if account is a proposalable member
-      this.data.isMember = await contracts.governance.isMember(
-        web3Instance.defaultAccount
-      );
-      this.setState({ contractReady: true });
+    this.setState({
+      isLogin: true,
+      walletVisible: false,
+      nowWalletType: walletType,
+    });
+  };
+  onLogout = () => {
+    web3Instance.web3.setProvider(chainInfo.rpcUrls);
+
+    this.setState({
+      isLogin: false,
+      nav: "1",
+      showProposal: false,
+      defaultAccount: null,
+      isMember: false,
+    });
+  };
+  setWalletModal = () => {
+    this.setState({
+      walletVisible: !this.state.walletVisible,
+    });
+  };
+
+  // update data related to new account
+  async updateAccountData(newAccount) {
+    if (web3Instance.web3.currentProvider.constructor.name === "HttpProvider")
+      return;
+
+    await this.updateAccountBalance(newAccount);
+    this.setStakingEventsWatch(newAccount);
+    const isMember = await callContractMethod(
+      web3Instance,
+      "GovImp",
+      "isMember",
+      newAccount
+    );
+    this.setState({ isMember, defaultAccount: newAccount });
+  }
+
+  // get governance setting variables from contract data
+  async getGovernanceVariables() {
+    await this.getStakingRange();
+    await this.getVotingDuration();
+    // TODO
+    // await this.updateAccountBalance();
+
+    // TODO
+    // this.setStakingEventsWatch();
+    // check if account is a proposalable member
+    // const isMember = await callContractMethod(
+    //   web3Instance,
+    //   "GovImp",
+    //   "isMember",
+    //   this.state.defaultAccount
+    // );
+    this.setState({
+      contractReady: true,
+      // isMember
     });
   }
 
   // set the balance of account
-  async updateAccountBalance() {
-    this.data.myBalance = await contracts.staking.balanceOf(
-      web3Instance.defaultAccount
+  async updateAccountBalance(defaultAccount = this.state.defaultAccount) {
+    const weiBalance = await callContractMethod(
+      web3Instance,
+      "Staking",
+      "balanceOf",
+      defaultAccount
     );
-    this.data.myLockedBalance = await contracts.staking.lockedBalanceOf(
-      web3Instance.defaultAccount
+    this.data.myLockedBalance = await callContractMethod(
+      web3Instance,
+      "Staking",
+      "lockedBalanceOf",
+      defaultAccount
     );
-    this.data.myBalance = web3Instance.web3.utils.fromWei(
-      this.data.myBalance,
-      "ether"
-    );
-    this.data.myLockedBalance = web3Instance.web3.utils.fromWei(
-      this.data.myLockedBalance,
-      "ether"
+    this.data.myBalance = util.convertWeiToEther(weiBalance);
+    this.data.myLockedBalance = util.convertWeiToEther(
+      this.data.myLockedBalance
     );
     // get voting, reward address
     await this.getMyAddress();
     this.setState({ stakingModalVisible: false, loading: false });
   }
 
-  // set the default account to MetaMask account
-  async updateDefaultAccount(account) {
-    if (web3Instance.defaultAccount.toLowerCase() !== account.toLowerCase()) {
-      web3Instance.defaultAccount =
-        web3Instance.web3.utils.toChecksumAddress(account);
-      await this.updateAccountBalance();
-      this.stakingEventsWatch();
-      this.data.isMember = await contracts.governance.isMember(
-        web3Instance.defaultAccount
-      );
-      this.setState({ showProposal: false });
-    }
-  }
-
   // get information for send transaction (Myinfo)
   async getMyAddress() {
     try {
-      const { defaultAccount } = web3Instance;
-      const memberLength = await contracts.governance.getMemberLength();
+      const { defaultAccount } = this.state;
+      const memberLength = await onlyCallContractMethod(
+        web3Instance,
+        "GovImp",
+        "getMemberLength"
+      );
       let memberIdx = 0;
       for (let i = 1; i <= memberLength; i++) {
-        const staker = await contracts.governance.getMember(i);
+        const staker = await callContractMethod(
+          web3Instance,
+          "GovImp",
+          "getMember",
+          i
+        );
         if (staker === defaultAccount) {
           memberIdx = i;
           break;
         }
       }
       // get member info
-      const oldVotingAddr = await contracts.governance.getVoter(memberIdx);
-      const oldRewardAddr = await contracts.governance.getReward(memberIdx);
+      const oldVotingAddr = await callContractMethod(
+        web3Instance,
+        "GovImp",
+        "getVoter",
+        memberIdx
+      );
+      const oldRewardAddr = await callContractMethod(
+        web3Instance,
+        "GovImp",
+        "getReward",
+        memberIdx
+      );
 
       this.data.memberIdx = memberIdx;
       this.data.oldVotingAddr = oldVotingAddr;
@@ -183,14 +252,14 @@ class App extends React.Component {
   }
 
   // update balance (after send transaction, changed account)
-  async stakingEventsWatch() {
+  async setStakingEventsWatch(defaultAccount = this.state.defaultAccount) {
     try {
       // for getting only default accounts event
       const filteraddress = web3Instance.web3.eth.abi.encodeParameter(
         "address",
-        web3Instance.defaultAccount
+        defaultAccount
       );
-      const result = await contracts.staking.stakingInstance.getPastEvents(
+      const result = await web3Instance.web3Contracts.Staking.getPastEvents(
         "allEvents",
         {
           fromBlock: "latest",
@@ -199,35 +268,47 @@ class App extends React.Component {
       );
       if (result) {
         // update balance
-        this.updateAccountBalance();
+        this.updateAccountBalance(defaultAccount);
       }
     } catch (err) {
       console.error(err);
     }
   }
 
-  // set the minimum and maximum values that can be staked
+  // get the minimum and maximum values that can be staked
   async getStakingRange() {
-    if (["MAINNET", "TESTNET"].includes(web3Instance.netName)) {
-      this.data.stakingMin = web3Instance.web3.utils.fromWei(
-        await contracts.envStorage.getStakingMin()
+    try {
+      this.data.stakingMin = util.convertWeiToEther(
+        await onlyCallContractMethod(
+          web3Instance,
+          "EnvStorageImp",
+          "getStakingMin"
+        )
       );
-      this.data.stakingMax = web3Instance.web3.utils.fromWei(
-        await contracts.envStorage.getStakingMax()
+      this.data.stakingMax = util.convertWeiToEther(
+        await onlyCallContractMethod(
+          web3Instance,
+          "EnvStorageImp",
+          "getStakingMax"
+        )
       );
+    } catch (err) {
+      this.getErrModal(err.message, err.name);
     }
   }
 
-  // set voting duration minium and maximum values
+  // get voting duration minium and maximum values
   async getVotingDuration() {
-    if (["MAINNET", "TESTNET"].includes(web3Instance.netName)) {
-      const duration = await contracts.envStorage.getBallotDurationMinMax();
-      this.data.votingDurationMin = duration[0];
-      this.data.votingDurationMax = duration[1];
-    }
+    const duration = await onlyCallContractMethod(
+      web3Instance,
+      "EnvStorageImp",
+      "getBallotDurationMinMax"
+    );
+    this.data.votingDurationMin = duration[0];
+    this.data.votingDurationMax = duration[1];
   }
 
-  async initContractData() {
+  async getContractAuthorityBallots() {
     await this.getAuthorityData();
     await this.initBallotData();
     util.setUpdatedTimeToLocal(new Date());
@@ -246,7 +327,11 @@ class App extends React.Component {
   // get the authority list stored in localStorage if modified block height is equal
   // or initalize new authority list
   async getAuthorityData() {
-    const modifiedBlock = await contracts.governance.getModifiedBlock();
+    const modifiedBlock = await onlyCallContractMethod(
+      web3Instance,
+      "GovImp",
+      "modifiedBlock"
+    );
     // if (
     //   modifiedBlock === util.getModifiedFromLocal() &&
     //   util.getAuthorityFromLocal()
@@ -259,7 +344,11 @@ class App extends React.Component {
   }
 
   async getBallotData() {
-    const ballotCnt = await contracts.governance.getBallotLength();
+    const ballotCnt = await onlyCallContractMethod(
+      web3Instance,
+      "GovImp",
+      "ballotLength"
+    );
     let localBallotCnt = Object.keys(this.data.ballotBasicOriginData).length;
     if (!ballotCnt || ballotCnt === localBallotCnt) return;
 
@@ -270,7 +359,11 @@ class App extends React.Component {
   }
 
   async modifyBallotData() {
-    let voteLength = await contracts.governance.getVoteLength();
+    let voteLength = await onlyCallContractMethod(
+      web3Instance,
+      "GovImp",
+      "voteLength"
+    );
     if (!voteLength || voteLength === this.data.voteLength) return;
 
     for (
@@ -279,7 +372,12 @@ class App extends React.Component {
       this.data.voteLength++
     ) {
       const ballotId = (
-        await contracts.ballotStorage.getVote(this.data.voteLength)
+        await callContractMethod(
+          web3Instance,
+          "BallotStorage",
+          "getVote",
+          this.data.voteLength
+        )
       ).ballotId;
       await this.getBallotBasicOriginData(ballotId);
       await this.getBallotMemberOriginData(ballotId);
@@ -299,7 +397,14 @@ class App extends React.Component {
     let memberAuthority = {};
     let index = 0;
     for (let i = 0; i < Object.keys(authorityList).length; i++) {
-      if (await contracts.governance.isMember(authorityList[i].addr)) {
+      if (
+        await callContractMethod(
+          web3Instance,
+          "GovImp",
+          "isMember",
+          authorityList[i].addr
+        )
+      ) {
         memberAuthority[index] = authorityList[i];
         memberAuthority[index].addr = web3Instance.web3.utils.toChecksumAddress(
           memberAuthority[index].addr
@@ -321,8 +426,16 @@ class App extends React.Component {
       : {};
     let localDataUpdated = false;
 
-    this.data.voteLength = await contracts.governance.getVoteLength();
-    const ballotCnt = await contracts.governance.getBallotLength();
+    this.data.voteLength = await onlyCallContractMethod(
+      web3Instance,
+      "GovImp",
+      "voteLength"
+    );
+    const ballotCnt = await onlyCallContractMethod(
+      web3Instance,
+      "GovImp",
+      "ballotLength"
+    );
     if (!ballotCnt) return;
     for (var i = 1; i <= ballotCnt; i++) {
       if (i in ballotBasicFinalizedData) {
@@ -350,7 +463,12 @@ class App extends React.Component {
 
   async getBallotBasicOriginData(i, ballotBasicFinalizedData = {}) {
     let isUpdated = false;
-    await contracts.ballotStorage.getBallotBasic(i).then((ret) => {
+    await callContractMethod(
+      web3Instance,
+      "BallotStorage",
+      "getBallotBasic",
+      i
+    ).then((ret) => {
       this.data.ballotTypeData[i] = ret.ballotType; // for sorting ballot data
       ret.id = i; // add ballot id
 
@@ -380,23 +498,41 @@ class App extends React.Component {
     switch (ballotType) {
       case "4":
         result = {
-          oldGovernanceAddress: await contracts.governance.implementation(),
-          newGovernanceAddress: await contracts.ballotStorage.getBallotAddress(
+          oldGovernanceAddress: await onlyCallContractMethod(
+            web3Instance,
+            "Gov",
+            "implementation"
+          ),
+          newGovernanceAddress: await callContractMethod(
+            web3Instance,
+            "BallotStorage",
+            "getBallotAddress",
             i
           ),
         };
         break;
       case "5": {
-        result = await contracts.ballotStorage.getBallotVariable(i);
-        const type = ENV_NAMES_SHA3.filter((key) => {
+        result = await callContractMethod(
+          web3Instance,
+          "BallotStorage",
+          "getBallotVariable",
+          i
+        );
+
+        const type = ENV_VOTING_PROPOSAL_LIST.filter((key) => {
           return key.sha3Name === result.envVariableName;
-        })[0] || { name: "Wrong Proposal (This label is only test)" };
-        result.envVariableName = type.name;
+        })[0] || { id: "Wrong Proposal (This label is only test)" };
+        result.envVariableName = type.id;
         break;
       }
       case "1":
       default:
-        result = await contracts.ballotStorage.getBallotMember(i);
+        result = await callContractMethod(
+          web3Instance,
+          "BallotStorage",
+          "getBallotMember",
+          i
+        );
         break;
     }
 
@@ -426,8 +562,14 @@ class App extends React.Component {
         window.open("https://www.wemix.com/", "_blank");
         break;
       case "explorer":
-        window.open(metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER);
+        window.open(
+          `https://microscope.${
+            process.env.NODE_ENV === "production" ? "" : "test."
+          }wemix.com`,
+          "_blank"
+        );
         break;
+
       case "github":
         window.open("https://github.com/wemixarchive", "_blank");
         break;
@@ -445,7 +587,6 @@ class App extends React.Component {
         return (
           <Authority
             title="Authority"
-            contracts={contracts}
             getErrModal={this.getErrModal}
             authorityOriginData={this.data.authorityOriginData}
             netName={web3Instance.netName}
@@ -457,9 +598,8 @@ class App extends React.Component {
         return (
           <Voting
             title="Voting"
-            contracts={contracts}
             getErrModal={this.getErrModal}
-            initContractData={this.initContractData}
+            getContractAuthorityBallots={this.getContractAuthorityBallots}
             refreshContractData={this.refreshContractData}
             authorityOriginData={this.data.authorityOriginData}
             ballotMemberOriginData={this.data.ballotMemberOriginData}
@@ -468,15 +608,13 @@ class App extends React.Component {
             loading={this.state.loading}
             convertLoading={this.convertLoading}
             showProposal={nav === "3" ? true : this.state.showProposal}
-            isMember={this.data.isMember}
+            isMember={this.state.isMember}
             stakingMax={this.data.stakingMax}
             stakingMin={this.data.stakingMin}
             votingDurationMax={this.data.votingDurationMax}
             votingDurationMin={this.data.votingDurationMin}
             selectedMenu={nav}
-            oldVotingAddr={this.data.oldVotingAddr}
-            oldRewardAddr={this.data.oldRewardAddr}
-            memberIdx={this.data.memberIdx}
+            defaultAccount={this.state.defaultAccount}
           />
         );
       default:
@@ -506,9 +644,9 @@ class App extends React.Component {
     this.data.errTitle = _title;
     this.data.errContent = _err;
     if (_link)
-      this.data.errLink = `${
-        metaWeb3Constants.NETWORK[web3Instance.netId].EXPLORER
-      }/${_link}`;
+      this.data.errLink = `https://microscope.${
+        process.env.NODE_ENV === "production" ? "" : "test."
+      }wemix.com/${_link}`;
     else this.data.errLink = false;
     this.setState({ errModalVisible: true });
   };
@@ -520,29 +658,37 @@ class App extends React.Component {
   };
 
   submitWemixStaking = () => {
+    this.setState({ loading: true });
     if (!/^[1-9]\d*$/.test(this.data.stakingAmount)) {
       this.setState({ errStakging: true });
       return;
     }
 
-    this.setState({ loading: true });
     let trx = {};
-    if (this.data.stakingTopic === "deposit")
-      trx = contracts.staking.deposit(this.data.stakingAmount);
-    else trx = contracts.staking.withdraw(this.data.stakingAmount);
+    const amount = util.convertEtherToWei(this.data.stakingAmount);
+
+    if (this.data.stakingTopic === "deposit") {
+      trx = encodeABIValueInTrx(web3Instance, "Staking", "deposit", amount);
+    } else {
+      trx = encodeABIValueInMethod(web3Instance, "Staking", "withdraw", amount);
+    }
     this.sendStakingTransaction(trx);
   };
 
   async sendStakingTransaction(trx) {
     try {
-      trx.from = web3Instance.defaultAccount;
+      trx.from = this.state.defaultAccount;
       const result = await web3Instance.web3.eth.sendTransaction(trx);
       if (result) {
-        this.stakingEventsWatch();
-        this.setState({ stakingModalVisible: false, loading: false });
+        this.setStakingEventsWatch();
       }
     } catch (err) {
+      let message = err.message;
+      if (err.message.includes("JSON-RPC error")) message = "RPC error";
+      this.getErrModal(message, "Staking Error");
       console.error(err);
+    } finally {
+      this.setState({ stakingModalVisible: false, loading: false });
     }
   }
 
@@ -575,9 +721,17 @@ class App extends React.Component {
                 nav={this.state.nav}
                 myBalance={this.data.myBalance}
                 myLockedBalance={this.data.myLockedBalance}
-                isMember={this.data.isMember}
+                isMember={this.state.isMember}
                 onMenuClick={this.onMenuClick}
                 getStakingModal={this.getStakingModal}
+                isLogin={this.state.isLogin}
+                onLogin={this.onLogin}
+                onLogout={this.onLogout}
+                walletVisible={this.state.walletVisible}
+                setWalletModal={this.setWalletModal}
+                updateAccountData={this.updateAccountData}
+                nowWalletType={this.state.nowWalletType}
+                defaultAccount={this.state.defaultAccount}
               />
             </Header>
 
