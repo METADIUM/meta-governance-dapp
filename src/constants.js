@@ -3,7 +3,7 @@ export const TESTNET_CONTRACTS = [
   { name: "Registry", address: "0x7A93c5d3A87929b99dA86D5b450838B47C3F0904" },
   {
     name: "EnvStorageImp",
-    address: "0xCd53a3297eb4C5464a8Ee9292BEc3CBBFEb150ED",
+    address: "0x14e17573BE5De74Ff3ed03f76433891aEe876d9D",
   },
   { name: "EnvStorage", address: "0x14e17573BE5De74Ff3ed03f76433891aEe876d9D" },
   {
