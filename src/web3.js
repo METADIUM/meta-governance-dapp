@@ -94,19 +94,6 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
         duration,
         oldStaker,
       } = value[0];
-      console.warn(
-        staker,
-        voter,
-        reward,
-        name,
-        enode,
-        ip,
-        port,
-        lockAmount,
-        memo,
-        duration,
-        oldStaker
-      );
       trxData.data = web3.web3Contracts.GovImp.methods
         .addProposalToChangeMember(
           [
