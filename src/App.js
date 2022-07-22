@@ -51,8 +51,6 @@ class App extends React.Component {
     // voting duration
     votingDurationMin: null,
     votingDurationMax: null,
-    oldVotingAddr: "",
-    oldRewardAddr: "",
     memberIdx: "",
   };
 
@@ -72,6 +70,8 @@ class App extends React.Component {
     defaultAccount: null,
     isMember: false,
     walletVisible: false,
+    oldVotingAddr: "",
+    oldRewardAddr: "",
     nowWalletType: null,
   };
 
@@ -150,6 +150,9 @@ class App extends React.Component {
     if (web3Instance.web3.currentProvider.constructor.name === "HttpProvider")
       return;
 
+    // checksum
+    newAccount = web3Instance.web3.utils.toChecksumAddress(newAccount);
+
     await this.updateAccountBalance(newAccount);
     this.setStakingEventsWatch(newAccount);
     const isMember = await callContractMethod(
@@ -158,7 +161,7 @@ class App extends React.Component {
       "isMember",
       newAccount
     );
-    this.getMyAddress();
+    await this.getMyAddress(newAccount);
     this.setState({ isMember, defaultAccount: newAccount });
   }
 
@@ -202,15 +205,12 @@ class App extends React.Component {
     this.data.myLockedBalance = util.convertWeiToEther(
       this.data.myLockedBalance
     );
-    // get voting, reward address
-    await this.getMyAddress();
     this.setState({ stakingModalVisible: false, loading: false });
   }
 
   // get information for send transaction (Myinfo)
-  async getMyAddress() {
+  async getMyAddress(defaultAccount) {
     try {
-      const { defaultAccount } = this.state;
       const memberLength = await onlyCallContractMethod(
         web3Instance,
         "GovImp",
@@ -243,8 +243,8 @@ class App extends React.Component {
         memberIdx
       );
       this.data.memberIdx = memberIdx;
-      this.data.oldVotingAddr = oldVotingAddr;
-      this.data.oldRewardAddr = oldRewardAddr;
+      this.setState({ oldVotingAddr: oldVotingAddr });
+      this.setState({ oldRewardAddr: oldRewardAddr });
     } catch (err) {
       console.log(err);
       this.getErrModal(err.message, err.name);
@@ -615,8 +615,8 @@ class App extends React.Component {
             votingDurationMin={this.data.votingDurationMin}
             selectedMenu={nav}
             defaultAccount={this.state.defaultAccount}
-            oldVotingAddr={this.data.oldVotingAddr}
-            oldRewardAddr={this.data.oldRewardAddr}
+            oldVotingAddr={this.state.oldVotingAddr}
+            oldRewardAddr={this.state.oldRewardAddr}
             memberIdx={this.data.memberIdx}
           />
         );

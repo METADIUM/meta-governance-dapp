@@ -168,18 +168,13 @@ export const getAccounts = async (walletType) => {
   switch (walletType) {
     case META_MASK:
       account = await web3Instance.web3.eth.requestAccounts();
-      break;
-
+      return account[0];
     case WALLET_CONNECT:
     case COIN_BASE:
       account = await web3Instance.web3.eth.getAccounts();
-      break;
-
+      return account[0];
     default:
-      account = "0x0000000000000000000000000000000000000000";
-      break;
   }
-  return web3Instance.web3.utils.toChecksumAddress(account[0]);
 };
 
 export { web3Instance };
