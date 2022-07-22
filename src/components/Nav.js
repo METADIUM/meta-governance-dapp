@@ -4,10 +4,10 @@ import { Button, Row, Menu, Input, Affix } from "antd";
 import "./style/style.css";
 import WalletButton from "./WalletButton";
 import { ConnectWalletModal, DisConnectWalletModal, ErrModal } from "./Modal";
-import WalletPage from "./WalletPage";
 import { web3Modal } from "../web3Modal";
 import { chainInfo, web3Instance } from "../web3";
 import { walletTypes } from "../constants";
+import ConnectWalletPage from "./ConnectWalletPage";
 
 const TopNav = ({
   defaultAccount,
@@ -31,9 +31,8 @@ const TopNav = ({
   const [provider, setProvider] = useState(null);
   const [errVisible, setErrVisible] = useState(false);
   const [errMsg, setErrMsg] = useState("");
-  const [errTitle, setErrTitle] = useState("Error");
+  const errTitle = "Error";
 
-  const wallets = web3Modal.userOptions;
   const {
     chainId,
     chainName,
@@ -127,37 +126,12 @@ const TopNav = ({
     console.log("Set a new Provider!", newProvider);
   };
 
-  const ConnectButton = ({ wallet, index, size = "30px" }) => {
-    if (
-      index === 0 &&
-      wallet.name !== "MetaMask" &&
-      wallet.name !== "WalletConnect"
-    ) {
-      return <></>;
-    }
-
-    return (
-      <div className="wallet-list" onClick={() => changeProvider(wallet.id)}>
-        <img
-          src={wallet.logo}
-          alt="wallet img"
-          style={{ width: size, height: size, marginRight: "10px" }}
-        />
-        <p>{wallet.name}</p>
-      </div>
-    );
-  };
-
   const handleAccountsChanged = async (accounts) => {
-    console.log("change account", accounts);
     await updateAccountData(accounts[0]);
   };
 
   const handleChainChanged = async (chainId) => {
-    console.log("change chain");
-    const nowChainId = web3Instance.web3.utils.hexToNumber(chainId);
-
-    if (chainInfo.chainId == nowChainId) {
+    if (chainInfo.chainId === chainId) {
       await changeProvider();
     } else {
       openErrModal("Your wallet is not on the right network.");
@@ -170,7 +144,6 @@ const TopNav = ({
   };
 
   const handleDisconnect = () => {
-    console.log("disconnect");
     if (isLogin) onLogout();
   };
   useEffect(() => {
@@ -243,36 +216,10 @@ const TopNav = ({
           visible={walletVisible}
           setWalletModal={setWalletModal}
         >
-          <div
-            style={{ display: "flex", flexDirection: "column", height: "100%" }}
-          >
-            {wallets.map((wallet, index) => (
-              <ConnectButton key={index} wallet={wallet} index={index} />
-            ))}
-            <div
-              style={{ marginTop: "48px", marginBottom: "40px", width: "100%" }}
-            >
-              <h3>Connectable with WEMIX Wallet App</h3>
-              <p>1. Select WalletConnect</p>
-              <p>2. Use the QR scan fuction of the WEMIX Wallet App main.</p>
-            </div>
-            <Button
-              className="walletlist-cancel-btn"
-              onClick={() => setWalletModal()}
-            >
-              Cancel
-            </Button>{" "}
-          </div>
-
-          {/* <WalletPage
-            onLogin={onLogin}
-            onLogout={onLogout}
+          <ConnectWalletPage
+            changeProvider={changeProvider}
             setWalletModal={setWalletModal}
-            updateAccountData={updateAccountData}
-            nowWalletType={nowWalletType}
-            provider={provider}
-            setProvider={setProvider}
-          /> */}
+          />
         </ConnectWalletModal>
         <DisConnectWalletModal
           onDisConnect={onDisConnect}

@@ -27,7 +27,6 @@ import AuthorityList from "./static/AuthorityList.json";
 
 import "./App.css";
 import "./components/style/style.css";
-import WalletPage from "./components/WalletPage";
 import { getWeb3Modal } from "./web3Modal";
 
 const { Header, Content, Footer } = Layout;
@@ -536,8 +535,6 @@ class App extends React.Component {
 
     const { nav } = this.state;
     switch (nav) {
-      case "0":
-        return <WalletPage onLogin={this.onLogin} />;
       case "1":
         return (
           <Authority
@@ -634,8 +631,9 @@ class App extends React.Component {
     trx.from = this.state.defaultAccount;
     web3Instance.web3.eth.sendTransaction(trx, async (err, hash) => {
       if (err) {
-        console.log(err);
-        this.getErrModal(err.message, "Staking Error");
+        let message = err.message;
+        if (err.message.includes("JSON-RPC error")) message = "RPC error";
+        this.getErrModal(message, "Staking Error");
       } else {
         console.log("hash: ", hash);
       }

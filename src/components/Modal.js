@@ -73,54 +73,66 @@ const ErrModal = ({
   link,
   visible,
   coloseErrModal = (f) => f,
-}) => (
-  <Modal
-    className="errorModal"
-    title={title}
-    visible={visible}
-    onCancel={coloseErrModal}
-    footer={
-      link
-        ? [
-            <a
-              key="link"
-              href={link}
-              rel="noopener noreferrer"
-              target="_blank"
-              className="ant-btn"
-            >
-              Checking on the Explorer
-            </a>,
-            <Button
-              type="primary"
-              key="ok"
-              className={"btn-fill-primary " + netName}
-              onClick={coloseErrModal}
-            >
-              Okay
-            </Button>,
-          ]
-        : [
-            <Button
-              type="primary"
-              key="ok"
-              className={"btn-fill-primary " + netName}
-              onClick={coloseErrModal}
-            >
-              Okay
-            </Button>,
-          ]
-    }
-  >
-    <p className="text-bold">Please revises the following information!</p>
-    <div className="text-container">
-      <div className="flex error-icon">
-        <Icon type="exclamation-circle" />
-        <p>{err}</p>
-      </div>
+}) => {
+  const RPCErrorMSG = () => (
+    <div>
+      <p>Ensure the network has been added correctly.</p>
+      <p>Ensure you have enough coins to pay for gas.</p>
+      <p>
+        Ensure you are using the latest version of the app or the extension.
+      </p>
     </div>
-  </Modal>
-);
+  );
+
+  return (
+    <Modal
+      className="errorModal"
+      title={title}
+      visible={visible}
+      onCancel={coloseErrModal}
+      footer={
+        link
+          ? [
+              <a
+                key="link"
+                href={link}
+                rel="noopener noreferrer"
+                target="_blank"
+                className="ant-btn"
+              >
+                Checking on the Explorer
+              </a>,
+              <Button
+                type="primary"
+                key="ok"
+                className={"btn-fill-primary " + netName}
+                onClick={coloseErrModal}
+              >
+                Okay
+              </Button>,
+            ]
+          : [
+              <Button
+                type="primary"
+                key="ok"
+                className={"btn-fill-primary " + netName}
+                onClick={coloseErrModal}
+              >
+                Okay
+              </Button>,
+            ]
+      }
+    >
+      <p className="text-bold">Please revises the following information!</p>
+      <div className="text-container">
+        <div className="flex error-icon">
+          <Icon type="exclamation-circle" />
+          <div>{err === "RPC error" ? <RPCErrorMSG /> : err}</div>
+        </div>
+      </div>
+    </Modal>
+  );
+};
 
 const AccessFailedModal = ({ visible, message }) => (
   <Modal
