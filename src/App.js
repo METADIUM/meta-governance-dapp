@@ -158,7 +158,7 @@ class App extends React.Component {
       "isMember",
       newAccount
     );
-    await this.getMyAddress();
+    this.getMyAddress();
     this.setState({ isMember, defaultAccount: newAccount });
   }
 
