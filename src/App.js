@@ -158,6 +158,7 @@ class App extends React.Component {
       "isMember",
       newAccount
     );
+    await this.getMyAddress();
     this.setState({ isMember, defaultAccount: newAccount });
   }
 
@@ -241,7 +242,6 @@ class App extends React.Component {
         "getReward",
         memberIdx
       );
-
       this.data.memberIdx = memberIdx;
       this.data.oldVotingAddr = oldVotingAddr;
       this.data.oldRewardAddr = oldRewardAddr;
@@ -615,6 +615,9 @@ class App extends React.Component {
             votingDurationMin={this.data.votingDurationMin}
             selectedMenu={nav}
             defaultAccount={this.state.defaultAccount}
+            oldVotingAddr={this.data.oldVotingAddr}
+            oldRewardAddr={this.data.oldRewardAddr}
+            memberIdx={this.data.memberIdx}
           />
         );
       default:

@@ -1198,8 +1198,7 @@ class ProposalForm extends React.Component {
   // get information for send transaction (Myinfo)
   async getMyInfo() {
     try {
-      const { defaultAccount } = web3Instance;
-      const { memberIdx } = this.props;
+      const { defaultAccount, memberIdx } = this.props;
       const { name, enode, ip, port } = await callContractMethod(
         web3Instance,
         "GovImp",

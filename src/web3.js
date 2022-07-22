@@ -76,9 +76,59 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
   try {
     let trxData = {
       to: getContractAddr(contract),
-      data: web3.web3Contracts[contract].methods[method](...value).encodeABI(),
     };
-
+    if (
+      method === "addProposalToAddMember" ||
+      method === "addProposalToChangeMember"
+    ) {
+      const {
+        staker,
+        voter,
+        reward,
+        name,
+        enode,
+        ip,
+        port,
+        lockAmount,
+        memo,
+        duration,
+        oldStaker,
+      } = value[0];
+      console.warn(
+        staker,
+        voter,
+        reward,
+        name,
+        enode,
+        ip,
+        port,
+        lockAmount,
+        memo,
+        duration,
+        oldStaker
+      );
+      trxData.data = web3.web3Contracts.GovImp.methods
+        .addProposalToChangeMember(
+          [
+            staker,
+            voter,
+            reward,
+            name,
+            enode,
+            ip,
+            port,
+            lockAmount,
+            memo,
+            duration,
+          ],
+          method === "addProposalToChangeMember" ? oldStaker : null
+        )
+        .encodeABI();
+    } else {
+      trxData.data = web3.web3Contracts[contract].methods[method](
+        ...value
+      ).encodeABI();
+    }
     return trxData;
   } catch (err) {
     return err;
@@ -118,13 +168,18 @@ export const getAccounts = async (walletType) => {
   switch (walletType) {
     case META_MASK:
       account = await web3Instance.web3.eth.requestAccounts();
-      return account[0];
+      break;
+
     case WALLET_CONNECT:
     case COIN_BASE:
       account = await web3Instance.web3.eth.getAccounts();
-      return account[0];
+      break;
+
     default:
+      account = "0x0000000000000000000000000000000000000000";
+      break;
   }
+  return web3Instance.web3.utils.toChecksumAddress(account[0]);
 };
 
 export { web3Instance };

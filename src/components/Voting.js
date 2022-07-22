@@ -11,7 +11,12 @@ import {
 } from "./";
 
 import * as util from "../util";
-import { encodeABIValueInMethod, web3Instance } from "../web3";
+import {
+  callContractMethod,
+  encodeABIValueInMethod,
+  onlyCallContractMethod,
+  web3Instance,
+} from "../web3";
 import { constants, ENV_PARAMETER_COUNT } from "../constants";
 
 // import "./style/style.css";
@@ -354,16 +359,23 @@ class Voting extends React.Component {
       return;
     }
     // check if you've already voted
-    const isVoted = await this.ballotStorage.hasAlreadyVoted(
+    const isVoted = await callContractMethod(
+      web3Instance,
+      "ballotStorage",
+      "hasAlreadyVoted",
       id,
-      web3Instance.defaultAccount
+      this.props.defaultAccount
     );
     if (isVoted) {
       this.props.getErrModal("You've already voted.", "Voting Error");
       return;
     }
     // check if there are items already being voted on
-    const isInVoting = await this.governance.getBallotInVoting();
+    const isInVoting = await onlyCallContractMethod(
+      web3Instance,
+      "GovImp",
+      "getBallotInVoting"
+    );
     if (isInVoting && isInVoting !== item.id.toString()) {
       this.props.getErrModal(
         "Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed.",
@@ -400,7 +412,7 @@ class Voting extends React.Component {
   onClickUpdateProposal = (topic, item) => {
     const { id, duration, creator } = item;
     // only those who voted are allowed
-    if (creator !== web3Instance.defaultAccount) {
+    if (creator !== this.props.defaultAccount) {
       this.props.getErrModal(
         "You don't have premission to Change or Revoke.",
         "Voting Error"
