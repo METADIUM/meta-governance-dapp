@@ -8,7 +8,7 @@ import {
 } from "./constants";
 import * as abis from "./abis/index";
 
-const isDev = process.env.NODE_ENV === "development";
+const isDev = process.env.REACT_APP_MODE === "development";
 
 // get network deploy informations
 export const chainInfo = isDev ? TESTNET_CHAIN_INFO : MAINNET_CHAIN_INFO;
