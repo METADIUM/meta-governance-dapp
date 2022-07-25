@@ -1033,7 +1033,7 @@ class ProposalForm extends React.Component {
         case "VotingAddress": {
           const { staker, name, lockAmount, enode, ip, port, newVotingAddr } =
             data;
-          const { oldVotingAddr } = this.props;
+          const { oldVotingAddr, oldRewardAddr } = this.props;
           // check undefined
           if (util.checkUndefined(newVotingAddr)) {
             this.setState({
@@ -1059,7 +1059,7 @@ class ProposalForm extends React.Component {
           checkData = {
             staker,
             voter: newVotingAddr,
-            reward: staker,
+            reward: oldRewardAddr,
             name,
             lockAmount,
             enode,
@@ -1073,7 +1073,7 @@ class ProposalForm extends React.Component {
         case "RewardAddress": {
           const { staker, name, lockAmount, enode, ip, port, newRewardAddr } =
             data;
-          const { oldRewardAddr } = this.props;
+          const { oldVotingAddr, oldRewardAddr } = this.props;
           // check undefined
           if (util.checkUndefined(newRewardAddr)) {
             this.setState({
@@ -1098,7 +1098,7 @@ class ProposalForm extends React.Component {
             );
           checkData = {
             staker,
-            voter: staker,
+            voter: oldVotingAddr,
             reward: newRewardAddr,
             name,
             lockAmount,
