@@ -906,10 +906,10 @@ class ProposalForm extends React.Component {
           const envVal = util.encodeParameters(
             ["uint256", "uint256", "uint256", "uint256"],
             [
-              Number(blockRate1) * 100,
-              Number(blockRate2) * 100,
-              Number(blockRate3) * 100,
-              Number(blockRate4) * 100,
+              (Number(blockRate1) * 100).toFixed(0),
+              (Number(blockRate2) * 100).toFixed(0),
+              (Number(blockRate3) * 100).toFixed(0),
+              (Number(blockRate4) * 100).toFixed(0),
             ]
           );
           trxFunction = (trx) =>
