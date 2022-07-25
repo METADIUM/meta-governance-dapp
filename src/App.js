@@ -387,7 +387,7 @@ class App extends React.Component {
 
   // get a static list for network status from github repository
   async initAuthorityData() {
-    const authorityList = AuthorityList[process.env.NODE_ENV] || [];
+    const authorityList = AuthorityList[process.env.REACT_APP_MODE] || [];
     this.data.authorityOriginData = await this.refineAuthority(authorityList);
     util.setAuthorityToLocal(this.data.authorityOriginData);
   }
@@ -564,7 +564,7 @@ class App extends React.Component {
       case "explorer":
         window.open(
           `https://microscope.${
-            process.env.NODE_ENV === "production" ? "" : "test."
+            process.env.REACT_APP_MODE === "production" ? "" : "test."
           }wemix.com`,
           "_blank"
         );
@@ -649,7 +649,7 @@ class App extends React.Component {
     this.data.errContent = _err;
     if (_link)
       this.data.errLink = `https://microscope.${
-        process.env.NODE_ENV === "production" ? "" : "test."
+        process.env.REACT_APP_MODE === "production" ? "" : "test."
       }wemix.com/${_link}`;
     else this.data.errLink = false;
     this.setState({ errModalVisible: true });
