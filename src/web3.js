@@ -80,22 +80,41 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
     let trxData = {
       to: getContractAddr(contract),
     };
+    const {
+      staker,
+      voter,
+      reward,
+      name,
+      enode,
+      ip,
+      port,
+      lockAmount,
+      memo,
+      duration,
+      oldStaker,
+      newGovAddr,
+      envName,
+      envType,
+      envVal,
+    } = value[0];
     switch (method) {
       case "addProposalToAddMember":
-      case "addProposalToChangeMember": {
-        const {
-          staker,
-          voter,
-          reward,
-          name,
-          enode,
-          ip,
-          port,
-          lockAmount,
-          memo,
-          duration,
-          oldStaker,
-        } = value[0];
+        trxData.data = web3.web3Contracts.GovImp.methods
+          .addProposalToAddMember([
+            staker,
+            voter,
+            reward,
+            name,
+            enode,
+            ip,
+            port,
+            lockAmount,
+            memo,
+            duration,
+          ])
+          .encodeABI();
+        break;
+      case "addProposalToChangeMember":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToChangeMember(
             [
@@ -110,31 +129,30 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
               memo,
               duration,
             ],
-            method === "addProposalToChangeMember" ? oldStaker : null
+            oldStaker
           )
           .encodeABI();
         break;
-      }
-      case "addProposalToChangeGov": {
-        const { newGovAddr, memo, duration } = value[0];
+      case "addProposalToRemoveMember":
+        trxData.data = web3.web3Contracts.GovImp.methods
+          .addProposalToRemoveMember(staker, lockAmount, memo, duration)
+          .encodeABI();
+        break;
+      case "addProposalToChangeGov":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToChangeGov(newGovAddr, memo, duration)
           .encodeABI();
         break;
-      }
-      case "addProposalToChangeEnv": {
-        const { envName, envType, envVal, memo, duration } = value[0];
+      case "addProposalToChangeEnv":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToChangeEnv(envName, envType, envVal, memo, duration)
           .encodeABI();
         break;
-      }
-      default: {
+      default:
         trxData.data = web3.web3Contracts[contract].methods[method](
           ...value
         ).encodeABI();
         break;
-      }
     }
     return trxData;
   } catch (err) {
