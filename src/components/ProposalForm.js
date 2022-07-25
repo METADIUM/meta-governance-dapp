@@ -828,7 +828,7 @@ class ProposalForm extends React.Component {
           // convert ms
           const envVal = util.encodeParameters(
             ["uint256"],
-            [blockCreation * 1000]
+            [(blockCreation * 1000).toFixed(0)]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
