@@ -377,7 +377,7 @@ class Voting extends React.Component {
       "GovImp",
       "getBallotInVoting"
     );
-    if (isInVoting && isInVoting !== item.id.toString()) {
+    if (!(isInVoting === "0" || isInVoting === item.id.toString())) {
       this.props.getErrModal(
         "Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed.",
         "Voting Error"
