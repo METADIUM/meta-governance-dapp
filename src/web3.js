@@ -115,6 +115,13 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
           .encodeABI();
         break;
       }
+      case "addProposalToChangeGov": {
+        const { newGovAddr, memo, duration } = value[0];
+        trxData.data = web3.web3Contracts.GovImp.methods
+          .addProposalToChangeGov(newGovAddr, memo, duration)
+          .encodeABI();
+        break;
+      }
       case "addProposalToChangeEnv": {
         const { envName, envType, envVal, memo, duration } = value[0];
         trxData.data = web3.web3Contracts.GovImp.methods
