@@ -358,6 +358,12 @@ class Voting extends React.Component {
       this.props.getErrModal("web3 is not exist", "Voting Error");
       return;
     }
+    // check if you've logged in
+    if (!this.props.isLogin) {
+      this.props.getErrModal("Login Required.", "Voting Error");
+      return;
+    }
+
     // check if you've already voted
     const isVoted = await callContractMethod(
       web3Instance,

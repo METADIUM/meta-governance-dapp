@@ -608,6 +608,7 @@ class App extends React.Component {
             loading={this.state.loading}
             convertLoading={this.convertLoading}
             showProposal={nav === "3" ? true : this.state.showProposal}
+            isLogin={this.state.isLogin}
             isMember={this.state.isMember}
             stakingMax={this.data.stakingMax}
             stakingMin={this.data.stakingMin}
