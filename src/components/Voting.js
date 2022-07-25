@@ -260,13 +260,6 @@ class Voting extends React.Component {
         for (let i = 1; i <= paramsCnt; i++) {
           paramsArr.push("uint256");
         }
-        // TODO 기획서 v1.33 이전 데이터 형식과 맞지 않아 발생하는 에러 핸들링
-        if (
-          this.props.ballotMemberOriginData[id].id === 39 ||
-          this.props.ballotMemberOriginData[id].id === 40
-        )
-          paramsArr.pop();
-
         const decodeValue = util.decodeParameters(paramsArr, envVariableValue);
         // set description
         let description = `${envVariableName}: `;
