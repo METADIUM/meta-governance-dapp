@@ -1,16 +1,16 @@
 import Web3Modal from "web3modal";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { chainInfo } from "./web3";
 
-const rpcUrls = process.env.REACT_APP_NETWORK_RPC_URLS;
 let web3Modal;
 
 const providerOptions = {
   walletlink: {
     package: CoinbaseWalletSDK, // Required
     options: {
-      rpc: rpcUrls,
-      appName: "Wemix Governance", // Required
+      rpc: chainInfo.rpcUrls,
+      appName: "Wemix Governance dApp", // Required
       // infuraId: "f76653c7c7c649f2971203b4ace1450b", // Required unless you provide a JSON RPC url; see `rpc` below3
     },
   },
@@ -18,7 +18,7 @@ const providerOptions = {
     package: WalletConnectProvider, // required
     options: {
       rpc: {
-        1112: rpcUrls,
+        [chainInfo.chainId]: chainInfo.rpcUrls,
       },
       // infuraId: "f76653c7c7c649f2971203b4ace1450b", // required
     },
