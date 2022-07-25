@@ -347,6 +347,7 @@ class Voting extends React.Component {
 
   onClickVote = async (value, item) => {
     const { id, endTime, state } = item;
+    // check web3
     if (!web3Instance.web3) {
       this.props.getErrModal("web3 is not exist", "Voting Error");
       return;
@@ -356,14 +357,15 @@ class Voting extends React.Component {
       this.props.getErrModal("Login Required.", "Voting Error");
       return;
     }
-
     // check if you've already voted
     const isVoted = await callContractMethod(
       web3Instance,
       "ballotStorage",
       "hasAlreadyVoted",
-      id,
-      this.props.defaultAccount
+      {
+        id,
+        voter: this.props.defaultAccount,
+      }
     );
     if (isVoted) {
       this.props.getErrModal("You've already voted.", "Voting Error");

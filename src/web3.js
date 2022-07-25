@@ -61,13 +61,16 @@ export const onlyCallContractMethod = async (web3, contract, method) => {
 };
 
 // call contract method (with value)
-export const callContractMethod = async (
-  web3,
-  contract,
-  method,
-  value = null
-) => {
-  const data = await web3.web3Contracts[contract].methods[method](value).call();
+export const callContractMethod = async (web3, contract, method, ...value) => {
+  let data;
+  if (method === "hasAlreadyVoted") {
+    const { id, voter } = value[0];
+    data = await web3.web3Contracts.BallotStorage.methods
+      .hasAlreadyVoted(id, voter)
+      .call();
+  } else {
+    data = await web3.web3Contracts[contract].methods[method](value[0]).call();
+  }
   return data;
 };
 
