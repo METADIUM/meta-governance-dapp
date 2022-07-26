@@ -4,7 +4,6 @@ import { Button, Select, Icon } from "antd";
 import {
   callContractMethod,
   encodeABIValueInMethod,
-  onlyCallContractMethod,
   web3Instance,
 } from "../web3";
 
