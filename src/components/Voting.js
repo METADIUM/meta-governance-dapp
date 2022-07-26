@@ -412,6 +412,11 @@ class Voting extends React.Component {
 
   onClickUpdateProposal = (topic, item) => {
     const { id, duration, creator } = item;
+    // check if you've logged in
+    if (!this.props.isLogin) {
+      this.props.getErrModal("Login Required.", "Voting Error");
+      return;
+    }
     // only those who voted are allowed
     if (creator !== this.props.defaultAccount) {
       this.props.getErrModal(
