@@ -18,6 +18,7 @@
 
 .ant-layout-header .header-logo img {
   height: 32px;
+  cursor: pointer;
 }
 
 .ant-layout-header .header-menu {

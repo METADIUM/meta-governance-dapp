@@ -556,6 +556,10 @@ class App extends React.Component {
     this.setState({ nav: key });
   };
 
+  onLogoClick = () => {
+    this.setState({ nav: "1" });
+  };
+
   onClickFootIcon = (e) => {
     switch (e.target.alt) {
       case "wemix":
@@ -727,6 +731,7 @@ class App extends React.Component {
                 myLockedBalance={this.data.myLockedBalance}
                 isMember={this.state.isMember}
                 onMenuClick={this.onMenuClick}
+                onLogoClick={this.onLogoClick}
                 getStakingModal={this.getStakingModal}
                 isLogin={this.state.isLogin}
                 onLogin={this.onLogin}

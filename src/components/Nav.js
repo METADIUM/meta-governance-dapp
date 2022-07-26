@@ -17,6 +17,7 @@ const TopNav = ({
   isMember,
   myBalance,
   myLockedBalance,
+  onLogoClick = (f) => f,
   onMenuClick = (f) => f,
   getStakingModal = (f) => f,
   isLogin,
@@ -164,7 +165,11 @@ const TopNav = ({
   return (
     <Row className="container flex">
       <div className="header-logo flex flex-center-horizontal">
-        <img src={`/img/logo_header_${netName}.png`} alt="" />
+        <img
+          src={`/img/logo_header_${netName}.png`}
+          alt=""
+          onClick={onLogoClick}
+        />
       </div>
       <div className={"header-menu center-vertical " + netName}>
         <Menu
