@@ -354,7 +354,7 @@ class Voting extends React.Component {
     }
     // check if you've logged in
     if (!this.props.isLogin) {
-      this.props.getErrModal("Login Required.", "Voting Error");
+      this.props.getErrModal("Please connect your wallet.", "Voting Error");
       return;
     }
     // check if you've already voted
@@ -414,7 +414,7 @@ class Voting extends React.Component {
     const { id, duration, creator } = item;
     // check if you've logged in
     if (!this.props.isLogin) {
-      this.props.getErrModal("Login Required.", "Voting Error");
+      this.props.getErrModal("Please connect your wallet.", "Voting Error");
       return;
     }
     // only those who voted are allowed
