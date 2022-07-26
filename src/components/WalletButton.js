@@ -19,7 +19,7 @@ export default ({
     <>
       {!isLogin ? (
         <Button type="primary" className="connect-btn" onClick={setWalletModal}>
-          Connect Wallet
+          Wallet Connect
         </Button>
       ) : (
         <>
