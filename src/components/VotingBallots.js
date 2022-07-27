@@ -28,7 +28,13 @@ const VotingBallots = ({
   } = ballotMemberOriginData;
   return (
     <div
-      className={`ballotDiv ${btArr[parseInt(item.state)]}`}
+      className={`ballotDiv ${
+        item.ballotType === "3" &&
+        item.state === "3" &&
+        oldStakerAddress === newStakerAddress
+          ? "Changed"
+          : btArr[parseInt(item.state)]
+      }`}
       id={item.id}
       ref={(ref) => ballotDetails.set(item.id, ref)}
     >

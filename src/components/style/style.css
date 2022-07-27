@@ -426,6 +426,9 @@
 .ballotDiv .ballotInfoDiv .infoRight .status {
   color: #261bc9;
 }
+.ballotDiv.Changed .ballotInfoDiv .infoRight .status {
+  color: green;
+}
 
 .ballotContentDiv .voteDiv {
   padding: 16px;
