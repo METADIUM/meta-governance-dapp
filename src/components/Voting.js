@@ -357,6 +357,11 @@ class Voting extends React.Component {
       this.props.getErrModal("Please connect your wallet.", "Voting Error");
       return;
     }
+    // check if member
+    if (!this.props.isMember) {
+      this.props.getErrModal("You are not member.", "Voting Error");
+      return;
+    }
     // check if you've already voted
     const isVoted = await callContractMethod(
       web3Instance,
@@ -382,11 +387,6 @@ class Voting extends React.Component {
         "Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed.",
         "Voting Error"
       );
-      return;
-    }
-    // check if member
-    if (!this.props.isMember) {
-      this.props.getErrModal("You are not member", "Voting Error");
       return;
     }
     // check the voting time
@@ -415,6 +415,11 @@ class Voting extends React.Component {
     // check if you've logged in
     if (!this.props.isLogin) {
       this.props.getErrModal("Please connect your wallet.", "Voting Error");
+      return;
+    }
+    // check if member
+    if (!this.props.isMember) {
+      this.props.getErrModal("You are not member.", "Voting Error");
       return;
     }
     // only those who voted are allowed
