@@ -78,7 +78,13 @@ class Authority extends React.Component {
 
   getSNSList(snsList) {
     return Object.keys(snsList).map((key) => (
-      <a key={key} className="snsGroup" href={snsList[key]}>
+      <a
+        key={key}
+        className="snsGroup"
+        href={snsList[key]}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <i className={`fab fa-${key} fa-2x`} />
       </a>
     ));
