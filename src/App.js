@@ -216,16 +216,15 @@ class App extends React.Component {
         "GovImp",
         "getMemberLength"
       );
-      let memberIdx = 0;
-      for (let i = 1; i <= memberLength; i++) {
+      let memberIdx = 1;
+      for (memberIdx; memberIdx <= memberLength; memberIdx++) {
         const staker = await callContractMethod(
           web3Instance,
           "GovImp",
           "getMember",
-          i
+          memberIdx
         );
         if (staker === defaultAccount) {
-          memberIdx = i;
           break;
         }
       }
