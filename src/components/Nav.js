@@ -114,6 +114,7 @@ const TopNav = ({
 
   const changeProvider = async (walletType = nowWalletType) => {
     const newProvider = await getProvider(walletType);
+    localStorage.setItem("nowWallet", walletType);
 
     if (!newProvider) {
       console.log("Can't set a new Provider!");
@@ -161,6 +162,21 @@ const TopNav = ({
       };
     }
   }, [provider]);
+
+  // check login data & auto login
+  useEffect(() => {
+    const nowWallet = localStorage.getItem("nowWallet");
+    const WCdata = localStorage.getItem("walletconnect");
+
+    if (
+      nowWallet === walletTypes.META_MASK ||
+      nowWallet === walletTypes.COIN_BASE
+    ) {
+      changeProvider(nowWallet);
+    } else if (nowWallet === walletTypes.WALLET_CONNECT && !!WCdata) {
+      changeProvider(nowWallet);
+    }
+  }, []);
 
   return (
     <Row className="container flex">

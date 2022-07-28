@@ -77,7 +77,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    localStorage.clear();
+    // localStorage.clear();
     this.getContractAuthorityBallots =
       this.getContractAuthorityBallots.bind(this);
     this.refreshContractData = this.refreshContractData.bind(this);
@@ -101,22 +101,6 @@ class App extends React.Component {
       }
     );
   }
-
-  // componentDidMount() {
-  //   // detect when the MetaMask account is changed
-  //   window.ethereum.on("accountsChanged", async (chagedAccounts) => {
-  //     // disconnect MetaMask
-  //     if (util.checkUndefined(chagedAccounts[0])) {
-  //       console.error("MetaMask connection is broken!");
-  //       window.location.reload();
-  //       return;
-  //     }
-  //     await this.updateDefaultAccount(chagedAccounts[0]);
-  //   });
-
-  //   // detect when the MetaMask network is changed
-  //   window.ethereum.on("chainChanged", () => window.location.reload());
-  // }
 
   onLogin = async (walletType) => {
     const account = await getAccounts(walletType);
