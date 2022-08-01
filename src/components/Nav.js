@@ -102,7 +102,7 @@ const TopNav = ({
 
       await addWemixNetwork(provider_tmp);
     } catch (err) {
-      if (walletType === "walletconnect") {
+      if (provider_tmp && walletType === "walletconnect") {
         provider_tmp.close();
       }
       openErrModal(err.message);
