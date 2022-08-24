@@ -114,13 +114,13 @@ const TopNav = ({
 
   const changeProvider = async (walletType = nowWalletType) => {
     const newProvider = await getProvider(walletType);
-    localStorage.setItem("nowWallet", walletType);
 
     if (!newProvider) {
       console.log("Can't set a new Provider!");
       return;
     }
 
+    localStorage.setItem("nowWallet", walletType);
     web3Instance.web3.setProvider(newProvider);
     await onLogin(walletType);
     setProvider(newProvider);
