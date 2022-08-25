@@ -115,8 +115,19 @@ const TopNav = ({
   const changeProvider = async (walletType = nowWalletType) => {
     const newProvider = await getProvider(walletType);
 
+    const chainId = await web3Instance.web3.eth.getChainId();
+    const providerChainId = web3Instance.web3.utils.isHexStrict(
+      newProvider.chainId
+    )
+      ? web3Instance.web3.utils.hexToNumber(newProvider.chainId)
+      : newProvider.chainId;
+
     if (!newProvider) {
       console.log("Can't set a new Provider!");
+      return;
+    }
+    if (providerChainId !== chainId) {
+      openErrModal("Your wallet is not on the right network.");
       return;
     }
 
