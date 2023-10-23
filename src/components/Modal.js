@@ -35,6 +35,7 @@ const StakingModal = ({
   scrollType,
   getErrModal,
 }) => {
+  console.log(isMember);
   const [isLoading, setIsLoading] = useState(false);
   const [stakingTopic, setStakingTopic] = useState("deposit");
   const [stakingAmount, setStakingAmount] = useState("");
@@ -92,7 +93,7 @@ const StakingModal = ({
             getErrModal(
               "The transaction could not be sent normally.",
               "Proposal Submit Error",
-              receipt.transactionHash,
+              receipt.transactionHash
             );
             setIsLoading(false);
             setStakingModalVisible(false);
@@ -127,7 +128,7 @@ const StakingModal = ({
   return (
     <Modal
       className={cn("staking-modal", scrollType && "scroll")}
-      title="META Staking"
+      title='META Staking'
       visible={stakingModalVisible}
       onCancel={() => {
         if (!isLoading) {
@@ -136,37 +137,33 @@ const StakingModal = ({
       }}
       footer={[
         <Button
-          key="cancel"
+          key='cancel'
           onClick={() => {
             if (!isLoading) {
               setStakingModalVisible(false);
             }
           }}
-          className="voting-cancel-btn"
-        >
+          className='voting-cancel-btn'>
           Cancel
         </Button>,
         <Button
-          key="submit"
-          className="voting-ok-btn"
+          key='submit'
+          className='voting-ok-btn'
           onClick={submitWemixStaking}
-          loading={isLoading}
-        >
+          loading={isLoading}>
           Submit
         </Button>,
-      ]}
-    >
+      ]}>
       <div className={cn("staking-wrap")}>
         <Select
           value={stakingTopic}
           onChange={handleSelectChange}
           disabled={isLoading}
-          className={cn("voting-filter")}
-        >
-          <Option value="deposit">
+          className={cn("voting-filter")}>
+          <Option value='deposit'>
             {isMember ? "Additional" : "Deposit"} Staking
           </Option>
-          <Option value="withdraw">Withdraw Staking</Option>
+          <Option value='withdraw'>Withdraw Staking</Option>
         </Select>
 
         {/* <Input
@@ -179,8 +176,8 @@ const StakingModal = ({
       /> */}
 
         <VotingInputArea
-          inputType="suffix"
-          suffixCoin="META"
+          inputType='suffix'
+          suffixCoin='META'
           placeholder={"META"}
           value={addCommasToNumber(stakingAmount)}
           superPrefix={"Meta Amount"}
@@ -189,17 +186,17 @@ const StakingModal = ({
           className={errStaking ? "errInput" : ""}
           disabled={isLoading}
           errType={errStaking}
-          errText="Invalid Amount"
+          errText='Invalid Amount'
         />
       </div>
-      <div className="sub-info">
-        <p className="sub-info-detail">
+      <div className='sub-info'>
+        <p className='sub-info-detail'>
           <span>Staked</span>
           <span>
             <p>{addCommasToNumber(accountBalance.balance)}</p> META
           </span>
         </p>
-        <p className="sub-info-detail">
+        <p className='sub-info-detail'>
           <span>Locked</span>
           <span>
             <p>{addCommasToNumber(accountBalance.lockedBalance)}</p>
@@ -228,8 +225,8 @@ const ErrModal = () => {
     <Modal
       className={cn("staking-modal")}
       title={
-        <div className="staking-modal-wrapper">
-          <span className="staking-modal-title">{title}</span>
+        <div className='staking-modal-wrapper'>
+          <span className='staking-modal-title'>{title}</span>
         </div>
       }
       visible={isModalOpened}
@@ -239,39 +236,35 @@ const ErrModal = () => {
         errLink
           ? [
               <a
-                key="link"
+                key='link'
                 href={errLink}
-                rel="noopener noreferrer"
-                target="_blank"
-                className="ant-btn"
-              >
+                rel='noopener noreferrer'
+                target='_blank'
+                className='ant-btn'>
                 Checking on the Explorer
               </a>,
               <Button
-                key="ok"
-                className="voting-ok-btn"
-                onClick={() => setIsModalOpened(false)}
-              >
+                key='ok'
+                className='voting-ok-btn'
+                onClick={() => setIsModalOpened(false)}>
                 Okay
               </Button>,
             ]
           : [
               <Button
-                key="ok"
-                className="voting-ok-btn proposal-error"
-                onClick={() => setIsModalOpened(false)}
-              >
+                key='ok'
+                className='voting-ok-btn proposal-error'
+                onClick={() => setIsModalOpened(false)}>
                 Okay
               </Button>,
             ]
-      }
-    >
-      <div className="flex error-icon">
+      }>
+      <div className='flex error-icon'>
         <p className={cn("sub-title")} style={{ color: "black" }}>
           Please revises the following information!
         </p>
-        <div className="modal-info-wrapper">
-          <Icon type="exclamation-circle" />
+        <div className='modal-info-wrapper'>
+          <Icon type='exclamation-circle' />
           <div>{content === "RPC error" ? <RPCErrorMSG /> : content}</div>
         </div>
       </div>
@@ -281,13 +274,12 @@ const ErrModal = () => {
 
 const AccessFailedModal = ({ visible, message }) => (
   <Modal
-    className="accessFail"
-    title="Access Failed"
+    className='accessFail'
+    title='Access Failed'
     visible={visible}
-    footer={null}
-  >
-    <Icon type="close-circle" />
-    <p className="text-bold">{message}</p>
+    footer={null}>
+    <Icon type='close-circle' />
+    <p className='text-bold'>{message}</p>
   </Modal>
 );
 
@@ -305,12 +297,11 @@ const ChangeModal = ({
 
   return (
     <Modal
-      title="Voting Duration Change"
+      title='Voting Duration Change'
       visible={updateModal}
       onOk={completeModal}
-      onCancel={hideChangeModal}
-    >
-      <p className="changeDay flex flex-center-vertical">
+      onCancel={hideChangeModal}>
+      <p className='changeDay flex flex-center-vertical'>
         {ballotUpdateDuration} days
       </p>
       <Slider
@@ -335,8 +326,7 @@ const ConnectWalletModal = ({ children, visible, setWalletModal }) => {
       visible={visible}
       title={"Wallet Connect"}
       onCancel={setWalletModal}
-      footer={null}
-    >
+      footer={null}>
       {children}
     </Modal>
   );
@@ -349,25 +339,23 @@ const DisConnectWalletModal = ({
 }) => {
   return (
     <Modal
-      className="dis-connect-foot"
+      className='dis-connect-foot'
       visible={visible}
       title={"Disconnect"}
       onCancel={() => setDisConnectView(false)}
       onOk={onDisConnect}
       footer={[
         <Button
-          key="cancel"
-          className="discon-cancel-btn"
-          onClick={() => setDisConnectView(false)}
-        >
+          key='cancel'
+          className='discon-cancel-btn'
+          onClick={() => setDisConnectView(false)}>
           Cancel
         </Button>,
-        <Button key="ok" className="discon-ok-btn" onClick={onDisConnect}>
+        <Button key='ok' className='discon-ok-btn' onClick={onDisConnect}>
           Okay
         </Button>,
-      ]}
-    >
-      <p className="modal-disconnect-title">Disconnect your Wallet?</p>
+      ]}>
+      <p className='modal-disconnect-title'>Disconnect your Wallet?</p>
     </Modal>
   );
 };
@@ -394,23 +382,21 @@ const VotingModal = ({
         </div>
       }
       onCancel={() => isVotingModal(false)}
-      transitionName="voting"
+      transitionName='voting'
       closeIcon={<IconPopupClose />}
       footer={[
         btn.cancel && (
           <Button
-            key="cancel"
-            className="voting-cancel-btn"
-            onClick={() => isVotingModal(false)}
-          >
+            key='cancel'
+            className='voting-cancel-btn'
+            onClick={() => isVotingModal(false)}>
             Cancel
           </Button>
         ),
-        <Button key="ok" className="voting-ok-btn" onClick={() => onOk()}>
+        <Button key='ok' className='voting-ok-btn' onClick={() => onOk()}>
           {btn.btnName}
         </Button>,
-      ]}
-    >
+      ]}>
       {children}
     </Modal>
   );
@@ -431,26 +417,23 @@ const TxHashAddModal = ({
       visible={visible}
       title={<div>Update Tx Hash</div>}
       onCancel={() => onCancel()}
-      transitionName="tx-hash-add"
+      transitionName='tx-hash-add'
       closeIcon={<IconPopupClose />}
       footer={[
         <Button
-          key="cancel"
-          className="tx-hash-add-cancel-btn"
-          onClick={() => onCancel()}
-        >
+          key='cancel'
+          className='tx-hash-add-cancel-btn'
+          onClick={() => onCancel()}>
           Cancel
         </Button>,
         <Button
-          key="apply"
-          className="tx-hash-add-apply-btn"
+          key='apply'
+          className='tx-hash-add-apply-btn'
           onClick={() => onApply()}
-          disabled={disabled}
-        >
+          disabled={disabled}>
           Apply
         </Button>,
-      ]}
-    >
+      ]}>
       {children}
     </Modal>
   );

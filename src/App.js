@@ -50,6 +50,7 @@ const App = ({ children }) => {
     updateAccountData,
     setStakingEventsWatch,
   } = useAuth();
+  console.log(isMember, myBalance, lockedBalance);
   const { pathname } = useLocation();
   const prev = usePrevious(chain);
 
@@ -103,10 +104,10 @@ const App = ({ children }) => {
             })}
           </>
         ) : (
-          <div className="flex-column voting-wrap">
+          <div className='flex-column voting-wrap'>
             <OGHeader />
 
-            <Header
+            {/* <Header
               isMember={isMember}
               isStaker={isStaker}
               isConnect={isLoggedIn}
@@ -117,8 +118,8 @@ const App = ({ children }) => {
               onLogout={onLogout}
               updateAccountData={updateAccountData}
               getStakingModal={() => setIsShowStakingModal(true)}
-            />
-
+            /> */}
+            <Header />
             <StakingModal
               defaultAccount={address}
               isMember={isMember}
@@ -132,7 +133,6 @@ const App = ({ children }) => {
               setStakingModalVisible={setIsShowStakingModal}
               getErrModal={getErrModal}
             />
-
             <Content>
               {isWeb3Loaded ? (
                 <div>
@@ -146,7 +146,7 @@ const App = ({ children }) => {
               ) : (
                 getErrModal(
                   "This is an unknown network. Please connect to WEMIX network",
-                  "Connecting Error",
+                  "Connecting Error"
                 )
               )}
             </Content>

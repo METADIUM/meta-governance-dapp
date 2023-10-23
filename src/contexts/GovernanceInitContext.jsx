@@ -64,7 +64,7 @@ const GovInitProvider = ({ children }) => {
         console.log("getWeb3 error: ", error);
         setIsWeb3Loaded(false);
         setAccessFailMsg(error.message);
-      },
+      }
     );
   };
 
@@ -100,8 +100,8 @@ const GovInitProvider = ({ children }) => {
       onlyCallBatchMethod(
         web3Instance,
         "EnvStorageImp",
-        "getBallotDurationMinMax",
-      ),
+        "getBallotDurationMinMax"
+      )
     );
     // related member length
     br.add(onlyCallBatchMethod(web3Instance, "GovImp", "getMemberLength"));
@@ -151,7 +151,7 @@ const GovInitProvider = ({ children }) => {
 
     // 멤버의 address와 name으로 Map을 만들어 줌
     Object.values(data.authorityOriginData).forEach((item) =>
-      data.authorityNames.set(item.addr, item.title),
+      data.authorityNames.set(item.addr, item.title)
     );
   };
 
@@ -167,12 +167,12 @@ const GovInitProvider = ({ children }) => {
           web3Instance,
           "GovImp",
           "isMember",
-          authorityList[i].addr,
+          authorityList[i].addr
         )
       ) {
         memberAuthority[index] = authorityList[i];
         memberAuthority[index].addr = web3Instance.web3.utils.toChecksumAddress(
-          memberAuthority[index].addr,
+          memberAuthority[index].addr
         );
         index++;
       }
@@ -193,13 +193,13 @@ const GovInitProvider = ({ children }) => {
     const ballotCnt = await onlyCallContractMethod(
       web3Instance,
       "GovImp",
-      "ballotLength",
+      "ballotLength"
     );
     if (!ballotCnt) return;
     // proposal 데이터 batch 세팅
     for (let i = 1; i <= ballotCnt; i++) {
       brBallotBasic.add(
-        callBatchMethod(web3Instance, "BallotStorage", "getBallotBasic", i),
+        callBatchMethod(web3Instance, "BallotStorage", "getBallotBasic", i)
       );
     }
     try {
@@ -217,8 +217,8 @@ const GovInitProvider = ({ children }) => {
                 web3Instance,
                 "BallotStorage",
                 "getBallotAddress",
-                i,
-              ),
+                i
+              )
             );
             break;
           case "5":
@@ -227,8 +227,8 @@ const GovInitProvider = ({ children }) => {
                 web3Instance,
                 "BallotStorage",
                 "getBallotVariable",
-                i,
-              ),
+                i
+              )
             );
             break;
           case "1":
@@ -238,8 +238,8 @@ const GovInitProvider = ({ children }) => {
                 web3Instance,
                 "BallotStorage",
                 "getBallotMember",
-                i,
-              ),
+                i
+              )
             );
             break;
         }
@@ -259,7 +259,7 @@ const GovInitProvider = ({ children }) => {
           result,
           i,
           isUpdatd,
-          ballotMemberFinalizedData,
+          ballotMemberFinalizedData
         );
       });
     } catch (err) {
@@ -275,7 +275,7 @@ const GovInitProvider = ({ children }) => {
   const getBallotBasicOriginDataNew = (
     ret,
     i,
-    ballotBasicFinalizedData = {},
+    ballotBasicFinalizedData = {}
   ) => {
     // MyInfo 변경 내용은 화면 출력 X (조건: finalized, ballotType: 3, Accepts: 0)
     if (
@@ -305,7 +305,7 @@ const GovInitProvider = ({ children }) => {
     result,
     i,
     isUpdated = false,
-    ballotMemberFinalizedData = {},
+    ballotMemberFinalizedData = {}
   ) => {
     const type = data.ballotTypeData[i];
     // changeEnv의 경우 envVariableName을 세팅해줌
@@ -337,8 +337,7 @@ const GovInitProvider = ({ children }) => {
         isContractReady,
         data,
         accessFailMsg,
-      }}
-    >
+      }}>
       {children}
     </GovInitCtx.Provider>
   );
