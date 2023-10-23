@@ -1,0 +1,582 @@
+@import "./variables";
+@import "./mixin";
+
+.title-wrap {
+  margin-top: 40px;
+
+  @include sm {
+    margin-top: 32px;
+  }
+
+  .title {
+    font-size: 48px;
+    line-height: 1.2;
+    font-weight: 500;
+
+    @include md {
+      font-size: 32px;
+      font-weight: 600;
+    }
+    @include sm {
+      font-size: 32px;
+      font-weight: 600;
+    }
+  }
+  .description {
+    @include body-1;
+    margin-top: 16px;
+    color: $gray20;
+    white-space: pre-line;
+
+    .caption {
+      color: $purple3;
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      font-weight: 500;
+
+      @include md {
+        margin-top: 4px;
+      }
+      @include sm {
+        margin-top: 12px;
+      }
+    }
+
+    @include md {
+      margin-top: 20px;
+    }
+    @include sm {
+      margin-top: 24px;
+      max-width: none;
+      text-align: left;
+      white-space: inherit;
+    }
+  }
+}
+.governance-top-list {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 40px;
+  gap: 24px;
+
+  @include md {
+    gap: 16px;
+  }
+  @include sm {
+    flex-wrap: wrap;
+    gap: 0;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    margin-right: -20px;
+    justify-content: flex-start;
+  }
+
+  &.history-list {
+    @include sm {
+      & > div {
+        width: 50%;
+
+        &:first-child {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  & > * {
+    position: relative;
+    min-width: 183px;
+    text-align: left;
+    padding: 0 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    @include md {
+      min-width: 145px;
+      padding: 0 8px;
+    }
+    @include sm {
+      min-width: auto;
+      width: 33.333%;
+      padding: 20px 20px 24px;
+    }
+
+    &::before {
+      @include content;
+      position: absolute;
+      left: -24px;
+      top: 0;
+      width: 0;
+      height: 100%;
+      border-right: 1px solid $gray50;
+
+      @include md {
+        left: -16px;
+      }
+      @include sm {
+        left: 0;
+      }
+    }
+
+    &:first-child {
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding-left: 0;
+
+      @include sm {
+        position: relative;
+        width: 100%;
+        padding-left: 20px;
+        &::after {
+          @include content;
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          height: 0;
+          border-bottom: 1px solid $gray50;
+
+          @include md {
+            left: -16px;
+          }
+          @include sm {
+            left: 0;
+          }
+        }
+      }
+      &::before {
+        display: none;
+
+        @include sm {
+          display: block;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 0;
+          border-left: 0;
+          border-top: 1px solid $gray50;
+        }
+      }
+    }
+    &:nth-child(2) {
+      &::before {
+        display: none;
+      }
+    }
+    // &:last-child {
+    //   &::after {
+    //     display: none;
+    //   }
+    // }
+    // &:not(:first-child) {
+    //   @include sm {
+    //     width: 33.333%;
+    //   }
+    // }
+  }
+
+  dt {
+    @include body-1;
+    color: $gray20;
+  }
+  dd {
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1.2;
+    color: $gray20;
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    margin-top: 12px;
+
+    @include md {
+      gap: 6;
+      margin-top: 8px;
+      font-size: 24px;
+      line-height: 1.4;
+    }
+    @include sm {
+      gap: 8px;
+      margin-top: 6px;
+    }
+  }
+  .img-wrap {
+    display: inline-flex;
+    width: 40px;
+
+    @include md {
+      width: 28px;
+    }
+    @include sm {
+      width: 28px;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+.board-title-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  @include sm {
+    align-items: flex-end;
+  }
+}
+
+.board-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: $gray100;
+  line-height: 1.4;
+}
+
+.top-info {
+  margin-top: 24px;
+  display: flex;
+  gap: 32px;
+
+  @include md {
+    flex-direction: column;
+    gap: 16px;
+  }
+  @include sm {
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 40px;
+  }
+
+  dt {
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 700;
+    margin-bottom: 8px;
+
+    @include sm {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+  }
+
+  dd {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+
+    * {
+      font-weight: 500;
+      font-feature-settings: "calt" off;
+    }
+
+    @include sm {
+      font-size: 12px;
+    }
+  }
+
+  .proposer-cell {
+    dd {
+      display: flex;
+      gap: 16px;
+
+      @include sm {
+        flex-direction: column;
+        gap: 2px;
+      }
+      .cell-cont {
+        position: relative;
+        &::before {
+          @include content;
+          width: 0;
+          height: 12px;
+          border-left: 1px solid $gray50;
+          position: absolute;
+          left: -8px;
+          top: 4px;
+
+          @include sm {
+            display: none;
+          }
+        }
+
+        @include sm {
+          word-break: break-all;
+        }
+      }
+    }
+  }
+
+  .proposal-cell {
+    dd {
+      @include sm {
+        display: flex;
+      }
+      & + dd {
+        margin-top: 2px;
+      }
+    }
+    .cell-title {
+      display: inline-flex;
+      width: 180px;
+      color: $purple3;
+
+      @include sm {
+        width: 100%;
+      }
+    }
+
+    .cell-cont {
+      @include sm {
+        width: 100%;
+        word-break: break-all;
+      }
+    }
+  }
+}
+
+.vote-content {
+  display: flex;
+  gap: 12px;
+  margin-top: 40px;
+
+  @include md {
+    gap: 8px;
+    flex-direction: column;
+  }
+  @include sm {
+    gap: 8px;
+    flex-direction: column;
+  }
+
+  .block-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 50%;
+
+    @include md {
+      gap: 8px;
+      width: 100%;
+    }
+    @include sm {
+      gap: 8px;
+      width: 100%;
+    }
+
+    &:nth-of-type(2) {
+      @include md {
+        flex-direction: initial;
+        flex-wrap: wrap;
+        gap: 8px;
+        .block {
+          width: calc((100% - 8px) / 2);
+
+          &:nth-child(3) {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .block {
+      background-color: $gray30;
+
+      .block-inner {
+        padding: 24px;
+        color: $gray80;
+
+        @include md {
+          padding: 24px 20px;
+        }
+        @include sm {
+          padding: 20px 16px;
+        }
+
+        .block-title {
+          font-size: 18px;
+          font-weight: 600;
+          line-height: 1.2;
+          color: $gray100;
+        }
+
+        .block-cont {
+          margin-top: 20px;
+          font-size: 14px;
+          line-height: 1.5;
+          word-break: break-all;
+
+          @include md {
+            margin-top: 12px;
+          }
+          &.editor {
+            white-space: pre-wrap;
+          }
+
+          a {
+            word-break: break-all;
+          }
+
+          .date-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            @include xsm {
+              gap: 12px;
+            }
+
+            & > div {
+              display: flex;
+              justify-content: space-between;
+              font-weight: 500;
+
+              @include xsm {
+                flex-direction: column;
+              }
+
+              dt {
+                color: $gray70;
+              }
+            }
+
+            .amount-wrap {
+              display: flex;
+              gap: 40px;
+
+              @include md {
+                gap: 48px;
+              }
+              @include sm {
+                gap: 8px;
+              }
+
+              @include xsm {
+                justify-content: space-between;
+              }
+
+              .date {
+                min-width: 84px;
+                text-align: right;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.no-data {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $gray70;
+  text-align: center;
+  white-space: pre-line;
+  padding: 40px 0 80px;
+
+  @include md {
+    padding: 32px 0 40px;
+  }
+  @include sm {
+    padding: 48px 0 60px;
+    white-space: inherit;
+  }
+}
+
+.history-table-wrap {
+  margin-top: 16px;
+
+  .empty-wrap {
+    margin-bottom: -1.5625vw;
+    @include md {
+      margin-bottom: -20px;
+    }
+
+    @include sm {
+      border-top: 1px solid $gray50;
+      border-bottom: 1px solid $gray50;
+      padding: 48px 0 48px;
+      margin-bottom: 0;
+    }
+  }
+
+  :global {
+    .ant-table-thead > tr > th {
+      @include body-2;
+      background-color: transparent;
+      color: $gray100;
+      border-color: $gray50;
+      padding: 12px 8px;
+
+      font-weight: 700;
+    }
+    .ant-table-tbody > tr > td {
+      @include body-2;
+      border-color: $gray50;
+      padding: 12px 8px;
+      color: $gray100;
+      vertical-align: middle;
+
+      a {
+        color: $purple;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        &:hover {
+          svg {
+            opacity: 1;
+          }
+        }
+
+        svg {
+          width: 16px;
+          height: 16px;
+          flex-shrink: 0;
+          opacity: 0;
+          transition: opacity 0.2s;
+
+          @include sm {
+            display: none;
+          }
+        }
+      }
+      &.proposal {
+        a {
+          span {
+            @include ellipsis(1);
+
+            font-feature-settings: "calt" off;
+          }
+        }
+      }
+    }
+
+    .ant-table-tbody
+      > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)
+      > td {
+      background-color: $gray30;
+    }
+
+    .ant-table-placeholder {
+      background-color: transparent;
+      border: none;
+      padding-top: 3.125vw;
+
+      @include md {
+        padding-top: 60px;
+      }
+      @include sm {
+        padding: 32px 0 40px;
+      }
+    }
+  }
+}

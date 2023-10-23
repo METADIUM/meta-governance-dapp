@@ -1,0 +1,249 @@
+/* stylelint-disable declaration-block-single-line-max-declarations */
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0b1 | 201101 
+   NOTE: WORK IN PROGRESS
+   USE WITH CAUTION AND TEST WITH ABANDON */
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  color: inherit;
+  font-family: "Roboto", sans-serif;
+  font-size: 100%;
+  vertical-align: baseline;
+  // letter-spacing: -0.01rem;
+  word-break: keep-all;
+  font-feature-settings: "pnum", "pnum";
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+  content: none;
+}
+
+/* remember to define visible focus styles!
+:focus{outline:?????;}
+*/
+
+/* remember to highlight inserts somehow! */
+ins {
+  text-decoration: none;
+}
+del {
+  text-decoration: line-through;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+  font-weight: normal;
+}
+a {
+  display: inline-block;
+  text-decoration: none;
+}
+img {
+  display: block;
+}
+
+a:link,
+a:visited,
+a:active {
+  text-decoration: none;
+}
+
+caption,
+legend {
+  display: none;
+}
+button {
+  box-sizing: inherit;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+}
+em {
+  font-style: normal;
+}
+/* input disabled ios 기본 css reset */
+input[type="checkbox"],
+input[type="radio"] {
+  &:disabled {
+    & + label {
+      cursor: default;
+    }
+  }
+}
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+textarea {
+  appearance: none;
+  -webkit-appearance: none;
+  &:disabled {
+    opacity: 1;
+    -webkit-text-fill-color: inherit;
+  }
+  &::-ms-clear,
+  &::-ms-reveal {
+    display: none;
+    height: 0;
+    width: 0;
+  }
+}
+
+select {
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none; /* 사파리, 크롬 하위버전용 */
+  -moz-appearance: none; /* 사파리, 크롬 하위버전용 */
+  &::-ms-expand {
+    display: none;
+  }
+}
+
+input[type="text"]::-ms-clear {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+img {
+  image-rendering: crisp-edges;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+div,
+button,
+span,
+a {
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+} // 백그라운드 이미지 랜더링 css
+
+a,
+button {
+  &:focus-visible {
+    outline: 1px solid #fff;
+  }
+}

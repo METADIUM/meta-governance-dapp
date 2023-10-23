@@ -33,6 +33,10 @@
   border-left: #595959 solid 2px;
 }
 
+.header-gnb.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: transparent;
+}
+
 .ant-layout-header .header-menu .ant-menu-horizontal {
   height: 40px;
   border: none;
@@ -184,7 +188,7 @@
 }
 
 .sub-header .functionDiv.MAINNET {
-  padding: 8px 16px 16px 16px;
+  padding: 16px 16px 16px 16px;
 }
 .sub-header .functionDiv.TESTNET {
   padding: 16px 16px 16px 16px;
@@ -551,6 +555,10 @@
   width: 208px;
 }
 
+.moreDiv {
+  margin-bottom: 16px;
+}
+
 .moreDiv button {
   height: 40px;
   width: 208px;
@@ -595,6 +603,7 @@
 .contentRefDiv,
 .contentVotingDiv .proposalHead {
   padding: 24px 16px;
+  word-wrap: break-word;
 }
 
 .contentVotingDiv .proposalHead .title {
@@ -862,5 +871,5 @@
   color: #ffffff;
   height: 100%;
 
-  background: #1a1a1a;
+  background: rgb(45, 35, 249);
 }

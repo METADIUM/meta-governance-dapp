@@ -2,26 +2,132 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-
-    <!-- Font awesome link. -->
+    <link rel="shortcut icon" href="%REACT_APP_URL%/favicon.ico" />
+    <link rel="icon" href="%REACT_APP_URL%/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="72*72"
+      href="%REACT_APP_URL%/favicon_72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114*114"
+      href="%REACT_APP_URL%/favicon_114.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="144*144"
+      href="%REACT_APP_URL%/favicon_144.png"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="%REACT_APP_URL%/favicon_72.png"
+    />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
       integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
       crossorigin="anonymous"
     />
-
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i&display=swap"
+    />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+
+    <!-- helmet 사용 여부 확인할 것!!! -->
+    <title data-react-helmet="true">Metadium Governance</title>
+
+    <!-- governance는 사이트 등록 X => seo 태그 사용 X -->
+    <!-- <meta
+      name="description"
+      content=""
+      data-react-helmet="true"
+    />
+    <meta
+      name="keywords"
+      content=""
+      data-react-helmet="true"
+    />
+    <meta
+      property="og:title"
+      content=""
+      data-react-helmet="true"
+    />
+    <meta
+      property="og:description"
+      content=""
+      data-react-helmet="true"
+    />
+    <meta
+      property="og:site_name"
+      content=""
+      data-react-helmet="true"
+    />
+    <meta
+      property="og:url"
+      content="%REACT_APP_URL%"
+      data-react-helmet="true"
+    />
+    <meta property="og:type" content="website" data-react-helmet="true" />
+    <meta
+      property="og:image"
+      content="%REACT_APP_URL%/img/.png"
+      data-react-helmet="true"
+    />
+    <meta
+      property="og:image:alt"
+      content=""
+      data-react-helmet="true"
+    />
+
+    <meta
+      name="twitter:title"
+      content=""
+      data-react-helmet="true"
+    />
+    <meta
+      name="twitter:description"
+      content=""
+      data-react-helmet="true"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:domain" content="%REACT_APP_URL%" />
+    <meta
+      name="twitter:url"
+      content="%REACT_APP_URL%"
+      data-react-helmet="true"
+    />
+    <meta
+      name="twitter:image"
+      content="%REACT_APP_URL%/img/.png"
+      data-react-helmet="true"
+    /> -->
+
+    <!-- 22.11.03 추가 start: GA 추가  -->
+    <!-- <script
+      async
+      src=""
+    ></script> -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-0T6GX326KE");
+    </script>
+    <!-- 22.11.03 추가 end: GA 추가  -->
+
     <meta name="theme-color" content="#000000" />
     <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="manifest" href="%REACT_APP_URL%/manifest.json" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -31,7 +137,6 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>WEMIX3.0 Testnet Governance dApp</title>
   </head>
   <body>
     <noscript> You need to enable JavaScript to run this app. </noscript>

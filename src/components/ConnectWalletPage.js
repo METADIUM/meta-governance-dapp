@@ -1,9 +1,10 @@
 import React from "react";
 import { Button } from "antd";
-import { web3Modal } from "../web3Modal";
+// import { web3Modal } from "../web3Modal";
 
+// Not Use
 const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
-  const wallets = web3Modal.userOptions;
+  const wallets = [];
 
   const ConnectButton = ({ wallet, index, size = "30px" }) => {
     if (
@@ -31,10 +32,16 @@ const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
       {wallets.map((wallet, index) => (
         <ConnectButton key={index} wallet={wallet} index={index} />
       ))}
-      <div style={{ marginTop: "48px", marginBottom: "40px", width: "100%" }}>
-        <h3>Connectable with WEMIX Wallet App</h3>
-        <p>1. Select WalletConnect</p>
-        <p>2. Use the QR scan fuction of the WEMIX Wallet App main.</p>
+      <div style={{ marginTop: "20px", marginBottom: "20px", width: "100%" }}>
+        <h3>[MetaMask, CoinBase Wallet]</h3>
+        <p>Metamask and Coinbase Wallet are accessible through extensions.</p>
+        <br />
+        <h3>[Wallet Connect]</h3>
+        <p>
+          Wallet Connect supports mobile wallets that support the WEMIX 3.0
+          network.
+        </p>
+        <p>*Connectable with WEMIX Wallet App</p>
       </div>
       <Button
         className="walletlist-cancel-btn"

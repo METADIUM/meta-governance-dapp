@@ -1,8 +1,11 @@
 import React from "react";
-import { Input, Form, Icon } from "antd";
+import { Input, Form, Icon, Button } from "antd";
 
-import { SubmitForm } from "./Forms";
 import { shouldPass } from "../util";
+import VotingInputArea from "./voting/VotingInputArea";
+import VotingButton from "../components/voting/Button";
+import cn from "classnames/bind";
+import GovButton from "./voting/GovButton";
 
 // Voting Address
 export const VotingAddress = ({
@@ -13,43 +16,44 @@ export const VotingAddress = ({
   handleChange = shouldPass(),
   handleSubmit = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
         Old Voting Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input name="oldVotingAddr" value={oldVotingAddr} disabled />
-      </Form.Item>
-      <p className="subtitle">
+      </strong>
+      <VotingInputArea name="oldVotingAddr" value={oldVotingAddr} disabled />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
         New Voting Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newVotingAddr"
-          className={newVotingAddrErr ? "errInput" : ""}
-          disabled={loading}
-          onChange={handleChange}
-        />
-        <p className={newVotingAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          Enter the old Voting Address and the new Voting Address to change the
-          Voting Address.
-        </p>
-      </div>
-      <SubmitForm
-        netName={netName}
-        disabled={newVotingAddrErr}
-        loading={loading}
-        handleSubmit={handleSubmit}
+      </strong>
+      <VotingInputArea
+        name="newVotingAddr"
+        disabled={loading}
+        onChange={handleChange}
+        errType={newVotingAddrErr}
+        errText="Invalid Address"
       />
-    </Form>
-  </div>
+      <div className={cn("description")}>
+        Enter the old Voting Address and the new Voting Address to change the
+        Voting Address.
+      </div>
+    </div>
+    {/* <div className="myinfo-footer">
+      <VotingButton
+        text="Submit"
+        disabled={loading || newVotingAddrErr}
+        type="bg"
+        loading={loading}
+      />
+    </div> */}
+    <GovButton
+      text={"Submit"}
+      disabled={loading || newVotingAddrErr}
+      type="bg"
+      loading={loading}
+    />
+  </Form>
 );
 
 // Reward Address
@@ -61,41 +65,42 @@ export const RewardAddress = ({
   handleChange = shouldPass(),
   handleSubmit = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
         Old Reward Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input name="oldRewardAddr" value={oldRewardAddr} disabled />
-      </Form.Item>
-      <p className="subtitle">
+      </strong>
+      <VotingInputArea name="oldRewardAddr" value={oldRewardAddr} disabled />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
         New Reward Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newRewardAddr"
-          className={newRewardAddrErr ? "errInput" : ""}
-          disabled={loading}
-          onChange={handleChange}
-        />
-        <p className={newRewardAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          Enter the old Reward Address and the new Reward Address to change the
-          Reward Address.
-        </p>
-      </div>
-      <SubmitForm
-        netName={netName}
-        disabled={newRewardAddrErr}
-        loading={loading}
-        handleSubmit={handleSubmit}
+      </strong>
+      <VotingInputArea
+        name="newRewardAddr"
+        disabled={loading}
+        onChange={handleChange}
+        errType={newRewardAddrErr}
+        errText="Invalid Address"
       />
-    </Form>
-  </div>
+      <div className={cn("description")}>
+        Enter the old Reward Address and the new Reward Address to change the
+        Reward Address.
+      </div>
+    </div>
+    {/* <div className="myinfo-footer">
+      <VotingButton
+        text="Submit"
+        disabled={loading || newRewardAddrErr}
+        type="bg"
+        loading={loading}
+      />
+    </div> */}
+    <GovButton
+      text={"Submit"}
+      disabled={loading || newRewardAddrErr}
+      type="bg"
+      loading={loading}
+    />
+  </Form>
 );

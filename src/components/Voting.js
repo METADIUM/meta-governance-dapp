@@ -7,8 +7,8 @@ import {
   SubHeader,
   SubNav,
   ChangeModal,
-  BaseLoader,
 } from "./";
+import Loading from "../Loading";
 
 import * as util from "../util";
 import {
@@ -62,7 +62,7 @@ class Voting extends React.Component {
 
   async componentDidMount() {
     Object.values(this.props.authorityOriginData).forEach((item) =>
-      this.data.authorityNames.set(item.addr, item.title)
+      this.data.authorityNames.set(item.addr, item.title),
     );
     this.getBallotOriginItem();
   }
@@ -103,7 +103,7 @@ class Voting extends React.Component {
           onClickVote={this.onClickVote}
           setDescription={this.setDescription}
           onClickUpdateProposal={this.onClickUpdateProposal}
-        />
+        />,
       );
     });
     this.data.ballotBasicOriginItems = list.reverse();
@@ -123,7 +123,7 @@ class Voting extends React.Component {
         case constants.ballotState.Ready:
           proposalList.push(item);
           break; // Ready
-        case constants.ballotState.Accepted: // Aceepted, Rejected
+        case constants.ballotState.Approved: // Approved, Rejected
         case constants.ballotState.Rejected:
           finalizedList.push(item);
           break;
@@ -150,7 +150,7 @@ class Voting extends React.Component {
     oldStakerAddr,
     newStakerAddr,
     newVotingAddr,
-    newRewardAddr
+    newRewardAddr,
   ) => {
     // to distinguish whether it came from a search
     if (
@@ -239,12 +239,9 @@ class Voting extends React.Component {
       }
       //  Governance Contract Address
       case constants.ballotTypes.GovernanceContractAddress: {
-        const { oldGovernanceAddress, newGovernanceAddress } =
-          this.props.ballotMemberOriginData[id];
+        const { newGovernanceAddress } = this.props.ballotMemberOriginData[id];
         return (
           <p className="description flex-full">
-            Old Governance Address: {oldGovernanceAddress}
-            <br />
             New Governnce Address: {newGovernanceAddress}
           </p>
         );
@@ -265,17 +262,17 @@ class Voting extends React.Component {
         let description = `${envVariableName}: `;
         if (envVariableName === "Voting Duration Setting") {
           description += `${util.convertSecondsToDay(
-            decodeValue[0]
+            decodeValue[0],
           )}-${util.convertSecondsToDay(decodeValue[1])} day`;
         } else if (envVariableName === "Authority Member Staking Amount") {
           description += `${util.convertWeiToEther(
-            decodeValue[0]
+            decodeValue[0],
           )}-${util.convertWeiToEther(decodeValue[1])} WEMIX`;
         } else if (envVariableName === "Block Creation Time") {
           description += `${decodeValue[0] / 1000} s`;
         } else if (envVariableName === "Block Reward Amount") {
           description += `${util.convertWeiToEther(
-            decodeValue[0]
+            decodeValue[0],
           )} WEMIX/Block`;
         } else if (envVariableName === "Block Reward Distribution Method") {
           description = `Distribution Rate: ${
@@ -287,8 +284,10 @@ class Voting extends React.Component {
           description += `${util.convertWeiToGWei(decodeValue[0])} GWei`;
         } else if (envVariableName === "Gas Limit & baseFee") {
           description = `Gas Limit: ${util.convertWeiToGWei(
-            decodeValue[0]
-          )} GWei\nMax baseFee: ${decodeValue[1]}\nBaseFee Max Change Rate: ${
+            decodeValue[0],
+          )} GWei\nMax baseFee: ${
+            decodeValue[1]
+          } GWei\nBaseFee Max Change Rate: ${
             decodeValue[2]
           }\nGas Target Percentage: ${decodeValue[3]}`;
         } else {
@@ -370,7 +369,7 @@ class Voting extends React.Component {
       {
         id,
         voter: this.props.defaultAccount,
-      }
+      },
     );
     if (isVoted) {
       this.props.getErrModal("You've already voted.", "Voting Error");
@@ -380,12 +379,12 @@ class Voting extends React.Component {
     const isInVoting = await onlyCallContractMethod(
       web3Instance,
       "GovImp",
-      "getBallotInVoting"
+      "getBallotInVoting",
     );
     if (!(isInVoting === "0" || isInVoting === item.id.toString())) {
       this.props.getErrModal(
         "Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed.",
-        "Voting Error"
+        "Voting Error",
       );
       return;
     }
@@ -405,7 +404,7 @@ class Voting extends React.Component {
       "GovImp",
       "vote",
       id,
-      value === "Y"
+      value === "Y",
     );
     this.sendTransaction(trx, "Voting");
   };
@@ -425,8 +424,8 @@ class Voting extends React.Component {
     // only those who voted are allowed
     if (creator !== this.props.defaultAccount) {
       this.props.getErrModal(
-        "You don't have premission to Change or Revoke.",
-        "Voting Error"
+        "You don't have permission to Change or Revoke.",
+        "Voting Error",
       );
       return;
     }
@@ -444,7 +443,7 @@ class Voting extends React.Component {
       web3Instance,
       "BallotStorage",
       "cancelBallot",
-      id
+      id,
     );
     this.sendTransaction(trx, "Revoke", true);
   };
@@ -456,16 +455,22 @@ class Voting extends React.Component {
       "BallotStorage",
       "updateBallotDuration",
       this.data.curBallotIdx,
-      util.convertDayToSeconds(this.state.ballotUpdateDuration)
+      util.convertDayToSeconds(this.state.ballotUpdateDuration),
     );
     this.sendTransaction(trx, "Change", true);
     this.setState({ updateModal: false });
   };
 
   sendTransaction(trx, type, init = false) {
-    try {
-      trx.from = this.props.defaultAccount;
-      web3Instance.web3.eth.sendTransaction(trx, (err, hash) => {
+    this.props.convertLoading(true);
+
+    trx.from = this.props.defaultAccount;
+    trx.gasPrice = 101000000000;
+    // trx.maxFeePerGas = 101000000000;
+    // trx.maxPriorityFeePerGas = 100000000000;
+
+    web3Instance.web3.eth.sendTransaction(trx, (err, hash) => {
+      try {
         if (err) {
           throw err;
         } else {
@@ -477,17 +482,17 @@ class Voting extends React.Component {
               this.props.getErrModal(
                 "Transaction has been reverted.",
                 type + " Error",
-                receipt.transactionHash
+                receipt.transactionHash,
               );
             }
+            this.props.convertLoading(false);
           });
         }
-      });
-    } catch (err) {
-      this.props.getErrModal(err.message, err.name);
-    } finally {
-      this.props.convertLoading(false);
-    }
+      } catch (err) {
+        this.props.convertLoading(false);
+        this.props.getErrModal(err.message, err.name);
+      }
+    });
   }
 
   onClickSubMenu = (e) => {
@@ -535,15 +540,15 @@ class Voting extends React.Component {
     const str = e.target.value.toLowerCase();
     this.data.visibleActiveItems = this.filteringBallot(
       this.data.activeItems,
-      str
+      str,
     );
     this.data.visibleProposalItems = this.filteringBallot(
       this.data.proposalItems,
-      str
+      str,
     );
     this.data.visibleFinalizedItems = this.filteringBallot(
       this.data.finalizedItems,
-      str
+      str,
     );
     this.setState({
       isBallotLoading: true,
@@ -561,7 +566,7 @@ class Voting extends React.Component {
         value.props.ballotMemberOriginData.newMemberAddress,
         value.props.ballotMemberOriginData.oldMemberAddress,
         value.props.ballotMemberOriginData.newVotingAddress,
-        value.props.ballotMemberOriginData.newRewardAddress
+        value.props.ballotMemberOriginData.newRewardAddress,
       );
       return [topic, value.props.item.creator].some((elem) => {
         return elem.toLowerCase().indexOf(str) !== -1;
@@ -605,19 +610,19 @@ class Voting extends React.Component {
             />
 
             {(!this.state.isBallotLoading || this.props.loading) && (
-              <BaseLoader />
+              <Loading txLoading={true} />
             )}
             <ShowBallots
               titles={this.titles}
               visibleActiveItems={this.data.visibleActiveItems}
               visibleProposalItems={this.data.visibleProposalItems.slice(
                 0,
-                this.state.proposalCount
+                this.state.proposalCount,
               )}
               totalProposalItemLength={this.data.visibleProposalItems.length}
               visibleFinalizedItems={this.data.visibleFinalizedItems.slice(
                 0,
-                this.state.finalizedCount
+                this.state.finalizedCount,
               )}
               totalFinalizedItemLength={this.data.visibleFinalizedItems.length}
               netName={web3Instance.netName}

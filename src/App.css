@@ -314,3 +314,61 @@ input.errInput:focus {
 .ant-form-item-control {
   line-height: 32px;
 }
+
+.ant-form {
+  color: rgba(0, 0, 0, 1);
+}
+
+/* 제목 텍스트 강조 */
+.topic.text-exlarge.text-bold {
+  font-weight: 600 !important;
+}
+
+/* 제안자 주소 텍스트 스타일 변경 */
+.ballotInfoDiv .addr.text-small {
+  font-weight: 500 !important;
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Status 텍스트 강조 */
+.status.text-small {
+  font-weight: 600 !important;
+}
+
+/* 제안 내용 텍스트 스타일 변경 */
+.voteDiv .description {
+  line-height: 1.4 !important;
+  color: rgba(0, 0, 0, 1) !important;
+  margin-bottom: 14px !important;
+}
+
+/* 우측 보팅 기간 텍스트 스타일 변경 */
+.voteDiv .duration {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin-left: 0px !important;
+}
+
+.voteDiv .duration div div {
+  height: 24px !important;
+  justify-content: right !important;
+}
+
+.voteDiv .duration div div span:first-child {
+  margin-right: 8px !important;
+}
+
+.voteDiv .duration div div span {
+  text-align: right !important;
+}
+
+/* 반응형 고려, 보팅기간 정보를 하단으로 보내기 */
+.voteDiv .textContent {
+  flex-wrap: wrap !important;
+}
+
+/* Active, Proposals, Finalized 세 섹션 사이에 구분선 추가 (해당 섹션 사이에 새로운 div를 만드는 것으로 가정하여 스타일 추가) */
+.vote-sectionline {
+  margin: 0px 16px 0 16px !important;
+  border-bottom: 1px solid #c7c7c7 !important;
+}

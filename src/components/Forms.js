@@ -1,7 +1,12 @@
 import React from "react";
 import { Button, Input, Form, Icon, Select } from "antd";
+import VotingButton from "../components/voting/Button";
 
 import { convertSecondsToDay, shouldPass } from "../util";
+import VotingInputArea from "./voting/VotingInputArea";
+import { ReactComponent as IconArrowDown } from "../assets/images/ico_select_arrow_drop_down.svg";
+import cn from "classnames/bind";
+import GovButton from "./voting/GovButton";
 
 const { TextArea } = Input;
 
@@ -34,67 +39,70 @@ const ProposalFormFooter = ({
   netName,
   loading,
   disabled,
+  useVotingDuration = true,
   votingDurationMin,
   votingDurationMax,
   handleChange = shouldPass(),
+  // handleSubmit = shouldPass(),
 }) => {
   const min = convertSecondsToDay(votingDurationMin);
   const max = convertSecondsToDay(votingDurationMax);
+
   // option component
   const selectOption = () => {
     let comp = [];
     for (let op = min; op <= max; op++) {
       comp.push(
         <Select.Option key={op} value={`votDuration_${op}`}>
-          {op}
-        </Select.Option>
+          {op} {op === 1 ? "day" : "days"}
+        </Select.Option>,
       );
     }
     return comp;
   };
   return (
     <>
-      <div className="divider flex flex-end-vertical mt-16">
-        <div className="flex-half flex-end-vertical flex-column mr-0">
-          <Form.Item>
-            <label className="subtitle mt-0 flex-align-self-center">
-              Voting Duration
-            </label>
-            <Select
-              defaultValue={min}
-              name="votDuration"
-              disabled={loading}
-              className="mg-rl-15"
-              style={{ width: 180 }}
-              onChange={handleChange}
-            >
-              {selectOption()}
-            </Select>
-            <span>day</span>
-          </Form.Item>
+      <div className="voting-duration">
+        <div className="voting-duration-wrap">
+          {useVotingDuration && (
+            <>
+              <strong>
+                Voting Duration<span className={cn("required")}>*</span>
+              </strong>
+              <Select
+                defaultValue={"1day"}
+                name="votDuration"
+                disabled={loading}
+                className="voting-filter proposal"
+                suffixIcon={<IconArrowDown />}
+                onChange={handleChange}
+              >
+                {selectOption()}
+              </Select>
+            </>
+          )}
         </div>
       </div>
-      <SubmitForm netName={netName} disabled={disabled} loading={loading} />
+      <div>
+        {/* <VotingButton
+          text="Submit"
+          disabled={loading || disabled}
+          type="bg"
+          loading={loading}
+        /> */}
+        <GovButton
+          text="Submit"
+          disabled={loading || disabled}
+          type="bg"
+          loading={loading}
+          onClick={() => {
+            console.log(1);
+          }}
+        />
+      </div>
     </>
   );
 };
-
-// submit button component
-export const SubmitForm = ({ netName, disabled, loading }) => (
-  <Form.Item>
-    <div className="submitDiv flex">
-      <Button
-        name="submit"
-        htmlType="submit"
-        className={"submit_Btn btn-fill-primary text-large " + netName}
-        disabled={disabled}
-        loading={loading}
-      >
-        Submit
-      </Button>
-    </div>
-  </Form.Item>
-);
 
 // Add Authority Member
 export const AddProposalForm = ({
@@ -111,112 +119,100 @@ export const AddProposalForm = ({
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
-        New Authority Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newAddr"
-          className={newAddrErr ? "errInput" : ""}
-          disabled={loading}
-          onChange={handleChange}
-        />
-        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          When registering the first Authority Address, the Staking Address,
-          Voting Address, and Reward Address are the same.
-        </p>
-      </div>
-
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Node Name <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              name="newName"
-              className={newNameErr ? "errInput" : ""}
-              disabled={loading}
-              onChange={handleChange}
-            />
-            <p className={newNameErr ? "errHint" : "errHint-hide"}>
-              Invalid Name
-            </p>
-          </Form.Item>
-        </div>
-        <div className="flex-full">
-          <p className="subtitle">
-            WEMIX Amount to be locked <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              name="newLockAmount"
-              addonAfter="WEMIX"
-              defaultValue={stakingMin}
-              value={newLockAmount || ""}
-              className={newLockAmountErr ? "errInput" : ""}
-              disabled={loading}
-              onChange={handleChange}
-            />
-            <p className={newLockAmountErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <p className="subtitle">
-        New Authority Node Description <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newNode"
-          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-          className={newNodeErr ? "errInput" : ""}
-          disabled={loading}
-          onChange={handleChange}
-        />
-        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
-      </Form.Item>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          The hexadecimal node ID is encoded in the username portion of the URL,
-          separated from the host by an @ sign. The hostname can only be given
-          as an IP address, DNS domain names are not allowed. The port in the
-          host name section is the TCP listening port.
-        </p>
-      </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          name="memo"
-          maxLength={256}
-          placeholder="Max. 256 bytes"
-          rows={4}
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          disabled={loading}
-          onChange={handleChange}
-        />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={newLockAmountErr || newAddrErr || newNameErr || newNodeErr}
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        New Authority Address <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        name="newAddr"
+        inputType={"default"}
+        placeholder={"Enter Address"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={newAddrErr}
+        errText="Invalid Address"
       />
-    </Form>
-  </div>
+      <div className={cn("description")}>
+        When registering the first Authority Address, the Stking Address, Voting
+        Address, and Reward Address are the same.
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Node Name <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        name="newName"
+        inputType={"default"}
+        placeholder={"Enter node name"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={newNameErr}
+        errText="Invalid Name"
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        META Amount to be locked <span className={cn("required")}>*</span>
+      </strong>
+      {console.log(
+        newLockAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+      )}
+      {console.log(stakingMin)}
+      {console.log(handleChange)}
+      <VotingInputArea
+        inputType="suffix"
+        fixText={"META"}
+        name="newLockAmount"
+        value={newLockAmount || ""}
+        defaultValue={stakingMin}
+        disabled={loading}
+        onChange={handleChange}
+        errType={newLockAmountErr}
+        errText="Invalid Amount"
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        New Authority Node Description <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        name="newNode"
+        // placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
+        placeholder={"Enter Address"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={newNodeErr}
+        errText="Invalid Node"
+      />
+      <div className={cn("description")}>
+        The hexadecimal node ID is encoded in the username portion of the URL,
+        separated from the host by an @ sign. The hostname can only be given as
+        an IP address, DNS domain names are not allowed. The port in the host
+        name section is the TCP listening port.
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
+      />
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={newLockAmountErr || newAddrErr || newNameErr || newNodeErr}
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
 );
 
 // Replace Authority Member
@@ -235,126 +231,107 @@ export const ReplaceProposalForm = ({
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
-        Old Authority Address <span className="required">*</span>
-      </p>
-      <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
-        <Form.Item className="mt-0">
-          <p className="subtitle mt-0">Staking Address</p>
-          <Input
-            name="stakingAddr"
-            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
-            disabled={loading}
-            onChange={handleChange}
-          />
-          <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
-            Invalid Address
-          </p>
-        </Form.Item>
-      </div>
-      <p className="subtitle">
-        New Authority Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newAddr"
-          onChange={handleChange}
-          className={newAddrErr ? "errInput" : ""}
-          disabled={loading}
-        />
-        <p className={newAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Node Name <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              name="newName"
-              onChange={handleChange}
-              className={newNameErr ? "errInput" : ""}
-              disabled={loading}
-            />
-            <p className={newNameErr ? "errHint" : "errHint-hide"}>
-              Invalid Name
-            </p>
-          </Form.Item>
-        </div>
-        <div className="flex-full">
-          <p className="subtitle">
-            Replace WEMIX Amount <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              addonAfter="WEMIX"
-              name="newLockAmount"
-              defaultValue={stakingMin}
-              value={newLockAmount || ""}
-              onChange={handleChange}
-              className={newLockAmountErr ? "errInput" : ""}
-              disabled={loading}
-            />
-            <p className={newLockAmountErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <p className="subtitle">
-        New Authority Node Description <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          name="newNode"
-          placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-          className={newNodeErr ? "errInput" : ""}
-          disabled={loading}
-          onChange={handleChange}
-        />
-        <p className={newNodeErr ? "errHint" : "errHint-hide"}>Invalid Node</p>
-      </Form.Item>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          The hexadecimal node ID is encoded in the username portion of the URL,
-          separated from the host by an @ sign. The hostname can only be given
-          as an IP address, DNS domain names are not allowed. The port in the
-          host name section is the TCP listening port.
-        </p>
-      </div>
-      <p className="subtitle">Description </p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          maxLength={256}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={
-          stakingAddrErr ||
-          newLockAmountErr ||
-          newAddrErr ||
-          newNameErr ||
-          newNodeErr
-        }
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Old Authority Address <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        name="stakingAddr"
+        placeholder={"Staking Address"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={stakingAddrErr}
+        errText="Invalid Address"
       />
-    </Form>
-  </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        New Authority Address <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        name="newAddr"
+        placeholder={"Enter Address"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={newAddrErr}
+        errText="Invalid Address"
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Node Name <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        name="newName"
+        placeholder={"Enter node name"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={newNameErr}
+        errText="Invalid Name"
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Replace META Amount <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        inputType="suffix"
+        fixText={"META"}
+        name="newLockAmount"
+        value={newLockAmount}
+        disabled={loading}
+        onChange={handleChange}
+        errType={newLockAmountErr}
+        errText="Invalid Amount"
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        New Authority Node Description <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        name="newNode"
+        // placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
+        placeholder={"Enter Address"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={newNodeErr}
+        errText="Invalid Node"
+      />
+      <div className={cn("description")}>
+        The hexadecimal node ID is encoded in the username portion of the URL,
+        separated from the host by an @ sign. The hostname can only be given as
+        an IP address, DNS domain names are not allowed. The port in the host
+        name section is the TCP listening port.
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
+      />
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={
+        stakingAddrErr ||
+        newLockAmountErr ||
+        newAddrErr ||
+        newNameErr ||
+        newNodeErr
+      }
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
 );
 
 // Remove Authority Member
@@ -363,6 +340,7 @@ export const RemoveProposalForm = ({
   loading,
   stakingAddrErr,
   showLockAmount,
+  showLockAmountErr,
   stakingMin,
   oldLockAmount,
   oldLockAmountErr,
@@ -372,86 +350,76 @@ export const RemoveProposalForm = ({
   handleChange = shouldPass(),
   getLockAmount = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
-        Address to be removed <span className="required">*</span>
-      </p>
-      <div className="bor-box pd-rl-24 pd-tb-24 mt-16">
-        <Form.Item className="mt-0">
-          <p className="subtitle mt-0">Staking Address</p>
-          <Input.Search
-            name="stakingAddr"
-            onChange={handleChange}
-            className={"mt-5" + (stakingAddrErr ? " errInput" : "")}
-            disabled={loading}
-            enterButton={
-              <span>
-                <Icon type="search" />
-                <span> Check Balance</span>
-              </span>
-            }
-            onSearch={(addr) => getLockAmount(addr)}
-          />
-          <p className={stakingAddrErr ? "errHint" : "errHint-hide"}>
-            Invalid Address
-          </p>
-        </Form.Item>
-      </div>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">Locked WEMIX Amount</p>
-          <Form.Item>
-            <Input
-              name="showLockAmount"
-              value={showLockAmount}
-              addonAfter="WEMIX"
-              disabled
-            />
-          </Form.Item>
-        </div>
-        <div className="flex-full">
-          <p className="subtitle">
-            WEMIX Amount to be unlocked <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <Input
-              addonAfter="WEMIX"
-              name="oldLockAmount"
-              defaultValue={stakingMin}
-              value={oldLockAmount || ""}
-              onChange={handleChange}
-              className={oldLockAmountErr ? "errInput" : ""}
-              disabled={loading}
-            />
-            <p className={oldLockAmountErr ? "errHint" : "errHint-hide"}>
-              Invalid Amount
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          maxLength={256}
-          onChange={handleChange}
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Address to be removed <span className={cn("required")}>*</span>
+      </strong>
+      <div className={cn("button-input-box")}>
+        <VotingInputArea
+          name="stakingAddr"
+          placeholder="Enter Staking Address"
           disabled={loading}
+          onChange={handleChange}
+          errType={stakingAddrErr}
+          errText="Invalid Address"
+          enterButton="Check Balance"
+          onClick={(addr) => {
+            getLockAmount(addr);
+          }}
         />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={stakingAddrErr || oldLockAmountErr}
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        <p className="subtitle">Locked META Amount</p>
+      </strong>
+      <VotingInputArea
+        inputType="suffix"
+        fixText={"META"}
+        name="showLockAmount"
+        value={showLockAmount || ""}
+        errType={showLockAmountErr}
+        errText={"Click the Check Balance button"}
+        readonly={true}
+        disabled={loading}
       />
-    </Form>
-  </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        <p className="subtitle">META Amount to be unlocked</p>
+      </strong>
+      <VotingInputArea
+        inputType="suffix"
+        fixText="META"
+        name="oldLockAmount"
+        value={oldLockAmount}
+        disabled={loading}
+        onChange={handleChange}
+        errType={oldLockAmountErr}
+        errText="Invalid Amount"
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
+      />
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={stakingAddrErr || oldLockAmountErr}
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
 );
 
 // Governance Contract Address
@@ -464,45 +432,41 @@ export const GovernanceContractAddressForm = ({
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <p className="subtitle">
-        New Governance Contract Address <span className="required">*</span>
-      </p>
-      <Form.Item>
-        <Input
-          type="primary"
-          name="newGovAddr"
-          className={newGovAddrErr ? "errInput" : ""}
-          disabled={loading}
-          onChange={handleChange}
-        />
-        <p className={newGovAddrErr ? "errHint" : "errHint-hide"}>
-          Invalid Address
-        </p>
-      </Form.Item>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          name="memo"
-          placeholder="Max. 256 bytes"
-          rows={4}
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          maxLength={256}
-          disabled={loading}
-          onChange={handleChange}
-        />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={newGovAddrErr}
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        New Governance Contract Address
+        <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        name="newGovAddr"
+        placeholder={"Enter Address"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={newGovAddrErr}
+        errText="Invalid Address"
       />
-    </Form>
-  </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
+      />
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={newGovAddrErr}
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
 );
 
 // Voting Duration Setting
@@ -517,92 +481,82 @@ export const VotingDurationSettingForm = ({
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Voting Duration Setting <span className="required">*</span>
-          </p>
-          <div className="flex-column">
-            <div className="flex-full flex-row">
-              <Form.Item>
-                <label className="subtitle mt-0 flex-align-self-center w-25">
-                  Min
-                </label>
-                <Input
-                  name="votDurationMin"
-                  defaultValue="1"
-                  value={votDurationMin}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15" + (votDurationErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>day</span>
-              </Form.Item>
-            </div>
-            <div className="flex-full flex-row mt-5">
-              <Form.Item>
-                <label className="subtitle mt-0 flex-align-self-center w-25">
-                  Max
-                </label>
-                <Input
-                  name="votDurationMax"
-                  defaultValue="7"
-                  value={votDurationMax}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15" + (votDurationErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>day</span>
-              </Form.Item>
-            </div>
-            <p
-              className={
-                "mt-5 ml-40" + (votDurationErr ? " errHint" : " errHint-hide")
-              }
-            >
-              {`${
-                votDurationErr === "min"
-                  ? "Invalid Min Date Setting"
-                  : votDurationErr === "max"
-                  ? "Invalid Max Date Setting"
-                  : "Invalid Duration Setting"
-              }`}
-            </p>
-          </div>
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Voting Duration Setting <span className={cn("required")}>*</span>
+      </strong>
+      <div className={"double-input-box"}>
+        <div className={"box-wrap"}>
+          <VotingInputArea
+            inputType="suffix"
+            fixText="day"
+            prefix={"MIN"}
+            name="votDurationMin"
+            value={votDurationMin || ""}
+            placeholder={"Enter day"}
+            disabled={loading}
+            onChange={handleChange}
+            errType={
+              votDurationErr === "min" ||
+              (votDurationErr && votDurationErr !== "max")
+            }
+          />
+          {votDurationErr === "min" && (
+            <p className={"error-massage"}>Invalid Min Date Setting</p>
+          )}
+          <div>&nbsp;</div>
+          <VotingInputArea
+            inputType={"suffix"}
+            fixText="day"
+            prefix="MAX"
+            name="votDurationMax"
+            value={votDurationMax || ""}
+            placeholder={"Enter day"}
+            onChange={handleChange}
+            disabled={loading}
+            errType={
+              votDurationErr === "max" ||
+              (votDurationErr && votDurationErr !== "min")
+            }
+          />
         </div>
+        {votDurationErr && (
+          <p className={"error-massage"}>
+            {`${
+              votDurationErr === "max"
+                ? "Invalid Max Date Setting"
+                : votDurationErr !== "min"
+                ? "Invalid Duration Setting"
+                : ""
+            }`}
+          </p>
+        )}
       </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>The minimum value for Voting Duration is 1 day.</p>
+      <div className={cn("description")}>
+        The minimum value for Voting Duration is 1 day.
       </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          maxLength={256}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={votDurationErr}
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
       />
-    </Form>
-  </div>
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={votDurationErr}
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
 );
 
 // Authority Member Staking Amount
@@ -617,90 +571,82 @@ export const AuthorityMemberStakingAmountForm = ({
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Staking Amount <span className="required">*</span>
-          </p>
-          <div className="flex-column">
-            <div className="flex-full flex-row">
-              <Form.Item>
-                <label className="subtitle mt-0 flex-align-self-center w-25">
-                  Min
-                </label>
-                <Input
-                  name="authMemSkAmountMin"
-                  value={authMemSkAmountMin}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15" + (authMemSkAmountErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>WEMIX</span>
-              </Form.Item>
-            </div>
-            <div className="flex-full flex-row mt-5">
-              <Form.Item>
-                <label className="subtitle mt-0 flex-align-self-center w-25">
-                  Max
-                </label>
-                <Input
-                  name="authMemSkAmountMax"
-                  value={authMemSkAmountMax}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15" + (authMemSkAmountErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>WEMIX</span>
-              </Form.Item>
-            </div>
-          </div>
-          <p
-            className={
-              "mt-5 ml-40" + (authMemSkAmountErr ? " errHint" : " errHint-hide")
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Staking Amount <span className={cn("required")}>*</span>
+      </strong>
+      <div className={"double-input-box"}>
+        <div className={"box-wrap"}>
+          <VotingInputArea
+            inputType="suffix"
+            fixText="META"
+            prefix={"MIN"}
+            name="authMemSkAmountMin"
+            value={authMemSkAmountMin || ""}
+            placeholder={"Enter amount"}
+            onChange={handleChange}
+            disabled={loading}
+            errType={
+              authMemSkAmountErr === "min" ||
+              (authMemSkAmountErr && authMemSkAmountErr !== "max")
             }
-          >
+          />
+          {authMemSkAmountErr === "min" && (
+            <p className={"error-massage"}>{"Invalid Min Amount"}</p>
+          )}
+          <div>&nbsp;</div>
+          <VotingInputArea
+            inputType={"suffix"}
+            fixText="META"
+            prefix={"MAX"}
+            name="authMemSkAmountMax"
+            value={authMemSkAmountMax || ""}
+            placeholder={"Enter amount"}
+            onChange={handleChange}
+            disabled={loading}
+            errType={
+              authMemSkAmountErr === "max" ||
+              (authMemSkAmountErr && authMemSkAmountErr !== "min")
+            }
+          />
+        </div>
+        {authMemSkAmountErr && (
+          <p className={"error-massage"}>
             {`${
-              authMemSkAmountErr === "min"
-                ? "Invalid Min Amount"
-                : authMemSkAmountErr === "max"
+              authMemSkAmountErr === "max"
                 ? "Invalid Max Amout"
-                : "Invalid Staking Amount"
+                : authMemSkAmountErr !== "min"
+                ? "Invalid Staking Amount"
+                : ""
             }`}
           </p>
-        </div>
+        )}
       </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>The maximum amount of staking that can be set is 4,980,000 WEMIX.</p>
+      <div className={cn("description")}>
+        The maximum amount of staking that can be set is 4,980,000 META.
       </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          maxLength={256}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={authMemSkAmountErr}
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
       />
-    </Form>
-  </div>
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={authMemSkAmountErr}
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
 );
 
 // Block Creation Time
@@ -714,60 +660,46 @@ export const BlockCreationTime = ({
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Block Creation Time <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Input
-                  name="blockCreation"
-                  value={blockCreation}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mr-8" + (blockCreationErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span className="align-bottom-next-to-input">s</span>
-              </div>
-            </div>
-            <p className={blockCreationErr ? "errHint" : "errHint-hide"}>
-              Invalid Block Creation Time
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>Block Creation time is possible from at least 0.1s.</p>
-      </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          maxLength={256}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={blockCreationErr}
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Block Creation Time <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        inputType="suffix"
+        fixText={"s"}
+        name="blockCreation"
+        value={blockCreation || ""}
+        placeholder={"Enter time"}
+        onChange={handleChange}
+        disabled={loading}
+        errType={blockCreationErr}
+        errText="Invalid Block Creation Time"
       />
-    </Form>
-  </div>
+      <div className={cn("description")}>
+        Block Creation time is possible from at least 1s.
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
+      />
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={blockCreationErr}
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
 );
 
 // Block Reward Amount
@@ -781,61 +713,46 @@ export const BlockRewardAmount = ({
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Block Reward Amount <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Input
-                  name="blockRewardAmount"
-                  value={blockRewardAmount}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15 ml-0" +
-                    (blockRewardAmountErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>WEMIX/Block</span>
-              </div>
-            </div>
-            <p className={blockRewardAmountErr ? "errHint" : "errHint-hide"}>
-              Invalid Block Reward Amount
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>Block Rewards are available from at least 1WEMIX/Block.</p>
-      </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          maxLength={256}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={blockRewardAmountErr}
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Block Reward Amount <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        inputType="suffix"
+        fixText="META/Block"
+        name="blockRewardAmount"
+        value={blockRewardAmount || ""}
+        placeholder={"Enter block reward amount"}
+        onChange={handleChange}
+        disabled={loading}
+        errType={blockRewardAmountErr}
+        errText="Invalid Block Reward Amount"
       />
-    </Form>
-  </div>
+      <div className={cn("description")}>
+        Block Rewards are available from at least 1META/Block.
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
+      />
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={blockRewardAmountErr}
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
 );
 
 // Block Reward Distribution Method
@@ -853,129 +770,119 @@ export const BlockRewardDistributionMethod = ({
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full mr-0">
-          <p className="subtitle">
-            Distribution Rate
-            <span className="required">*</span>
-          </p>
-          <div className="bor-box pd-rl-24 pd-tb-24">
-            <div className="flex-full flex-row">
-              <div className="flex-column w-15per">
-                <Form.Item label="Block Producer">
-                  <Input
-                    name="blockRate1"
-                    value={blockRate1}
-                    addonAfter="%"
-                    onChange={handleChange}
-                    className={
-                      "w-100 mg-rl-5 ml-0" +
-                      (blockRewardDisMthErr ? " errInput" : "")
-                    }
-                    disabled={loading}
-                  />
-                </Form.Item>
-              </div>
-              <span className="sign pb-8">+</span>
-              <div className="flex-column w-15per">
-                <Form.Item label="Staking Reward">
-                  <Input
-                    name="blockRate2"
-                    value={blockRate2}
-                    addonAfter="%"
-                    onChange={handleChange}
-                    className={
-                      "mg-rl-5" + (blockRewardDisMthErr ? " errInput" : "")
-                    }
-                    disabled={loading}
-                  />
-                </Form.Item>
-              </div>
-              <span className="sign pb-8">+</span>
-              <div className="flex-column w-15per">
-                <Form.Item label="Ecosystem">
-                  <Input
-                    name="blockRate3"
-                    value={blockRate3}
-                    addonAfter="%"
-                    onChange={handleChange}
-                    className={
-                      "mg-rl-5" + (blockRewardDisMthErr ? " errInput" : "")
-                    }
-                    disabled={loading}
-                  />
-                </Form.Item>
-              </div>
-              <span className="sign pb-8">+</span>
-              <div className="flex-column w-15per">
-                <Form.Item label="Maintenance">
-                  <Input
-                    name="blockRate4"
-                    value={blockRate4}
-                    addonAfter="%"
-                    onChange={handleChange}
-                    className={
-                      "mg-rl-5" + (blockRewardDisMthErr ? " errInput" : "")
-                    }
-                    disabled={loading}
-                  />
-                </Form.Item>
-              </div>
-              <span className="sign pb-8">=</span>
-              <div className="flex-column w-auto">
-                <Form.Item label="Sum">
-                  <Input
-                    name="blockRateTotal"
-                    value={blockRateTotal}
-                    addonAfter="%"
-                    onChange={handleChange}
-                    className={
-                      "w-auto mg-rl-5" +
-                      (blockRewardDisMthErr ? " errInput" : "")
-                    }
-                    disabled
-                    readOnly
-                  />
-                </Form.Item>
-              </div>
-            </div>
-            <p className={blockRewardDisMthErr ? "errHint" : "errHint-hide"}>
-              Only numbers can be entered, and Sum must be 100.
-            </p>
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Distribution Rate<span className={cn("required")}>*</span>
+      </strong>
+      <div className={cn("box-wrap")}>
+        {/* !! input 갯수, 하이픈 갯수 css 변수로 추가 필요 */}
+        <div
+          className={cn("multi-input-box")}
+          style={{ "--input-count": 5, "--hyphen-count": 4 }}
+        >
+          <div className={cn("input-cell")}>
+            <strong className={cn("input-cell-title")}>Block Producer</strong>
+            <VotingInputArea
+              inputType={"suffix"}
+              fixText={"%"}
+              placeholder={"0 %"}
+              name="blockRate1"
+              value={blockRate1 || ""}
+              onChange={handleChange}
+              disabled={loading}
+              errType={blockRewardDisMthErr}
+            />
+          </div>
+          <span className={cn("hyphen")}>+</span>
+          <div className={cn("input-cell")}>
+            <strong className={cn("input-cell-title")}>Staking Reward</strong>
+            <VotingInputArea
+              inputType={"suffix"}
+              fixText={"%"}
+              placeholder={"0 %"}
+              name="blockRate2"
+              value={blockRate2 || ""}
+              onChange={handleChange}
+              disabled={loading}
+              errType={blockRewardDisMthErr}
+            />
+          </div>
+          <span className={cn("hyphen")}>+</span>
+          <div className={cn("input-cell")}>
+            <strong className={cn("input-cell-title")}>Ecosystem</strong>
+            <VotingInputArea
+              inputType={"suffix"}
+              fixText={"%"}
+              placeholder={"0 %"}
+              name="blockRate3"
+              value={blockRate3 || ""}
+              onChange={handleChange}
+              disabled={loading}
+              errType={blockRewardDisMthErr}
+            />
+          </div>
+          <span className={cn("hyphen")}>+</span>
+          <div className={cn("input-cell")}>
+            <strong className={cn("input-cell-title")}>Maintenance</strong>
+            <VotingInputArea
+              inputType={"suffix"}
+              fixText={"%"}
+              placeholder={"0 %"}
+              name="blockRate4"
+              value={blockRate4 || ""}
+              onChange={handleChange}
+              disabled={loading}
+              errType={blockRewardDisMthErr}
+            />
+          </div>
+          <span className={cn("hyphen")}>=</span>
+          <div className={cn("input-cell")}>
+            <strong className={cn("input-cell-title")}>Sum</strong>
+            <VotingInputArea
+              inputType={"suffix"}
+              fixText={"%"}
+              placeholder={"0 %"}
+              name="blockRateTotal"
+              value={blockRateTotal || ""}
+              onChange={handleChange}
+              disabled={true}
+              errType={blockRewardDisMthErr}
+              readonly={true}
+            />
           </div>
         </div>
+        {blockRewardDisMthErr && (
+          <p className={"error-massage"}>
+            Only numbers can be entered, and Sum must be 100.
+          </p>
+        )}
       </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          For the Block reward distribution rate, the sum of Default, Block
-          Producer, Ecosystem, and Maintenance should be 100.
-        </p>
-      </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          maxLength={256}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={blockRewardDisMthErr}
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+      <span className={cn("description")}>
+        For the Block reward distribution rate, the sum of Default, Block
+        Producer, Ecosystem, and Maintenance should be 100.
+      </span>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
       />
-    </Form>
-  </div>
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={blockRewardDisMthErr}
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
 );
 
 // MaxPriorityFeePerGas
@@ -989,61 +896,46 @@ export const MaxPriorityFeePerGasForm = ({
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            MaxPriorityFeePerGas <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Input
-                  name="maxPriorityFeePerGas"
-                  value={maxPriorityFeePerGas}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15 ml-0" +
-                    (maxPriorityFeePerGasErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>GWei</span>
-              </div>
-            </div>
-            <p className={maxPriorityFeePerGasErr ? "errHint" : "errHint-hide"}>
-              Invalid MaxPriorityFeePerGas
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>Specifies the fee returned to the miner</p>
-      </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          maxLength={256}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={maxPriorityFeePerGasErr}
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        MaxPriorityFeePerGas <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        inputType="suffix"
+        fixText={"GWei"}
+        name="maxPriorityFeePerGas"
+        value={maxPriorityFeePerGas || ""}
+        placeholder={"Enter fee"}
+        onChange={handleChange}
+        disabled={loading}
+        errType={maxPriorityFeePerGasErr}
+        errText="Invalid MaxPriorityFeePerGas"
       />
-    </Form>
-  </div>
+      <div className={cn("description")}>
+        Specifies the fee returned to the miner
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
+      />
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={maxPriorityFeePerGasErr}
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
 );
 
 // Gas Limit & baseFee
@@ -1063,159 +955,198 @@ export const GasLimitBaseFeeForm = ({
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
 }) => (
-  <div className="proposalBody">
-    <Form onSubmit={handleSubmit}>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Gas Limit <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Input
-                  name="gasLimit"
-                  value={gasLimit}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15 ml-0" + (gasLimitErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-                <span>GWei</span>
-              </div>
-            </div>
-            <p className={gasLimitErr ? "errHint" : "errHint-hide"}>
-              Invalid Gas Limit
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          Gas Limit is the maximum amount of gas to be consumed when processing
-          a transaction.
-        </p>
-      </div>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Max baseFee <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Input
-                  name="maxBaseFee"
-                  value={maxBaseFee}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15 ml-0" + (maxBaseFeeErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-              </div>
-            </div>
-            <p className={maxBaseFeeErr ? "errHint" : "errHint-hide"}>
-              Invalid Max baseFee
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>MAX baseFee is the maximum to which baseFee can be increased.</p>
-      </div>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            BaseFee Max Change Rate <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Input
-                  name="baseFeeMaxChangeRate"
-                  value={baseFeeMaxChangeRate}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15 ml-0" +
-                    (baseFeeMaxChangeRateErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-              </div>
-            </div>
-            <p className={baseFeeMaxChangeRateErr ? "errHint" : "errHint-hide"}>
-              Invalid BaseFee Max Change Rate
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>Specifies how full the block must be to increase the baseFee.</p>
-      </div>
-      <div className="divider flex">
-        <div className="flex-full">
-          <p className="subtitle">
-            Gas Target Percentage <span className="required">*</span>
-          </p>
-          <Form.Item>
-            <div className="flex-column">
-              <div className="flex-full flex-row">
-                <Input
-                  name="gasTargetPercentage"
-                  value={gasTargetPercentage}
-                  onChange={handleChange}
-                  className={
-                    "w-180 mg-rl-15 ml-0" +
-                    (gasTargetPercentageErr ? " errInput" : "")
-                  }
-                  disabled={loading}
-                />
-              </div>
-            </div>
-            <p className={gasTargetPercentageErr ? "errHint" : "errHint-hide"}>
-              Invalid Gas Target Percentage
-            </p>
-          </Form.Item>
-        </div>
-      </div>
-      <div className="helpDescription">
-        <Icon type="question-circle" />
-        <p>
-          Determines what percentage to increase when baseFee is increased.
-          <br />
-          ex&#41; 8&rarr; 1/8 = 12.5%
-        </p>
-      </div>
-      <p className="subtitle">Description</p>
-      <Form.Item>
-        <TextArea
-          rows={4}
-          placeholder="Max. 256 bytes"
-          autoSize={{ minRows: 4, maxRows: 4 }}
-          name="memo"
-          maxLength={256}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </Form.Item>
-      <ProposalFormFooter
-        netName={netName}
-        loading={loading}
-        disabled={
-          gasLimitErr ||
-          maxBaseFeeErr ||
-          baseFeeMaxChangeRateErr ||
-          gasTargetPercentageErr
-        }
-        votingDurationMin={votingDurationMin}
-        votingDurationMax={votingDurationMax}
-        handleChange={handleChange}
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Gas Limit <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        inputType={"suffix"}
+        fixText="GWei"
+        name="gasLimit"
+        value={gasLimit || ""}
+        placeholder={"Enter gas limit"}
+        onChange={handleChange}
+        disabled={loading}
+        errType={gasLimitErr}
+        errText="Invalid Gas Limit"
       />
-    </Form>
-  </div>
+      <div className={cn("description")}>
+        Gas Limit is the maximum amount of gas to be consumed when processing a
+        transaction.
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Max base Fee <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        inputType={"suffix"}
+        fixText="Gwei"
+        name="maxBaseFee"
+        value={maxBaseFee || ""}
+        placeholder={"Enter max base fee"}
+        onChange={handleChange}
+        disabled={loading}
+        errType={maxBaseFeeErr}
+        errText="Invalid Max baseFee"
+      />
+      <div className={cn("description")}>
+        MAX baseFee is the maximum to which baseFee can be increased.
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        BaseFee Max Change Rate <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        inputType={"suffix"}
+        fixText="%"
+        name="baseFeeMaxChangeRate"
+        value={baseFeeMaxChangeRate || ""}
+        placeholder={"Enter change rate"}
+        onChange={handleChange}
+        disabled={loading}
+        errType={baseFeeMaxChangeRateErr}
+        errText="Invalid BaseFee Max Change Rate"
+      />
+      <div className={cn("description")}>
+        Specifies how full the block must be to increase the baseFee.
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Gas Target Percentage <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        inputType={"suffix"}
+        fixText="%"
+        name="gasTargetPercentage"
+        value={gasTargetPercentage || ""}
+        placeholder={"Enter gas target percentage"}
+        onChange={handleChange}
+        disabled={loading}
+        errType={gasTargetPercentageErr}
+        errText="Invalid Gas Target Percentage"
+      />
+      <div className={cn("description")}>
+        Determines what percentage to increase when baseFee is increased.
+        <br />
+        ex&#41; 8&rarr; 1/8 = 12.5%
+      </div>
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={256}
+        placeholder="Enter desc. max 256"
+        disabled={loading}
+        onChange={handleChange}
+      />
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={
+        gasLimitErr ||
+        maxBaseFeeErr ||
+        baseFeeMaxChangeRateErr ||
+        gasTargetPercentageErr
+      }
+      votingDurationMin={votingDurationMin}
+      votingDurationMax={votingDurationMax}
+      handleChange={handleChange}
+    />
+  </Form>
+);
+
+// Wait Proposal
+export const AddWaitProposalForm = ({
+  netName,
+  loading,
+  companyNameErr,
+  companyAddressErr,
+  investmentAmount,
+  investmentAmountErr,
+  handleSubmit = shouldPass(),
+  handleChange = shouldPass(),
+}) => (
+  <Form onSubmit={handleSubmit}>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Company Name <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        name="companyName"
+        inputType={"default"}
+        maxLength={50}
+        placeholder={"Enter company name"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={companyNameErr}
+        errText="Invalid Name"
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Company Wallet Address <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        name="companyAddress"
+        inputType={"default"}
+        placeholder={"Enter company wallet address"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={companyAddressErr}
+        errText="Invalid Address"
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        Investment Amount <span className={cn("required")}>*</span>
+      </strong>
+      <VotingInputArea
+        inputType="suffix"
+        fixText={"META"}
+        name="investmentAmount"
+        value={investmentAmount || ""}
+        placeholder={"Enter investment amount"}
+        disabled={loading}
+        onChange={handleChange}
+        errType={investmentAmountErr}
+        errText="Invalid Investment Amount"
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Description</strong>
+      <VotingInputArea
+        inputType="multiline"
+        name="memo"
+        maxLength={8000}
+        placeholder="Enter desc. max 8000"
+        disabled={loading}
+        onChange={handleChange}
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>Link </strong>
+      <VotingInputArea
+        name="link"
+        inputType={"default"}
+        placeholder={"Enter link"}
+        disabled={loading}
+        onChange={handleChange}
+        errText="Invalid link"
+      />
+    </div>
+    <ProposalFormFooter
+      netName={netName}
+      loading={loading}
+      disabled={companyNameErr || companyAddressErr || investmentAmountErr}
+      useVotingDuration={false}
+      handleChange={handleChange}
+    />
+  </Form>
 );
