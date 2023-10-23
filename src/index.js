@@ -10,6 +10,7 @@ import App from "./App";
 import "./index.css";
 import "./i18n";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 import Loading from "./Loading";
 import WalletConnector from "./components/WalletConnector";
@@ -18,27 +19,28 @@ import VotingDetail from "./pages/voting/detail";
 import VotingList from "./pages/voting/list";
 import Proposal from "./pages/voting/proposal";
 
-const paths = ["/voting/proposal", "/my-info"];
+const proposalPaths = ["/voting/proposal", "/my-info"];
 
 const renderApp = () => (
   <BrowserRouter>
     <ModalProvider>
       <GovInitProvider>
         <WalletConnector>
-          {/* <Header /> */}
+          <Header />
           <App>
             <Routes>
-              <Route path='/' element={<Home />}></Route>
-              <Route path='/voting/list' element={<VotingList />}></Route>
-              <Route path='/voting/detail' element={<VotingDetail />}></Route>
+              <Route path='/' element={<Home />} />
+              <Route path='/voting/list' element={<VotingList />} />
+              <Route path='/voting/detail' element={<VotingDetail />} />
               {process.env.REACT_APP_EXPOSURE &&
-                paths.map((path) => (
-                  <Route key={path} path={path} element={<Proposal />}></Route>
+                proposalPaths.map((path) => (
+                  <Route key={path} path={path} element={<Proposal />} />
                 ))}
-              <Route path='/loading' element={<Loading />}></Route>
-              <Route path='/*' element={<Navigate replace to='/' />}></Route>
+              <Route path='/loading' element={<Loading />} />
+              <Route path='/*' element={<Navigate replace to='/' />} />
             </Routes>
           </App>
+          <Footer />
         </WalletConnector>
       </GovInitProvider>
     </ModalProvider>

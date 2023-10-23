@@ -12,7 +12,7 @@ import { useLocation } from "react-router-dom";
 import { throttle } from "lodash";
 import { addCommasToNumber } from "../util";
 import { useAuth } from "../hooks/useAuth";
-
+import { GovInitCtx } from "../contexts/GovernanceInitContext";
 import { ReactComponent as IconSymbol } from "../assets/images/header-logo-white.svg";
 import { DisConnectWalletModal, ErrModal } from "./Modal";
 import { web3Instance } from "../web3";
@@ -99,6 +99,8 @@ const HeaderCopy = ({ getStakingModal }) => {
     setDisConnectView(false);
     onLogout();
   };
+  const { isWeb3Loaded, isContractReady, accessFailMsg } =
+    useContext(GovInitCtx);
 
   const handleAccountsChanged = async (accounts) => {
     navigate(0);
@@ -253,31 +255,35 @@ const HeaderCopy = ({ getStakingModal }) => {
           </div>
         </>
       )}
-      <DisConnectWalletModal
-        onDisConnect={onDisConnect}
-        visible={disConnectView}
-        setDisConnectView={setDisConnectView}
-      />
-      <ErrModal
-        netName={web3Instance.netName}
-        title='Error'
-        err={errMsg}
-        visible={errVisible}
-        coloseErrModal={closeErrModal}
-      />
-      <StakingModal
-        defaultAccount={address}
-        isMember={isMember}
-        accountBalance={{
-          balance: myBalance,
-          lockedBalance: lockedBalance,
-        }}
-        stakingModalVisible={isShowStakingModal}
-        scrollType={false}
-        setStakingEventsWatch={setStakingEventsWatch}
-        setStakingModalVisible={setIsShowStakingModal}
-        getErrModal={getErrModal}
-      />
+      {isContractReady && isWeb3Loaded && (
+        <>
+          <DisConnectWalletModal
+            onDisConnect={onDisConnect}
+            visible={disConnectView}
+            setDisConnectView={setDisConnectView}
+          />
+          <ErrModal
+            netName={web3Instance.netName}
+            title='Error'
+            err={errMsg}
+            visible={errVisible}
+            coloseErrModal={closeErrModal}
+          />
+          <StakingModal
+            defaultAccount={address}
+            isMember={isMember}
+            accountBalance={{
+              balance: myBalance,
+              lockedBalance: lockedBalance,
+            }}
+            stakingModalVisible={isShowStakingModal}
+            scrollType={false}
+            setStakingEventsWatch={setStakingEventsWatch}
+            setStakingModalVisible={setIsShowStakingModal}
+            getErrModal={getErrModal}
+          />
+        </>
+      )}
     </header>
   );
 };
