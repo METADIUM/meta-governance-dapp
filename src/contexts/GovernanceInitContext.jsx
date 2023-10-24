@@ -29,6 +29,11 @@ const initData = {
   waitBallotLength: 0,
   waitBallotMemberOriginData: {},
   waitBallotBasicOriginData: {},
+  isMember: false,
+  isStaker: false,
+  myBalance: "",
+  myLockedBalance: "",
+  address: "",
 };
 
 const GovInitCtx = createContext();
@@ -121,19 +126,6 @@ const GovInitProvider = ({ children }) => {
     } catch (err) {
       getErrModal(err.message, err.name);
     }
-
-    // TODO
-    // await this.updateAccountBalance();
-
-    // TODO
-    // this.setStakingEventsWatch();
-    // check if account is a proposalable member
-    // const isMember = await callContractMethod(
-    //   web3Instance,
-    //   "GovImp",
-    //   "isMember",
-    //   this.state.defaultAccount
-    // );
     setIsContractReady(true);
   };
 

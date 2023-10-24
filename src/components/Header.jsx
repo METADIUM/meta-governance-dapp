@@ -24,7 +24,21 @@ import { loginAcc } from "../util";
 import Button from "./voting/Button";
 import { ModalContext } from "../contexts/ModalContext";
 
-const HeaderCopy = ({ getStakingModal }) => {
+const Header = () => {
+  const {
+    isWeb3Loaded,
+    isContractReady,
+    data: GovCtxData,
+  } = useContext(GovInitCtx);
+
+  const {
+    isMember,
+    isStaker,
+    address,
+    myBalance,
+    myLockedBalance: lockedBalance,
+  } = GovCtxData;
+
   const navigate = useNavigate();
   const [offset, setOffset] = useState({
     width: 0,
@@ -40,13 +54,7 @@ const HeaderCopy = ({ getStakingModal }) => {
   const { getErrModal } = useContext(ModalContext);
 
   const {
-    isMember,
-    isStaker,
-    address,
-    myBalance,
-    lockedBalance,
     isLoggedIn: isConnect,
-    // chain,
     onLogin,
     onLogout,
     updateAccountData,
@@ -61,9 +69,9 @@ const HeaderCopy = ({ getStakingModal }) => {
     }
   }, [address, web3Instance]);
   console.log(isMember, myBalance, lockedBalance);
+
   // ---------- wallet modal state start ----------
   const [isGnbOpen, setIsGnbOpen] = useState(false);
-
   const [disConnectView, setDisConnectView] = useState(false);
   const [errVisible, setErrVisible] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -99,8 +107,6 @@ const HeaderCopy = ({ getStakingModal }) => {
     setDisConnectView(false);
     onLogout();
   };
-  const { isWeb3Loaded, isContractReady, accessFailMsg } =
-    useContext(GovInitCtx);
 
   const handleAccountsChanged = async (accounts) => {
     navigate(0);
@@ -118,18 +124,13 @@ const HeaderCopy = ({ getStakingModal }) => {
   };
 
   // ---------- wallet modal method end ----------
-
+  console.log(isMember, isStaker, address, myBalance);
   return (
     <header className={cn("header")}>
       {offset.width > 1023 ? (
         <>
           <div className='header-logo-wrap'>
             <HeaderLogo />
-            {/* <Menu
-              className={cn("header-gnb", isConnect && isMember && "connect")}
-            >
-              {menuComponent}
-            </Menu> */}
             <HeaderMenu
               isConnect={isConnect}
               isMember={isMember}
@@ -190,14 +191,6 @@ const HeaderCopy = ({ getStakingModal }) => {
                   <IconClose />
                 </button>
                 <div className={cn("header-content")}>
-                  {/* <Menu
-                    className={cn(
-                      "header-gnb",
-                      isConnect && isMember && "connect",
-                    )}
-                  >
-                    {menuComponent}
-                  </Menu> */}
                   <HeaderMenu
                     isConnect={isConnect}
                     isMember={isMember}
@@ -364,4 +357,4 @@ export const HeaderLogo = () => {
   );
 };
 
-export default HeaderCopy;
+export default Header;

@@ -41,7 +41,7 @@ const App = ({ children }) => {
     updateAccountData,
     setStakingEventsWatch,
   } = useAuth();
-  console.log(isMember, myBalance, lockedBalance);
+  // console.log(isMember, myBalance, lockedBalance);
   const { pathname } = useLocation();
   const prev = usePrevious(chain);
 
@@ -95,7 +95,6 @@ const App = ({ children }) => {
           <>
             {/* <div className='flex-column voting-wrap'> */}
             <OGHeader />
-
             <Content>
               {isWeb3Loaded ? (
                 <div>

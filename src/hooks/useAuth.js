@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { GovInitCtx } from "../contexts/GovernanceInitContext";
 import { useNavigate } from "react-router-dom";
 import { web3Instance, callContractMethod } from "../web3";
 import * as util from "../util";
@@ -6,13 +7,21 @@ import { useAccount, useNetwork, useDisconnect } from "wagmi";
 import { useWeb3Modal } from "@web3modal/react";
 
 const useAuth = () => {
+  const { data: GovCtxData } = useContext(GovInitCtx);
   const navigate = useNavigate();
   const { open } = useWeb3Modal();
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useAccount({
+    onConnect: () => {
+      console.log("onConnect");
+      GovCtxData.address = address;
+    },
+  });
   const { chain } = useNetwork();
   const { disconnect } = useDisconnect();
   const [myBalance, setMyBalance] = useState("");
   const [lockedBalance, setLockedBalance] = useState("");
+
+  console.log(GovCtxData);
 
   const [isMember, setIsMember] = useState(false);
   const [isStaker, setIsStaker] = useState(false);
@@ -31,6 +40,11 @@ const useAuth = () => {
     }
   };
   const onLogout = () => {
+    GovCtxData.isMember = false;
+    GovCtxData.isStaker = false;
+    GovCtxData.myBalance = "0";
+    GovCtxData.myLockedBalance = "0";
+    GovCtxData.address = "";
     setIsMember(false);
     setIsStaker(false);
     disconnect();
@@ -59,14 +73,16 @@ const useAuth = () => {
       web3Instance,
       "GovImp",
       "isMember",
-      newAccount,
+      newAccount
     );
     const isStaker = await callContractMethod(
       web3Instance,
       "GovImp",
       "isStaker",
-      newAccount,
+      newAccount
     );
+    GovCtxData.isMember = isMember;
+    GovCtxData.isStaker = isStaker;
     setIsMember(isMember);
     setIsStaker(isStaker);
 
@@ -82,16 +98,18 @@ const useAuth = () => {
       web3Instance,
       "Staking",
       "balanceOf",
-      defaultAccount,
+      defaultAccount
     );
     const locked = await callContractMethod(
       web3Instance,
       "Staking",
       "lockedBalanceOf",
-      defaultAccount,
+      defaultAccount
     );
     const myBalance = util.convertWeiToEther(weiBalance);
     const lockedMyBalance = util.convertWeiToEther(locked);
+    GovCtxData.myBalance = myBalance;
+    GovCtxData.myLockedBalance = lockedMyBalance;
     setMyBalance(myBalance);
     setLockedBalance(lockedMyBalance);
     // this.setState({ stakingModalVisible: false, loading: false });
@@ -103,14 +121,14 @@ const useAuth = () => {
       // for getting only default accounts event
       const filteraddress = web3Instance.web3.eth.abi.encodeParameter(
         "address",
-        defaultAccount,
+        defaultAccount
       );
       const result = await web3Instance.web3Contracts.Staking.getPastEvents(
         "allEvents",
         {
           fromBlock: "latest",
           topics: [null, filteraddress],
-        },
+        }
       );
 
       if (result) {
