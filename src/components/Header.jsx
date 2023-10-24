@@ -1,19 +1,10 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useContext,
-} from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import cn from "classnames/bind";
-import { Link, useNavigate } from "react-router-dom";
-import { Menu } from "antd";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { throttle } from "lodash";
 import { addCommasToNumber } from "../util";
 import { useAuth } from "../hooks/useAuth";
 import { GovInitCtx } from "../contexts/GovernanceInitContext";
-import { ReactComponent as IconSymbol } from "../assets/images/header-logo-white.svg";
 import { DisConnectWalletModal, ErrModal } from "./Modal";
 import { web3Instance } from "../web3";
 import { StakingModal } from "./Modal";
@@ -23,8 +14,23 @@ import { ReactComponent as IconMenu } from "../assets/images/ico_menu.svg";
 import { loginAcc } from "../util";
 import Button from "./voting/Button";
 import { ModalContext } from "../contexts/ModalContext";
+import HeaderLogo from "./HeaderLogo";
+import HeaderMenu from "./HeaderMenu";
+const Header = () => {
+  const {
+    isWeb3Loaded,
+    isContractReady,
+    data: GovCtxData,
+  } = useContext(GovInitCtx);
 
-const HeaderCopy = ({ getStakingModal }) => {
+  const {
+    isMember,
+    isStaker,
+    address,
+    myBalance,
+    myLockedBalance: lockedBalance,
+  } = GovCtxData;
+
   const navigate = useNavigate();
   const [offset, setOffset] = useState({
     width: 0,
@@ -40,13 +46,7 @@ const HeaderCopy = ({ getStakingModal }) => {
   const { getErrModal } = useContext(ModalContext);
 
   const {
-    isMember,
-    isStaker,
-    address,
-    myBalance,
-    lockedBalance,
     isLoggedIn: isConnect,
-    // chain,
     onLogin,
     onLogout,
     updateAccountData,
@@ -59,10 +59,9 @@ const HeaderCopy = ({ getStakingModal }) => {
     if (address && web3Instance) {
       updateAccountData(address);
     }
-  }, [address, web3Instance]);
+  }, [address, updateAccountData]);
   // ---------- wallet modal state start ----------
   const [isGnbOpen, setIsGnbOpen] = useState(false);
-
   const [disConnectView, setDisConnectView] = useState(false);
   const [errVisible, setErrVisible] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -98,8 +97,6 @@ const HeaderCopy = ({ getStakingModal }) => {
     setDisConnectView(false);
     onLogout();
   };
-  const { isWeb3Loaded, isContractReady, accessFailMsg } =
-    useContext(GovInitCtx);
 
   const handleAccountsChanged = async (accounts) => {
     navigate(0);
@@ -117,18 +114,13 @@ const HeaderCopy = ({ getStakingModal }) => {
   };
 
   // ---------- wallet modal method end ----------
-
+  console.log(isMember, isStaker, address, myBalance);
   return (
     <header className={cn("header")}>
       {offset.width > 1023 ? (
         <>
           <div className="header-logo-wrap">
             <HeaderLogo />
-            {/* <Menu
-              className={cn("header-gnb", isConnect && isMember && "connect")}
-            >
-              {menuComponent}
-            </Menu> */}
             <HeaderMenu
               isConnect={isConnect}
               isMember={isMember}
@@ -189,14 +181,6 @@ const HeaderCopy = ({ getStakingModal }) => {
                   <IconClose />
                 </button>
                 <div className={cn("header-content")}>
-                  {/* <Menu
-                    className={cn(
-                      "header-gnb",
-                      isConnect && isMember && "connect",
-                    )}
-                  >
-                    {menuComponent}
-                  </Menu> */}
                   <HeaderMenu
                     isConnect={isConnect}
                     isMember={isMember}
@@ -208,20 +192,20 @@ const HeaderCopy = ({ getStakingModal }) => {
                       <dl>
                         <div>
                           <dt>Locked</dt>
-                          <dd>{lockedBalance} WEMIX</dd>
+                          <dd>{lockedBalance} META</dd>
                         </div>
                         <div>
                           <dt>Staked</dt>
-                          <dd>{myBalance} WEMIX</dd>
+                          <dd>{myBalance} META</dd>
                         </div>
                       </dl>
                     )}
                     {isConnect ? (
                       <div className="btns-wrap">
                         <Button
-                          text="WEMIX Staking"
-                          type="outline"
-                          size="sm"
+                          text='WEMIX Staking'
+                          type='outline'
+                          size='sm'
                           onClick={() => {
                             setIsShowStakingModal(true);
                           }}
@@ -287,81 +271,4 @@ const HeaderCopy = ({ getStakingModal }) => {
   );
 };
 
-// TODO:  path는 상황에 맞게 넣어주세요. voting, myinfo 페이지에 layout 내용 넣을 때 props로 activate="menu-voting" or activate="menu-myinfo" 이런식으로 메뉴 키값에 맞게 넣어주세요.
-const menuList = [
-  {
-    title: "Authority",
-    path: "/",
-    key: "menu-authority",
-    onlyMember: false,
-  },
-  {
-    title: "Voting",
-    path: "/voting/list",
-    key: "menu-voting",
-    onlyMember: false,
-  },
-  {
-    title: "My Info",
-    path: "/my-info",
-    key: "menu-myinfo",
-    onlyMember: true,
-  },
-];
-
-const HeaderMenu = ({ isConnect, isMember, isStaker, setIsGnbOpen }) => {
-  const activeMenu = useRef("menu-authority");
-  const location = useLocation();
-
-  const onMenuClick = (key) => {
-    activeMenu.current = key;
-    // console.log(activeMenu.current);
-    window.localStorage.removeItem("selectedTopic");
-    setIsGnbOpen(false);
-  };
-
-  const menuComponent = menuList.map((menu) => {
-    return menu.onlyMember ? (
-      isMember && isStaker && (
-        <Menu.Item
-          key={menu.title}
-          className={location.pathname === menu.path && "active"}
-        >
-          <Link to={menu.path} onClick={() => onMenuClick(menu.key)}>
-            {menu.title}
-          </Link>
-        </Menu.Item>
-      )
-    ) : (
-      <Menu.Item
-        key={menu.title}
-        className={location.pathname === menu.path && "active"}
-      >
-        <Link to={menu.path} onClick={() => onMenuClick(menu.key)}>
-          {menu.title}
-        </Link>
-      </Menu.Item>
-    );
-  });
-
-  return (
-    <Menu className={cn("header-gnb", isConnect && isMember && "connect")}>
-      {menuComponent}
-    </Menu>
-  );
-};
-
-export const HeaderLogo = () => {
-  return (
-    <h1 className={cn("header-logo")}>
-      <Link to="/">
-        <span className={cn("logo-symbol")}>
-          <IconSymbol />
-          <span className={cn("a11y")}>metadium governance</span>
-        </span>
-      </Link>
-    </h1>
-  );
-};
-
-export default HeaderCopy;
+export default Header;

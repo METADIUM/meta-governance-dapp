@@ -93,7 +93,6 @@ const App = ({ children }) => {
           <>
             {/* <div className='flex-column voting-wrap'> */}
             <OGHeader />
-
             <Content>
               {isWeb3Loaded ? (
                 <div>
