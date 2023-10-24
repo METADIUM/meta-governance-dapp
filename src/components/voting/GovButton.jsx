@@ -1,5 +1,4 @@
 import React from "react";
-import "../../home.scss";
 
 const GovButton = ({ onClick, text, disabled, loading, type }) => {
   return (
