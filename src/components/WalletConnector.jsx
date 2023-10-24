@@ -31,7 +31,6 @@ const wagmiConfig = createConfig({
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 const WalletConnector = ({ children }) => {
-  console.log("Render Wallet Connector");
   return (
     <WagmiConfig config={wagmiConfig}>
       {children}

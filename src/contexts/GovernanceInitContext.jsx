@@ -77,7 +77,6 @@ const GovInitProvider = ({ children }) => {
     return new Promise((resolve, reject) => {
       let requests = batch.requests;
 
-      console.log(requests);
       batch.requestManager.sendBatch(requests, (err, results) => {
         results = results || [];
         let response = requests
@@ -329,7 +328,8 @@ const GovInitProvider = ({ children }) => {
         isContractReady,
         data,
         accessFailMsg,
-      }}>
+      }}
+    >
       {children}
     </GovInitCtx.Provider>
   );

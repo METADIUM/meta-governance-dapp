@@ -126,7 +126,7 @@ const VotingList = () => {
         ? DEVNET_CONTRACTS
         : DEVMETANET_CONTRACTS;
     const to = contracts.filter(
-      (item) => item.name === `${id.length ? "WaitGovernance" : "GovImp"}`,
+      (item) => item.name === `${id.length ? "WaitGovernance" : "GovImp"}`
     )[0].address;
     try {
       /* 
@@ -146,7 +146,7 @@ const VotingList = () => {
               getErrModal(
                 "The transaction could not be sent normally.",
                 "Proposal Submit Error",
-                receipt.transactionHash,
+                receipt.transactionHash
               );
             }
           });
@@ -179,7 +179,7 @@ const VotingList = () => {
       getErrModal(
         "The transaction could not be sent normally.",
         "Proposal Submit Error",
-        e,
+        e
       );
       setLoading(false);
     }
@@ -220,7 +220,7 @@ const VotingList = () => {
           onClick={sendTransaction}
           isMember={isMember}
           style={{ display: !isView && "none" }}
-        />,
+        />
       );
     });
     // wait 안건
@@ -234,7 +234,7 @@ const VotingList = () => {
           setTopic={(item) => setTopic(item)}
           onClick={(id) => sendTransaction(id)}
           isMember={isMember}
-        />,
+        />
       );
     });
     setBallotBasicOriginItems(list.reverse());
@@ -253,7 +253,6 @@ const VotingList = () => {
     let rejected = 0;
 
     // 상태 별로 나누어 저장
-    console.log(ballotBasicOriginItems);
     ballotBasicOriginItems.forEach((item) => {
       switch (item.props.item.state) {
         case constants.ballotState.InProgress:
@@ -285,7 +284,7 @@ const VotingList = () => {
 
     // finalized 투표 종료된 순으로 출력
     const sortFinalizedList = finalizedList.sort(
-      (s, l) => l.props.item.endTime - s.props.item.endTime,
+      (s, l) => l.props.item.endTime - s.props.item.endTime
     );
 
     setActiveItems(activeList);
@@ -387,7 +386,6 @@ const VotingList = () => {
 
   // select 옵션 변경에 따른 항목 렌더링
   const handleSelect = (e = filterData[0]) => {
-    console.log(e);
     const props = [];
     // 옵션에 따른 props 값 적용
     if (e === filterData[0] || e === filterData[1]) {
@@ -406,8 +404,6 @@ const VotingList = () => {
     }
 
     const render = props.map((prop) => {
-      console.log(prop);
-
       return (
         <div className={cn("voting-list-section")} key={prop.title}>
           <VotingTitle
@@ -475,7 +471,6 @@ const VotingList = () => {
           {/* voting time over - filter와 상관없이 고정*/}
           {revokeItems.length > 0 && (
             <div className={cn("voting-list-section", "revoke-item")}>
-              {console.log("revoke", revokeItems)}
               <VotingTitle
                 type="md"
                 title={"Voting Time Over"}

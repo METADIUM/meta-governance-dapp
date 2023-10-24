@@ -83,7 +83,6 @@ const App = ({ children }) => {
       window.navigator.userAgent === "ReactSnap" ? (
         checkPath ? (
           <>
-            {console.log("checkPath")}
             {React.cloneElement(children, {
               getErrModal,
               isMember,

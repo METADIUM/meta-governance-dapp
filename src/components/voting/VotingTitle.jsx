@@ -65,7 +65,7 @@ const VotingTitle = ({
           <div
             className={cn(
               "detail-search-area",
-              isFilter && isMobile ? "active" : "",
+              isFilter && isMobile ? "active" : ""
             )}
           >
             {isViewFilter && (
@@ -98,7 +98,6 @@ const VotingTitle = ({
                 setIsViewFilter(!isViewFilter);
               }}
             />
-            {console.log(isMember)}
             {isMember && (
               <button
                 className="voting-button-new-proposal"

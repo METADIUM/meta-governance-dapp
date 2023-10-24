@@ -59,7 +59,6 @@ const useAuth = () => {
   // update data related to new account
   const updateAccountData = async (newAccount) => {
     if (!web3Instance) return;
-    console.log("Protocol", web3Instance.web3.currentProvider.constructor.name);
     // if (web3Instance.web3.currentProvider.constructor.name === "HttpProvider") {
     //   return;
     // }
