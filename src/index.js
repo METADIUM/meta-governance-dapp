@@ -29,15 +29,13 @@ const renderApp = () => (
           <Header />
           <App>
             <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/voting/list' element={<VotingList />} />
-              <Route path='/voting/detail' element={<VotingDetail />} />
-              {process.env.REACT_APP_EXPOSURE &&
-                proposalPaths.map((path) => (
-                  <Route key={path} path={path} element={<Proposal />} />
-                ))}
-              <Route path='/loading' element={<Loading />} />
-              <Route path='/*' element={<Navigate replace to='/' />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/voting/list" element={<VotingList />} />
+              <Route path="/voting/detail" element={<VotingDetail />} />
+              <Route path="/voting/proposal" element={<Proposal />} />
+              <Route path="/my-info" element={<Proposal />} />
+              <Route path="/loading" element={<Loading />} />
+              <Route path="/*" element={<Navigate replace to="/" />} />
             </Routes>
           </App>
           <Footer />
