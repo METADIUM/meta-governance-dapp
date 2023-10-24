@@ -19,7 +19,6 @@ import VotingDetail from "./pages/voting/detail";
 import VotingList from "./pages/voting/list";
 import Proposal from "./pages/voting/proposal";
 
-const proposalPaths = ["/voting/proposal", "/my-info"];
 
 const renderApp = () => (
   <BrowserRouter>
