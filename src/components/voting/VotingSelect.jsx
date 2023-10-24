@@ -10,7 +10,6 @@ export default function VotingSelect({
   handleSelect,
 }) {
   const Option = Select.Option;
-  console.log(filterData, className, dropdownClassName, handleSelect);
   return (
     <Select
       defaultValue={filterData[0]}

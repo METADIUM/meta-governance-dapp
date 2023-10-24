@@ -32,7 +32,7 @@ const VotingInputArea = ({
           inputType,
           type,
           isFocus && "focus-on",
-          disabled && "disabled",
+          disabled && "disabled"
         )}
       >
         {inputType === "multiline" ? (
@@ -76,7 +76,7 @@ const VotingInputArea = ({
                 !enterButton && errType && "error",
                 readonly && "readonly",
                 superPrefix && "superPrefix",
-                enterButton && "enter",
+                enterButton && "enter"
               )}
             >
               {superPrefix && (
@@ -85,7 +85,6 @@ const VotingInputArea = ({
                   <span>*</span>
                 </span>
               )}
-              {console.log("error", errType)}
               <input
                 className={
                   enterButton &&

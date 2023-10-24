@@ -41,7 +41,6 @@ const App = ({ children }) => {
     updateAccountData,
     setStakingEventsWatch,
   } = useAuth();
-  console.log(isMember, myBalance, lockedBalance);
   const { pathname } = useLocation();
   const prev = usePrevious(chain);
 
@@ -83,7 +82,6 @@ const App = ({ children }) => {
       window.navigator.userAgent === "ReactSnap" ? (
         checkPath ? (
           <>
-            {console.log("checkPath")}
             {React.cloneElement(children, {
               getErrModal,
               isMember,

@@ -45,7 +45,6 @@ const useAuth = () => {
   // update data related to new account
   const updateAccountData = async (newAccount) => {
     if (!web3Instance) return;
-    console.log("Protocol", web3Instance.web3.currentProvider.constructor.name);
     // if (web3Instance.web3.currentProvider.constructor.name === "HttpProvider") {
     //   return;
     // }
@@ -59,13 +58,13 @@ const useAuth = () => {
       web3Instance,
       "GovImp",
       "isMember",
-      newAccount,
+      newAccount
     );
     const isStaker = await callContractMethod(
       web3Instance,
       "GovImp",
       "isStaker",
-      newAccount,
+      newAccount
     );
     setIsMember(isMember);
     setIsStaker(isStaker);
@@ -82,13 +81,13 @@ const useAuth = () => {
       web3Instance,
       "Staking",
       "balanceOf",
-      defaultAccount,
+      defaultAccount
     );
     const locked = await callContractMethod(
       web3Instance,
       "Staking",
       "lockedBalanceOf",
-      defaultAccount,
+      defaultAccount
     );
     const myBalance = util.convertWeiToEther(weiBalance);
     const lockedMyBalance = util.convertWeiToEther(locked);
@@ -103,14 +102,14 @@ const useAuth = () => {
       // for getting only default accounts event
       const filteraddress = web3Instance.web3.eth.abi.encodeParameter(
         "address",
-        defaultAccount,
+        defaultAccount
       );
       const result = await web3Instance.web3Contracts.Staking.getPastEvents(
         "allEvents",
         {
           fromBlock: "latest",
           topics: [null, filteraddress],
-        },
+        }
       );
 
       if (result) {

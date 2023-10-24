@@ -55,7 +55,7 @@ const ProposalFormFooter = ({
       comp.push(
         <Select.Option key={op} value={`votDuration_${op}`}>
           {op} {op === 1 ? "day" : "days"}
-        </Select.Option>,
+        </Select.Option>
       );
     }
     return comp;
@@ -95,9 +95,7 @@ const ProposalFormFooter = ({
           disabled={loading || disabled}
           type="bg"
           loading={loading}
-          onClick={() => {
-            console.log(1);
-          }}
+          onClick={() => {}}
         />
       </div>
     </>
@@ -156,11 +154,6 @@ export const AddProposalForm = ({
       <strong>
         META Amount to be locked <span className={cn("required")}>*</span>
       </strong>
-      {console.log(
-        newLockAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-      )}
-      {console.log(stakingMin)}
-      {console.log(handleChange)}
       <VotingInputArea
         inputType="suffix"
         fixText={"META"}

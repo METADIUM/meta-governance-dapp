@@ -31,7 +31,6 @@ export default function VotingSearch({
           type="button"
           className={cn("search-close-btn")}
           onClick={() => {
-            console.log("close");
             setIsFilter(false);
             setIsNonACtive("");
             setSearchValue("");

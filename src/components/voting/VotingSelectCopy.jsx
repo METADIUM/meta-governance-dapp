@@ -18,7 +18,6 @@ const VotingSelectCopy = ({
       onSelect();
     }
   }
-  console.log(isMember);
   return (
     <div className="voting-select-wrapper">
       <div className="voting-select">
