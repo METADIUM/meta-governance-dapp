@@ -60,7 +60,6 @@ const Header = () => {
       updateAccountData(address);
     }
   }, [address, web3Instance]);
-
   // ---------- wallet modal state start ----------
   const [isGnbOpen, setIsGnbOpen] = useState(false);
   const [disConnectView, setDisConnectView] = useState(false);
@@ -120,7 +119,7 @@ const Header = () => {
     <header className={cn("header")}>
       {offset.width > 1023 ? (
         <>
-          <div className='header-logo-wrap'>
+          <div className="header-logo-wrap">
             <HeaderLogo />
             <HeaderMenu
               isConnect={isConnect}
@@ -143,18 +142,18 @@ const Header = () => {
                       <dd>{addCommasToNumber(myBalance)} META </dd>
                     </div>
                   </dl>
-                  <div className='btns-wrap'>
+                  <div className="btns-wrap">
                     <Button
-                      text='META Staking'
-                      type='outline'
-                      size='sm'
+                      text="META Staking"
+                      type="outline"
+                      size="sm"
                       onClick={() => {
                         setIsShowStakingModal(true);
                       }}
                     />
                     <Button
-                      type='outline'
-                      size='sm'
+                      type="outline"
+                      size="sm"
                       text={address && loginAcc(address)}
                       onClick={() => setDisConnectView(true)}
                     />
@@ -162,9 +161,9 @@ const Header = () => {
                 </>
               ) : (
                 <Button
-                  type='outline'
-                  size='sm'
-                  text='Connect Wallet'
+                  type="outline"
+                  size="sm"
+                  text="Connect Wallet"
                   onClick={onLogin}
                 />
               )}
@@ -174,7 +173,7 @@ const Header = () => {
       ) : (
         // mobile toggle open
         <>
-          <div className='header-logo-wrap'>
+          <div className="header-logo-wrap">
             <HeaderLogo />
             <div className={cn("mobile-gnb", isGnbOpen && "show")}>
               <div className={cn("gnb-inner")}>
@@ -202,7 +201,7 @@ const Header = () => {
                       </dl>
                     )}
                     {isConnect ? (
-                      <div className='btns-wrap'>
+                      <div className="btns-wrap">
                         <Button
                           text='META Staking'
                           type='outline'
@@ -213,17 +212,17 @@ const Header = () => {
                         />
 
                         <Button
-                          type='outline'
-                          size='sm'
+                          type="outline"
+                          size="sm"
                           text={address && loginAcc(address)}
                           onClick={() => setDisConnectView(true)}
                         />
                       </div>
                     ) : (
                       <Button
-                        type='outline'
-                        size='sm'
-                        text='Connect Wallet'
+                        type="outline"
+                        size="sm"
+                        text="Connect Wallet"
                         onClick={onLogin}
                       />
                     )}
@@ -232,7 +231,7 @@ const Header = () => {
               </div>
             </div>
           </div>
-          <div className='header-utils'>
+          <div className="header-utils">
             <button onClick={onClickToggle}>
               <IconMenu />
             </button>
@@ -248,7 +247,7 @@ const Header = () => {
           />
           <ErrModal
             netName={web3Instance.netName}
-            title='Error'
+            title="Error"
             err={errMsg}
             visible={errVisible}
             coloseErrModal={closeErrModal}
