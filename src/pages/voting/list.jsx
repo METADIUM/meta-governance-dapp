@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import cn from "classnames/bind";
 import VotingTopList from "../../components/voting/VotingTopList.jsx";
 import VotingListBlock from "../../components/voting/VotingListBlock.jsx";
@@ -70,31 +70,26 @@ const VotingList = () => {
   // -------------------- useEffect
   useEffect(() => {
     getBallotOriginItem();
-  }, [
-    ballotBasicOriginData,
-    waitBallotBasicOriginData,
-    isMember,
-    viewingFinalizedItems,
-  ]);
+  }, [ballotBasicOriginData, waitBallotBasicOriginData, isMember, viewingFinalizedItems, getBallotOriginItem]);
 
   useEffect(() => {
     // 리스트 생성 후 상세 내용 가져옴
     if (ballotBasicOriginItems.length > 0) {
       getBallotDetailInfo();
     }
-  }, [ballotBasicOriginItems]);
+  }, [ballotBasicOriginItems, getBallotDetailInfo]);
 
   useEffect(() => {
     // 리스트를 가져온 후 화면에 뿌리기 위한 용도
     if (Object.keys(itemCount)) {
       handleSelect();
     }
-  }, [itemCount]);
+  }, [handleSelect, itemCount]);
 
   // 검색 후 리스트 업데이트
   useEffect(() => {
     handleSelect(currentSelect);
-  }, [visibleActiveItems, visibleProposalItems, visibleFinalizedItems]);
+  }, [visibleActiveItems, visibleProposalItems, visibleFinalizedItems, handleSelect, currentSelect]);
 
   const openErrModal = (e) => {
     const _msg = e?.details || "Unknown Error";
@@ -241,7 +236,7 @@ const VotingList = () => {
   };
 
   // 각 항목 별 상세 정보를 가져옴
-  const getBallotDetailInfo = () => {
+  const getBallotDetailInfo = useCallback(() => {
     let activeList = [];
     let proposalList = [];
     let finalizedList = [];
@@ -304,7 +299,7 @@ const VotingList = () => {
       approved,
       rejected,
     });
-  };
+  });
 
   // 투표 항목의 타이틀을 리턴
   const setTopic = ({
@@ -385,7 +380,8 @@ const VotingList = () => {
   };
 
   // select 옵션 변경에 따른 항목 렌더링
-  const handleSelect = (e = filterData[0]) => {
+  const handleSelect = useCallback((e = filterData[0]) => {
+    console.log(e);
     const props = [];
     // 옵션에 따른 props 값 적용
     if (e === filterData[0] || e === filterData[1]) {
@@ -441,7 +437,7 @@ const VotingList = () => {
     });
     setCurrentSelect(e);
     setRenderSelectedItems(render);
-  };
+  });
   return (
     <>
       <VotingTopList
@@ -452,45 +448,44 @@ const VotingList = () => {
         approvedCount={itemCount.approved}
         rejectedCount={itemCount.rejected}
       />
-      <main>
-        <div className={cn("inner")}>
-          <div className={cn("content-filter-wrap")}>
-            <VotingTitle
-              type="sm"
-              title=""
-              count={""}
-              searchName="search-type"
-              searchBallot={(e) => searchBallot(e)}
-              filterData={filterData}
-              handleSelect={(e) => handleSelect(e)}
-              onClose={() => getBallotDetailInfo()}
-              isMember={isMember}
-            />
-            <div className={cn("filter-wrap")}></div>
-          </div>
-          {/* voting time over - filter와 상관없이 고정*/}
-          {revokeItems.length > 0 && (
-            <div className={cn("voting-list-section", "revoke-item")}>
-              <VotingTitle
-                type="md"
-                title={"Voting Time Over"}
-                count={revokeItems.length}
-                exp={
-                  <>
-                    The proposed vote was rejected because more than 50% of the
-                    votes were not carried out.
-                    <strong>
-                      Please cancel the proposal to proceed with another vote.
-                    </strong>
-                  </>
-                }
-              />
-              <div className={cn("section-inner")}>{revokeItems}</div>
-            </div>
-          )}
-          {renderSelectedItems}
+      <div className={cn("inner")}>
+        <div className={cn("content-filter-wrap")}>
+          <VotingTitle
+            type="sm"
+            title=""
+            count={""}
+            searchName="search-type"
+            searchBallot={(e) => searchBallot(e)}
+            filterData={filterData}
+            handleSelect={(e) => handleSelect(e)}
+            onClose={() => getBallotDetailInfo()}
+            isMember={isMember}
+          />
+          <div className={cn("filter-wrap")}></div>
         </div>
-      </main>
+        {/* voting time over - filter와 상관없이 고정*/}
+        {revokeItems.length > 0 && (
+          <div className={cn("voting-list-section", "revoke-item")}>
+            {console.log("revoke", revokeItems)}
+            <VotingTitle
+              type="md"
+              title={"Voting Time Over"}
+              count={revokeItems.length}
+              exp={
+                <>
+                  The proposed vote was rejected because more than 50% of the
+                  votes were not carried out.
+                  <strong>
+                    Please cancel the proposal to proceed with another vote.
+                  </strong>
+                </>
+              }
+            />
+            <div className={cn("section-inner")}>{revokeItems}</div>
+          </div>
+        )}
+        {renderSelectedItems}
+      </div>
     </>
   );
 };

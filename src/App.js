@@ -58,13 +58,13 @@ const App = ({ children }) => {
     if (!!_chainId && !!_prevChainId && isChanged) {
       onLogout();
     }
-  }, [_chainId, _prevChainId]);
+  }, [_chainId, _prevChainId, onLogout]);
 
   useEffect(() => {
     if (address && web3Instance) {
       updateAccountData(address);
     }
-  }, [address, web3Instance]);
+  }, [address, updateAccountData]);
 
   const checkPath =
     pathname === "/wait" ||
