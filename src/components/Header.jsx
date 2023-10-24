@@ -1,32 +1,31 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useContext,
+} from "react";
 import cn from "classnames/bind";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu } from "antd";
 import { useLocation } from "react-router-dom";
 import { throttle } from "lodash";
 import { addCommasToNumber } from "../util";
+import { useAuth } from "../hooks/useAuth";
 
 import { ReactComponent as IconSymbol } from "../assets/images/header-logo-white.svg";
 import { DisConnectWalletModal, ErrModal } from "./Modal";
 import { web3Instance } from "../web3";
+import { StakingModal } from "./Modal";
 
 import { ReactComponent as IconClose } from "../assets/images/ico_close.svg";
 import { ReactComponent as IconMenu } from "../assets/images/ico_menu.svg";
 import { loginAcc } from "../util";
 import Button from "./voting/Button";
+import { ModalContext } from "../contexts/ModalContext";
 
-const HeaderCopy = ({
-  isMember,
-  isStaker,
-  isConnect,
-  myLockedBalance,
-  myBalance,
-  onLogin,
-  onLogout,
-  getStakingModal,
-  updateAccountData,
-  defaultAccount,
-}) => {
+const HeaderCopy = ({ getStakingModal }) => {
+  const navigate = useNavigate();
   const [offset, setOffset] = useState({
     width: 0,
     height: 0,
@@ -37,14 +36,31 @@ const HeaderCopy = ({
       height: window.innerHeight,
     });
   }, []);
+  const newLocal = useAuth();
+  const { getErrModal } = useContext(ModalContext);
 
-  const navigate = useNavigate();
-  // 확인 후 삭제 : Mira
-  const [isVotingModal, setIsVotingModal] = useState(false);
-  const filterData = ["Deposit Staking", "3days", "4days", "5days"];
-  const [inputValue, setInputValue] = useState("");
-  const [inputValue2, setInputValue2] = useState("");
+  const {
+    isMember,
+    isStaker,
+    address,
+    myBalance,
+    lockedBalance,
+    isLoggedIn: isConnect,
+    // chain,
+    onLogin,
+    onLogout,
+    updateAccountData,
+    setStakingEventsWatch,
+  } = newLocal;
+  const [isShowStakingModal, setIsShowStakingModal] = useState(false);
 
+  // address, web3Instance가 있다면 ctx 업데이트
+  useEffect(() => {
+    if (address && web3Instance) {
+      updateAccountData(address);
+    }
+  }, [address, web3Instance]);
+  console.log(isMember, myBalance, lockedBalance);
   // ---------- wallet modal state start ----------
   const [isGnbOpen, setIsGnbOpen] = useState(false);
 
@@ -84,10 +100,6 @@ const HeaderCopy = ({
     onLogout();
   };
 
-  const handleDisconnect = () => {
-    // if (isLogin) onLogout();
-  };
-
   const handleAccountsChanged = async (accounts) => {
     navigate(0);
     await updateAccountData(accounts[0], true);
@@ -109,7 +121,7 @@ const HeaderCopy = ({
     <header className={cn("header")}>
       {offset.width > 1023 ? (
         <>
-          <div className="header-logo-wrap">
+          <div className='header-logo-wrap'>
             <HeaderLogo />
             {/* <Menu
               className={cn("header-gnb", isConnect && isMember && "connect")}
@@ -130,33 +142,35 @@ const HeaderCopy = ({
                   <dl>
                     <div>
                       <dt>Locked</dt>
-                      <dd>{addCommasToNumber(myLockedBalance)} META </dd>
+                      <dd>{addCommasToNumber(lockedBalance)} META </dd>
                     </div>
                     <div>
                       <dt>Staked</dt>
                       <dd>{addCommasToNumber(myBalance)} META </dd>
                     </div>
                   </dl>
-                  <div className="btns-wrap">
+                  <div className='btns-wrap'>
                     <Button
-                      text="META Staking"
-                      type="outline"
-                      size="sm"
-                      onClick={getStakingModal}
+                      text='META Staking'
+                      type='outline'
+                      size='sm'
+                      onClick={() => {
+                        setIsShowStakingModal(true);
+                      }}
                     />
                     <Button
-                      type="outline"
-                      size="sm"
-                      text={defaultAccount && loginAcc(defaultAccount)}
+                      type='outline'
+                      size='sm'
+                      text={address && loginAcc(address)}
                       onClick={() => setDisConnectView(true)}
                     />
                   </div>
                 </>
               ) : (
                 <Button
-                  type="outline"
-                  size="sm"
-                  text="Connect Wallet"
+                  type='outline'
+                  size='sm'
+                  text='Connect Wallet'
                   onClick={onLogin}
                 />
               )}
@@ -166,7 +180,7 @@ const HeaderCopy = ({
       ) : (
         // mobile toggle open
         <>
-          <div className="header-logo-wrap">
+          <div className='header-logo-wrap'>
             <HeaderLogo />
             <div className={cn("mobile-gnb", isGnbOpen && "show")}>
               <div className={cn("gnb-inner")}>
@@ -193,7 +207,7 @@ const HeaderCopy = ({
                       <dl>
                         <div>
                           <dt>Locked</dt>
-                          <dd>{myLockedBalance} WEMIX</dd>
+                          <dd>{lockedBalance} WEMIX</dd>
                         </div>
                         <div>
                           <dt>Staked</dt>
@@ -202,26 +216,28 @@ const HeaderCopy = ({
                       </dl>
                     )}
                     {isConnect ? (
-                      <div className="btns-wrap">
+                      <div className='btns-wrap'>
                         <Button
-                          text="WEMIX Staking"
-                          type="outline"
-                          size="sm"
-                          onClick={getStakingModal}
+                          text='WEMIX Staking'
+                          type='outline'
+                          size='sm'
+                          onClick={() => {
+                            setIsShowStakingModal(true);
+                          }}
                         />
 
                         <Button
-                          type="outline"
-                          size="sm"
-                          text={defaultAccount && loginAcc(defaultAccount)}
+                          type='outline'
+                          size='sm'
+                          text={address && loginAcc(address)}
                           onClick={() => setDisConnectView(true)}
                         />
                       </div>
                     ) : (
                       <Button
-                        type="outline"
-                        size="sm"
-                        text="Connect Wallet"
+                        type='outline'
+                        size='sm'
+                        text='Connect Wallet'
                         onClick={onLogin}
                       />
                     )}
@@ -230,7 +246,7 @@ const HeaderCopy = ({
               </div>
             </div>
           </div>
-          <div className="header-utils">
+          <div className='header-utils'>
             <button onClick={onClickToggle}>
               <IconMenu />
             </button>
@@ -244,10 +260,23 @@ const HeaderCopy = ({
       />
       <ErrModal
         netName={web3Instance.netName}
-        title="Error"
+        title='Error'
         err={errMsg}
         visible={errVisible}
         coloseErrModal={closeErrModal}
+      />
+      <StakingModal
+        defaultAccount={address}
+        isMember={isMember}
+        accountBalance={{
+          balance: myBalance,
+          lockedBalance: lockedBalance,
+        }}
+        stakingModalVisible={isShowStakingModal}
+        scrollType={false}
+        setStakingEventsWatch={setStakingEventsWatch}
+        setStakingModalVisible={setIsShowStakingModal}
+        getErrModal={getErrModal}
       />
     </header>
   );
@@ -292,8 +321,7 @@ const HeaderMenu = ({ isConnect, isMember, isStaker, setIsGnbOpen }) => {
       isMember && isStaker && (
         <Menu.Item
           key={menu.title}
-          className={location.pathname === menu.path && "active"}
-        >
+          className={location.pathname === menu.path && "active"}>
           <Link to={menu.path} onClick={() => onMenuClick(menu.key)}>
             {menu.title}
           </Link>
@@ -302,8 +330,7 @@ const HeaderMenu = ({ isConnect, isMember, isStaker, setIsGnbOpen }) => {
     ) : (
       <Menu.Item
         key={menu.title}
-        className={location.pathname === menu.path && "active"}
-      >
+        className={location.pathname === menu.path && "active"}>
         <Link to={menu.path} onClick={() => onMenuClick(menu.key)}>
           {menu.title}
         </Link>
@@ -321,7 +348,7 @@ const HeaderMenu = ({ isConnect, isMember, isStaker, setIsGnbOpen }) => {
 export const HeaderLogo = () => {
   return (
     <h1 className={cn("header-logo")}>
-      <Link to="/">
+      <Link to='/'>
         <span className={cn("logo-symbol")}>
           <IconSymbol />
           <span className={cn("a11y")}>metadium governance</span>
