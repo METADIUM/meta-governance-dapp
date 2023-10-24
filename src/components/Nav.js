@@ -1,14 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Button, Row, Menu, Input, Affix } from "antd";
+import React from "react";
+import { Button, Menu, Input, Affix } from "antd";
 
 import "./style/style.css";
-import WalletButton from "./WalletButton";
-import { ConnectWalletModal, DisConnectWalletModal, ErrModal } from "./Modal";
-// import { web3Modal } from '../web3Modal'
-import { chainInfo, web3Instance } from "../web3";
-import { walletTypes } from "../constants";
-import ConnectWalletPage from "./ConnectWalletPage";
-import { hexToNumberJs } from "../util";
 
 // TODO Wemix apply form 생기면 아래 코드 수정 필요
 const SubHeader = ({
