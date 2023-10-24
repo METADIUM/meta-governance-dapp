@@ -67,8 +67,7 @@ const Header = () => {
     if (address && web3Instance) {
       updateAccountData(address);
     }
-  }, [address, web3Instance]);
-  console.log(isMember, myBalance, lockedBalance);
+  }, [address, web3Instance]); 
 
   // ---------- wallet modal state start ----------
   const [isGnbOpen, setIsGnbOpen] = useState(false);

@@ -41,7 +41,6 @@ const App = ({ children }) => {
     updateAccountData,
     setStakingEventsWatch,
   } = useAuth();
-  // console.log(isMember, myBalance, lockedBalance);
   const { pathname } = useLocation();
   const prev = usePrevious(chain);
 
