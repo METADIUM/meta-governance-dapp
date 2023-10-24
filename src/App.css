@@ -91,7 +91,8 @@ p {
   margin-bottom: auto;
 }
 
-.container {
+/* Nav.js 사용 여부 확인 후 삭제 */
+.container { 
   margin: 0 auto;
   max-width: 1152px;
   height: 100%;
