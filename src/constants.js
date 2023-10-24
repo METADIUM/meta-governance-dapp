@@ -93,7 +93,7 @@ export const DEVNET_CHAIN_INFO = {
   symbol: "WEMIX",
 };
 export const TESTNET_CHAIN_INFO = {
-  chainId: "0xb",
+  chainId: "0xc",
   chainName: "METADIUM Testnet",
   rpcUrls: "http://3.38.235.244:6588",
   blockExplorerUrls: "",
