@@ -75,95 +75,89 @@ const Home = () => {
     },
   ]);
 
-  useEffect(() => {
-    console.log(process, "process");
-  }, [])
-
   return (
     <Layout>
-      <Content>
-        <div className="section-head">
-          <div className="wrap">
-            <div className="title">
-              <span>metadium governance</span>
-              <p>
-                Metadium uses its advanced technology and experience to provide
-                a new ecosystem of compliant services and solutions that serve
-                as the bridge to blockchain’s true potential. Metadium
-                Governance can receive various proposals to improve Metadium in
-                a decentralized way, and network members can directly
-                participate in decision-making. Enable active governance
-                operations through an autonomous authority configuration to
-                develop and grow the Metadium ecosystem.
-              </p>
-            </div>
-            <ul>
-              <li>
-                <div>
-                  <span className="subject">Staking</span>
-                  <p>
-                    Metadium staking is one of the prerequisites to becoming an
-                    authority member. The staking method is possible by sending
-                    Metadium while calling a predefined function in the
-                    governance contract known at the system level. Even if
-                    staking is completed, it cannot become a member unless an
-                    official contract with the Metadium Blockchain Foundation
-                    and identity disclosure is made.
-                  </p>
-                </div>
-                {/* img 임시 처리 */}
-                <TempImage />
-              </li>
-              <li>
-                <div>
-                  <span className="subject">Voting</span>
-                  <p>
-                    Each voting will be passed when more than 50% of the total
-                    amount of staked Metadium is obtained during the voting
-                    duration (1-7 days). Only one voting is conducted at a time,
-                    so if there is existing voting in progress, it is impossible
-                    to start new voting.
-                  </p>
-                </div>
-                {/* img 임시 처리 */}
-                <TempImage />
-              </li>
-            </ul>
+      <div className="section-head">
+        <div className="wrap">
+          <div className="title">
+            <span>metadium governance</span>
+            <p>
+              Metadium uses its advanced technology and experience to provide
+              a new ecosystem of compliant services and solutions that serve
+              as the bridge to blockchain’s true potential. Metadium
+              Governance can receive various proposals to improve Metadium in
+              a decentralized way, and network members can directly
+              participate in decision-making. Enable active governance
+              operations through an autonomous authority configuration to
+              develop and grow the Metadium ecosystem.
+            </p>
           </div>
-        </div>
-        <div className="section-body">
-          <div className="wrap">
-            <div className="title">
-              <span class="subject">Partners</span>
+          <ul>
+            <li>
               <div>
-                <div>
-                  <p>
-                    Partners in various fields and industries, collaborating
-                    with Metadium to bring about change to your on-chain
-                    experience.
-                  </p>
-                  {/* 파트너사 9개 고정이라고 함 */}
-                  <strong>Total Partners 9</strong>
-                </div>
-                <button className="default-btn">+ Apply for Authority</button>
+                <span className="subject">Staking</span>
+                <p>
+                  Metadium staking is one of the prerequisites to becoming an
+                  authority member. The staking method is possible by sending
+                  Metadium while calling a predefined function in the
+                  governance contract known at the system level. Even if
+                  staking is completed, it cannot become a member unless an
+                  official contract with the Metadium Blockchain Foundation
+                  and identity disclosure is made.
+                </p>
               </div>
-            </div>
-            {/* list */}
-            <div className="partners-list">
-              {partners.map((partner, index) => (  
-                <div key={index}>
-                  <ul> 
-                    <li><img src={partner.logo} alt={partner.company} /></li>
-                    <li><a href={partner.link} target="_blank" rel="noopener noreferrer">{partner.company}</a></li>
-                    <li>Address: {partner.address}</li>
-                    <li>{partner.desc}</li>
-                  </ul>
-                </div>
-              ))}
+              {/* img 임시 처리 */}
+              <TempImage />
+            </li>
+            <li>
+              <div>
+                <span className="subject">Voting</span>
+                <p>
+                  Each voting will be passed when more than 50% of the total
+                  amount of staked Metadium is obtained during the voting
+                  duration (1-7 days). Only one voting is conducted at a time,
+                  so if there is existing voting in progress, it is impossible
+                  to start new voting.
+                </p>
+              </div>
+              {/* img 임시 처리 */}
+              <TempImage />
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="section-body">
+        <div className="wrap">
+          <div className="title">
+            <span className="subject">Partners</span>
+            <div>
+              <div>
+                <p>
+                  Partners in various fields and industries, collaborating
+                  with Metadium to bring about change to your on-chain
+                  experience.
+                </p>
+                {/* 파트너사 9개 고정이라고 함 */}
+                <strong>Total Partners 9</strong>
+              </div>
+              <button className="default-btn">+ Apply for Authority</button>
             </div>
           </div>
+          {/* list */}
+          <div className="partners-list">
+            {partners.map((partner, index) => (  
+              <div key={index}>
+                <ul> 
+                  <li><img src={partner.logo} alt={partner.company} /></li>
+                  <li><a href={partner.link} target="_blank" rel="noopener noreferrer">{partner.company}</a></li>
+                  <li>Address: {partner.address}</li>
+                  <li>{partner.desc}</li>
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
-      </Content>
+      </div>
     </Layout>
   );
 };
