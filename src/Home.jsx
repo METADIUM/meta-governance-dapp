@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "antd";
+import "./home.scss";
 // temporary
 import SampleIcon from "./assets/images/sampleIcon.svg";
 import { ReactComponent as TempImage } from "./assets/images/temp_image.svg";
