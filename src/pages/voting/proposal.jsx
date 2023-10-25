@@ -30,11 +30,11 @@ import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx";
 
 import { useSendTransaction } from "wagmi";
 import { ModalContext } from "../../contexts/ModalContext.jsx";
-import { useAuth } from "../../hooks/useAuth.js";
+import { AuthCtx } from "../../contexts/AuthContext.js";
 
 const Proposal = () => {
   const { getErrModal } = useContext(ModalContext);
-  const { address } = useAuth();
+  const { address } = useContext(AuthCtx);
   const { pathname } = useLocation();
   const { data } = useContext(GovInitCtx);
   const {

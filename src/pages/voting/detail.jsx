@@ -24,7 +24,7 @@ import {
 import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx";
 import { useModal } from "../../hooks/useModal.jsx";
 import { useSendTransaction } from "wagmi";
-import { useAuth } from "../../hooks/useAuth.js";
+import { AuthCtx } from "../../contexts/AuthContext.js";
 
 const VotingDetail = () => {
   const { data } = useContext(GovInitCtx);
@@ -39,7 +39,7 @@ const VotingDetail = () => {
   } = data;
   const { sendTransactionAsync } = useSendTransaction();
   const { getErrModal } = useModal();
-  const { address, isLoggedIn: isLogin, isMember } = useAuth();
+  const { address, isLoggedIn: isLogin, isMember } = useContext(AuthCtx);
   // -------------------- state
   const [ballotMemberData, setBallotMemberData] = useState({});
   const [ballotBasicData, setsBallotBasicData] = useState({});
@@ -93,7 +93,7 @@ const VotingDetail = () => {
       ? waitBallotBasicOriginData
       : ballotBasicOriginData;
     const ballotBasic = Object.values(basicData, "id").filter(
-      (item) => item.id.toString() === id,
+      (item) => item.id.toString() === id
     )[0];
     // wait protocol인 경우 basic id 순서대로 저장되어 있음
     const ballotMember = parseInt(wait)
@@ -101,7 +101,7 @@ const VotingDetail = () => {
         ? waitBallotMemberOriginData[ballotBasic.id]
         : null
       : Object.values(ballotMemberOriginData).filter(
-          (item) => item.id.toString() === id,
+          (item) => item.id.toString() === id
         )[0];
     // 투표 정보가 없을 경우 리스트로 보내기
     if (!ballotMember || !ballotBasic) {
@@ -131,7 +131,7 @@ const VotingDetail = () => {
     } = ballotBasicData;
     // 그 당시 총 멤버 수
     const previousMemberCount = Math.floor(
-      (100 * parseInt(totalVoters)) / parseInt(powerOfAccepts + powerOfRejects),
+      (100 * parseInt(totalVoters)) / parseInt(powerOfAccepts + powerOfRejects)
     );
     // count (wait 안건은 다르게 표기)
     const countAccepts = isWait
@@ -246,10 +246,10 @@ const VotingDetail = () => {
       if (isWait) {
         // 찬성, 반대 투표 리스트에 있는지 확인
         const approveVote = ballotBasicData.acceptVoters.filter(
-          (voter) => voter === address,
+          (voter) => voter === address
         );
         const rejectVote = ballotBasicData.rejectVoters.filter(
-          (voter) => voter === address,
+          (voter) => voter === address
         );
         return approveVote.length || rejectVote.length;
       } else {
@@ -260,7 +260,7 @@ const VotingDetail = () => {
           {
             id,
             voter: address,
-          },
+          }
         );
       }
     };
@@ -272,12 +272,12 @@ const VotingDetail = () => {
     const isInVoting = await onlyCallContractMethod(
       web3Instance,
       "GovImp",
-      "getBallotInVoting",
+      "getBallotInVoting"
     );
     if (!isWait && !(isInVoting === "0" || isInVoting === id.toString())) {
       // wait 일 경우 투표 중인 항목이 있어도 다른 투표할 수 있음
       openToast(
-        "Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed.",
+        "Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed."
       );
       return;
     }
@@ -296,7 +296,7 @@ const VotingDetail = () => {
       isWait ? "WaitGovernance" : "GovImp", // wait protocol 분기 처리
       "vote",
       id,
-      isWait ? currentVote : currentVote === "Yes", // wait protocol 분기 처리
+      isWait ? currentVote : currentVote === "Yes" // wait protocol 분기 처리
     );
     sendTransaction(trx);
   };
@@ -317,7 +317,7 @@ const VotingDetail = () => {
               getErrModal(
                 "The transaction could not be sent normally.",
                 "Proposal Submit Error",
-                receipt.transactionHash,
+                receipt.transactionHash
               );
             }
           });
