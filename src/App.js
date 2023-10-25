@@ -28,19 +28,8 @@ const App = ({ children }) => {
   const { getErrModal } = useContext(ModalContext);
   const { isWeb3Loaded, isContractReady, accessFailMsg } =
     useContext(GovInitCtx);
-  const {
-    isMember,
-    isStaker,
-    address,
-    myBalance,
-    lockedBalance,
-    isLoggedIn,
-    chain,
-    onLogin,
-    onLogout,
-    updateAccountData,
-    setStakingEventsWatch,
-  } = useAuth();
+  const { isMember, address, isLoggedIn, chain, onLogout, updateAccountData } =
+    useAuth();
   const { pathname } = useLocation();
   const prev = usePrevious(chain);
 

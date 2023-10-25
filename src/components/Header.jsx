@@ -17,19 +17,7 @@ import { ModalContext } from "../contexts/ModalContext";
 import HeaderLogo from "./HeaderLogo";
 import HeaderMenu from "./HeaderMenu";
 const Header = () => {
-  const {
-    isWeb3Loaded,
-    isContractReady,
-    data: GovCtxData,
-  } = useContext(GovInitCtx);
-
-  const {
-    isMember,
-    isStaker,
-    address,
-    myBalance,
-    myLockedBalance: lockedBalance,
-  } = GovCtxData;
+  const { isWeb3Loaded, isContractReady } = useContext(GovInitCtx);
 
   const navigate = useNavigate();
   const [offset, setOffset] = useState({
@@ -44,8 +32,12 @@ const Header = () => {
   }, []);
   const newLocal = useAuth();
   const { getErrModal } = useContext(ModalContext);
-
   const {
+    address,
+    isMember,
+    isStaker,
+    lockedBalance,
+    myBalance,
     isLoggedIn: isConnect,
     onLogin,
     onLogout,
@@ -114,7 +106,7 @@ const Header = () => {
   };
 
   // ---------- wallet modal method end ----------
-  console.log(isMember, isStaker, address, myBalance);
+
   return (
     <header className={cn("header")}>
       {offset.width > 1023 ? (
@@ -173,7 +165,7 @@ const Header = () => {
       ) : (
         // mobile toggle open
         <>
-          <div className="header-logo-wrap">
+          <div className='header-logo-wrap'>
             <HeaderLogo />
             <div className={cn("mobile-gnb", isGnbOpen && "show")}>
               <div className={cn("gnb-inner")}>
@@ -181,6 +173,7 @@ const Header = () => {
                   <IconClose />
                 </button>
                 <div className={cn("header-content")}>
+                  {console.log("HeaderMenu", isMember, isStaker)}
                   <HeaderMenu
                     isConnect={isConnect}
                     isMember={isMember}
@@ -201,7 +194,7 @@ const Header = () => {
                       </dl>
                     )}
                     {isConnect ? (
-                      <div className="btns-wrap">
+                      <div className='btns-wrap'>
                         <Button
                           text='WEMIX Staking'
                           type='outline'
@@ -212,17 +205,17 @@ const Header = () => {
                         />
 
                         <Button
-                          type="outline"
-                          size="sm"
+                          type='outline'
+                          size='sm'
                           text={address && loginAcc(address)}
                           onClick={() => setDisConnectView(true)}
                         />
                       </div>
                     ) : (
                       <Button
-                        type="outline"
-                        size="sm"
-                        text="Connect Wallet"
+                        type='outline'
+                        size='sm'
+                        text='Connect Wallet'
                         onClick={onLogin}
                       />
                     )}
@@ -231,7 +224,7 @@ const Header = () => {
               </div>
             </div>
           </div>
-          <div className="header-utils">
+          <div className='header-utils'>
             <button onClick={onClickToggle}>
               <IconMenu />
             </button>
@@ -247,7 +240,7 @@ const Header = () => {
           />
           <ErrModal
             netName={web3Instance.netName}
-            title="Error"
+            title='Error'
             err={errMsg}
             visible={errVisible}
             coloseErrModal={closeErrModal}
