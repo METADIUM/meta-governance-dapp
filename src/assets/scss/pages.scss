@@ -485,6 +485,160 @@ a {
     @include xsm {
       margin-bottom: 20px;
     }
-    
   }
+}
+
+.voting-list-section {
+  .section-inner {
+    border: 1px solid $gray4;
+    border-radius: 8px;
+    background: $white;
+    display: flex;
+    flex-direction: column;
+    padding: 0 24px;
+    margin-bottom: 60px;
+
+    .proposal-box {
+      border-top: 1px solid $gray4;
+      &:first-child {
+          border-top: 0;
+      }
+      .voting-list-block-wrap {
+        padding: 24px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 16px 0;
+
+        .wallet-info {
+          display: flex;
+          flex-direction: row;
+          gap: 0 17px;
+
+          > span {
+            @include R14;
+            color: $gray;
+
+            &:nth-child(2) {
+              color: $gray2;
+              position: relative;
+
+              &:before {
+                content:'';
+                display: inline-block;
+                width: 1px;
+                height: 10px;
+                background-color: $gray4;
+                position: absolute;
+                top: calc(50% - 5px);
+                left: -9px;
+              }
+            }
+          }
+        }
+
+        .list-title-wrap {
+          display: flex;
+          flex-direction: row;
+          gap: 0 12px;
+
+          .voting-status {
+            width: 84px;
+            height: 24px;
+            border-radius: 100px;
+            background: $gray4;
+            @include B12;
+            line-height: 24px;
+            text-align: center;
+          }
+          .title {
+            padding-bottom: 0;
+            @include B20;
+            line-height: 24px;
+            color: $gray;
+
+          }
+        }
+
+        .list-desc-wrap {
+          @include R14;
+          color: $gray;
+        }
+
+        .list-bottom-info {
+          display: flex;
+          flex-direction: row;
+          gap: 0 17px;
+
+          .icon-with-text-wrap {
+            .icon-with-text {
+              display: flex;
+              flex-direction: row;
+              gap: 0 8px;
+
+              > span {
+                @include R14;
+                color: $gray2;
+                line-height: 24px;
+              }
+            }
+          }
+
+          > div {
+            &:nth-child(2) {
+              display: flex;
+              flex-direction: row;
+              gap: 0 8px;
+              align-items: center;
+              position: relative;
+
+              &:before {
+                content: '';
+                display: inline-block;
+                width: 1px;
+                height: 10px;
+                background: $gray4;
+                position: absolute;
+                left: -8px;
+                top: calc(50% - 5px);
+              }
+            }
+          }
+
+          .voting-chart-mini {
+            display: flex;
+            width: 100px;
+            height: 8px;
+            background: $gray4;
+            border-radius: 4px;
+            .graph-positive {
+              background-color: $mint;
+            }
+            .graph-critical {
+              background-color: $red;
+            }
+          }
+
+          @include xsm {
+            flex-direction: column;
+            gap: 8px 0;
+
+            > div {
+              &:nth-child(2) {
+                &:before {
+                  display: none;
+                }
+              }
+            }
+          }
+
+        }
+
+      }
+      
+
+
+    }
+
+  }
+
 }

@@ -4,74 +4,74 @@
 .body-lock {
   overflow: hidden;
 }
-.voting-chart-mini {
-  display: inline-flex;
-  &.light {
-    gap: 2px;
-    width: 64px;
-    height: 4px;
-    background-color: #cacaca;
-    @include sm {
-      width: 100%;
-    }
-  }
-  &.dark {
-    width: 40px;
-    height: 3px;
-    border-radius: 3px;
-    overflow: hidden;
-    background-color: $gray70;
-  }
-  .graph-positive {
-    background-color: $positive;
-  }
-  .graph-critical {
-    background-color: $critical;
-  }
-}
-.icon-with-text-wrap {
-  display: inline-flex;
-  gap: 25px;
-  &.dark {
-    .icon-with-text {
-      color: $gray100;
-    }
-  }
-  @include sm {
-    flex-direction: column;
-    gap: 4px;
-    display: flex;
-    width: 100%;
-  }
-  .icon-with-text {
-    position: relative;
-    z-index: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: $gray40;
-    @include sm {
-      svg {
-        width: 20px !important;
-        height: 20px !important;
-      }
-    }
-    &:not(&:first-child)::before {
-      position: absolute;
-      @include content;
-      width: 1px;
-      height: 15px;
-      left: -13px;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: $gray80;
-      @include sm {
-        display: none;
-      }
-    }
-  }
-}
+// .voting-chart-mini {
+//   display: inline-flex;
+//   &.light {
+//     gap: 2px;
+//     width: 64px;
+//     height: 4px;
+//     background-color: #cacaca;
+//     @include sm {
+//       width: 100%;
+//     }
+//   }
+//   &.dark {
+//     width: 40px;
+//     height: 3px;
+//     border-radius: 3px;
+//     overflow: hidden;
+//     background-color: $gray70;
+//   }
+//   .graph-positive {
+//     background-color: $positive;
+//   }
+//   .graph-critical {
+//     background-color: $critical;
+//   }
+// }
+// .icon-with-text-wrap {
+//   display: inline-flex;
+//   gap: 25px;
+//   &.dark {
+//     .icon-with-text {
+//       color: $gray100;
+//     }
+//   }
+//   @include sm {
+//     flex-direction: column;
+//     gap: 4px;
+//     display: flex;
+//     width: 100%;
+//   }
+//   .icon-with-text {
+//     position: relative;
+//     z-index: 0;
+//     display: flex;
+//     align-items: center;
+//     gap: 8px;
+//     font-size: 14px;
+//     color: $gray40;
+//     @include sm {
+//       svg {
+//         width: 20px !important;
+//         height: 20px !important;
+//       }
+//     }
+//     &:not(&:first-child)::before {
+//       position: absolute;
+//       @include content;
+//       width: 1px;
+//       height: 15px;
+//       left: -13px;
+//       top: 50%;
+//       transform: translateY(-50%);
+//       background-color: $gray80;
+//       @include sm {
+//         display: none;
+//       }
+//     }
+//   }
+// }
 // voting-wrap 없음
 .voting-wrap {
 
@@ -428,165 +428,165 @@
   }
 }
 
-.voting-list-block-wrap {
-  position: relative;
-  background-color: $gray100;
-  border-radius: 4px;
-  padding: 16px 28px;
-  width: 100%;
-  border: 2px solid transparent;
-  transition: border 0.3s;
+// .voting-list-block-wrap {
+//   position: relative;
+//   background-color: $gray100;
+//   border-radius: 4px;
+//   padding: 16px 28px;
+//   width: 100%;
+//   border: 2px solid transparent;
+//   transition: border 0.3s;
 
-  @include sm {
-    padding: 16px;
-  }
-  &:hover {
-    border: 2px solid rgba($deepBlue, 0.5);
-  }
-  .wallet-info {
-    display: flex;
-    width: 100%;
-    gap: 17px;
-    span {
-      display: inline-block;
-      position: relative;
-      z-index: 0;
-      font-size: 12px;
-      color: $gray60;
-      line-height: 20px;
-      font-feature-settings: "calt" off;
-      & + span {
-        &::before {
-          @include content;
-          position: absolute;
-          width: 1px;
-          background-color: #bfbfbf;
-          height: 9px;
-          left: -9px;
-          top: 50%;
-          transform: translateY(-50%);
-        }
-      }
-    }
-    @include sm {
-      position: absolute;
-      transform: translateY(40px);
-    }
-  }
-  .list-title-wrap {
-    display: flex;
-    margin-top: 2px;
-    width: 100%;
-    justify-content: space-between;
-    @include sm {
-      flex-direction: column;
-      gap: 5px;
-    }
-    .title {
-      font-size: 20px;
-      line-height: 28px;
-      color: $black1;
-      font-weight: 700;
-      word-break: break-all;
-      @include sm {
-        display: flex;
-        order: 2;
-        margin-top: 26px;
-      }
-    }
-  }
-  .list-desc-wrap {
-    font-size: 14px;
-    line-height: 26px;
-    color: #595959;
-    width: 70%;
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    text-overflow: ellipsis;
-    word-break: keep-all;
-    @include sm {
-      width: 100%;
-      margin-top: 5px;
-      -webkit-line-clamp: 2;
-      line-height: 22px;
-    }
-  }
-  .list-bottom-info {
-    position: relative;
-    display: flex;
-    width: 100%;
-    justify-content: flex-start;
-    align-items: center;
-    margin-top: 20px;
-    gap: 40px;
-    @include sm {
-      flex-direction: column;
-      gap: 16px;
-    }
-    .tx-state {
-      position: absolute;
-      font-size: 14px;
-      right: 0;
-      bottom: 5px;
+//   @include sm {
+//     padding: 16px;
+//   }
+//   &:hover {
+//     border: 2px solid rgba($deepBlue, 0.5);
+//   }
+//   .wallet-info {
+//     display: flex;
+//     width: 100%;
+//     gap: 17px;
+//     span {
+//       display: inline-block;
+//       position: relative;
+//       z-index: 0;
+//       font-size: 12px;
+//       color: $gray60;
+//       line-height: 20px;
+//       font-feature-settings: "calt" off;
+//       & + span {
+//         &::before {
+//           @include content;
+//           position: absolute;
+//           width: 1px;
+//           background-color: #bfbfbf;
+//           height: 9px;
+//           left: -9px;
+//           top: 50%;
+//           transform: translateY(-50%);
+//         }
+//       }
+//     }
+//     @include sm {
+//       position: absolute;
+//       transform: translateY(40px);
+//     }
+//   }
+//   .list-title-wrap {
+//     display: flex;
+//     margin-top: 2px;
+//     width: 100%;
+//     justify-content: space-between;
+//     @include sm {
+//       flex-direction: column;
+//       gap: 5px;
+//     }
+//     .title {
+//       font-size: 20px;
+//       line-height: 28px;
+//       color: $black1;
+//       font-weight: 700;
+//       word-break: break-all;
+//       @include sm {
+//         display: flex;
+//         order: 2;
+//         margin-top: 26px;
+//       }
+//     }
+//   }
+//   .list-desc-wrap {
+//     font-size: 14px;
+//     line-height: 26px;
+//     color: #595959;
+//     width: 70%;
+//     display: -webkit-box;
+//     overflow: hidden;
+//     -webkit-box-orient: vertical;
+//     -webkit-line-clamp: 1;
+//     text-overflow: ellipsis;
+//     word-break: keep-all;
+//     @include sm {
+//       width: 100%;
+//       margin-top: 5px;
+//       -webkit-line-clamp: 2;
+//       line-height: 22px;
+//     }
+//   }
+//   .list-bottom-info {
+//     position: relative;
+//     display: flex;
+//     width: 100%;
+//     justify-content: flex-start;
+//     align-items: center;
+//     margin-top: 20px;
+//     gap: 40px;
+//     @include sm {
+//       flex-direction: column;
+//       gap: 16px;
+//     }
+//     .tx-state {
+//       position: absolute;
+//       font-size: 14px;
+//       right: 0;
+//       bottom: 5px;
 
-      &.tx-before {
-        color: $gray50;
-      }
-      &.tx-complete {
-        color: $black1;
-        font-weight: 700;
-      }
+//       &.tx-before {
+//         color: $gray50;
+//       }
+//       &.tx-complete {
+//         color: $black1;
+//         font-weight: 700;
+//       }
 
-      @include sm {
-        position: static;
-        width: 100%;
-        text-align: left;
-      }
-    }
-  }
-  & + .voting-list-block-wrap {
-    margin-top: 20px;
-  }
+//       @include sm {
+//         position: static;
+//         width: 100%;
+//         text-align: left;
+//       }
+//     }
+//   }
+//   & + .voting-list-block-wrap {
+//     margin-top: 20px;
+//   }
 
-  &.revoke {
-    .wallet-info {
-      @include sm {
-        transform: translateY(0px);
-        -webkit-transform: translateY(0px);
-      }
-    }
-    .list-title-wrap {
-      .voting-status {
-        display: none;
-      }
-    }
-    + .button-wrap {
-      border: 1px solid $critical;
-      color: $critical;
-      position: absolute;
-      right: 30px;
-      bottom: 18px;
-      z-index: 1;
+//   &.revoke {
+//     .wallet-info {
+//       @include sm {
+//         transform: translateY(0px);
+//         -webkit-transform: translateY(0px);
+//       }
+//     }
+//     .list-title-wrap {
+//       .voting-status {
+//         display: none;
+//       }
+//     }
+//     + .button-wrap {
+//       border: 1px solid $critical;
+//       color: $critical;
+//       position: absolute;
+//       right: 30px;
+//       bottom: 18px;
+//       z-index: 1;
 
-      @include sm {
-        right: 18px;
-        bottom: 52px;
-      }
-    }
-  }
+//       @include sm {
+//         right: 18px;
+//         bottom: 52px;
+//       }
+//     }
+//   }
 
-  @at-root .dark & {
-    padding: 24px 32px;
-    background-color: $gray30;
-    border-radius: 0;
-    border: 1px solid $gray40;
-    &:hover {
-      border: 1px solid rgba($gray80, 0.5);
-    }
-  }
-}
+//   @at-root .dark & {
+//     padding: 24px 32px;
+//     background-color: $gray30;
+//     border-radius: 0;
+//     border: 1px solid $gray40;
+//     &:hover {
+//       border: 1px solid rgba($gray80, 0.5);
+//     }
+//   }
+// }
 // voting-filter 컴포넌트
 // .voting-filter {
 //   min-width: 117px;
@@ -2653,9 +2653,9 @@
   }
 }
 
-.proposal-box {
-  position: relative;
-}
+// .proposal-box {
+//   position: relative;
+// }
 .voting-select-wrapper {
   display: flex;
   width: 100%;

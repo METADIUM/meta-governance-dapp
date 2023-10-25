@@ -67,7 +67,9 @@ const HeaderMenu = ({ isMember, isStaker, isConnect, setIsGnbOpen }) => {
   });
 
   return (
-    <Menu className={cn("header-gnb", isConnect && isMember && "connect")}>
+    <Menu
+      className={cn("header-gnb", isConnect && isMember && "connect")}
+    >
       {menuComponent}
     </Menu>
   );

@@ -231,19 +231,19 @@ const VotingList = () => {
       );
     });
     // wait 안건
-    Object.values(waitBallotBasicOriginData).forEach((item, index) => {
-      list.push(
-        <VotingListBlock
-          key={`wait-${index}`}
-          item={item}
-          authorityName={authorityNames.get(item.creator) || "-"}
-          ballotMemberOriginData={waitBallotMemberOriginData[item.id]}
-          setTopic={(item) => setTopic(item)}
-          onClick={(id) => sendTransaction(id)}
-          isMember={isMember}
-        />
-      );
-    });
+    // Object.values(waitBallotBasicOriginData).forEach((item, index) => {
+    //   list.push(
+    //     <VotingListBlock
+    //       key={`wait-${index}`}
+    //       item={item}
+    //       authorityName={authorityNames.get(item.creator) || "-"}
+    //       ballotMemberOriginData={waitBallotMemberOriginData[item.id]}
+    //       setTopic={(item) => setTopic(item)}
+    //       onClick={(id) => sendTransaction(id)}
+    //       isMember={isMember}
+    //     />
+    //   );
+    // });
     setBallotBasicOriginItems(list.reverse());
   };
 
