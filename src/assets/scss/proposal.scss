@@ -1,0 +1,713 @@
+@import './mixin';
+@import './variables';
+
+.proposal-top-wrap {
+  //   background-color: blueviolet;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+
+  .proposal-top-btn-wrap {
+    margin-bottom: 40px;
+    display: flex;
+    h2 {
+      @include B24;
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 100%; /* 24px */
+      //   background-color: aqua;
+      align-items: center;
+      margin-left: 8px;
+    }
+
+    .proposal-select {
+      margin-top: 48px;
+      display: flex;
+      min-height: 40px;
+    }
+  }
+
+  .proposal-select-wrap {
+    display: flex;
+    flex-direction: column;
+
+    .select-label {
+      @include B20;
+      margin-bottom: 20px;
+    }
+
+    .ant-select-selection--single {
+      color: $gray;
+      @include R14;
+      height: auto;
+      padding: 16px 20px;
+      box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      margin: 0;
+    }
+    .ant-select-selection__rendered {
+      margin-left: 0px;
+      line-height: 100%;
+    }
+  }
+}
+
+// proposal input
+.proposal-form {
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid var($gray4);
+  box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+  // proposal input
+  .textfield-contain {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0px;
+    .textfield-wrap {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 40px;
+
+      form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 32px;
+      }
+
+      @include sm {
+        gap: 20px;
+      }
+
+      .voting-input-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: space-between;
+
+        // block distribution
+        .box-wrap {
+          width: 65%;
+
+          @include sm {
+            width: 100%;
+          }
+
+          .multi-input-box {
+            width: 100%;
+          }
+
+          .error-massage {
+            @include errMsgState;
+          }
+        }
+
+        .button-input-box {
+          display: flex;
+          width: 65%;
+
+          @include sm {
+            width: 100%;
+          }
+          .input-wrap {
+            width: 100%;
+          }
+          .input-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 26px;
+
+            white-space: nowrap;
+            border-radius: 10px;
+            border: 1px solid rgb(206, 206, 206);
+            margin-left: 5px;
+            &:disabled {
+              opacity: 0.3;
+            }
+          }
+        }
+        .multi-input-box {
+          display: flex;
+          flex-wrap: wrap;
+          width: 65%;
+          gap: 0 11px;
+
+          @include sm {
+            width: 100%;
+            gap: 5px;
+          }
+
+          .hyphen {
+            padding-top: 24px;
+            display: flex;
+            align-items: center;
+            height: calc(48px + 24px);
+            color: #595959;
+          }
+
+          @include sm {
+            .input-cell {
+              width: calc(50% - 20px);
+            }
+          }
+          .input-cell-title {
+            display: block;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 20px;
+            margin-bottom: 4px;
+          }
+          .input-wrap {
+            width: calc(
+              ((741px - 32.5px * var(--hyphen-count)) / var(--input-count))
+            );
+
+            @include sm {
+              width: 100%;
+            }
+
+            .input-area {
+              width: 100%;
+            }
+          }
+
+          .error-massage {
+            @include errMsgState;
+          }
+        }
+        .description {
+          @include R12;
+          line-height: 100%;
+          display: block;
+          color: #8c8c8c;
+          width: 100%;
+          margin-bottom: 12px;
+          @include sm {
+            padding: 0;
+          }
+        }
+
+        @include sm {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 5px;
+        }
+
+        strong {
+          @include B14;
+          line-height: 100%;
+          margin-bottom: 12px;
+        }
+
+        .important {
+          color: red;
+        }
+
+        .required {
+          color: red;
+        }
+
+        .double-input-box {
+          display: flex;
+          flex-direction: column;
+          width: 65%;
+          gap: 10px;
+
+          .box-wrap {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            .input-wrap {
+              width: 100%;
+            }
+          }
+
+          .error-massage {
+            width: 91%;
+            margin-left: 9%;
+            @include errMsgState;
+
+            @include sm {
+              margin-left: 0;
+            }
+          }
+
+          @include sm {
+            width: 100%;
+
+            .input-wrap {
+              .description {
+                display: none;
+              }
+            }
+          }
+
+          + .description {
+            padding-left: 41%;
+
+            @include sm {
+              padding-left: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .voting-duration {
+      display: flex;
+
+      width: 100%;
+
+      justify-content: space-between;
+      @include sm {
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .voting-duration-wrap {
+        display: flex;
+        flex-direction: column;
+
+        justify-content: space-between;
+        width: 100%;
+        @include sm {
+          flex-direction: column;
+          gap: 5px;
+          align-items: flex-start;
+          .ant-select {
+            width: 100% !important;
+          }
+        }
+        .ant-select-selection--single {
+          // width: 65%;
+          height: 46px;
+          height: auto;
+          padding: 16px 20px;
+          border-radius: 8px;
+          border-radius: 8px;
+          border: 1px solid $gray4;
+          background: #fff;
+        }
+        .ant-select-selection__rendered {
+          @include R14;
+          margin-left: 0px;
+        }
+        strong {
+          @include B14;
+          line-height: 100%;
+          margin-bottom: 12px;
+        }
+
+        .important {
+          color: red;
+        }
+
+        .required {
+          color: red;
+        }
+      }
+
+      .submit-btn {
+        color: #fff;
+        background-color: #323cff;
+        opacity: 0.3;
+        border-radius: 0;
+        border: none;
+        width: 160px;
+        height: 52px;
+
+        @include sm {
+          width: 100%;
+        }
+      }
+    }
+
+    // my info footer
+    .myinfo-footer {
+      display: flex;
+      border-top: 1px solid #d9d9d9;
+      width: 100%;
+      margin-top: 40px;
+      padding-top: 24px;
+      justify-content: flex-end;
+    }
+  }
+
+  .voting-proposal {
+    padding: 30px;
+    background-color: #fff;
+    @include sm {
+      padding: 16px;
+    }
+  }
+}
+.input-wrap {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+
+  @include sm {
+    width: 100%;
+  }
+
+  &.disabled {
+    .input-area {
+      background-color: #f2f2f2;
+
+      input {
+        font-feature-settings: 'calt' off;
+        &::input-placeholder {
+          color: #a6a6a6;
+        }
+
+        &:placeholder {
+          color: #a6a6a6;
+        }
+
+        &::placeholder {
+          color: #a6a6a6;
+        }
+
+        &:input-placeholder {
+          color: #a6a6a6;
+        }
+      }
+    }
+    .textarea-wrap {
+      background-color: #f2f2f2;
+      border: none !important;
+
+      span {
+        color: #a6a6a6 !important;
+      }
+      textarea {
+        font-feature-settings: 'calt' off;
+        border: none !important;
+      }
+
+      textarea {
+        &::input-placeholder {
+          color: #a6a6a6;
+        }
+
+        &:placeholder {
+          color: #a6a6a6;
+        }
+
+        &::placeholder {
+          color: #a6a6a6;
+        }
+
+        &:input-placeholder {
+          color: #a6a6a6;
+        }
+      }
+    }
+  }
+
+  &.multiline {
+    align-items: flex-start;
+
+    @include sm {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .description {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px;
+      color: #8c8c8c;
+      margin-top: 4px;
+      display: block;
+    }
+    .error-massage {
+      @include errMsgState;
+    }
+    .textarea-wrap {
+      width: 100%;
+      position: relative;
+      border: 1px solid $gray4;
+      padding: 14px 16px 25px 16px;
+      border-radius: 10px;
+      &.focus-on {
+        border: 1px solid #323cff;
+      }
+
+      textarea {
+        font-feature-settings: 'calt' off;
+        background-color: transparent;
+        border: none;
+        width: 100%;
+        height: 104px;
+        resize: none;
+        text-align: start;
+
+        @include sm {
+          width: 100%;
+          font-size: 14px;
+        }
+
+        &:disabled {
+          opacity: 1;
+          color: #d9d9d9;
+        }
+        &:focus {
+          outline: none;
+          border: none;
+        }
+      }
+
+      span {
+        position: absolute;
+        bottom: 5%;
+        right: 2%;
+        transform: translate(-2%, -5%);
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 18px;
+        color: #8c8c8c;
+      }
+    }
+
+    &.error {
+      .textarea-wrap {
+        border: 1px solid $critical;
+      }
+    }
+  }
+
+  .input-top-area {
+    width: 100%;
+
+    &.prefix {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      @include sm {
+        flex-direction: column;
+        align-items: flex-start;
+
+        > span {
+          margin-bottom: 10px;
+        }
+      }
+
+      > span {
+        width: 9%;
+        color: $gray20;
+        font-size: 16px;
+      }
+    }
+
+    @include sm {
+      width: 100%;
+    }
+    .description {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px;
+      color: #8c8c8c;
+      margin-top: 4px;
+      display: block;
+    }
+    .error-massage {
+      @include errMsgState;
+    }
+
+    .input-area {
+      width: 100%;
+      position: relative;
+      border: 1px solid $gray4;
+      display: flex;
+      border-radius: 10px;
+      input {
+        border-radius: 10px;
+      }
+
+      &.focus-on {
+        border: 1px solid #323cff;
+      }
+      //에러 케이스
+      &.error {
+        border: 1px solid $critical;
+        background: none;
+
+        &.focus-on {
+          border: none;
+        }
+
+        input {
+          // outline: none;
+          // border: none;
+
+          &:focus {
+            outline: none;
+          }
+        }
+
+        &.focus-on {
+          border: 1px solid #eb524f;
+          &::after {
+            display: none;
+          }
+        }
+      }
+      //suffix일때 케이스
+      &.suffix {
+        &.not-value {
+          input {
+            border-radius: 10px;
+            border: none;
+            background-color: rgb(231, 231, 231);
+            padding: 10px 16px 10px 16px;
+          }
+        }
+        &.superPrefix {
+          display: flex;
+          flex-direction: column;
+          border: none;
+          span {
+            @include R14;
+            width: 45%;
+            font-weight: 700;
+            color: black;
+            margin-bottom: 12px;
+          }
+          span:last-child {
+            color: red;
+          }
+
+          input {
+            padding: 10px;
+            border-radius: 10px;
+
+            background-color: #fff;
+            border: 1px solid rgb(212, 212, 212);
+          }
+          .text-place {
+            display: none;
+          }
+        }
+        input {
+          text-align: end;
+          font-weight: 400;
+          padding: 10px 0px 10px 35px;
+
+          @include sm {
+            padding: 10px 0px 10px 35px;
+          }
+        }
+
+        .text-place {
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+          padding: 11px 16px 10px 4px;
+          color: #737373;
+
+          @include sm {
+            font-size: 14px;
+          }
+        }
+      }
+
+      //perfix일때 케이스
+      &.prefix {
+        &.not-value {
+          input {
+            padding: 10px 16px 10px 16px;
+          }
+        }
+        input {
+          order: 2;
+          text-align: start;
+          font-weight: 400;
+          padding: 10px 35px 10px 0px;
+
+          @include sm {
+            padding: 10px 35px 10px 0px;
+          }
+        }
+
+        .text-place {
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+          padding: 11px 8px 10px 15px;
+
+          @include sm {
+            font-size: 14px;
+          }
+        }
+      }
+
+      &.readonly {
+        background-color: #f2f2f2;
+      }
+      // enter 버튼이 있을 때
+      &.enter {
+        border: none;
+
+        input {
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          &.default {
+            border: 1px solid #ccc !important;
+          }
+          &.focus-on {
+            border: 1px solid #323cff;
+          }
+          &.error {
+            border: 1px solid $critical;
+            background: none;
+          }
+        }
+      }
+
+      //input 기본값
+      input {
+        @include R14;
+        color: $gray3;
+        border: none;
+        background-color: transparent;
+        height: 48px;
+        width: 100%;
+        padding: 16px 20px;
+        text-align: start;
+
+        @include sm {
+          font-size: 14px;
+          height: 44px;
+        }
+
+        &:disabled {
+          opacity: 1;
+          color: $gray20;
+        }
+
+        &:read-only {
+          opacity: 1;
+          color: $gray20;
+        }
+
+        &:focus {
+          outline: none;
+        }
+      }
+      input::placeholder {
+        color: $gray3;
+      }
+    }
+  }
+}

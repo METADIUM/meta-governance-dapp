@@ -1,36 +1,37 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router-dom";
-import cn from "classnames/bind";
-import VotingTopProposal from "../../components/voting/VotingTopProposal.jsx";
+import React, { useState, useEffect, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
+import cn from 'classnames/bind';
+import VotingTopProposal from '../../components/voting/VotingTopProposal.jsx';
+import '../../assets/scss/proposal.scss';
 
 import {
   callContractMethod,
   encodeABIValueInMethod,
   web3Instance,
-} from "../../web3";
+} from '../../web3';
 
-import * as PComponent from "../../components/Forms";
-import * as MComponent from "../../components/MyForm";
-import * as util from "../../util";
-import { removeCommasFromNumber, addCommasToNumber } from "../../util";
+import * as PComponent from '../../components/Forms';
+import * as MComponent from '../../components/MyForm';
+import * as util from '../../util';
+import { removeCommasFromNumber, addCommasToNumber } from '../../util';
 
 import {
   constants,
   ENV_MY_INFO_PROPOSAL_LIST,
   ENV_NAMES,
   ENV_VOTING_PROPOSAL_LIST,
-} from "../../constants";
+} from '../../constants';
 import {
   DEVMETANET_WHITE_LIST,
   MAINNET_WHITE_LIST,
   TESTNET_WHITE_LIST,
-} from "../../whitelist.js";
+} from '../../whitelist.js';
 
-import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx";
+import { GovInitCtx } from '../../contexts/GovernanceInitContext.jsx';
 
-import { useSendTransaction } from "wagmi";
-import { ModalContext } from "../../contexts/ModalContext.jsx";
-import { AuthCtx } from "../../contexts/AuthContext.js";
+import { useSendTransaction } from 'wagmi';
+import { ModalContext } from '../../contexts/ModalContext.jsx';
+import { AuthCtx } from '../../contexts/AuthContext.js';
 
 const Proposal = () => {
   const { getErrModal } = useContext(ModalContext);
@@ -53,17 +54,17 @@ const Proposal = () => {
     votDuration: 1,
     newLockAmount: stakingMin,
     oldLockAmount: stakingMin,
-    staker: "",
-    name: "",
-    enode: "",
-    ip: "",
-    port: "",
+    staker: '',
+    name: '',
+    enode: '',
+    ip: '',
+    port: '',
     lockAmount: 0,
-    oldStaker: "",
+    oldStaker: '',
   });
   const [errState, setErrState] = useState({});
 
-  const [selectedTopic, setSelectedTopic] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState('');
   const [onLoading, setOnLoading] = useState(false);
 
   const [newMemberaddr, setNewMemberAddr] = useState([]);
@@ -77,15 +78,15 @@ const Proposal = () => {
   const [oldRewardAddr, setOldRewardAddr] = useState();
   const [memberIdx, setMemberIdx] = useState();
   const [showProposal, setShowProposal] = useState(false);
-  const [selectedMenu, setIsSelectedMenu] = useState("menu-voting");
+  const [selectedMenu, setIsSelectedMenu] = useState('menu-voting');
 
   useEffect(() => {
-    if (pathname === "/my-info") {
+    if (pathname === '/my-info') {
       setShowProposal(true);
-      setIsSelectedMenu("menu-myinfo");
+      setIsSelectedMenu('menu-myinfo');
     } else {
       setShowProposal(false);
-      setIsSelectedMenu("menu-voting");
+      setIsSelectedMenu('menu-voting');
     }
   }, [pathname]);
 
@@ -96,8 +97,8 @@ const Proposal = () => {
       for (memberIdx; memberIdx <= memberLength; memberIdx++) {
         const staker = await callContractMethod(
           web3Instance,
-          "GovImp",
-          "getMember",
+          'GovImp',
+          'getMember',
           memberIdx
         );
         if (staker === address) {
@@ -107,14 +108,14 @@ const Proposal = () => {
       // get member info
       const oldVotingAddr = await callContractMethod(
         web3Instance,
-        "GovImp",
-        "getVoter",
+        'GovImp',
+        'getVoter',
         memberIdx
       );
       const oldRewardAddr = await callContractMethod(
         web3Instance,
-        "GovImp",
-        "getReward",
+        'GovImp',
+        'getReward',
         memberIdx
       );
 
@@ -144,24 +145,24 @@ const Proposal = () => {
   });
 
   // 새로고침 시 selecTedtopic 유지되도록 저장
-  const currentTopic = window.localStorage.getItem("selectedTopic");
+  const currentTopic = window.localStorage.getItem('selectedTopic');
 
   useEffect(() => {
     if (currentTopic) {
       setSelectedTopic(currentTopic);
     } else {
       if (showProposal) {
-        setSelectedTopic("VotingAddress");
-      } else setSelectedTopic("AddAuthorityMember");
+        setSelectedTopic('VotingAddress');
+      } else setSelectedTopic('AddAuthorityMember');
     }
     getMemberList();
   }, []);
 
   useEffect(() => {
-    if (selectedMenu === "menu-myinfo") {
-      if (currentTopic === "RewardAddress") {
-        setSelectedTopic("RewardAddress");
-      } else setSelectedTopic("VotingAddress");
+    if (selectedMenu === 'menu-myinfo') {
+      if (currentTopic === 'RewardAddress') {
+        setSelectedTopic('RewardAddress');
+      } else setSelectedTopic('VotingAddress');
     }
   }, [selectedMenu]);
 
@@ -191,21 +192,21 @@ const Proposal = () => {
 
   const getLockAmount = async (addr) => {
     if (!util.checkAddress(addr)) {
-      getErrModal("Staking Address is Invalids.", "Proposal Submit Error");
+      getErrModal('Staking Address is Invalids.', 'Proposal Submit Error');
       setFormData({
         ...formData,
-        showLockAmount: "",
+        showLockAmount: '',
       });
       // setShowLockAmount("");
       return;
     } else if (!web3Instance.web3.utils.checkAddressChecksum(addr)) {
       addr = web3Instance.web3.utils.toChecksumAddress(addr);
     }
-    if (!(await callContractMethod(web3Instance, "GovImp", "isMember", addr))) {
-      getErrModal("Non-existing Member Address.", "Proposal Submit Error");
+    if (!(await callContractMethod(web3Instance, 'GovImp', 'isMember', addr))) {
+      getErrModal('Non-existing Member Address.', 'Proposal Submit Error');
       setFormData({
         ...formData,
-        showLockAmount: "",
+        showLockAmount: '',
       });
       // setShowLockAmount("");
       return;
@@ -214,8 +215,8 @@ const Proposal = () => {
     try {
       let lockedBalance = await callContractMethod(
         web3Instance,
-        "Staking",
-        "lockedBalanceOf",
+        'Staking',
+        'lockedBalanceOf',
         addr
       );
       setFormData({
@@ -229,7 +230,7 @@ const Proposal = () => {
       setOnLoading(false);
       setFormData({
         ...formData,
-        showLockAmount: "",
+        showLockAmount: '',
       });
       // setShowLockAmount("");
     }
@@ -245,13 +246,13 @@ const Proposal = () => {
       votDuration: 1,
       newLockAmount: stakingMin,
       oldLockAmount: stakingMin,
-      staker: "",
-      name: "",
-      enode: "",
-      ip: "",
-      port: "",
+      staker: '',
+      name: '',
+      enode: '',
+      ip: '',
+      port: '',
       lockAmount: 0,
-      oldStaker: "",
+      oldStaker: '',
     });
     // setShowLockAmount("");
     // block distribution
@@ -277,14 +278,14 @@ const Proposal = () => {
     )[0];
 
     setSelectedTopic(topic);
-    window.localStorage.setItem("selectedTopic", topic);
+    window.localStorage.setItem('selectedTopic', topic);
 
     resetForm();
 
     // getmyInfo가 필요한 topic
     if (
-      topic === "AddAuthorityMember" ||
-      topic === "ReplaceAuthorityMember" ||
+      topic === 'AddAuthorityMember' ||
+      topic === 'ReplaceAuthorityMember' ||
       isMyInfo
     ) {
       getMyInfo();
@@ -293,7 +294,7 @@ const Proposal = () => {
 
   // when the select option has changed
   const handleSelectChange = (e) => {
-    let [name, value] = e.split("_");
+    let [name, value] = e.split('_');
     setFormData({
       ...formData,
       [name]: value,
@@ -302,7 +303,7 @@ const Proposal = () => {
 
   const handleChange = (e) => {
     // if selected value is topic
-    if (typeof e === "string") {
+    if (typeof e === 'string') {
       return handleSelectChange(e);
     }
 
@@ -315,7 +316,7 @@ const Proposal = () => {
       // amount들은 숫자에 콤마를 찍어놨기 때문에 초기화
       targetValue = removeCommasFromNumber(targetValue);
     }
-    const originStr = { ...formData, [e.target.name]: "" };
+    const originStr = { ...formData, [e.target.name]: '' };
 
     setFormData({
       ...formData,
@@ -323,19 +324,19 @@ const Proposal = () => {
     });
     switch (e.target.name) {
       // Add Authority Member
-      case "newAddr":
+      case 'newAddr':
         setErrState({
           ...errState,
           newAddrErr: !util.checkAddress(targetValue),
         });
         break;
-      case "newName":
+      case 'newName':
         setErrState({
           ...errState,
           newNameErr: !util.checkName(targetValue),
         });
         break;
-      case "newLockAmount":
+      case 'newLockAmount':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
@@ -344,19 +345,19 @@ const Proposal = () => {
           });
         }
         break;
-      case "newNode":
+      case 'newNode':
         setErrState({
           ...errState,
           newNodeErr: !util.checkNode(targetValue),
         });
         break;
-      case "stakingAddr":
+      case 'stakingAddr':
         setErrState({
           ...errState,
           stakingAddrErr: !util.checkAddress(e.target.targetValue),
         });
         break;
-      case "oldLockAmount":
+      case 'oldLockAmount':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         // formData[e.target.name] = originStr;
         else {
@@ -367,33 +368,33 @@ const Proposal = () => {
         }
         break;
       // Governance Contract Address
-      case "newGovAddr":
+      case 'newGovAddr':
         setErrState({
           ...errState,
           newGovAddrErr: !util.checkAddress(targetValue),
         });
         break;
       // Voting Duration Setting
-      case "votDurationMin":
+      case 'votDurationMin':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
             ...errState,
             votDurationErr: util.checkNumberRange(
-              "min",
+              'min',
               targetValue,
               formData.votDurationMax
             ),
           });
         }
         break;
-      case "votDurationMax":
+      case 'votDurationMax':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
             ...errState,
             votDurationErr: util.checkNumberRange(
-              "max",
+              'max',
               formData.votDurationMin,
               targetValue
             ),
@@ -401,14 +402,14 @@ const Proposal = () => {
         }
         break;
       //Authority Member Staking Amount
-      case "authMemSkAmountMin":
+      case 'authMemSkAmountMin':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
             ...errState,
             authMemSkAmountErr:
               util.checkNumberRange(
-                "min",
+                'min',
                 targetValue,
                 formData.authMemSkAmountMax
               ) ||
@@ -419,14 +420,14 @@ const Proposal = () => {
           });
         }
         break;
-      case "authMemSkAmountMax":
+      case 'authMemSkAmountMax':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
             ...errState,
             authMemSkAmountErr:
               util.checkNumberRange(
-                "max",
+                'max',
                 formData.authMemSkAmountMin,
                 targetValue
               ) ||
@@ -438,7 +439,7 @@ const Proposal = () => {
         }
         break;
       // Block Creation Time
-      case "blockCreation":
+      case 'blockCreation':
         if (!/^([0-9.]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
@@ -448,10 +449,10 @@ const Proposal = () => {
         }
         break;
       // Block Reward Distribution Method
-      case "blockRate1":
-      case "blockRate2":
-      case "blockRate3":
-      case "blockRate4":
+      case 'blockRate1':
+      case 'blockRate2':
+      case 'blockRate3':
+      case 'blockRate4':
         if (!/^[0-9]*\.?([0-9]{1,2})?$/.test(targetValue)) {
           // 입력이 더이상 되지 않도록 막음.
           setFormData({ ...formData });
@@ -477,7 +478,7 @@ const Proposal = () => {
         }
         break;
       // Block Reward Amount
-      case "blockRewardAmount":
+      case 'blockRewardAmount':
         if (!/^([0-9.]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
@@ -487,7 +488,7 @@ const Proposal = () => {
         }
         break;
       // maxPriorityFeePerGas
-      case "maxPriorityFeePerGas":
+      case 'maxPriorityFeePerGas':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
@@ -497,7 +498,7 @@ const Proposal = () => {
         }
         break;
       // Gas Limit & baseFee
-      case "gasLimit":
+      case 'gasLimit':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
@@ -506,7 +507,7 @@ const Proposal = () => {
           });
         }
         break;
-      case "maxBaseFee":
+      case 'maxBaseFee':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
@@ -515,7 +516,7 @@ const Proposal = () => {
           });
         }
         break;
-      case "baseFeeMaxChangeRate":
+      case 'baseFeeMaxChangeRate':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
@@ -524,7 +525,7 @@ const Proposal = () => {
           });
         }
         break;
-      case "gasTargetPercentage":
+      case 'gasTargetPercentage':
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
@@ -534,32 +535,32 @@ const Proposal = () => {
         }
         break;
       // Voting Address
-      case "newVotingAddr":
+      case 'newVotingAddr':
         setErrState({
           ...errState,
           newVotingAddrErr: !util.checkAddress(targetValue),
         });
         break;
       // Reward Address
-      case "newRewardAddr":
+      case 'newRewardAddr':
         setErrState({
           ...errState,
           newRewardAddrErr: !util.checkAddress(targetValue),
         });
         break;
-      case "companyName":
+      case 'companyName':
         setErrState({
           ...errState,
           companyNameErr: !util.checkCompanyName(targetValue),
         });
         break;
-      case "companyAddress":
+      case 'companyAddress':
         setErrState({
           ...errState,
           companyAddressErr: !util.checkAddress(targetValue),
         });
         break;
-      case "investmentAmount":
+      case 'investmentAmount':
         if (!/^([0-9.]*)$/.test(targetValue)) setFormData(originStr);
         else {
           setErrState({
@@ -581,105 +582,105 @@ const Proposal = () => {
   const handleProposalError = async (refineData) => {
     // ! wait 안건 등록 시 화이트리스트에 등록된 계정만 가능한데 추후 조건 추가해야 됨
     if (
-      selectedTopic !== "AddWaitProposal" &&
+      selectedTopic !== 'AddWaitProposal' &&
       !(await callContractMethod(
         web3Instance,
-        "GovImp",
-        "isMember",
+        'GovImp',
+        'isMember',
         address
       )) &&
       !constants.debugMode
     ) {
       return getErrModal(
-        "You are not Governance Member.",
-        "Proposal Submit Error"
+        'You are not Governance Member.',
+        'Proposal Submit Error'
       );
     }
     switch (selectedTopic) {
-      case "AddAuthorityMember": {
+      case 'AddAuthorityMember': {
         const { staker, lockAmount } = refineData;
         const newLockedAmount = Number(lockAmount);
         // get the balance of staking address
         const balance = Number(
           await callContractMethod(
             web3Instance,
-            "Staking",
-            "availableBalanceOf",
+            'Staking',
+            'availableBalanceOf',
             staker
           )
         );
         // check if addresses already exist
         const isMember = await callContractMethod(
           web3Instance,
-          "GovImp",
-          "isMember",
+          'GovImp',
+          'isMember',
           staker
         );
         if (isMember) {
           return getErrModal(
-            "Existing Member Address.",
-            "Proposal Submit Error"
+            'Existing Member Address.',
+            'Proposal Submit Error'
           );
         }
         // check if addresses already voted
         const inBallotMember = newMemberaddr.some((addr) => addr === staker);
         if (inBallotMember) {
           return getErrModal(
-            "Address with Existing Ballot.",
-            "Proposal Submit Error"
+            'Address with Existing Ballot.',
+            'Proposal Submit Error'
           );
         }
         // check if staking address has wemix
         if (balance < newLockedAmount) {
           return getErrModal(
-            "Not Enough WEMIX to Stake.",
-            "Proposal Submit Error"
+            'Not Enough WEMIX to Stake.',
+            'Proposal Submit Error'
           );
         }
         return false;
       }
-      case "ReplaceAuthorityMember": {
+      case 'ReplaceAuthorityMember': {
         const { oldStaker, staker, lockAmount } = refineData;
         const newLockedAmount = Number(lockAmount);
         // get the balance of old, new addresses
         const oldMemberBalance = await callContractMethod(
           web3Instance,
-          "Staking",
-          "lockedBalanceOf",
+          'Staking',
+          'lockedBalanceOf',
           oldStaker
         );
         const newMemberBalance = Number(
           await callContractMethod(
             web3Instance,
-            "Staking",
-            "availableBalanceOf",
+            'Staking',
+            'availableBalanceOf',
             staker
           )
         );
         // check if old address does not exist
         const isMemberOldAddr = await callContractMethod(
           web3Instance,
-          "GovImp",
-          "isMember",
+          'GovImp',
+          'isMember',
           oldStaker
         );
         if (!isMemberOldAddr) {
           return getErrModal(
-            "Non-existing Member Address (Old).",
-            "Proposal Submit Error"
+            'Non-existing Member Address (Old).',
+            'Proposal Submit Error'
           );
         }
         // check if new addresses already exist
         const isMemberNewAddr = await callContractMethod(
           web3Instance,
-          "GovImp",
-          "isMember",
+          'GovImp',
+          'isMember',
           staker
         );
         if (isMemberNewAddr) {
           return getErrModal(
-            "Existing Member Address.",
-            "Proposal Submit Error"
+            'Existing Member Address.',
+            'Proposal Submit Error'
           );
         }
         // check if old address already voted
@@ -688,47 +689,47 @@ const Proposal = () => {
         );
         if (inBallotOldMember) {
           return getErrModal(
-            "Address with Existing Ballot (Old).",
-            "Proposal Submit Error"
+            'Address with Existing Ballot (Old).',
+            'Proposal Submit Error'
           );
         }
         // check if new address already voted
         const isBallotNewMember = newMemberaddr.some((addr) => addr === staker);
         if (isBallotNewMember) {
           return getErrModal(
-            "Address with Existing Ballot (New).",
-            "Proposal Submit Error"
+            'Address with Existing Ballot (New).',
+            'Proposal Submit Error'
           );
         }
         // check the balance of the old address is not same as lockAmount
         if (Number(oldMemberBalance) !== newLockedAmount) {
           return getErrModal(
             [
-              "Invalid Replace WEMIX Amount",
+              'Invalid Replace WEMIX Amount',
               <br />,
               `(Old Address: ${util.convertWeiToEther(
                 oldMemberBalance,
-                "ether"
+                'ether'
               )} WEMIX Locked)`,
             ],
-            "Proposal Submit Error"
+            'Proposal Submit Error'
           );
         }
         // check if staking address has wemix
         if (newMemberBalance < newLockedAmount) {
           return getErrModal(
-            "Not Enough WEMIX Stake (New)",
-            "Proposal Submit Error"
+            'Not Enough WEMIX Stake (New)',
+            'Proposal Submit Error'
           );
         }
         return false;
       }
-      case "RemoveAuthorityMember": {
+      case 'RemoveAuthorityMember': {
         const { staker, lockAmount } = refineData;
         const balance = await callContractMethod(
           web3Instance,
-          "Staking",
-          "lockedBalanceOf",
+          'Staking',
+          'lockedBalanceOf',
           staker
         );
         const lockedAmount = Number(lockAmount);
@@ -736,41 +737,41 @@ const Proposal = () => {
         // check if addresses already exist
         const isMember = await callContractMethod(
           web3Instance,
-          "GovImp",
-          "isMember",
+          'GovImp',
+          'isMember',
           staker
         );
         if (!isMember) {
           return getErrModal(
-            "Non-existing Member Address.",
-            "Proposal Submit Error"
+            'Non-existing Member Address.',
+            'Proposal Submit Error'
           );
         }
         // check if new address already voted
         const isBallotMember = newMemberaddr.some((addr) => addr === staker);
         if (isBallotMember) {
           return getErrModal(
-            "Address with Existing Ballot.",
-            "Proposal Submit Error"
+            'Address with Existing Ballot.',
+            'Proposal Submit Error'
           );
         }
         // check if the balance is small
         if (balance < lockedAmount) {
           return getErrModal(
-            "Locked Amount must be less than or equal to Unlocked Amount.",
-            "Proposal Submit Error"
+            'Locked Amount must be less than or equal to Unlocked Amount.',
+            'Proposal Submit Error'
           );
         }
         return false;
       }
-      case "GovernanceContractAddress": {
+      case 'GovernanceContractAddress': {
         const { newGovAddr } = refineData;
         // check if address is contract code
         const code = await web3Instance.web3.eth.getCode(newGovAddr);
-        if (code === "0x") {
+        if (code === '0x') {
           return getErrModal(
-            "Address is not a Contract Address.",
-            "Proposal Submit Error"
+            'Address is not a Contract Address.',
+            'Proposal Submit Error'
           );
         }
         return false;
@@ -787,7 +788,7 @@ const Proposal = () => {
 
     try {
       switch (selectedTopic) {
-        case "AddAuthorityMember": {
+        case 'AddAuthorityMember': {
           const { newAddr, newName, newNode, newLockAmount } = data;
           // check undefined
           if (util.checkUndefined(newAddr)) {
@@ -826,8 +827,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToAddMember",
+              'GovImp',
+              'addProposalToAddMember',
               trx
             );
           checkData = {
@@ -844,7 +845,7 @@ const Proposal = () => {
           };
           break;
         }
-        case "ReplaceAuthorityMember": {
+        case 'ReplaceAuthorityMember': {
           const { stakingAddr, newAddr, newName, newNode, newLockAmount } =
             data;
           // check undefined
@@ -880,7 +881,7 @@ const Proposal = () => {
             setOnLoading(false);
             return;
           }
-          if (util.checkUndefined(newLockAmount) || newLockAmount === "") {
+          if (util.checkUndefined(newLockAmount) || newLockAmount === '') {
             setErrState({
               ...errState,
               newLockAmountErr: !errState.newLockAmountErr,
@@ -893,8 +894,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeMember",
+              'GovImp',
+              'addProposalToChangeMember',
               trx
             );
           checkData = {
@@ -912,7 +913,7 @@ const Proposal = () => {
           };
           break;
         }
-        case "RemoveAuthorityMember": {
+        case 'RemoveAuthorityMember': {
           const { stakingAddr, oldLockAmount } = data;
 
           // check undefined
@@ -943,8 +944,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToRemoveMember",
+              'GovImp',
+              'addProposalToRemoveMember',
               trx
             );
           checkData = {
@@ -955,7 +956,7 @@ const Proposal = () => {
           };
           break;
         }
-        case "GovernanceContractAddress": {
+        case 'GovernanceContractAddress': {
           const { newGovAddr } = data;
           // check undefined
           if (util.checkUndefined(newGovAddr)) {
@@ -969,8 +970,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeGov",
+              'GovImp',
+              'addProposalToChangeGov',
               trx
             );
           checkData = {
@@ -980,10 +981,10 @@ const Proposal = () => {
           };
           break;
         }
-        case "VotingDurationSetting": {
+        case 'VotingDurationSetting': {
           const { votDurationMin, votDurationMax } = data;
           // check undefined
-          if (util.checkUndefined(votDurationMin) || votDurationMin === "") {
+          if (util.checkUndefined(votDurationMin) || votDurationMin === '') {
             setErrState({
               ...errState,
               votDurationErr: !errState.votDurationErr,
@@ -991,7 +992,7 @@ const Proposal = () => {
             setOnLoading(false);
             return;
           }
-          if (util.checkUndefined(votDurationMax) || votDurationMax === "") {
+          if (util.checkUndefined(votDurationMax) || votDurationMax === '') {
             setErrState({
               ...errState,
               votDurationErr: !errState.votDurationErr,
@@ -1004,7 +1005,7 @@ const Proposal = () => {
             ENV_NAMES.ENV_BALLOT_DURATION_MIN_MAX
           );
           const envVal = util.encodeParameters(
-            ["uint256", "uint256"],
+            ['uint256', 'uint256'],
             [
               util.convertDayToSeconds(votDurationMin),
               util.convertDayToSeconds(votDurationMax),
@@ -1013,8 +1014,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
             );
           checkData = {
@@ -1026,12 +1027,12 @@ const Proposal = () => {
           };
           break;
         }
-        case "AuthorityMemberStakingAmount": {
+        case 'AuthorityMemberStakingAmount': {
           const { authMemSkAmountMin, authMemSkAmountMax } = data;
           // check undefined
           if (
             util.checkUndefined(authMemSkAmountMin) ||
-            authMemSkAmountMin === ""
+            authMemSkAmountMin === ''
           ) {
             setErrState({
               ...errState,
@@ -1042,7 +1043,7 @@ const Proposal = () => {
           }
           if (
             util.checkUndefined(authMemSkAmountMax) ||
-            authMemSkAmountMax === ""
+            authMemSkAmountMax === ''
           ) {
             setErrState({
               ...errState,
@@ -1056,7 +1057,7 @@ const Proposal = () => {
             ENV_NAMES.ENV_STAKING_MIN_MAX
           );
           const envVal = util.encodeParameters(
-            ["uint256", "uint256"],
+            ['uint256', 'uint256'],
             [
               util.convertEtherToWei(authMemSkAmountMin),
               util.convertEtherToWei(authMemSkAmountMax),
@@ -1065,8 +1066,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
             );
           checkData = {
@@ -1078,10 +1079,10 @@ const Proposal = () => {
           };
           break;
         }
-        case "BlockCreationTime": {
+        case 'BlockCreationTime': {
           const { blockCreation } = data;
           // check undefined
-          if (util.checkUndefined(blockCreation) || blockCreation === "") {
+          if (util.checkUndefined(blockCreation) || blockCreation === '') {
             setErrState({
               ...errState,
               blockCreationErr: !errState.blockCreationErr,
@@ -1095,14 +1096,14 @@ const Proposal = () => {
           );
           // convert ms
           const envVal = util.encodeParameters(
-            ["uint256"],
+            ['uint256'],
             [(blockCreation * 1000).toFixed(0)]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
             );
           checkData = {
@@ -1114,12 +1115,12 @@ const Proposal = () => {
           };
           break;
         }
-        case "BlockRewardAmount": {
+        case 'BlockRewardAmount': {
           const { blockRewardAmount } = data;
           // check undefined
           if (
             util.checkUndefined(blockRewardAmount) ||
-            blockRewardAmount === ""
+            blockRewardAmount === ''
           ) {
             setErrState({
               ...errState,
@@ -1133,14 +1134,14 @@ const Proposal = () => {
             ENV_NAMES.ENV_BLOCK_REWARD_AMOUNT
           );
           const envVal = util.encodeParameters(
-            ["uint256"],
+            ['uint256'],
             [util.convertEtherToWei(blockRewardAmount)]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
             );
           checkData = {
@@ -1152,7 +1153,7 @@ const Proposal = () => {
           };
           break;
         }
-        case "BlockRewardDistributionMethod": {
+        case 'BlockRewardDistributionMethod': {
           const { blockRate1, blockRate2, blockRate3, blockRate4 } =
             tempRates.blockRates;
           // check undefined
@@ -1173,7 +1174,7 @@ const Proposal = () => {
           );
           // remove decimals
           const envVal = util.encodeParameters(
-            ["uint256", "uint256", "uint256", "uint256"],
+            ['uint256', 'uint256', 'uint256', 'uint256'],
             [
               (Number(blockRate1) * 100).toFixed(0),
               (Number(blockRate2) * 100).toFixed(0),
@@ -1184,8 +1185,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
             );
           checkData = {
@@ -1197,12 +1198,12 @@ const Proposal = () => {
           };
           break;
         }
-        case "MaxPriorityFeePerGas": {
+        case 'MaxPriorityFeePerGas': {
           const { maxPriorityFeePerGas } = data;
           // check undefined
           if (
             util.checkUndefined(maxPriorityFeePerGas) ||
-            maxPriorityFeePerGas === ""
+            maxPriorityFeePerGas === ''
           ) {
             setErrState({
               ...errState,
@@ -1216,14 +1217,14 @@ const Proposal = () => {
             ENV_NAMES.ENV_MAX_PRIORITY_FEE_PER_GAS
           );
           const envVal = util.encodeParameters(
-            ["uint256"],
+            ['uint256'],
             [util.convertGWeiToWei(maxPriorityFeePerGas)]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
             );
           checkData = {
@@ -1235,7 +1236,7 @@ const Proposal = () => {
           };
           break;
         }
-        case "GasLimitBaseFee": {
+        case 'GasLimitBaseFee': {
           const {
             gasLimit,
             maxBaseFee,
@@ -1243,7 +1244,7 @@ const Proposal = () => {
             gasTargetPercentage,
           } = data;
           // check undefined
-          if (util.checkUndefined(gasLimit) || gasLimit === "") {
+          if (util.checkUndefined(gasLimit) || gasLimit === '') {
             setErrState({
               ...errState,
               gasLimitErr: !errState.gasLimitErr,
@@ -1251,7 +1252,7 @@ const Proposal = () => {
             setOnLoading(false);
             return;
           }
-          if (util.checkUndefined(maxBaseFee) || maxBaseFee === "") {
+          if (util.checkUndefined(maxBaseFee) || maxBaseFee === '') {
             setErrState({
               ...errState,
               maxBaseFeeErr: !errState.maxBaseFeeErr,
@@ -1261,7 +1262,7 @@ const Proposal = () => {
           }
           if (
             util.checkUndefined(baseFeeMaxChangeRate) ||
-            baseFeeMaxChangeRate === ""
+            baseFeeMaxChangeRate === ''
           ) {
             setErrState({
               ...errState,
@@ -1272,7 +1273,7 @@ const Proposal = () => {
           }
           if (
             util.checkUndefined(gasTargetPercentage) ||
-            gasTargetPercentage === ""
+            gasTargetPercentage === ''
           ) {
             setErrState({
               ...errState,
@@ -1286,7 +1287,7 @@ const Proposal = () => {
             ENV_NAMES.ENV_GASLIMIT_AND_BASE_FEE
           );
           const envVal = util.encodeParameters(
-            ["uint256", "uint256", "uint256", "uint256"],
+            ['uint256', 'uint256', 'uint256', 'uint256'],
             [
               util.convertGWeiToWei(gasLimit),
               maxBaseFee,
@@ -1297,8 +1298,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
             );
           checkData = {
@@ -1310,7 +1311,7 @@ const Proposal = () => {
           };
           break;
         }
-        case "VotingAddress": {
+        case 'VotingAddress': {
           const { staker, name, lockAmount, enode, ip, port, newVotingAddr } =
             data;
 
@@ -1334,8 +1335,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeMember",
+              'GovImp',
+              'addProposalToChangeMember',
               trx
             );
           checkData = {
@@ -1352,7 +1353,7 @@ const Proposal = () => {
           };
           break;
         }
-        case "RewardAddress": {
+        case 'RewardAddress': {
           const { staker, name, lockAmount, enode, ip, port, newRewardAddr } =
             data;
           // const { oldVotingAddr, oldRewardAddr } = props;
@@ -1376,8 +1377,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeMember",
+              'GovImp',
+              'addProposalToChangeMember',
               trx
             );
           checkData = {
@@ -1394,12 +1395,12 @@ const Proposal = () => {
           };
           break;
         }
-        case "AddWaitProposal": {
+        case 'AddWaitProposal': {
           const {
             companyName,
             companyAddress,
             investmentAmount,
-            link = "",
+            link = '',
           } = data;
           if (util.checkUndefined(companyName)) {
             setErrState({
@@ -1418,7 +1419,7 @@ const Proposal = () => {
           }
           if (
             util.checkUndefined(investmentAmount) ||
-            investmentAmount === ""
+            investmentAmount === ''
           ) {
             setErrState({
               ...errState,
@@ -1430,8 +1431,8 @@ const Proposal = () => {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "WaitGovernance",
-              "addProposal",
+              'WaitGovernance',
+              'addProposal',
               trx
             );
           // company name 입력 시 앞에 넘버링 추가
@@ -1452,13 +1453,13 @@ const Proposal = () => {
       // sets the default value of memo, votDuration
       checkData = {
         ...checkData,
-        memo: checkData.memo || "",
+        memo: checkData.memo || '',
         duration:
           util.convertDayToSeconds(checkData.duration) || votingDurationMin,
       };
       // override data for formatting
       refineData = util.refineSubmitData(checkData);
-      if (typeof (await handleProposalError(refineData)) === "undefined") {
+      if (typeof (await handleProposalError(refineData)) === 'undefined') {
         setOnLoading(false);
         return;
       }
@@ -1489,7 +1490,7 @@ const Proposal = () => {
 
   const waitForReceipt = (hash, cb) => {
     web3Instance.web3.eth.getTransactionReceipt(hash, (err, receipt) => {
-      if (err) console.log("err: ", err);
+      if (err) console.log('err: ', err);
       if (util.checkUndefined(receipt) || receipt === null) {
         // Try again in 1 second
         window.setTimeout(() => {
@@ -1510,18 +1511,18 @@ const Proposal = () => {
         to: trx.to,
         data: trx.data,
         gasPrice: 101000000000,
-        value: "0x0",
+        value: '0x0',
         // maxFeePerGas: 101000000000,
         // maxPriorityFeePerGas: 100000000000,
       })
         .then(({ hash }) => {
           waitForReceipt(hash, (receipt) => {
             if (receipt.status) {
-              window.location.href = "/voting/list";
+              window.location.href = '/voting/list';
             } else {
               getErrModal(
-                "The transaction could not be sent normally.",
-                "Proposal Submit Error",
+                'The transaction could not be sent normally.',
+                'Proposal Submit Error',
                 receipt.transactionHash
               );
               setOnLoading(false);
@@ -1529,8 +1530,8 @@ const Proposal = () => {
           });
         })
         .catch((err) => {
-          const _msg = err?.details || "Unknown Error";
-          getErrModal(_msg, "Proposal Submit Error");
+          const _msg = err?.details || 'Unknown Error';
+          getErrModal(_msg, 'Proposal Submit Error');
           setOnLoading(false);
         });
       // web3Instance.web3.eth.sendTransaction(
@@ -1574,14 +1575,14 @@ const Proposal = () => {
     try {
       const { name, enode, ip, port } = await callContractMethod(
         web3Instance,
-        "GovImp",
-        "getNode",
+        'GovImp',
+        'getNode',
         memberIdx
       );
       const lockAmount = await callContractMethod(
         web3Instance,
-        "Staking",
-        "lockedBalanceOf",
+        'Staking',
+        'lockedBalanceOf',
         address
       );
 
@@ -1606,7 +1607,7 @@ const Proposal = () => {
   let showProposalForm = () => {
     const TopicComponent = (topic) => {
       switch (topic) {
-        case "AddAuthorityMember":
+        case 'AddAuthorityMember':
           return (
             <PComponent.AddProposalForm
               newAddrErr={errState.newAddrErr}
@@ -1616,7 +1617,7 @@ const Proposal = () => {
               newNameErr={errState.newNameErr}
             />
           );
-        case "ReplaceAuthorityMember":
+        case 'ReplaceAuthorityMember':
           return (
             <PComponent.ReplaceProposalForm
               stakingAddrErr={errState.stakingAddrErr}
@@ -1628,7 +1629,7 @@ const Proposal = () => {
               newNodeErr={errState.newNodeErr}
             />
           );
-        case "RemoveAuthorityMember":
+        case 'RemoveAuthorityMember':
           return (
             <PComponent.RemoveProposalForm
               stakingAddrErr={errState.stakingAddrErr}
@@ -1640,13 +1641,13 @@ const Proposal = () => {
               getLockAmount={getLockAmount}
             />
           );
-        case "GovernanceContractAddress":
+        case 'GovernanceContractAddress':
           return (
             <PComponent.GovernanceContractAddressForm
               newGovAddrErr={errState.newGovAddrErr}
             />
           );
-        case "VotingDurationSetting":
+        case 'VotingDurationSetting':
           return (
             <PComponent.VotingDurationSettingForm
               votDurationErr={errState.votDurationErr}
@@ -1654,7 +1655,7 @@ const Proposal = () => {
               votDurationMax={formData.votDurationMax}
             />
           );
-        case "AuthorityMemberStakingAmount":
+        case 'AuthorityMemberStakingAmount':
           return (
             <PComponent.AuthorityMemberStakingAmountForm
               authMemSkAmountErr={errState.authMemSkAmountErr}
@@ -1666,21 +1667,21 @@ const Proposal = () => {
               )}
             />
           );
-        case "BlockCreationTime":
+        case 'BlockCreationTime':
           return (
             <PComponent.BlockCreationTime
               blockCreation={formData.blockCreation}
               blockCreationErr={errState.blockCreationErr}
             />
           );
-        case "BlockRewardAmount":
+        case 'BlockRewardAmount':
           return (
             <PComponent.BlockRewardAmount
               blockRewardAmount={addCommasToNumber(formData.blockRewardAmount)}
               blockRewardAmountErr={errState.blockRewardAmountErr}
             />
           );
-        case "BlockRewardDistributionMethod":
+        case 'BlockRewardDistributionMethod':
           return (
             <PComponent.BlockRewardDistributionMethod
               blockRate1={formData.blockRate1}
@@ -1691,7 +1692,7 @@ const Proposal = () => {
               blockRewardDisMthErr={tempRates.blockRewardDisMthErr}
             />
           );
-        case "MaxPriorityFeePerGas":
+        case 'MaxPriorityFeePerGas':
           return (
             <PComponent.MaxPriorityFeePerGasForm
               maxPriorityFeePerGas={addCommasToNumber(
@@ -1700,7 +1701,7 @@ const Proposal = () => {
               maxPriorityFeePerGasErr={errState.maxPriorityFeePerGasErr}
             />
           );
-        case "GasLimitBaseFee":
+        case 'GasLimitBaseFee':
           return (
             <PComponent.GasLimitBaseFeeForm
               gasLimit={addCommasToNumber(formData.gasLimit)}
@@ -1713,21 +1714,21 @@ const Proposal = () => {
               gasTargetPercentageErr={errState.gasTargetPercentageErr}
             />
           );
-        case "VotingAddress":
+        case 'VotingAddress':
           return (
             <MComponent.VotingAddress
               oldVotingAddr={oldVotingAddr}
               newVotingAddrErr={errState.newVotingAddrErr}
             />
           );
-        case "RewardAddress":
+        case 'RewardAddress':
           return (
             <MComponent.RewardAddress
               oldRewardAddr={oldRewardAddr}
               newRewardAddrErr={errState.newRewardAddrErr}
             />
           );
-        case "AddWaitProposal":
+        case 'AddWaitProposal':
           return (
             <PComponent.AddWaitProposalForm
               companyNameErr={errState.companyNameErr}
@@ -1748,8 +1749,7 @@ const Proposal = () => {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         votingDurationMax={votingDurationMax}
-        votingDurationMin={votingDurationMin}
-      >
+        votingDurationMin={votingDurationMin}>
         {/* component of selected topic */}
         {TopicComponent(selectedTopic)}
       </PComponent.PassesCommonProps>
@@ -1757,55 +1757,59 @@ const Proposal = () => {
   };
 
   const options =
-    selectedMenu === "menu-myinfo"
+    selectedMenu === 'menu-myinfo'
       ? ENV_MY_INFO_PROPOSAL_LIST
       : ENV_VOTING_PROPOSAL_LIST;
 
   const network = process.env.REACT_APP_NETWORK_TYPE;
   const whiteList =
-    network === "mainnet"
+    network === 'mainnet'
       ? MAINNET_WHITE_LIST
-      : network === "testnet"
+      : network === 'testnet'
       ? TESTNET_WHITE_LIST
-      : network === "devnet"
+      : network === 'devnet'
       ? DEVMETANET_WHITE_LIST
       : DEVMETANET_WHITE_LIST;
 
   return (
     <>
-      <VotingTopProposal
-        loading={onLoading}
-        options={options}
-        showProposal={showProposal}
-        selectedTopic={selectedTopic}
-        handleSelectTopicChange={handleSelectTopicChange}
-        isWhiteList={whiteList.includes(address)}
-      />
-      <main>
-        <div className={cn("inner")}>
-          <div className={cn("voting-proposal")}>
-            <div className="textfield-contain">
-              <div className="textfield-wrap">{showProposalForm()}</div>
+      <div className='section-body'>
+        <div className='wrap'>
+          <VotingTopProposal
+            loading={onLoading}
+            options={options}
+            showProposal={showProposal}
+            selectedTopic={selectedTopic}
+            handleSelectTopicChange={handleSelectTopicChange}
+            isWhiteList={whiteList.includes(address)}
+          />
+          <main>
+            <div className={'proposal-form'}>
+              <div className='textfield-contain'>
+                <div className='textfield-wrap'>{showProposalForm()}</div>
+              </div>
+
+              {selectedMenu === 'menu-voting' && (
+                <div className={cn('reference-wrap')}>
+                  <strong className={cn('reference-title')}>Reference</strong>
+                  <ul className={cn('reference-list')}>
+                    <li className={cn('reference-list-info')}>
+                      Even within the voting duration, if more than 50% of
+                      options are expressed for or against, voting ends and
+                      follow-up work is carried out.
+                    </li>
+                    <li className={cn('reference-list-info')}>
+                      Basically, only one voting is conducted at a time, so if
+                      there is already voting in progress, you cannot start a
+                      new voting.
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
-          </div>
-          {selectedMenu === "menu-voting" && (
-            <div className={cn("reference-wrap")}>
-              <strong className={cn("reference-title")}>Reference</strong>
-              <ul className={cn("reference-list")}>
-                <li className={cn("reference-list-info")}>
-                  Even within the voting duration, if more than 50% of options
-                  are expressed for or against, voting ends and follow-up work
-                  is carried out.
-                </li>
-                <li className={cn("reference-list-info")}>
-                  Basically, only one voting is conducted at a time, so if there
-                  is already voting in progress, you cannot start a new voting.
-                </li>
-              </ul>
-            </div>
-          )}
+          </main>
         </div>
-      </main>
+      </div>
     </>
   );
 };
