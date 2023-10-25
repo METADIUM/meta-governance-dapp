@@ -185,18 +185,22 @@ const Header = () => {
                       <dl>
                         <div>
                           <dt>Locked</dt>
-                          <dd>{lockedBalance} META</dd>
+                          <dd>
+                            {lockedBalance} <span>META</span>
+                          </dd>
                         </div>
                         <div>
                           <dt>Staked</dt>
-                          <dd>{myBalance} META</dd>
+                          <dd>
+                            {myBalance} <span>META</span>
+                          </dd>
                         </div>
                       </dl>
                     )}
                     {isConnect ? (
                       <div className="btns-wrap">
                         <Button
-                          text="WEMIX Staking"
+                          text="META Staking"
                           type="outline"
                           size="sm"
                           onClick={() => {

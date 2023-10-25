@@ -96,7 +96,7 @@ const VotingListBlock = ({
       default:
         return false;
     }
-  }, []);
+  }, [txState]);
 
   return (
     <>
@@ -105,7 +105,7 @@ const VotingListBlock = ({
           to={`/voting/detail?id=${id}${isWait ? "&wait=1" : ""}`}
           className={cn(
             "voting-list-block-wrap",
-            state === "4" && isFinalized === "" && "revoke",
+            state === "4" && isFinalized === "" && "revoke"
           )}
         >
           <div className={cn("wallet-info")}>
@@ -113,11 +113,11 @@ const VotingListBlock = ({
             <span>{loginAcc(creator)}</span>
           </div>
           <div className={cn("list-title-wrap")}>
+            <Status status={state} />
             <strong className={cn("title")}>
               {/* wait protocol 분기 처리 */}
               {isWait ? companyName : title}
             </strong>
-            <Status status={state} />
           </div>
           <div className={cn("list-desc-wrap")}>
             {/* wait protocol 분기 처리 */}
@@ -131,14 +131,20 @@ const VotingListBlock = ({
                   // 완료된 케이스는 완료 날짜 표시 예시를 위한 코드
                   text: exFinalizedCode(),
                 },
-                {
-                  icon: "person",
-                  // 투표 0건인 케이스 (썸네일 그래프 없음) 예시를 위한 코드
-                  text: `${totalVoters} Addresses`,
-                },
               ]}
             />
-            <VotingChartMini data={chartData} />
+            <div>
+              <IconWithText
+                data={[
+                  {
+                    icon: "person",
+                    // 투표 0건인 케이스 (썸네일 그래프 없음) 예시를 위한 코드
+                    text: `${totalVoters} Addresses`,
+                  },
+                ]}
+              />
+              <VotingChartMini data={chartData} />
+            </div>
             {/* 23.04.20 수정: wait protocol 케이스 추가 */}
             {isWait && (
               <div className={cn("tx-state", `${txState}`)}>

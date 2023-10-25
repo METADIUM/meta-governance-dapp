@@ -48,12 +48,11 @@ const VotingTitle = ({
     window.localStorage.removeItem("selectedTopic");
     navigate("/voting/proposal");
   }
+
   return (
     <>
       <div className={cn("voting-title-wrap", type)}>
-        {isFilter && isMobile ? (
-          false
-        ) : (
+        {title && count && (
           <>
             <strong className="subject">{title}</strong>
             {count !== undefined && <span className="subject">{count}</span>}
