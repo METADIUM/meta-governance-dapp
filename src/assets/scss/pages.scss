@@ -13,6 +13,12 @@ main {
   flex-direction: column;
   max-width: 1140px;
   margin: 0 auto;
+
+  @include xsm {
+    max-width: calc(100% - 40px);
+    width: 100%;
+    padding: 0 20px;
+  }
 }
 
 .subject {
@@ -20,6 +26,10 @@ main {
   line-height: 1;
   display: flex;
   padding-bottom: 20px;
+
+  @include xsm {
+    @include B20;
+  }
 }
 
 .title {
@@ -44,6 +54,30 @@ main {
 a {
   &:hover {
     color: $blue1;
+  }
+}
+
+.ant-select-arrow {
+  top: 50%;
+  margin-top: 0;
+  transform: translateY(-50%);
+  transition: transform 300ms;
+
+  svg {
+    width: 10px;
+    height: 6px;
+  } 
+}
+
+.ant-select-open {
+  .ant-select-arrow {
+    transform: rotate(180deg) translateY(50%);
+  }
+}
+.ant-select-selection {
+  &:active {
+    box-shadow: none;
+    border-color: $gray4;
   }
 }
 
@@ -87,7 +121,9 @@ a {
       }
     }
   }
-
+  @include xsm {
+    width: 100%;
+  }
 }
 
 .section-body {
@@ -125,7 +161,6 @@ a {
 
   > div {
     width: calc(50% - 10px);
-    height: 420px;
     background: $white;
     padding: 24px;
     border-color: $gray4;
@@ -143,9 +178,7 @@ a {
       position: absolute;
       left: 24px;
       bottom: 0;
-
     }
-
 
     &:nth-child(1) {
       border-radius: 8px 8px 0 0;
@@ -192,6 +225,10 @@ a {
 
         }
         &:nth-child(2) {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+
           > a {
             display: inline-flex;
             @include B20;
@@ -212,7 +249,11 @@ a {
               right: 0;
               top: 0;
             }
+          }
 
+          > span {
+            @include B12;
+            line-height: 24px;
           }
         }
 
@@ -225,8 +266,225 @@ a {
 
         &:nth-child(4) {
           @include R14;
+          height: 84px;
+          overflow-y: auto;
         }
       }
     }
+  }
+}
+
+.section-head {
+  .boxs {
+    display: flex;
+    flex-direction: row;
+    gap: 0 20px;
+    width: 100%;
+
+    .dashboard-block {
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid $gray4;
+      background: $white;
+      width: calc(20% - 10px);
+      gap: 16px 0;
+
+      > span {
+        @include B16;
+        line-height: 1;
+        color: $gray2;
+        padding: 0 0 0 20px;
+        position: relative;
+
+        &.default {
+          padding: 0;
+        }
+
+        &:before {
+          content: '';
+          display: inline-block;
+          width: 12px;
+          height: 12px;
+          border-radius: 100%;
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+
+        &.active {
+          &:before {
+            background: $blue2;
+          }
+        }
+
+        &.ready {
+          &:before {
+            background: $gray;
+          }
+        }
+
+        &.approved {
+          &:before {
+            background: $mint;
+          }
+        }
+
+        &.rejected {
+          &:before {
+            background: $red;
+          }
+        }
+      }
+
+      > strong {
+        @include B24;
+        line-height: 1;
+      }
+
+    }
+
+    @include xsm {
+      max-width: 100%;
+      flex-wrap: wrap;
+      gap: 20px;
+
+        .dashboard-block {
+          width: calc(50% - 10px);
+
+          &:first-child {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.detail-search-area {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 60px;
+
+  > :nth-child(3) {
+    margin-left: 20px;
+
+    @include xsm {
+      margin-left: 0;
+    }
+  }
+
+  .ant-select-selection {
+    height: 48px;
+    width: 212px;
+    border-radius: 8px 0 0 8px;
+    border-color: $gray4;
+    box-shadow: 0px 8px 8px 0px #0000000D;
+
+
+    .ant-select-selection__rendered {
+      @include R14;
+      line-height: 48px;
+      color: $gray;
+      margin-left: 20px;
+      margin-right: 50px;
+    }
+
+    @include xsm {
+      width: 100%;
+      border-radius: 8px;
+    }
+  }
+
+  .default-btn {
+    box-shadow: 0px 8px 8px 0px #0000000D;
+  }
+
+  @include xsm {
+    flex-direction: column;
+    margin-bottom: 40px;
+    gap: 20px 0;
+
+    .default-btn {
+      width: 100%;
+      height: 48px;
+      
+    }
+  }
+}
+
+.voting-search {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  z-index: 1;
+
+  .search-text-area {
+    width: 100%;
+    height: 48px;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0px 8px 8px 0px #0000000D;
+
+    .search-input {
+      height: 100%;
+      width: 100%;
+      border-width: 1px 1px 1px 0;
+      border-style: solid;
+      border-color: $gray4;
+      color: $gray;
+      overflow: hidden;
+      padding: 12px 20px;
+      background: $white url("#{$rootPath}/ic-search.svg") no-repeat right 20px center;
+      background-size: 24px 24px;
+      border-radius: 0 8px 8px 0;
+
+      &::placeholder {
+        color: $gray3;
+      }
+
+      & + .search-close-btn {
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: 16px;
+        transform: translateY(-50%);
+        path {
+          fill: $gray60;
+        }
+      }
+
+      @include xsm {
+        border-radius: 8px;
+        border-width: 1px;
+      }
+
+
+    }
+
+    @include xsm {
+      border-radius: 8px;
+    }
+  }
+}
+
+.voting-list-section {
+  .voting-title-wrap {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 40px;
+    gap: 0 8px;
+
+    > span {
+      color: $gray2;
+    }
+
+    .subject {
+      padding-bottom: 0;
+    }
+
+    @include xsm {
+      margin-bottom: 20px;
+    }
+    
   }
 }

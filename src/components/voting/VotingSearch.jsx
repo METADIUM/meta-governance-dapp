@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import { ReactComponent as IconPopupClose } from "../../assets/images/ico_popup_close.svg";
-import { ReactComponent as IconSearch } from "../../assets/images/ico_search.svg";
 import cn from "classnames/bind";
 
 export default function VotingSearch({
@@ -27,7 +26,7 @@ export default function VotingSearch({
           value={searchValue}
         ></input>
 
-        <button
+        {/* <button
           type="button"
           className={cn("search-close-btn")}
           onClick={() => {
@@ -40,7 +39,7 @@ export default function VotingSearch({
           }}
         >
           <IconPopupClose />
-        </button>
+        </button> */}
       </div>
 
       <button type="button" className={cn("voting-search-btn")}></button>

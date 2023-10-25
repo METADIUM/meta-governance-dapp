@@ -1,7 +1,7 @@
 import React from "react";
 import { Select } from "antd";
 import cn from "classnames/bind";
-import { ReactComponent as IconArrowDown } from "../../assets/images/ico_select_arrow_drop_down.svg";
+import { ReactComponent as IconArrowDown } from "../../assets/images/ic-select-arrow.svg";
 
 export default function VotingSelect({
   filterData,

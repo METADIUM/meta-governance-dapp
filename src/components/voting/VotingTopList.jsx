@@ -14,51 +14,36 @@ const VotingTopList = ({
   btnFunction = (f) => f,
 }) => {
   return (
-    <div className={cn("voting-top-wrap")}>
-      <div className={cn("inner")}>
-        <div className={cn("voting-title")}>
-          <h2 className={cn("title")}>Voting</h2>
-          {/* {isMember && (
-            <Link to="/voting/proposal">
-              <Button
-                type={"bg"}
-                text="New Proposal"
-                prefix={true}
-                onClick={() => {
-                  btnFunction();
-                  window.localStorage.removeItem("selectedTopic");
-                }}
-              />
-            </Link>
-          )} */}
+    <div className="section-head">
+      <div className="wrap">
+        <div className="title">
+          <span>Voting</span>
         </div>
-        <div className={cn("dashboard-wrap")}>
-          <div style={{ boxShadow: "0px 20px 40px 4px #ececfe" }}>
-            <VotingTopDashBoard value={totalCount} text="Total Votes" />
-          </div>
-
-          <div className={cn("dashboard-module")}>
-            <VotingTopDashBoard
-              value={activeCount}
-              text="Active"
-              status="active"
-            />
-            <VotingTopDashBoard
-              value={readyCount}
-              text="Ready"
-              status="ready"
-            />
-            <VotingTopDashBoard
-              value={approvedCount}
-              text="Approved"
-              status="approved"
-            />
-            <VotingTopDashBoard
-              value={rejectedCount}
-              text="Rejected"
-              status="rejected"
-            />
-          </div>
+        <div className="boxs">
+          <VotingTopDashBoard
+            value={totalCount}
+            text="Total Votes"
+          />
+          <VotingTopDashBoard
+            value={activeCount}
+            text="Active"
+            status="active"
+          />
+          <VotingTopDashBoard
+            value={readyCount}
+            text="Ready"
+            status="ready"
+          />
+          <VotingTopDashBoard
+            value={approvedCount}
+            text="Approved"
+            status="approved"
+          />
+          <VotingTopDashBoard
+            value={rejectedCount}
+            text="Rejected"
+            status="rejected"
+          />
         </div>
       </div>
     </div>

@@ -381,7 +381,6 @@ const VotingList = () => {
 
   // select 옵션 변경에 따른 항목 렌더링
   const handleSelect = useCallback((e = filterData[0]) => {
-    console.log(e);
     const props = [];
     // 옵션에 따른 props 값 적용
     if (e === filterData[0] || e === filterData[1]) {
@@ -448,43 +447,46 @@ const VotingList = () => {
         approvedCount={itemCount.approved}
         rejectedCount={itemCount.rejected}
       />
-      <div className={cn("inner")}>
-        <div className={cn("content-filter-wrap")}>
-          <VotingTitle
-            type="sm"
-            title=""
-            count={""}
-            searchName="search-type"
-            searchBallot={(e) => searchBallot(e)}
-            filterData={filterData}
-            handleSelect={(e) => handleSelect(e)}
-            onClose={() => getBallotDetailInfo()}
-            isMember={isMember}
-          />
-          <div className={cn("filter-wrap")}></div>
-        </div>
-        {/* voting time over - filter와 상관없이 고정*/}
-        {revokeItems.length > 0 && (
-          <div className={cn("voting-list-section", "revoke-item")}>
-            {console.log("revoke", revokeItems)}
+      <div className="section-body">
+        <div className="wrap">
+          <div className={cn("content-filter-wrap")}>
             <VotingTitle
-              type="md"
-              title={"Voting Time Over"}
-              count={revokeItems.length}
-              exp={
-                <>
-                  The proposed vote was rejected because more than 50% of the
-                  votes were not carried out.
-                  <strong>
-                    Please cancel the proposal to proceed with another vote.
-                  </strong>
-                </>
-              }
+              type="sm"
+              title=""
+              count={""}
+              searchName="search-type"
+              searchBallot={(e) => searchBallot(e)}
+              filterData={filterData}
+              handleSelect={(e) => handleSelect(e)}
+              onClose={() => getBallotDetailInfo()}
+              isMember={isMember}
             />
-            <div className={cn("section-inner")}>{revokeItems}</div>
+            <div className={cn("filter-wrap")}></div>
+            {/* filter-wrap?? */}
           </div>
-        )}
-        {renderSelectedItems}
+          {/* voting time over - filter와 상관없이 고정*/}
+          {revokeItems.length > 0 && (
+            <div className={cn("voting-list-section", "revoke-item")}>
+              {console.log("revoke", revokeItems)}
+              <VotingTitle
+                type="md"
+                title={"Voting Time Over"}
+                count={revokeItems.length}
+                exp={
+                  <>
+                    The proposed vote was rejected because more than 50% of the
+                    votes were not carried out.
+                    <strong>
+                      Please cancel the proposal to proceed with another vote.
+                    </strong>
+                  </>
+                }
+              />
+              <div className={cn("section-inner")}>{revokeItems}</div>
+            </div>
+          )}
+          {renderSelectedItems}
+        </div>
       </div>
     </>
   );

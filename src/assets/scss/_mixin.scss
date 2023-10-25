@@ -1,6 +1,6 @@
 @import "./variables";
 
-// ~ 359
+// ~ 719
 @mixin xsm {
   @media (max-width: #{$breakpointXsm - 1px}) {
     @content;
@@ -394,75 +394,3 @@
   transition: $transition;
   will-change: $will-change;
 }
-
-// @mixin font-B {
-//   font-family: "Roboto";
-//   font-weight: bold;
-// }
-// @mixin font-R {
-//   font-family: "Roboto";
-//   font-weight: normal;
-// }
-// @mixin font-B-32 {
-//   @include font-B;
-//   font-size: 32px;
-//   letter-spacing: -1px;
-// }
-// @mixin font-B-28 {
-//   @include font-B;
-//   font-size: 28px;
-//   letter-spacing: -0.5px;
-// }
-
-// @mixin font-B-24 {
-//   @include font-B;
-//   font-size: 24px;
-//   letter-spacing: -1px;
-// }
-
-// @mixin font-B-20 {
-//   @include font-B;
-//   font-size: 20px;
-//   letter-spacing: -0.5px;
-// }
-// @mixin fon-B-16 {
-//   @include font-B;
-//   font-size: 16px;
-//   letter-spacing: -0.3px;
-// }
-
-// @mixin font-B-14 {
-//   @include font-B;
-//   font-size: 14px;
-//   letter-spacing: -0.3px;
-// }
-
-// @mixin font-B-12 {
-//   @include font-B;
-//   font-size: 12px;
-//   letter-spacing: 0px;
-// }
-
-// @mixin font-R-20 {
-//   @include font-R;
-//   font-size: 20px;
-//   letter-spacing: -0.5px;
-// }
-
-// @mixin font-R-16 {
-//   @include font-R;
-//   font-size: 16px;
-//   letter-spacing: -1px;
-// }
-
-// @mixin font-R-14 {
-//   @include font-R;
-//   font-size: 14px;
-//   letter-spacing: -0.3px;
-// }
-
-// @mixin font-R-12 {
-//   @include font-R;
-//   font-size: 12px;
-//   letter-spacing: -0.2px;
-// }
