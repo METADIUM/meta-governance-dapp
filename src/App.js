@@ -13,7 +13,7 @@ import "./assets/scss/common.scss";
 import i18n from "./i18n";
 
 import OGHeader from "./components/OGHeader";
-import { useAuth } from "./hooks/useAuth";
+import { AuthCtx } from "./contexts/AuthContext";
 import { usePrevious } from "./hooks/usePrevious";
 import { web3Instance } from "./web3";
 import { ModalContext } from "./contexts/ModalContext";
@@ -28,8 +28,7 @@ const App = ({ children }) => {
   const { getErrModal } = useContext(ModalContext);
   const { isWeb3Loaded, isContractReady, accessFailMsg } =
     useContext(GovInitCtx);
-  const { isMember, address, isLoggedIn, chain, onLogout, updateAccountData } =
-    useAuth();
+  const { address, chain, onLogout, updateAccountData } = useContext(AuthCtx);
   const { pathname } = useLocation();
   const prev = usePrevious(chain);
 
@@ -73,8 +72,6 @@ const App = ({ children }) => {
           <>
             {React.cloneElement(children, {
               getErrModal,
-              isMember,
-              isLoggedIn,
               address,
             })}
           </>
@@ -87,8 +84,6 @@ const App = ({ children }) => {
                 <div>
                   {React.cloneElement(children, {
                     getErrModal,
-                    isMember,
-                    isLoggedIn,
                     address,
                   })}
                 </div>

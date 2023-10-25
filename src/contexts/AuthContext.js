@@ -1,11 +1,13 @@
-import { useState } from "react";
+import React, { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { web3Instance, callContractMethod } from "../web3";
 import * as util from "../util";
 import { useAccount, useNetwork, useDisconnect } from "wagmi";
 import { useWeb3Modal } from "@web3modal/react";
 
-const useAuth = () => {
+const AuthCtx = createContext();
+
+const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const { open } = useWeb3Modal();
   const { address, isConnected } = useAccount();
@@ -44,7 +46,6 @@ const useAuth = () => {
 
   // update data related to new account
   const updateAccountData = async (newAccount) => {
-  
     if (!web3Instance) return;
     // if (web3Instance.web3.currentProvider.constructor.name === "HttpProvider") {
     //   return;
@@ -121,19 +122,25 @@ const useAuth = () => {
       console.error(err);
     }
   };
-  return {
-    isMember,
-    isStaker,
-    address,
-    myBalance,
-    lockedBalance,
-    isLoggedIn: isConnected,
-    chain,
-    updateAccountData,
-    setStakingEventsWatch,
-    onLogin,
-    onLogout,
-  };
+  return (
+    <AuthCtx.Provider
+      value={{
+        isMember,
+        isStaker,
+        address,
+        myBalance,
+        lockedBalance,
+        isLoggedIn: isConnected,
+        chain,
+        updateAccountData,
+        setStakingEventsWatch,
+        onLogin,
+        onLogout,
+      }}
+    >
+      {children}
+    </AuthCtx.Provider>
+  );
 };
 
-export { useAuth };
+export { AuthProvider, AuthCtx };

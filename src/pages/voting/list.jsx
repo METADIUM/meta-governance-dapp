@@ -23,11 +23,11 @@ import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx";
 
 import { useSendTransaction } from "wagmi";
 import MoreButton from "../../components/voting/GovButton.jsx";
-import { useAuth } from "../../hooks/useAuth.js";
+import { AuthCtx } from "../../contexts/AuthContext.js";
 import { ModalContext } from "../../contexts/ModalContext.jsx";
 
 const VotingList = () => {
-  const { address, isMember } = useAuth();
+  const { address, isMember } = useContext(AuthCtx);
   const { getErrModal } = useContext(ModalContext);
   const { data } = useContext(GovInitCtx);
   const {
@@ -70,7 +70,13 @@ const VotingList = () => {
   // -------------------- useEffect
   useEffect(() => {
     getBallotOriginItem();
-  }, [ballotBasicOriginData, waitBallotBasicOriginData, isMember, viewingFinalizedItems, getBallotOriginItem]);
+  }, [
+    ballotBasicOriginData,
+    waitBallotBasicOriginData,
+    isMember,
+    viewingFinalizedItems,
+    getBallotOriginItem,
+  ]);
 
   useEffect(() => {
     // 리스트 생성 후 상세 내용 가져옴
@@ -89,7 +95,13 @@ const VotingList = () => {
   // 검색 후 리스트 업데이트
   useEffect(() => {
     handleSelect(currentSelect);
-  }, [visibleActiveItems, visibleProposalItems, visibleFinalizedItems, handleSelect, currentSelect]);
+  }, [
+    visibleActiveItems,
+    visibleProposalItems,
+    visibleFinalizedItems,
+    handleSelect,
+    currentSelect,
+  ]);
 
   const openErrModal = (e) => {
     const _msg = e?.details || "Unknown Error";

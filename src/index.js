@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 import { GovInitProvider } from "./contexts/GovernanceInitContext";
 import { ModalProvider } from "./contexts/ModalContext";
+import { AuthProvider } from "./contexts/AuthContext";
 
 import App from "./App";
 import "./index.css";
@@ -19,25 +20,26 @@ import VotingDetail from "./pages/voting/detail";
 import VotingList from "./pages/voting/list";
 import Proposal from "./pages/voting/proposal";
 
-
 const renderApp = () => (
   <BrowserRouter>
     <ModalProvider>
       <GovInitProvider>
         <WalletConnector>
-          <Header />
-          <App>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/voting/list" element={<VotingList />} />
-              <Route path="/voting/detail" element={<VotingDetail />} />
-              <Route path="/voting/proposal" element={<Proposal />} />
-              <Route path="/my-info" element={<Proposal />} />
-              <Route path="/loading" element={<Loading />} />
-              <Route path="/*" element={<Navigate replace to="/" />} />
-            </Routes>
-          </App>
-          <Footer />
+          <AuthProvider>
+            <Header />
+            <App>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/voting/list" element={<VotingList />} />
+                <Route path="/voting/detail" element={<VotingDetail />} />
+                <Route path="/voting/proposal" element={<Proposal />} />
+                <Route path="/my-info" element={<Proposal />} />
+                <Route path="/loading" element={<Loading />} />
+                <Route path="/*" element={<Navigate replace to="/" />} />
+              </Routes>
+            </App>
+            <Footer />
+          </AuthProvider>
         </WalletConnector>
       </GovInitProvider>
     </ModalProvider>
