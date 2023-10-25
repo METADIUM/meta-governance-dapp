@@ -2,6 +2,9 @@
 .ant-layout {
   background: transparent;
 }
+.body-lock {
+  overflow: hidden;
+}
 
 main {
   width: 100%;
@@ -13,6 +16,12 @@ main {
   flex-direction: column;
   max-width: 1140px;
   margin: 0 auto;
+
+  @include sm {
+    max-width: calc(100% - 30px);
+    width: 100%;
+    padding: 0 15px;
+  }
 
   @include xsm {
     max-width: calc(100% - 40px);
@@ -45,9 +54,15 @@ main {
   border-radius: 8px;
   border: 1px solid $gray4;
   width: 212px;
+  box-shadow: 0px 8px 8px 0px #0000000D;
 
   &:hover {
     border-color: $gray2;
+  }
+
+  @include xsm {
+    width: 100%;
+    height: 48px;
   }
 }
 
@@ -85,8 +100,16 @@ a {
   padding: 72px 0;
   background: linear-gradient(180deg, #000000 0%, #0A0F5D 100%);
 
+  @include xsm {
+    padding: 60px 0;
+  }
+
   .title {
     color: $white;
+
+    @include xsm {
+      padding-bottom: 40px;
+    }
 
     span {
       display: flex;
@@ -94,6 +117,10 @@ a {
       @include B32;
       line-height: 1;
       padding-bottom: 20px;
+
+      @include xsm {
+        justify-content: flex-start;
+      }
     }
   }
 
@@ -110,10 +137,20 @@ a {
       padding: 24px 40px;
       border-radius: 8px;
 
+      @include xsm {
+        flex-direction: column;
+        padding: 20px;
+        gap: 20px 0;
+      }
+
       > div {
         width: calc(100% - 320px);
         display: flex;
         flex-direction: column;
+
+        @include xsm {
+          width: 100%;
+        }
 
         p {
           @include R14;
@@ -129,6 +166,10 @@ a {
 .section-body {
   padding: 60px 0 0;
 
+  @include xsm {
+    padding: 40px 0 0;
+  }
+
   .title {
     padding-bottom: 40px;
 
@@ -136,6 +177,12 @@ a {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+
+      @include xsm {
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 20px 0;
+      }
 
       > div {
         > p {
@@ -225,10 +272,6 @@ a {
 
         }
         &:nth-child(2) {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-
           > a {
             display: inline-flex;
             @include B20;
@@ -268,6 +311,92 @@ a {
           @include R14;
           height: 84px;
           overflow-y: auto;
+        }
+      }
+    }
+  }
+
+  @include xsm {
+    flex-direction: column;
+    border-radius: 8px;
+    border: 1px solid $gray4;
+    padding: 24px 20px;
+    background: $white;
+    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+
+
+    > div {
+      width: 100%;
+      border-width: 0;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+
+      &:nth-child(1) {
+        border-width: 0;
+        border-radius: 0;
+      }
+
+      &:nth-child(2) {
+        border-width: 0;
+        border-radius: 0;
+      }
+
+      &:nth-last-child(1) {
+        border-width: 0;
+        border-radius: 0;
+      }
+
+      &:nth-last-child(2) {
+        border-width: 0;
+        border-radius: 0;
+      }
+
+      &:before {
+        display: none;
+      }
+
+      > ul {
+        > li {
+          opacity: 0;
+          height: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease;
+
+          &:nth-child(1) {
+            opacity: 1;
+            visibility: visible;
+          }
+
+          &:nth-child(3) {
+            margin-bottom: 0;
+          }
+
+          &:nth-child(4) {
+            height: 0;
+          }
+        }
+      }
+
+      &.active {
+        > ul {
+          li {
+            &:nth-child(1) {
+              height: 80px;
+            }
+            &:nth-child(3) {
+              margin-bottom: 16px;
+            }
+
+            &:nth-child(4) {
+              height: auto;
+              margin-bottom: 20px;
+            }
+
+            opacity: 1;
+            height: auto;
+            visibility: visible;
+          }
         }
       }
     }
@@ -396,20 +525,20 @@ a {
     }
   }
 
-  .default-btn {
-    box-shadow: 0px 8px 8px 0px #0000000D;
-  }
+  // .default-btn {
+  //   box-shadow: 0px 8px 8px 0px #0000000D;
+  // }
 
   @include xsm {
     flex-direction: column;
     margin-bottom: 40px;
     gap: 20px 0;
 
-    .default-btn {
-      width: 100%;
-      height: 48px;
+    // .default-btn {
+    //   width: 100%;
+    //   height: 48px;
       
-    }
+    // }
   }
 }
 
@@ -621,6 +750,7 @@ a {
           @include xsm {
             flex-direction: column;
             gap: 8px 0;
+            align-items: flex-start;
 
             > div {
               &:nth-child(2) {
