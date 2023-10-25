@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useContext } from "react";
-import { useModal } from "../hooks/useModal";
 
 import { useState, useRef } from "react";
 import getWeb3Instance, {
@@ -29,11 +28,6 @@ const initData = {
   waitBallotLength: 0,
   waitBallotMemberOriginData: {},
   waitBallotBasicOriginData: {},
-  isMember: false,
-  isStaker: false,
-  myBalance: "",
-  myLockedBalance: "",
-  address: "",
 };
 
 const GovInitCtx = createContext();
@@ -328,8 +322,7 @@ const GovInitProvider = ({ children }) => {
         isContractReady,
         data,
         accessFailMsg,
-      }}
-    >
+      }}>
       {children}
     </GovInitCtx.Provider>
   );

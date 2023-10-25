@@ -1,7 +1,6 @@
-import React, { useContext, useRef } from "react";
+import React, { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import cn from "classnames/bind";
-import { GovInitCtx } from "../contexts/GovernanceInitContext";
 import { Menu } from "antd";
 // TODO:  path는 상황에 맞게 넣어주세요. voting, myinfo 페이지에 layout 내용 넣을 때 props로 activate="menu-voting" or activate="menu-myinfo" 이런식으로 메뉴 키값에 맞게 넣어주세요.
 const menuList = [
@@ -24,12 +23,10 @@ const menuList = [
     onlyMember: true,
   },
 ];
-const HeaderMenu = ({ isConnect, setIsGnbOpen }) => {
-  const { data } = useContext(GovInitCtx);
-  const { isMember, isStaker } = data;
+const HeaderMenu = ({ isMember, isStaker, isConnect, setIsGnbOpen }) => {
   const activeMenu = useRef("menu-authority");
   const location = useLocation();
-  console.log(isMember, isStaker);
+
   const onMenuClick = (key) => {
     activeMenu.current = key;
     // console.log(activeMenu.current);
@@ -38,7 +35,7 @@ const HeaderMenu = ({ isConnect, setIsGnbOpen }) => {
   };
   const menuComponent = menuList.map((menu) => {
     return menu.onlyMember ? (
-      isMember && isStaker && (
+      isConnect && isMember && isStaker && (
         <Menu.Item
           key={menu.title}
           className={

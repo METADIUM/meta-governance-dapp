@@ -1,5 +1,4 @@
-import { useEffect, useState, useContext } from "react";
-import { GovInitCtx } from "../contexts/GovernanceInitContext";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { web3Instance, callContractMethod } from "../web3";
 import * as util from "../util";
@@ -7,21 +6,13 @@ import { useAccount, useNetwork, useDisconnect } from "wagmi";
 import { useWeb3Modal } from "@web3modal/react";
 
 const useAuth = () => {
-  const { data: GovCtxData } = useContext(GovInitCtx);
   const navigate = useNavigate();
   const { open } = useWeb3Modal();
-  const { address, isConnected } = useAccount({
-    onConnect: () => {
-      console.log("onConnect");
-      GovCtxData.address = address;
-    },
-  });
+  const { address, isConnected } = useAccount();
   const { chain } = useNetwork();
   const { disconnect } = useDisconnect();
   const [myBalance, setMyBalance] = useState("");
   const [lockedBalance, setLockedBalance] = useState("");
-
-  console.log(GovCtxData);
 
   const [isMember, setIsMember] = useState(false);
   const [isStaker, setIsStaker] = useState(false);
@@ -40,11 +31,6 @@ const useAuth = () => {
     }
   };
   const onLogout = () => {
-    GovCtxData.isMember = false;
-    GovCtxData.isStaker = false;
-    GovCtxData.myBalance = "0";
-    GovCtxData.myLockedBalance = "0";
-    GovCtxData.address = "";
     setIsMember(false);
     setIsStaker(false);
     disconnect();
@@ -58,6 +44,7 @@ const useAuth = () => {
 
   // update data related to new account
   const updateAccountData = async (newAccount) => {
+  
     if (!web3Instance) return;
     // if (web3Instance.web3.currentProvider.constructor.name === "HttpProvider") {
     //   return;
@@ -80,8 +67,6 @@ const useAuth = () => {
       "isStaker",
       newAccount
     );
-    GovCtxData.isMember = isMember;
-    GovCtxData.isStaker = isStaker;
     setIsMember(isMember);
     setIsStaker(isStaker);
 
@@ -107,8 +92,6 @@ const useAuth = () => {
     );
     const myBalance = util.convertWeiToEther(weiBalance);
     const lockedMyBalance = util.convertWeiToEther(locked);
-    GovCtxData.myBalance = myBalance;
-    GovCtxData.myLockedBalance = lockedMyBalance;
     setMyBalance(myBalance);
     setLockedBalance(lockedMyBalance);
     // this.setState({ stakingModalVisible: false, loading: false });
@@ -138,7 +121,6 @@ const useAuth = () => {
       console.error(err);
     }
   };
-
   return {
     isMember,
     isStaker,
