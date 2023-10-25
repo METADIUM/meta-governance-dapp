@@ -27,7 +27,7 @@ import { AuthCtx } from "../../contexts/AuthContext.js";
 import { ModalContext } from "../../contexts/ModalContext.jsx";
 
 const VotingList = () => {
-  const { address, isMember } = useContext(AuthCtx);
+  const { address, isMember, isLoggedIn } = useContext(AuthCtx);
   const { getErrModal } = useContext(ModalContext);
   const { data } = useContext(GovInitCtx);
   const {
@@ -472,6 +472,7 @@ const VotingList = () => {
               handleSelect={(e) => handleSelect(e)}
               onClose={() => getBallotDetailInfo()}
               isMember={isMember}
+              isConnect={isLoggedIn}
             />
             <div className={cn("filter-wrap")}></div>
             {/* filter-wrap?? */}

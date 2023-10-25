@@ -109,7 +109,7 @@ const Header = () => {
 
   return (
     <header className={cn("header")}>
-      {offset.width > 1023 ? (
+      {offset.width > 1240 ? (
         <>
           <div className="header-logo-wrap">
             <HeaderLogo />
@@ -173,7 +173,6 @@ const Header = () => {
                   <IconClose />
                 </button>
                 <div className={cn("header-content")}>
-                  {console.log("HeaderMenu", isMember, isStaker)}
                   <HeaderMenu
                     isConnect={isConnect}
                     isMember={isMember}

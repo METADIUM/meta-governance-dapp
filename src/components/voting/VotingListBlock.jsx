@@ -146,11 +146,11 @@ const VotingListBlock = ({
               <VotingChartMini data={chartData} />
             </div>
             {/* 23.04.20 수정: wait protocol 케이스 추가 */}
-            {isWait && (
+            {/* {isWait && (
               <div className={cn("tx-state", `${txState}`)}>
                 {investmentStateAction()}
               </div>
-            )}
+            )} */}
           </div>
         </Link>
         {isMember &&

@@ -81,6 +81,37 @@ let partners = [
 ];
 
 const Home = () => {
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  const checkMobile = () => {
+    if (window.innerWidth < 720) {
+      setIsMobile(true)
+    } else {
+      setIsMobile(false);
+    }
+  }
+
+  useEffect(() => {
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    }
+  }, [])
+
+  
+  
+  const mobileShowInfo = (e) => {
+    if (isMobile) {
+      // 모바일일 때만
+      e.stopPropagation();
+      const el = e.currentTarget;
+      el.classList.toggle("active");
+    }
+  }
+
   return (
     <Layout>
       <div className="section-head">
@@ -88,14 +119,14 @@ const Home = () => {
           <div className="title">
             <span>metadium governance</span>
             <p>
-              Metadium uses its advanced technology and experience to provide
-              a new ecosystem of compliant services and solutions that serve
-              as the bridge to blockchain’s true potential. Metadium
-              Governance can receive various proposals to improve Metadium in
-              a decentralized way, and network members can directly
-              participate in decision-making. Enable active governance
-              operations through an autonomous authority configuration to
-              develop and grow the Metadium ecosystem.
+              Metadium uses its advanced technology and experience to provide a
+              new ecosystem of compliant services and solutions that serve as
+              the bridge to blockchain’s true potential. Metadium Governance can
+              receive various proposals to improve Metadium in a decentralized
+              way, and network members can directly participate in
+              decision-making. Enable active governance operations through an
+              autonomous authority configuration to develop and grow the
+              Metadium ecosystem.
             </p>
           </div>
           <ul>
@@ -105,11 +136,11 @@ const Home = () => {
                 <p>
                   Metadium staking is one of the prerequisites to becoming an
                   authority member. The staking method is possible by sending
-                  Metadium while calling a predefined function in the
-                  governance contract known at the system level. Even if
-                  staking is completed, it cannot become a member unless an
-                  official contract with the Metadium Blockchain Foundation
-                  and identity disclosure is made.
+                  Metadium while calling a predefined function in the governance
+                  contract known at the system level. Even if staking is
+                  completed, it cannot become a member unless an official
+                  contract with the Metadium Blockchain Foundation and identity
+                  disclosure is made.
                 </p>
               </div>
               {/* img 임시 처리 */}
@@ -139,9 +170,8 @@ const Home = () => {
             <div>
               <div>
                 <p>
-                  Partners in various fields and industries, collaborating
-                  with Metadium to bring about change to your on-chain
-                  experience.
+                  Partners in various fields and industries, collaborating with
+                  Metadium to bring about change to your on-chain experience.
                 </p>
                 {/* 파트너사 9개 고정이라고 함 */}
                 <strong>Total Partners 9</strong>
@@ -151,12 +181,20 @@ const Home = () => {
           </div>
           {/* list */}
           <div className="partners-list">
-            {partners.map((partner, index) => (  
-              <div key={index}>
-                <ul> 
-                  <li><img src={partner.logo} alt={partner.company} /></li>
+            {partners.map((partner, index) => (
+              <div key={index} onClick={mobileShowInfo}>
+                <ul>
                   <li>
-                    <a href={partner.link} target="_blank" rel="noopener noreferrer">{partner.company}</a>
+                    <img src={partner.logo} alt={partner.company} />
+                  </li>
+                  <li>
+                    <a
+                      href={partner.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {partner.company}
+                    </a>
                   </li>
                   <li>Address: {partner.address}</li>
                   <li>{partner.desc}</li>

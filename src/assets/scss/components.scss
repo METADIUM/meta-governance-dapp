@@ -408,6 +408,11 @@ body {
     max-width: 1140px;
     margin: 0 auto;
 
+    @include sm {
+      max-width: calc(100% - 20px);
+      padding: 0 10px;
+    }
+
     @include xsm {
       flex-direction: column;
       gap: 20px 0;
