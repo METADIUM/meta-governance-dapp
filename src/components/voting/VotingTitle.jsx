@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
-import cn from "classnames/bind";
-import VotingSearch from "../../components/voting/VotingSearch";
-import VotingSelect from "./VotingSelect";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from 'react';
+import cn from 'classnames/bind';
+import VotingSearch from '../../components/voting/VotingSearch';
+import VotingSelect from './VotingSelect';
+import { useNavigate } from 'react-router-dom';
 
 const VotingTitle = ({
-  type = "md",
+  type = 'md',
   title,
   count,
   searchName,
@@ -22,7 +22,7 @@ const VotingTitle = ({
   const [isMobile, setIsMobile] = useState();
   // 필터 보이기 상태변수
   const [isViewFilter, setIsViewFilter] = useState(false);
-  const [checkedData, setCheckedData] = useState("All");
+  const [checkedData, setCheckedData] = useState('All');
   // console.log(checkedData);
   let isMobileType = true;
   const navigate = useNavigate();
@@ -36,35 +36,34 @@ const VotingTitle = ({
 
   useEffect(() => {
     handleWindowSizeChange();
-    window.addEventListener("resize", handleWindowSizeChange);
+    window.addEventListener('resize', handleWindowSizeChange);
     return () => {
-      window.removeEventListener("resize", handleWindowSizeChange);
+      window.removeEventListener('resize', handleWindowSizeChange);
     };
   }, [handleWindowSizeChange]);
 
   function newProposalBtnClickHandler(event) {
     event.preventDefault();
     btnFunction && btnFunction();
-    window.localStorage.removeItem("selectedTopic");
-    navigate("/voting/proposal");
+    window.localStorage.removeItem('selectedTopic');
+    navigate('/voting/proposal');
   }
 
   return (
-    <>
-      <div className={cn("voting-title-wrap", type)}>
-        {title && count && (
-          <>
-            <strong className="subject">{title}</strong>
-            {count !== undefined && <span className="subject">{count}</span>}
-          </>
-        )}
+    <div className={cn('voting-title-wrap', type)}>
+      {title && count && (
+        <>
+          <strong className='subject'>{title}</strong>
+          {count !== undefined && <span className='subject'>{count}</span>}
+        </>
+      )}
+      <div className={cn('voting-title-wrap', type)}>
         {searchName && ( // "search-type"
           <div
             className={cn(
-              "detail-search-area",
-              isFilter && isMobile ? "active" : ""
-            )}
-          >
+              'detail-search-area',
+              isFilter && isMobile ? 'active' : ''
+            )}>
             <VotingSelect
               filterData={filterData}
               className={searchName}
@@ -81,17 +80,16 @@ const VotingTitle = ({
             />
             {isMember && (
               <button
-                className="default-btn"
-                onClick={newProposalBtnClickHandler}
-              >
+                className='default-btn'
+                onClick={newProposalBtnClickHandler}>
                 + New Proposal
               </button>
             )}
           </div>
         )}
       </div>
-      {exp && <div className="voting-title-exp">{exp}</div>}
-    </>
+      {exp && <div className='voting-title-exp'>{exp}</div>}
+    </div>
   );
 };
 
