@@ -81,12 +81,12 @@ const VotingTitle = ({
               }}
             />
             {isMember && (
-            <button
-              className="default-btn"
-              onClick={newProposalBtnClickHandler}
-            >
-              + New Proposal
-            </button>
+              <button
+                className="default-btn"
+                onClick={newProposalBtnClickHandler}
+              >
+                + New Proposal
+              </button>
             )}
           </div>
         )}

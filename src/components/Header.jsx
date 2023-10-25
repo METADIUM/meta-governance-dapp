@@ -3,7 +3,7 @@ import cn from "classnames/bind";
 import { useNavigate } from "react-router-dom";
 import { throttle } from "lodash";
 import { addCommasToNumber } from "../util";
-import { useAuth } from "../hooks/useAuth";
+import { AuthCtx } from "../contexts/AuthContext";
 import { GovInitCtx } from "../contexts/GovernanceInitContext";
 import { DisConnectWalletModal, ErrModal } from "./Modal";
 import { web3Instance } from "../web3";
@@ -30,7 +30,7 @@ const Header = () => {
       height: window.innerHeight,
     });
   }, []);
-  const newLocal = useAuth();
+
   const { getErrModal } = useContext(ModalContext);
   const {
     address,
@@ -43,7 +43,7 @@ const Header = () => {
     onLogout,
     updateAccountData,
     setStakingEventsWatch,
-  } = newLocal;
+  } = useContext(AuthCtx);
   const [isShowStakingModal, setIsShowStakingModal] = useState(false);
 
   // address, web3Instance가 있다면 ctx 업데이트
@@ -165,7 +165,7 @@ const Header = () => {
       ) : (
         // mobile toggle open
         <>
-          <div className='header-logo-wrap'>
+          <div className="header-logo-wrap">
             <HeaderLogo />
             <div className={cn("mobile-gnb", isGnbOpen && "show")}>
               <div className={cn("gnb-inner")}>
@@ -194,28 +194,28 @@ const Header = () => {
                       </dl>
                     )}
                     {isConnect ? (
-                      <div className='btns-wrap'>
+                      <div className="btns-wrap">
                         <Button
-                          text='WEMIX Staking'
-                          type='outline'
-                          size='sm'
+                          text="WEMIX Staking"
+                          type="outline"
+                          size="sm"
                           onClick={() => {
                             setIsShowStakingModal(true);
                           }}
                         />
 
                         <Button
-                          type='outline'
-                          size='sm'
+                          type="outline"
+                          size="sm"
                           text={address && loginAcc(address)}
                           onClick={() => setDisConnectView(true)}
                         />
                       </div>
                     ) : (
                       <Button
-                        type='outline'
-                        size='sm'
-                        text='Connect Wallet'
+                        type="outline"
+                        size="sm"
+                        text="Connect Wallet"
                         onClick={onLogin}
                       />
                     )}
@@ -224,7 +224,7 @@ const Header = () => {
               </div>
             </div>
           </div>
-          <div className='header-utils'>
+          <div className="header-utils">
             <button onClick={onClickToggle}>
               <IconMenu />
             </button>
@@ -240,7 +240,7 @@ const Header = () => {
           />
           <ErrModal
             netName={web3Instance.netName}
-            title='Error'
+            title="Error"
             err={errMsg}
             visible={errVisible}
             coloseErrModal={closeErrModal}
