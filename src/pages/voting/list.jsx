@@ -448,42 +448,45 @@ const VotingList = () => {
         rejectedCount={itemCount.rejected}
       />
       <div className="section-body">
-        <div className={cn("content-filter-wrap")}>
-          <VotingTitle
-            type="sm"
-            title=""
-            count={""}
-            searchName="search-type"
-            searchBallot={(e) => searchBallot(e)}
-            filterData={filterData}
-            handleSelect={(e) => handleSelect(e)}
-            onClose={() => getBallotDetailInfo()}
-            isMember={isMember}
-          />
-          <div className={cn("filter-wrap")}></div>
-        </div>
-        {/* voting time over - filter와 상관없이 고정*/}
-        {revokeItems.length > 0 && (
-          <div className={cn("voting-list-section", "revoke-item")}>
-            {console.log("revoke", revokeItems)}
+        <div className="wrap">
+          <div className={cn("content-filter-wrap")}>
             <VotingTitle
-              type="md"
-              title={"Voting Time Over"}
-              count={revokeItems.length}
-              exp={
-                <>
-                  The proposed vote was rejected because more than 50% of the
-                  votes were not carried out.
-                  <strong>
-                    Please cancel the proposal to proceed with another vote.
-                  </strong>
-                </>
-              }
+              type="sm"
+              title=""
+              count={""}
+              searchName="search-type"
+              searchBallot={(e) => searchBallot(e)}
+              filterData={filterData}
+              handleSelect={(e) => handleSelect(e)}
+              onClose={() => getBallotDetailInfo()}
+              isMember={isMember}
             />
-            <div className={cn("section-inner")}>{revokeItems}</div>
+            <div className={cn("filter-wrap")}></div>
+            {/* filter-wrap?? */}
           </div>
-        )}
-        {renderSelectedItems}
+          {/* voting time over - filter와 상관없이 고정*/}
+          {revokeItems.length > 0 && (
+            <div className={cn("voting-list-section", "revoke-item")}>
+              {console.log("revoke", revokeItems)}
+              <VotingTitle
+                type="md"
+                title={"Voting Time Over"}
+                count={revokeItems.length}
+                exp={
+                  <>
+                    The proposed vote was rejected because more than 50% of the
+                    votes were not carried out.
+                    <strong>
+                      Please cancel the proposal to proceed with another vote.
+                    </strong>
+                  </>
+                }
+              />
+              <div className={cn("section-inner")}>{revokeItems}</div>
+            </div>
+          )}
+          {renderSelectedItems}
+        </div>
       </div>
     </>
   );

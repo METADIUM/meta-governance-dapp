@@ -72,14 +72,14 @@ const VotingTitle = ({
                 setIsViewFilter(!isViewFilter);
               }}
             />
-            {isMember && (
+            {/* {isMember && ( */}
               <button
-                className="voting-button-new-proposal"
+                className="default-btn"
                 onClick={newProposalBtnClickHandler}
               >
-                New Proposal
+                + New Proposal
               </button>
-            )}
+            {/* )} */}
           </div>
         )}
       </div>

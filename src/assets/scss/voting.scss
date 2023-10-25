@@ -348,13 +348,6 @@
       }
       @include sm {
         justify-content: flex-end;
-        .voting-search {
-          margin-left: 0;
-          width: 100%;
-          .search-text-area {
-            width: 100%;
-          }
-        }
       }
       &.active {
         @include sm {
@@ -363,9 +356,6 @@
           .voting-search {
             margin-left: 0;
 
-            .search-text-area {
-              width: 100%;
-            }
           }
         }
       }
@@ -628,31 +618,14 @@
   .ant-select-selection__rendered {
     margin-left: 20px;
   }
-  &.search-type {
-    .ant-select-selection {
-      background-color: $bgColor;
-    }
-    &.ant-select-focused {
-      .ant-select-selection {
-        background-color: $gray100;
-      }
-    }
-  }
+
   .ant-select-selection {
     min-height: 37px;
     display: flex;
     align-items: center;
   }
   // search-type style
-  &.search-type {
-    min-width: 182px;
-
-    .ant-select-selection {
-      min-height: 48px;
-      border-radius: 0;
-    }
-  }
-
+ 
   &.ant-select-open {
     .ant-select-arrow {
       transform: rotate(180deg) translateY(50%);
@@ -738,48 +711,48 @@
   }
   .search-text-area {
     // position: absolute;
-    width: 0px;
-    right: 0;
+    
+    
     overflow: hidden;
-    transition: width 0.3s ease;
-    width: 100%;
+    
+    
     position: relative;
 
-    .search-input {
-      height: 100%;
-      width: 100%;
-      border: 1px solid #d9d9d9;
-      background-color: $gray100;
-      color: $gray20;
-      min-height: 48px;
-      overflow: hidden;
-      padding: 0 44px;
-      background: $gray100 url("#{$rootPath}/ico_search.svg") no-repeat left
-        16px center;
-      border-radius: 10px;
+    // .search-input {
+    //   height: 100%;
+    //   width: 100%;
+    //   border: 1px solid #d9d9d9;
+    //   background-color: $gray100;
+    //   color: $gray20;
+    //   min-height: 48px;
+    //   overflow: hidden;
+    //   padding: 0 44px;
+    //   background: $gray100 url("#{$rootPath}/ico_search.svg") no-repeat left
+    //     16px center;
+    //   border-radius: 10px;
 
-      & + .search-close-btn {
-        display: block;
-        position: absolute;
-        top: 50%;
-        right: 16px;
-        transform: translateY(-50%);
-        path {
-          fill: $gray60;
-        }
-      }
+    //   & + .search-close-btn {
+    //     display: block;
+    //     position: absolute;
+    //     top: 50%;
+    //     right: 16px;
+    //     transform: translateY(-50%);
+    //     path {
+    //       fill: $gray60;
+    //     }
+    //   }
 
-      @include sm {
-        width: 100%;
-      }
-    }
+    //   @include sm {
+    //     width: 100%;
+    //   }
+    // }
   }
 }
 
 .detail-search-area {
   position: relative;
   .voting-search {
-    width: 100%;
+    
 
     @include sm {
       margin-left: 8px;
@@ -1106,10 +1079,7 @@
       .ant-select {
         width: 65%;
       }
-      .ant-select-selection {
-        height: 48px;
-        border-radius: 10px;
-      }
+
       strong {
         font-weight: 700;
         font-size: 16px;
