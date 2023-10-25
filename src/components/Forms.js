@@ -4,7 +4,7 @@ import VotingButton from "../components/voting/Button";
 
 import { convertSecondsToDay, shouldPass } from "../util";
 import VotingInputArea from "./voting/VotingInputArea";
-import { ReactComponent as IconArrowDown } from "../assets/images/ico_select_arrow_drop_down.svg";
+import { ReactComponent as IconArrowDown } from "../assets/images/ic-select-arrow.svg";
 import cn from "classnames/bind";
 import GovButton from "./voting/GovButton";
 

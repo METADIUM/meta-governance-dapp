@@ -3,7 +3,7 @@ import cn from "classnames/bind";
 import VotingSelect from "../../components/voting/VotingSelect";
 import { ReactComponent as IconPrev } from "../../assets/images/ico_prev.svg";
 import { Select } from "antd";
-import { ReactComponent as IconArrowDown } from "../../assets/images/ico_select_arrow_drop_down.svg";
+import { ReactComponent as IconArrowDown } from "../../assets/images/ic-select-arrow.svg";
 import { useNavigate } from "react-router-dom";
 
 const VotingTopProposal = ({

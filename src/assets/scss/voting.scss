@@ -372,49 +372,49 @@
     }
   }
 
-  .voting-list-section {
-    margin-top: 32px;
-    & + .voting-list-section {
-      margin-top: 50px;
-    }
+  // .voting-list-section {
+  //   margin-top: 32px;
+  //   & + .voting-list-section {
+  //     margin-top: 50px;
+  //   }
 
-    .section-inner {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 20px 0;
-    }
+  //   .section-inner {
+  //     position: relative;
+  //     display: flex;
+  //     flex-direction: column;
+  //     gap: 20px 0;
+  //   }
 
-    &.revoke-item {
-      .voting-title-wrap {
-        > strong {
-          color: $critical;
-        }
-      }
+  //   &.revoke-item {
+  //     .voting-title-wrap {
+  //       > strong {
+  //         color: $critical;
+  //       }
+  //     }
 
-      .section-inner {
-        .voting-list-block-wrap {
-          border: 2px solid $critical;
-          position: relative;
+  //     .section-inner {
+  //       .voting-list-block-wrap {
+  //         border: 2px solid $critical;
+  //         position: relative;
 
-          &:hover {
-            border: 2px solid $critical;
-          }
-          &:before {
-            content: "";
-            display: block;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            background-color: $critical;
-            opacity: 0.2;
-          }
-        }
-      }
-    }
-  }
+  //         &:hover {
+  //           border: 2px solid $critical;
+  //         }
+  //         &:before {
+  //           content: "";
+  //           display: block;
+  //           width: 100%;
+  //           height: 100%;
+  //           position: absolute;
+  //           left: 0;
+  //           top: 0;
+  //           background-color: $critical;
+  //           opacity: 0.2;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
   .section-inner {
     margin-top: 20px;
   }
@@ -588,56 +588,50 @@
   }
 }
 // voting-filter 컴포넌트
-.voting-filter {
-  min-width: 117px;
+// .voting-filter {
+//   min-width: 117px;
 
-  @include sm {
-    width: 100%;
-  }
+//   @include sm {
+//     width: 100%;
+//   }
 
-  &.ant-select {
-    width: auto;
+//   &.ant-select {
+//     width: auto;
 
-    @include sm {
-      width: 100%;
-    }
-  }
+//     @include sm {
+//       width: 100%;
+//     }
+//   }
 
-  .ant-select-arrow {
-    right: 16px;
-    top: 50%;
-    margin-top: 0;
-    transform: translateY(-50%);
-    transition: transform 300ms;
+//   .ant-select-arrow {
+//     right: 16px;
+//     top: 50%;
+//     margin-top: 0;
+//     transform: translateY(-50%);
+//     transition: transform 300ms;
 
-    svg {
-      width: 15px;
-      height: 15px;
-    }
-  }
-  .ant-select-selection__rendered {
-    margin-left: 20px;
-  }
+//     svg {
+//       width: 15px;
+//       height: 15px;
+//     }
+//   }
+//   .ant-select-selection__rendered {
+//     margin-left: 20px;
+//   }
 
-  .ant-select-selection {
-    min-height: 37px;
-    display: flex;
-    align-items: center;
-  }
-  // search-type style
+//   .ant-select-selection {
+//     min-height: 37px;
+//     display: flex;
+//     align-items: center;
+//   }
+//   // search-type style
  
-  &.ant-select-open {
-    .ant-select-arrow {
-      transform: rotate(180deg) translateY(50%);
-    }
-  }
-
-  @include md {
-  }
-
-  @include sm {
-  }
-}
+//   &.ant-select-open {
+//     .ant-select-arrow {
+//       transform: rotate(180deg) translateY(50%);
+//     }
+//   }
+// }
 // voting-filter 드랍다운 스타일
 .ant-select-dropdown {
   .ant-select-dropdown-menu {
@@ -691,79 +685,75 @@
   }
 }
 
-.voting-search {
-  display: inline-flex;
-  .voting-search-btn {
-    .a11y {
-      position: absolute !important;
-      display: block !important;
-      overflow: hidden !important;
-      width: 1px !important;
-      height: 1px !important;
-      padding: 0 !important;
-      border: 0 !important;
-      margin: 0 !important;
-      clip: rect(1px, 1px, 1px, 1px) !important;
-      clip-path: inset(50%) !important;
-      word-break: initial !important;
-      word-wrap: initial !important;
-    }
-  }
-  .search-text-area {
-    // position: absolute;
+// .voting-search {
+//   display: inline-flex;
+//   .voting-search-btn {
+//     .a11y {
+//       position: absolute !important;
+//       display: block !important;
+//       overflow: hidden !important;
+//       width: 1px !important;
+//       height: 1px !important;
+//       padding: 0 !important;
+//       border: 0 !important;
+//       margin: 0 !important;
+//       clip: rect(1px, 1px, 1px, 1px) !important;
+//       clip-path: inset(50%) !important;
+//       word-break: initial !important;
+//       word-wrap: initial !important;
+//     }
+//   }
+//   // .search-text-area {
+//     // position: absolute;
     
     
-    overflow: hidden;
+//     // overflow: hidden;
     
     
-    position: relative;
+//     // position: relative;
 
-    // .search-input {
-    //   height: 100%;
-    //   width: 100%;
-    //   border: 1px solid #d9d9d9;
-    //   background-color: $gray100;
-    //   color: $gray20;
-    //   min-height: 48px;
-    //   overflow: hidden;
-    //   padding: 0 44px;
-    //   background: $gray100 url("#{$rootPath}/ico_search.svg") no-repeat left
-    //     16px center;
-    //   border-radius: 10px;
+//     // .search-input {
+//     //   height: 100%;
+//     //   width: 100%;
+//     //   border: 1px solid #d9d9d9;
+//     //   background-color: $gray100;
+//     //   color: $gray20;
+//     //   min-height: 48px;
+//     //   overflow: hidden;
+//     //   padding: 0 44px;
+//     //   background: $gray100 url("#{$rootPath}/ico_search.svg") no-repeat left
+//     //     16px center;
+//     //   border-radius: 10px;
 
-    //   & + .search-close-btn {
-    //     display: block;
-    //     position: absolute;
-    //     top: 50%;
-    //     right: 16px;
-    //     transform: translateY(-50%);
-    //     path {
-    //       fill: $gray60;
-    //     }
-    //   }
+//     //   & + .search-close-btn {
+//     //     display: block;
+//     //     position: absolute;
+//     //     top: 50%;
+//     //     right: 16px;
+//     //     transform: translateY(-50%);
+//     //     path {
+//     //       fill: $gray60;
+//     //     }
+//     //   }
 
-    //   @include sm {
-    //     width: 100%;
-    //   }
-    // }
-  }
-}
+//     //   @include sm {
+//     //     width: 100%;
+//     //   }
+//     // }
+//   // }
+// }
 
-.detail-search-area {
-  position: relative;
-  .voting-search {
+// .detail-search-area {
+//   position: relative;
+//   .voting-search {
     
 
-    @include sm {
-      margin-left: 8px;
-    }
-
-    &.active {
-      width: auto;
-      display: flex;
-    }
-  }
-}
+//     &.active {
+//       width: auto;
+//       display: flex;
+//     }
+//   }
+// }
 
 .voting-proposal-select {
   margin-top: 48px;

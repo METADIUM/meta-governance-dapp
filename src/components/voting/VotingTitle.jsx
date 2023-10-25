@@ -51,6 +51,14 @@ const VotingTitle = ({
   return (
     <>
       <div className={cn("voting-title-wrap", type)}>
+        {isFilter && isMobile ? (
+          false
+        ) : (
+          <>
+            <strong className="subject">{title}</strong>
+            {count !== undefined && <span className="subject">{count}</span>}
+          </>
+        )}
         {searchName && ( // "search-type"
           <div
             className={cn(
@@ -73,12 +81,12 @@ const VotingTitle = ({
               }}
             />
             {/* {isMember && ( */}
-              <button
-                className="default-btn"
-                onClick={newProposalBtnClickHandler}
-              >
-                + New Proposal
-              </button>
+            <button
+              className="default-btn"
+              onClick={newProposalBtnClickHandler}
+            >
+              + New Proposal
+            </button>
             {/* )} */}
           </div>
         )}
