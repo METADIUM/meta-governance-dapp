@@ -1,0 +1,38 @@
+@import './mixin';
+@import './variables';
+
+.proposal-top-wrap {
+  background-color: blueviolet;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+
+  .proposal-top-btn-wrap {
+    margin-bottom: 40px;
+    display: flex;
+    h2 {
+      @include B24;
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 100%; /* 24px */
+      background-color: aqua;
+      align-items: center;
+      margin-left: 8px;
+    }
+
+    .proposal-select {
+      margin-top: 48px;
+      display: flex;
+      min-height: 40px;
+    }
+  }
+
+  .proposal-select-wrap {
+    display: flex;
+    flex-direction: column;
+
+    .select-label {
+      margin-bottom: 20px;
+    }
+  }
+}
