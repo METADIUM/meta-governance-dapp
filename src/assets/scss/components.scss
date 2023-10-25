@@ -45,11 +45,7 @@ body {
   .header-logo-wrap {
     display: flex;
     align-items: center;
-    gap: 10px;
-
-    @include sm {
-      gap: 8px;
-    }
+    gap: 0 20px;
   }
 
   .header-logo {
@@ -69,29 +65,29 @@ body {
   }
 
   .header-gnb {
-    position: absolute;
-    left: 25%;
-    top: 50%;
-    transform: translate(-50%, -50%);
     display: flex;
-    gap: 0;
+    flex-direction: row;
+    border-bottom: 0;
+    // position: absolute;
+    // left: 25%;
+    // top: 50%;
+    // transform: translate(-50%, -50%);
+    
+    // gap: 0;
     border-right: none;
     background: transparent;
-
-    @include md {
-      position: static;
-      transform: none;
-    }
 
     li {
       padding: 0 !important;
 
       &:active {
-        background-color: transparent;
+        background-color: transparent;     
       }
       &.active {
         &.ant-menu-item-selected {
           background-color: transparent;
+          border-bottom: 0;
+          color: $blue1;
         }
         a {
           font-weight: 600;
@@ -99,7 +95,16 @@ body {
           text-decoration: underline;
           text-underline-offset: 23px;
           text-decoration-thickness: 2px;
+
+          &:before {
+            display: none;
+          }
         }
+      }
+
+      &:hover {
+        color: $blue1;
+        border-bottom: 0;
       }
 
       a {
@@ -189,10 +194,9 @@ body {
     gap: 20px;
 
     @include sm {
-      // to check
       flex-direction: column;
       align-items: flex-start;
-      gap: 12px;
+      gap: 40px 0;
     }
 
     dl {
@@ -203,8 +207,9 @@ body {
       white-space: nowrap;
 
       @include sm {
-        // to check
-        display: table;
+        flex-direction: column;
+        width: 100%;
+        gap: 20px 0;
       }
 
       div {
@@ -212,24 +217,21 @@ body {
         gap: 8px;
 
         @include sm {
-          display: table-row;
+          justify-content: space-between;
+          
         }
 
         dt {
           color: $gray3;
 
           @include sm {
-            display: table-cell;
-            text-align: left;
-            padding-top: 4px;
+            @include R20;
           }
         }
         dd {
           @include sm {
-            text-align: left;
-            padding-top: 4px;
-            padding-left: 4px;
-            display: table-cell;
+            color: $black2;
+            @include B20;
           }
           color: $white;
         }
@@ -252,16 +254,17 @@ body {
         }
       }
     }
-    @include sm {
-      // .button-wrap.outline {
-      //   color: $black1;
-      //   border-color: $black1;
-      // }
-    }
 
     .btns-wrap {
       display: flex;
       gap: 8px;
+
+      @include sm {
+        width: 100%;
+        flex-direction: column;
+        gap: 20px 0;
+     }
+
 
       button {
         @include B16;
@@ -270,6 +273,11 @@ body {
         background-color: $gray;
         border-radius: 8px;
         border-color: transparent;
+
+        @include sm {
+          line-height: 48px;
+          height: 48px;
+        }
       }
     }
   }
@@ -313,35 +321,15 @@ body {
     top: 0;
     overflow: hidden;
     opacity: 0;
-
-    // display: flex;
-    // justify-content: flex-end;
-    background-color: $gray100;
+    background-color: rgba(0, 0, 0, 0.3);
     display: none;
     transition: opacity 0.3s;
-
-    // .gnb-bg {
-    //   position: absolute;
-    //   left: 0;
-    //   top: 0;
-    //   width: 100%;
-    //   height: 100%;
-    //   background-color: rgba($gray10, 0.3);
-    // }
 
     &.show {
       opacity: 1;
       display: block;
-
-      // .gnb-inner {
-      //   transform: translateX(100%);
-      // }
     }
-    // &.leave {
-    //   .gnb-inner {
-    //     transform: translateX(100%);
-    //   }
-    // }
+
     .gnb-inner {
       position: absolute;
       z-index: 10;
@@ -349,19 +337,17 @@ body {
       right: 0;
       width: 100%;
       min-width: 280px;
-      max-width: 392px;
-      background-color: $gray30;
+      max-width: 320px;
+      background-color: $white;
+      background-image: url("../images/mobile-gnb-logo.svg");
+      background-repeat: no-repeat;
+      background-position: left 20px top 14px;
+      background-size: 189px 28px;
       // transform: translateX(100%);
       // transition: transform 0.3s;
       height: 100%;
       padding: 12px 20px 24px;
       text-align: right;
-
-      .btn-lang-change {
-        // to check
-        position: absolute;
-        left: 20px;
-      }
 
       .header-gnb {
         position: static;
@@ -372,10 +358,8 @@ body {
         li {
           margin-bottom: 0;
           margin-top: 0;
-          padding: 0 20px !important;
           height: auto;
-          line-height: 20px;
-          border-bottom: 1px solid $gray90;
+          line-height: 56px;
 
           &.active {
             a {
@@ -384,25 +368,19 @@ body {
             }
           }
           a {
-            padding: 12px 0 16px;
-            @include B16;
-            color: $white;
-          }
-          & + li {
-            a {
-              padding-top: 16px;
-            }
+            padding: 18px 0;
+            @include B20;
+            color: $gray;
           }
         }
       }
     }
     .btn-close {
       position: relative;
-      right: 20px;
-      margin-bottom: 10.5px;
+      right: 0;
       svg {
         path {
-          fill: $gray100;
+          fill: $black2;
         }
       }
     }
@@ -412,22 +390,9 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
-    height: calc(100% - 41.5px);
-    justify-content: space-between;
-    padding-top: 24px;
-    overflow-y: auto;
-
-    &::before {
-      @include content;
-      position: fixed;
-      top: 60px;
-      right: 0;
-      width: 100%;
-      max-width: 392px;
-      min-width: 280px;
-      height: 1px;
-      background-color: $gray50;
-    }
+    overflow-y: auto; 
+    padding-top: 14px;
+    gap: 40px 0;
   }
 }
 
