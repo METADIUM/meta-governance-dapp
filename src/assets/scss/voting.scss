@@ -72,8 +72,12 @@
     }
   }
 }
+// voting-wrap 없음
 .voting-wrap {
-  .hyphen {
+
+
+  // forms.js, votingTextfiled.jsx에서 사용
+  .hyphen { 
     display: inline-flex;
     align-items: center;
     height: 48px;

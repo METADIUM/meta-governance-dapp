@@ -381,7 +381,6 @@ const VotingList = () => {
 
   // select 옵션 변경에 따른 항목 렌더링
   const handleSelect = useCallback((e = filterData[0]) => {
-    console.log(e);
     const props = [];
     // 옵션에 따른 props 값 적용
     if (e === filterData[0] || e === filterData[1]) {
@@ -448,7 +447,7 @@ const VotingList = () => {
         approvedCount={itemCount.approved}
         rejectedCount={itemCount.rejected}
       />
-      <div className={cn("inner")}>
+      <div className="section-body">
         <div className={cn("content-filter-wrap")}>
           <VotingTitle
             type="sm"

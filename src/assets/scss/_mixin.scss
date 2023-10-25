@@ -1,6 +1,6 @@
 @import "./variables";
 
-// ~ 359
+// ~ 719
 @mixin xsm {
   @media (max-width: #{$breakpointXsm - 1px}) {
     @content;
