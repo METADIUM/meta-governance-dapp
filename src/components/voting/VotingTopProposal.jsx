@@ -1,10 +1,9 @@
 import React from 'react';
 import cn from 'classnames/bind';
-import { ReactComponent as IconPrev } from '../../assets/images/ic-prev.svg';
 import { Select } from 'antd';
-import { ReactComponent as IconArrowDown } from '../../assets/images/ico_arrow_drop_down.svg';
+import { ReactComponent as IconPrev } from "../../assets/images/ic-prev.svg";
+import { ReactComponent as IconArrowDown } from '../../assets/images/ic-select-arrow.svg';
 import { useNavigate } from 'react-router-dom';
-import '../../assets/scss/proposal.scss';
 
 const VotingTopProposal = ({
   loading,

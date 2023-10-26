@@ -310,9 +310,49 @@ a {
         }
 
         &:nth-child(4) {
-          @include R14;
-          height: 84px;
-          overflow-y: auto;
+          position: relative;
+
+          .desc {
+            @include R14;
+            display: block;
+            height: 84px;
+            overflow-y: auto;
+            padding-right: 5px;
+
+            &::-webkit-scrollbar {
+              width: 10px;
+            }
+            &::-webkit-scrollbar-thumb {
+              overflow: visible;
+              background: $gray3; /* 스크롤바 색상 */
+              border-radius: 10px; /* 스크롤바 둥근 테두리 */
+            }
+            &::-webkit-scrollbar-track {
+              background: rgba(0, 0, 0, 0.05);
+              border-radius: 10px;
+            }
+          }
+
+          .cover-bar {
+            width: 10px;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            -webkit-transition: all .5s;
+            transition: all .5s;
+            opacity: 1;
+            background: $white;           
+          }
+
+          &:hover {
+            .cover-bar {
+              opacity: 0;
+              -webkit-transition: all .5s;
+              transition: all .5s;
+            }
+          }
+          
         }
       }
     }

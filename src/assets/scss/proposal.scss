@@ -1,5 +1,5 @@
-@import './mixin';
-@import './variables';
+@import "./variables";
+@import "./mixin";
 
 .proposal-top-wrap {
   //   background-color: blueviolet;
@@ -14,12 +14,8 @@
     display: flex;
     h2 {
       @include B24;
-      font-weight: 700;
-      letter-spacing: -1px;
       line-height: 100%; /* 24px */
-      //   background-color: aqua;
       align-items: center;
-      // margin-left: 8px;
     }
 
     .proposal-select {
@@ -37,6 +33,7 @@
       @include B20;
       line-height: 100%;
       margin-bottom: 20px;
+      color: $gray;
     }
 
     .ant-select-selection--single {
