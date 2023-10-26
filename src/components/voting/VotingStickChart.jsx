@@ -14,7 +14,7 @@ export default function VotingStickChart({
     <div className={cn("stick-chart", `${theme}`)}>
       {!noUnit && (
         <p className={cn("legend-area")}>
-          <strong className={cn("legend-title")}>{title}</strong>
+          <span className={cn("legend-title")}>{title}</span>
           {/* 23.04.21 수정: type class 추가 */}
           <span className={cn("legend-unit", type)}>
             {count}

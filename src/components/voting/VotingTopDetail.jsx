@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import cn from "classnames/bind";
 import Button from "./Button.jsx";
 import Status from "./Status.jsx";
-import { ReactComponent as IconPrev } from "../../assets/images/ico_prev.svg";
+import { ReactComponent as IconPrev } from "../../assets/images/ic-prev.svg";
 
 /* 23.04.20 수정: TxHashAddModal, VotingInputArea 추가 */
 import { VotingModal, TxHashAddModal } from "../../components/Modal.js";
@@ -88,7 +88,7 @@ const VotingTopDetail = ({
   // -------------------- useEffect
   useEffect(() => {
     setVotingDuration();
-  }, []);
+  }, [setVotingDuration]);
 
   const resize = useCallback(() => {
     setOffset({
@@ -333,7 +333,7 @@ const VotingTopDetail = ({
           });
         } else {
           contents.push({
-            title: "WEMIX to be locked",
+            title: "META to be locked",
             class: "text-bold",
             value: `${locked} WEMIX`,
           });
@@ -464,7 +464,8 @@ const VotingTopDetail = ({
   return (
     <>
       <div className={cn("voting-top-wrap")}>
-        <div className={cn("inner")}>
+        <div className="box">
+          {/* <div className={cn("inner")}> */}
           <button
             className={cn("btn-prev")}
             onClick={() => {
@@ -475,25 +476,8 @@ const VotingTopDetail = ({
           </button>
           <div className={cn("top-status-wrap")}>
             {state && <Status status={state} />}
-            {offset.width > 1023 &&
-              state === "1" &&
-              creator === defaultAccount && (
-                <div className={cn("btn-wrap")}>
-                  <Button
-                    onClick={() => {
-                      setIsVotingDurationModal(true);
-                    }}
-                    type={"outline"}
-                    text="Change"
-                  />
-                  <Button
-                    onClick={() => updateProposal("revoke")}
-                    type={"outline"}
-                    text="Revoke"
-                  />
-                </div>
-              )}
-            {defaultAccount &&
+            {/* TO CHECK: wait에서만 사용되는 지 확인 */}
+            {/* {defaultAccount &&
               whiteList.includes(defaultAccount) &&
               offset.width > 1023 &&
               isWait &&
@@ -511,29 +495,70 @@ const VotingTopDetail = ({
                     })`}
                   />
                 </div>
-              )}
+              )} */}
           </div>
           {/* title */}
-          <div className={cn("voting-title")}>
-            <h2 className={cn("title")}>{setTopic()}</h2>
+          <div className={cn("voting-title")}>{setTopic()}</div>
+          {state === "1" &&
+            creator === defaultAccount && (
+              <div className={cn("btn-wrap")}>
+                <button
+                  onClick={() => {
+                    setIsVotingDurationModal(true);
+                  }}
+                >Change</button>
+                <button
+                  onClick={() => updateProposal("revoke")}
+                >Revoke</button>
+              </div>
+            )}
+        </div>
+
+        {/*  모바일 popover 메뉴 */}
+        {/* {state === "1" && creator === defaultAccount && (
+          <div className={cn("detail-top-menu")}>
+            <Dropdown
+              overlayClassName="familysite-list-wrap"
+              placement="bottomLeft"
+              overlay={
+                <div className={cn("detail-menu-list")}>
+                  <Button
+                    onClick={() => {
+                      setIsVotingDurationModal(true);
+                    }}
+                    text="Change"
+                  />
+                  <Button
+                    onClick={() => updateProposal("revoke")}
+                    text="Revoke"
+                  />
+                </div>
+              }
+              trigger={["click"]}
+              getPopupContainer={(triggerNode) => triggerNode.parentNode}
+            >
+              <button type="button">
+                <span className={cn("more-text")}>···</span>
+              </button>
+            </Dropdown>
           </div>
-          {/*  모바일 popover 메뉴 */}
-          {state === "1" && creator === defaultAccount && (
+        )} */}
+        {defaultAccount &&
+          whiteList.includes(defaultAccount) &&
+          isWait &&
+          state === "3" && (
             <div className={cn("detail-top-menu")}>
               <Dropdown
                 overlayClassName="familysite-list-wrap"
                 placement="bottomLeft"
                 overlay={
                   <div className={cn("detail-menu-list")}>
+                    {/* 23.04.20 수정: Add Tx Hash 버튼 추가 */}
                     <Button
-                      onClick={() => {
-                        setIsVotingDurationModal(true);
-                      }}
-                      text="Change"
-                    />
-                    <Button
-                      onClick={() => updateProposal("revoke")}
-                      text="Revoke"
+                      onClick={() => setIsTxHashAddModal(true)}
+                      text={`${txHashes.length ? "Change" : "Add"} Tx Hash (${
+                        txHashes.length
+                      })`}
                     />
                   </div>
                 }
@@ -546,59 +571,22 @@ const VotingTopDetail = ({
               </Dropdown>
             </div>
           )}
-          {defaultAccount &&
-            whiteList.includes(defaultAccount) &&
-            isWait &&
-            state === "3" && (
-              <div className={cn("detail-top-menu")}>
-                <Dropdown
-                  overlayClassName="familysite-list-wrap"
-                  placement="bottomLeft"
-                  overlay={
-                    <div className={cn("detail-menu-list")}>
-                      {/* 23.04.20 수정: Add Tx Hash 버튼 추가 */}
-                      <Button
-                        onClick={() => setIsTxHashAddModal(true)}
-                        text={`${txHashes.length ? "Change" : "Add"} Tx Hash (${
-                          txHashes.length
-                        })`}
-                      />
-                    </div>
-                  }
-                  trigger={["click"]}
-                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                >
-                  <button type="button">
-                    <span className={cn("more-text")}>···</span>
-                  </button>
-                </Dropdown>
-              </div>
-            )}
-          {/* 설명 부분 */}
-          <div className={cn("detail-top-content")}>
-            <dl className={cn("detail-top-list")}>
-              <div className={cn("detail-list-item")}>
-                <dt>Proposer</dt>
-                <dd>
-                  <p className={cn("item-notice")}>
-                    <strong
-                      className={cn("text-bold", "no-margin", "item-title")}
-                    >
-                      {authorityName}
-                    </strong>
-                    <span className={cn("pocket-address", "wemix-inc-type")}>
-                      {creator}
-                      {/* <em>0x76C6</em>
-                      E4A0a2A141343c370D5d36276DA643B0
-                      <em>c829</em> */}
-                    </span>
-                  </p>
-                </dd>
-              </div>
-              {setDescription()}
-            </dl>
-          </div>
+        {/* 설명 부분 */}
+        <div className={cn("detail-top-content")}>
+          <dl className={cn("detail-top-list")}>
+            <div className={cn("detail-list-item")}>
+              <dt>Proposer</dt>
+              <dd>
+                <p className={cn("item-notice", "proposer")}>
+                  <strong className={cn("item-title")}>{authorityName}</strong>
+                  <span className={cn("pocket-address")}>{creator}</span>
+                </p>
+              </dd>
+            </div>
+            {setDescription()}
+          </dl>
         </div>
+        {/* </div> */}
       </div>
 
       {/* duration modal */}

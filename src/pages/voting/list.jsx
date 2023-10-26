@@ -419,10 +419,10 @@ const VotingList = () => {
             count={prop.count}
             isMember={isMember}
           />
-          <div className={cn("section-inner")}>
-            {prop.items.length ? (
-              <>{prop.items}</>
-            ) : (
+          {prop.items.length ? (
+            <div className={cn("section-inner")}>{prop.items}</div>
+          ) : (
+            <div className="section-inner empty">
               <div className={cn("empty-area")}>
                 <div className={cn("empty-notice")}>
                   {/* 23.04.11 수정: 아이콘 삭제 */}
@@ -430,8 +430,8 @@ const VotingList = () => {
                   <strong className={cn("empty-title")}>No result</strong>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {prop.title === "Finalized" &&
             finalizedItemsLength >= 5 &&

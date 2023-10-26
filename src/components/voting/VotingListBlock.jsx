@@ -3,7 +3,7 @@ import cn from "classnames/bind";
 import Status from "./Status.jsx";
 import IconWithText from "./IconWithText.jsx";
 import VotingChartMini from "./VotingChartMini.jsx";
-import { loginAcc, shouldPass } from "../../util.js";
+import { loginAcc, shouldPass, timeConverter } from "../../util.js";
 import { Link } from "react-router-dom";
 import RevokeButton from "./Button";
 import MoreButton from "./GovButton.jsx";
@@ -39,7 +39,9 @@ const VotingListBlock = ({
     powerOfAccepts,
     powerOfRejects,
     totalVoters,
-    endTimeConverted,
+    startTime,
+    endTime,
+    // endTimeConverted,
     memo,
     powers, // 0: 투표 안한 사람, 1: 찬성 투표율, 2: 반대 투표율, 3: 기권율
   } = item;
@@ -65,7 +67,7 @@ const VotingListBlock = ({
 
   const exFinalizedCode = () => {
     if (state === "1") return "Proposal Ready";
-    return endTimeConverted;
+    return `${timeConverter(startTime, true)} ~ ${timeConverter(endTime, true)}`;
   };
 
   const chartData = {

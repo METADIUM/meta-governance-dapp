@@ -52,14 +52,14 @@ const VotingTitle = ({
 
   return (
     <div className={cn("voting-title-wrap", type)}>
-      {title && count && (
+      {title && (
         <>
           <strong className="subject">{title}</strong>
           {count !== undefined && <span className="subject">{count}</span>}
         </>
       )}
-      <div className={cn("voting-title-wrap", type)}>
-        {searchName && ( // "search-type"
+      {searchName && ( // "search-type"
+        <div className={cn("voting-title-wrap", type)}>
           <div
             className={cn(
               "detail-search-area",
@@ -89,8 +89,8 @@ const VotingTitle = ({
               </button>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
       {exp && <div className="voting-title-exp">{exp}</div>}
     </div>
   );
