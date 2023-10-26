@@ -197,7 +197,10 @@ const Home = () => {
                     </a>
                   </li>
                   <li>Address: {partner.address}</li>
-                  <li>{partner.desc}</li>
+                  <li>
+                    <span className="desc">{partner.desc}</span>
+                    <span className="cover-bar"></span>
+                  </li>
                 </ul>
               </div>
             ))}

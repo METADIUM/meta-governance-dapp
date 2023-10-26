@@ -1788,25 +1788,24 @@ const Proposal = () => {
               <div className='textfield-contain'>
                 <div className='textfield-wrap'>{showProposalForm()}</div>
               </div>
-
-              {selectedMenu === 'menu-voting' && (
-                <div className={cn('reference-wrap')}>
-                  <strong className={cn('reference-title')}>Reference</strong>
-                  <ul className={cn('reference-list')}>
-                    <li className={cn('reference-list-info')}>
-                      Even within the voting duration, if more than 50% of
-                      options are expressed for or against, voting ends and
-                      follow-up work is carried out.
-                    </li>
-                    <li className={cn('reference-list-info')}>
-                      Basically, only one voting is conducted at a time, so if
-                      there is already voting in progress, you cannot start a
-                      new voting.
-                    </li>
-                  </ul>
-                </div>
-              )}
             </div>
+            {selectedMenu === 'menu-voting' && (
+              <div className={cn('reference-wrap')}>
+                <strong className={cn('reference-title')}>Reference</strong>
+                <ul className={cn('reference-list')}>
+                  <li className={cn('reference-list-info')}>
+                    Even within the voting duration, if more than 50% of options
+                    are expressed for or against, voting ends and follow-up work
+                    is carried out.
+                  </li>
+                  <li className={cn('reference-list-info')}>
+                    Basically, only one voting is conducted at a time, so if
+                    there is already voting in progress, you cannot start a new
+                    voting.
+                  </li>
+                </ul>
+              </div>
+            )}
           </main>
         </div>
       </div>

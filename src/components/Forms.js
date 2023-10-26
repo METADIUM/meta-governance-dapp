@@ -283,6 +283,12 @@ export const ReplaceProposalForm = ({
       <strong>
         New Authority Node Description <span className={cn('required')}>*</span>
       </strong>
+      <div className={cn('description')}>
+        The hexadecimal node ID is encoded in the username portion of the URL,
+        separated from the host by an @ sign. The hostname can only be given as
+        an IP address, DNS domain names are not allowed. The port in the host
+        name section is the TCP listening port.
+      </div>
       <VotingInputArea
         name='newNode'
         // placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
@@ -292,12 +298,6 @@ export const ReplaceProposalForm = ({
         errType={newNodeErr}
         errText='Invalid Node'
       />
-      <div className={cn('description')}>
-        The hexadecimal node ID is encoded in the username portion of the URL,
-        separated from the host by an @ sign. The hostname can only be given as
-        an IP address, DNS domain names are not allowed. The port in the host
-        name section is the TCP listening port.
-      </div>
     </div>
     <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
@@ -334,6 +334,8 @@ export const RemoveProposalForm = ({
   stakingAddrErr,
   showLockAmount,
   showLockAmountErr,
+  newNodeErr,
+
   stakingMin,
   oldLockAmount,
   oldLockAmountErr,
@@ -344,7 +346,7 @@ export const RemoveProposalForm = ({
   getLockAmount = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn('voting-input-wrap check-balance')}>
       <strong>
         Address to be removed <span className={cn('required')}>*</span>
       </strong>
@@ -365,11 +367,12 @@ export const RemoveProposalForm = ({
     </div>
     <div className={cn('voting-input-wrap')}>
       <strong>
-        <p className='subtitle'>Locked META Amount</p>
+        Locked META Amount <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
         inputType='suffix'
-        fixText={'META'}
+        fixText='META'
+        Locked={true}
         name='showLockAmount'
         value={showLockAmount || ''}
         errType={showLockAmountErr}
@@ -393,6 +396,7 @@ export const RemoveProposalForm = ({
         errText='Invalid Amount'
       />
     </div>
+
     <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
@@ -475,10 +479,13 @@ export const VotingDurationSettingForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn('voting-input-wrap double-box')}>
       <strong>
         Voting Duration Setting <span className={cn('required')}>*</span>
       </strong>
+      <div className={cn('description')}>
+        The minimum value for Voting Duration is 1 day.
+      </div>
       <div className={'double-input-box'}>
         <div className={'box-wrap'}>
           <VotingInputArea
@@ -526,9 +533,6 @@ export const VotingDurationSettingForm = ({
           </p>
         )}
       </div>
-      <div className={cn('description')}>
-        The minimum value for Voting Duration is 1 day.
-      </div>
     </div>
     <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
@@ -569,6 +573,9 @@ export const AuthorityMemberStakingAmountForm = ({
       <strong>
         Staking Amount <span className={cn('required')}>*</span>
       </strong>
+      <div className={cn('description')}>
+        The maximum amount of staking that can be set is 4,980,000 META.
+      </div>
       <div className={'double-input-box'}>
         <div className={'box-wrap'}>
           <VotingInputArea
@@ -616,9 +623,6 @@ export const AuthorityMemberStakingAmountForm = ({
           </p>
         )}
       </div>
-      <div className={cn('description')}>
-        The maximum amount of staking that can be set is 4,980,000 META.
-      </div>
     </div>
     <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
@@ -654,10 +658,13 @@ export const BlockCreationTime = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn('voting-input-wrap creative')}>
       <strong>
         Block Creation Time <span className={cn('required')}>*</span>
       </strong>
+      <div className={cn('description')}>
+        Block Creation time is possible from at least 1s.
+      </div>
       <VotingInputArea
         inputType='suffix'
         fixText={'s'}
@@ -669,9 +676,6 @@ export const BlockCreationTime = ({
         errType={blockCreationErr}
         errText='Invalid Block Creation Time'
       />
-      <div className={cn('description')}>
-        Block Creation time is possible from at least 1s.
-      </div>
     </div>
     <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
@@ -707,10 +711,13 @@ export const BlockRewardAmount = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn('voting-input-wrap creative')}>
       <strong>
         Block Reward Amount <span className={cn('required')}>*</span>
       </strong>
+      <div className={cn('description')}>
+        Block Rewards are available from at least 1META/Block.
+      </div>
       <VotingInputArea
         inputType='suffix'
         fixText='META/Block'
@@ -722,9 +729,6 @@ export const BlockRewardAmount = ({
         errType={blockRewardAmountErr}
         errText='Invalid Block Reward Amount'
       />
-      <div className={cn('description')}>
-        Block Rewards are available from at least 1META/Block.
-      </div>
     </div>
     <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
@@ -764,10 +768,14 @@ export const BlockRewardDistributionMethod = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn('voting-input-wrap distribution')}>
       <strong>
         Distribution Rate<span className={cn('required')}>*</span>
       </strong>
+      <span className={cn('description')}>
+        For the Block reward distribution rate, the sum of Default, Block
+        Producer, Ecosystem, and Maintenance should be 100.
+      </span>
       <div className={cn('box-wrap')}>
         {/* !! input 갯수, 하이픈 갯수 css 변수로 추가 필요 */}
         <div
@@ -778,7 +786,7 @@ export const BlockRewardDistributionMethod = ({
             <VotingInputArea
               inputType={'suffix'}
               fixText={'%'}
-              placeholder={'0 %'}
+              placeholder={'0%'}
               name='blockRate1'
               value={blockRate1 || ''}
               onChange={handleChange}
@@ -792,7 +800,7 @@ export const BlockRewardDistributionMethod = ({
             <VotingInputArea
               inputType={'suffix'}
               fixText={'%'}
-              placeholder={'0 %'}
+              placeholder={'0%'}
               name='blockRate2'
               value={blockRate2 || ''}
               onChange={handleChange}
@@ -806,7 +814,7 @@ export const BlockRewardDistributionMethod = ({
             <VotingInputArea
               inputType={'suffix'}
               fixText={'%'}
-              placeholder={'0 %'}
+              placeholder={'0%'}
               name='blockRate3'
               value={blockRate3 || ''}
               onChange={handleChange}
@@ -820,7 +828,7 @@ export const BlockRewardDistributionMethod = ({
             <VotingInputArea
               inputType={'suffix'}
               fixText={'%'}
-              placeholder={'0 %'}
+              placeholder={'0%'}
               name='blockRate4'
               value={blockRate4 || ''}
               onChange={handleChange}
@@ -834,7 +842,7 @@ export const BlockRewardDistributionMethod = ({
             <VotingInputArea
               inputType={'suffix'}
               fixText={'%'}
-              placeholder={'0 %'}
+              placeholder={'0%'}
               name='blockRateTotal'
               value={blockRateTotal || ''}
               onChange={handleChange}
@@ -850,10 +858,6 @@ export const BlockRewardDistributionMethod = ({
           </p>
         )}
       </div>
-      <span className={cn('description')}>
-        For the Block reward distribution rate, the sum of Default, Block
-        Producer, Ecosystem, and Maintenance should be 100.
-      </span>
     </div>
     <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
@@ -889,10 +893,13 @@ export const MaxPriorityFeePerGasForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn('voting-input-wrap creative')}>
       <strong>
         MaxPriorityFeePerGas <span className={cn('required')}>*</span>
       </strong>
+      <div className={cn('description')}>
+        Specifies the fee returned to the miner
+      </div>
       <VotingInputArea
         inputType='suffix'
         fixText={'GWei'}
@@ -904,9 +911,6 @@ export const MaxPriorityFeePerGasForm = ({
         errType={maxPriorityFeePerGasErr}
         errText='Invalid MaxPriorityFeePerGas'
       />
-      <div className={cn('description')}>
-        Specifies the fee returned to the miner
-      </div>
     </div>
     <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
@@ -948,10 +952,14 @@ export const GasLimitBaseFeeForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn('voting-input-wrap creative')}>
       <strong>
         Gas Limit <span className={cn('required')}>*</span>
       </strong>
+      <div className={cn('description')}>
+        Gas Limit is the maximum amount of gas to be consumed when processing a
+        transaction.
+      </div>
       <VotingInputArea
         inputType={'suffix'}
         fixText='GWei'
@@ -963,15 +971,14 @@ export const GasLimitBaseFeeForm = ({
         errType={gasLimitErr}
         errText='Invalid Gas Limit'
       />
-      <div className={cn('description')}>
-        Gas Limit is the maximum amount of gas to be consumed when processing a
-        transaction.
-      </div>
     </div>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn('voting-input-wrap creative')}>
       <strong>
         Max base Fee <span className={cn('required')}>*</span>
       </strong>
+      <div className={cn('description')}>
+        MAX baseFee is the maximum to which baseFee can be increased.
+      </div>
       <VotingInputArea
         inputType={'suffix'}
         fixText='Gwei'
@@ -983,14 +990,14 @@ export const GasLimitBaseFeeForm = ({
         errType={maxBaseFeeErr}
         errText='Invalid Max baseFee'
       />
-      <div className={cn('description')}>
-        MAX baseFee is the maximum to which baseFee can be increased.
-      </div>
     </div>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn('voting-input-wrap creative')}>
       <strong>
         BaseFee Max Change Rate <span className={cn('required')}>*</span>
       </strong>
+      <div className={cn('description')}>
+        Specifies how full the block must be to increase the baseFee.
+      </div>
       <VotingInputArea
         inputType={'suffix'}
         fixText='%'
@@ -1002,14 +1009,15 @@ export const GasLimitBaseFeeForm = ({
         errType={baseFeeMaxChangeRateErr}
         errText='Invalid BaseFee Max Change Rate'
       />
-      <div className={cn('description')}>
-        Specifies how full the block must be to increase the baseFee.
-      </div>
     </div>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn('voting-input-wrap creative')}>
       <strong>
         Gas Target Percentage <span className={cn('required')}>*</span>
       </strong>
+      <div className={cn('description')}>
+        Determines what percentage to increase when baseFee is increased.
+        ex&#41; 8&rarr; 1/8 = 12.5%
+      </div>
       <VotingInputArea
         inputType={'suffix'}
         fixText='%'
@@ -1021,11 +1029,6 @@ export const GasLimitBaseFeeForm = ({
         errType={gasTargetPercentageErr}
         errText='Invalid Gas Target Percentage'
       />
-      <div className={cn('description')}>
-        Determines what percentage to increase when baseFee is increased.
-        <br />
-        ex&#41; 8&rarr; 1/8 = 12.5%
-      </div>
     </div>
     <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
