@@ -21,19 +21,19 @@ export const DEVNET_CONTRACTS = [
 ];
 // for wmgov
 export const DEVMETANET_CONTRACTS = [
-  { name: "Registry", address: "0x06C13fc771Abc31a44D017368176E6B3cba5eeD8" },
+  { name: "Registry", address: "0x565e1a1F8Da87698Bc8aB0FC9BAE5b969BB90328" },
   {
     name: "EnvStorageImp",
-    address: "0xFE4b773A891E525A41c1987DE6125098cECcA76a",
-  },
-  { name: "EnvStorage", address: "0xFE4b773A891E525A41c1987DE6125098cECcA76a" },
-  {
-    name: "BallotStorage",
     address: "0x3f7F9B356b9f5308d39684126De821751902338e",
   },
-  { name: "Staking", address: "0x83d7Bf709aDD8d0112434193B62901b2396555e3" },
-  { name: "GovImp", address: "0xa98C15B5D0d4F12A7b4C12bb8FA216f446D6534D" },
-  { name: "Gov", address: "0xa98C15B5D0d4F12A7b4C12bb8FA216f446D6534D" },
+  { name: "EnvStorage", address: "0x3f7F9B356b9f5308d39684126De821751902338e" },
+  {
+    name: "BallotStorage",
+    address: "0x83d7Bf709aDD8d0112434193B62901b2396555e3",
+  },
+  { name: "Staking", address: "0x4c9552B876acd6EE90567986150600C38416eD56" },
+  { name: "GovImp", address: "0xFE4b773A891E525A41c1987DE6125098cECcA76a" },
+  { name: "Gov", address: "0x6c2604D8671F941bdCDb7d43b9CEce5023008FCa" },
   {
     name: "WaitGovernance",
     address: "0xc2f8B7e0A7EF1397F749632D4Da49cf159f39B4f",
