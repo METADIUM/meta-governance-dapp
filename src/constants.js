@@ -21,7 +21,7 @@ export const DEVNET_CONTRACTS = [
 ];
 // for wmgov
 export const DEVMETANET_CONTRACTS = [
-  { name: "Registry", address: "0x565e1a1F8Da87698Bc8aB0FC9BAE5b969BB90328" },
+  { name: "Registry", address: "0x06C13fc771Abc31a44D017368176E6B3cba5eeD8" },
   {
     name: "EnvStorageImp",
     address: "0x3f7F9B356b9f5308d39684126De821751902338e",
