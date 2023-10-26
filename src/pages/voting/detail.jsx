@@ -76,7 +76,7 @@ const VotingDetail = () => {
     window.scrollTo(0, 0);
 
     getVotingData(id, wait);
-  }, []);
+  }, [getVotingData, navigate, search]);
 
   // -------------------- function
   const openToast = (content) => {
@@ -394,113 +394,116 @@ const VotingDetail = () => {
     <Loading txLoading={true} />
   ) : (
     <>
-      <VotingTopDetail
-        isWait={isWait}
-        ballotMemberData={ballotMemberData}
-        ballotBasicData={ballotBasicData}
-        votingDurationMax={votingDurationMax}
-        votingDurationMin={votingDurationMin}
-        defaultAccount={address}
-        authorityName={authorityNames.get(creator) || "-"}
-        setTrx={(trx) => sendTransaction(trx)}
-        waitBallotMemberOriginData={waitBallotMemberOriginData}
-      />
-      <main>
-        <div className={cn("inner")}>
-          {/* status content */}
-          <div className={cn("detail-vote-cont")}>
-            <div className={cn("status-content")}>{setVoteStatus()}</div>
-            {/* cast content */}
-            <div className={cn("cast-content")}>
-              <VotingTitle type="sm" title="Cast your vote" />
-              <div className={cn("vote-btn-area")}>
-                <div className={cn("btn-wrap")}>
-                  <div className={cn("voting-check-wrap")}>
-                    <input
-                      id={"voting-check-yes"}
-                      name={"radio"}
-                      type="radio"
-                      onClick={() => setCurrentVote(isWait ? 1 : "Yes")}
-                      disabled={state !== "1" && state !== "2"}
-                    />
-                    <label htmlFor={"voting-check-yes"}>Yes</label>
+      <div className="section-body">
+        <div className="wrap">
+          <VotingTopDetail
+            isWait={isWait}
+            ballotMemberData={ballotMemberData}
+            ballotBasicData={ballotBasicData}
+            votingDurationMax={votingDurationMax}
+            votingDurationMin={votingDurationMin}
+            defaultAccount={address}
+            authorityName={authorityNames.get(creator) || "-"}
+            setTrx={(trx) => sendTransaction(trx)}
+            waitBallotMemberOriginData={waitBallotMemberOriginData}
+          />
+
+          <div className={cn("inner")}>
+            {/* status content */}
+            <div className={cn("detail-vote-cont")}>
+              <div className={cn("status-content")}>{setVoteStatus()}</div>
+              {/* cast content */}
+              <div className={cn("cast-content")}>
+                <VotingTitle type="sm" title="Cast your vote" />
+                <div className={cn("vote-btn-area")}>
+                  <div className={cn("btn-wrap")}>
+                     <div className={cn("voting-check-wrap")}>
+                      <input
+                        id={"voting-check-yes"}
+                        name={"radio"}
+                        type="radio"
+                        onClick={() => setCurrentVote(isWait ? 1 : "Yes")}
+                        disabled={state !== "1" && state !== "2"}
+                      />
+                      <label htmlFor={"voting-check-yes"}>Yes</label>
+                    </div>
+                    <div className={cn("voting-check-wrap")}>
+                      <input
+                        id={"voting-check-no"}
+                        name={"radio"}
+                        type="radio"
+                        onClick={() => setCurrentVote(isWait ? 2 : "No")}
+                        disabled={state !== "1" && state !== "2"}
+                      />
+                      <label htmlFor={"voting-check-no"}>No</label>
+                    </div>
                   </div>
-                  <div className={cn("voting-check-wrap")}>
-                    <input
-                      id={"voting-check-no"}
-                      name={"radio"}
-                      type="radio"
-                      onClick={() => setCurrentVote(isWait ? 2 : "No")}
-                      disabled={state !== "1" && state !== "2"}
-                    />
-                    <label htmlFor={"voting-check-no"}>No</label>
-                  </div>
+                  <button
+                    className={cn("text-banner")}
+                    onClick={() => vote()}
+                    disabled={state !== "1" && state !== "2"}
+                  >
+                    Vote
+                  </button>
                 </div>
-                <button
-                  className={cn("text-banner")}
-                  onClick={() => vote()}
-                  disabled={state !== "1" && state !== "2"}
-                >
-                  Vote
-                </button>
               </div>
+              {/* date content */}
             </div>
-            {/* date content */}
-          </div>
-          {setVotingDate()}
-          {/* description */}
-          <div className={cn("detail-date-cont")}>
-            <p className={cn("unit-date")}>
-              <span>Description</span>
-            </p>
-            <p className={cn("description-value")}>
-              <span>
-                {isWait ? ballotMemberData.description : ballotBasicData.memo}
-              </span>
-            </p>
-          </div>
-          {/* vote list */}
-          {isWait && (state === "3" || state === "4") && ballotBasicData && (
+            {setVotingDate()}
+            {/* description */}
             <div className={cn("detail-date-cont")}>
-              <p className={cn("vote-list")}>
+              <p className={cn("unit-date")}>
+                <span>Description</span>
+              </p>
+              <p className={cn("description-value")}>
                 <span>
-                  Votes
-                  <span className={cn("vote-count")}>
-                    {" " +
-                      `${
-                        ballotBasicData.acceptVoters.length +
-                        ballotBasicData.rejectVoters.length
-                      }`}
-                  </span>
+                  {isWait ? ballotMemberData.description : ballotBasicData.memo}
                 </span>
               </p>
-              <Table
-                pagination={true}
-                columns={columnsData}
-                dataSource={ballotBasicData.votingList}
-                showHeader={false}
-              />
             </div>
-          )}
-        </div>
-
-        {/* error modal */}
-        <VotingModal
-          visible={errModal}
-          isVotingModal={setErrModal}
-          btn={{ btnName: "Okay", cancel: false }}
-          scrollType={false}
-          title="Unknown Error"
-          onOk={() => {
-            setErrMessage("");
-            setErrModal(false);
-          }}
-        >
-          <div className={cn("unknown-wrap")}>
-            <span className={cn("error-detail")}>{errMessage}</span>
+            {/* vote list */}
+            {isWait && (state === "3" || state === "4") && ballotBasicData && (
+              <div className={cn("detail-date-cont")}>
+                <p className={cn("vote-list")}>
+                  <span>
+                    Votes
+                    <span className={cn("vote-count")}>
+                      {" " +
+                        `${
+                          ballotBasicData.acceptVoters.length +
+                          ballotBasicData.rejectVoters.length
+                        }`}
+                    </span>
+                  </span>
+                </p>
+                <Table
+                  pagination={true}
+                  columns={columnsData}
+                  dataSource={ballotBasicData.votingList}
+                  showHeader={false}
+                />
+              </div>
+            )}
           </div>
-        </VotingModal>
-      </main>
+
+          {/* error modal */}
+          <VotingModal
+            visible={errModal}
+            isVotingModal={setErrModal}
+            btn={{ btnName: "Okay", cancel: false }}
+            scrollType={false}
+            title="Unknown Error"
+            onOk={() => {
+              setErrMessage("");
+              setErrModal(false);
+            }}
+          >
+            <div className={cn("unknown-wrap")}>
+              <span className={cn("error-detail")}>{errMessage}</span>
+            </div>
+          </VotingModal>
+        </div>
+      </div>
     </>
   );
 };

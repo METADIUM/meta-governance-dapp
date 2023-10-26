@@ -394,3 +394,15 @@
   transition: $transition;
   will-change: $will-change;
 }
+
+@mixin border-box {
+  border: 1px solid $gray4;
+  border-radius: 8px;
+  padding: 24px;
+  background: $white;
+  box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+
+  @include xsm {
+    padding: 24px 20px;
+  }
+}
