@@ -32,7 +32,7 @@ export const DEVMETANET_CONTRACTS = [
     address: "0x83d7Bf709aDD8d0112434193B62901b2396555e3",
   },
   { name: "Staking", address: "0x4c9552B876acd6EE90567986150600C38416eD56" },
-  { name: "GovImp", address: "0xFE4b773A891E525A41c1987DE6125098cECcA76a" },
+  { name: "GovImp", address: "0x6c2604D8671F941bdCDb7d43b9CEce5023008FCa" },
   { name: "Gov", address: "0x6c2604D8671F941bdCDb7d43b9CEce5023008FCa" },
   {
     name: "WaitGovernance",
