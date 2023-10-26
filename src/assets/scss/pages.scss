@@ -26,7 +26,7 @@ main {
   @include xsm {
     max-width: calc(100% - 40px);
     width: 100%;
-    padding: 0 20px;
+    // padding: 0 20px;
   }
 }
 
@@ -56,7 +56,7 @@ main {
   border-style: solid;
   border-color: $gray4;
   width: 212px;
-  box-shadow: 0px 8px 8px 0px #0000000D;
+  box-shadow: 0px 8px 8px 0px #0000000d;
 
   &:hover {
     border-color: $gray2;
@@ -77,13 +77,14 @@ a {
 .ant-select-arrow {
   top: 50%;
   margin-top: 0;
+  right: 20px;
   transform: translateY(-50%);
   transition: transform 300ms;
 
   svg {
     width: 10px;
     height: 6px;
-  } 
+  }
 }
 
 .ant-select-open {
@@ -100,7 +101,7 @@ a {
 
 .section-head {
   padding: 72px 0;
-  background: linear-gradient(180deg, #000000 0%, #0A0F5D 100%);
+  background: linear-gradient(180deg, #000000 0%, #0a0f5d 100%);
 
   @include xsm {
     padding: 60px 0;
@@ -196,7 +197,7 @@ a {
         > strong {
           font-weight: 700;
         }
-      }   
+      }
     }
   }
 }
@@ -215,7 +216,7 @@ a {
     border-color: $gray4;
     border-width: 0 1px;
     border-style: solid;
-    box-shadow: 0px 8px 8px 0px #0000000D;
+    box-shadow: 0px 8px 8px 0px #0000000d;
     position: relative;
 
     &:before {
@@ -251,7 +252,7 @@ a {
     &:nth-last-child(2) {
       border-radius: 0 0 8px 8px;
       border-width: 0 1px 1px;
-      
+
       &:before {
         display: none;
       }
@@ -271,7 +272,6 @@ a {
             height: 28px;
             width: auto;
           }
-
         }
         &:nth-child(2) {
           > a {
@@ -287,7 +287,7 @@ a {
               display: inline-block;
               width: 24px;
               height: 24px;
-              background: url("../images/ic-external.svg") no-repeat;
+              background: url('../images/ic-external.svg') no-repeat;
               background-size: 24px 24px;
               background-position: left center;
               position: absolute;
@@ -325,7 +325,6 @@ a {
     padding: 24px 20px;
     background: $white;
     box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
-
 
     > div {
       width: 100%;
@@ -473,7 +472,6 @@ a {
         @include B24;
         line-height: 1;
       }
-
     }
 
     @include xsm {
@@ -481,10 +479,10 @@ a {
       flex-wrap: wrap;
       gap: 20px;
 
-        .dashboard-block {
-          width: calc(50% - 10px);
+      .dashboard-block {
+        width: calc(50% - 10px);
 
-          &:first-child {
+        &:first-child {
           width: 100%;
         }
       }
@@ -510,8 +508,7 @@ a {
     width: 212px;
     border-radius: 8px 0 0 8px;
     border-color: $gray4;
-    box-shadow: 0px 8px 8px 0px #0000000D;
-
+    box-shadow: 0px 8px 8px 0px #0000000d;
 
     .ant-select-selection__rendered {
       @include R14;
@@ -544,7 +541,7 @@ a {
     width: 100%;
     height: 48px;
     border-radius: 0 8px 8px 0;
-    box-shadow: 0px 8px 8px 0px #0000000D;
+    box-shadow: 0px 8px 8px 0px #0000000d;
 
     .search-input {
       height: 100%;
@@ -555,7 +552,8 @@ a {
       color: $gray;
       overflow: hidden;
       padding: 12px 20px;
-      background: $white url("#{$rootPath}/ic-search.svg") no-repeat right 20px center;
+      background: $white url('#{$rootPath}/ic-search.svg') no-repeat right 20px
+        center;
       background-size: 24px 24px;
       border-radius: 0 8px 8px 0;
 
@@ -578,8 +576,6 @@ a {
         border-radius: 8px;
         border-width: 1px;
       }
-
-
     }
 
     @include xsm {
@@ -637,7 +633,7 @@ a {
     .proposal-box {
       border-top: 1px solid $gray4;
       &:first-child {
-          border-top: 0;
+        border-top: 0;
       }
       .voting-list-block-wrap {
         padding: 24px 0;
@@ -659,7 +655,7 @@ a {
               position: relative;
 
               &:before {
-                content:'';
+                content: '';
                 display: inline-block;
                 width: 1px;
                 height: 10px;
@@ -706,7 +702,6 @@ a {
             @include B20;
             line-height: 24px;
             color: $gray;
-
           }
         }
 
