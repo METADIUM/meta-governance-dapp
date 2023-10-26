@@ -396,26 +396,7 @@ export const RemoveProposalForm = ({
         errText='Invalid Amount'
       />
     </div>
-    <div className={cn('voting-input-wrap')}>
-      <strong>
-        New Authority Node Description <span className={cn('required')}>*</span>
-      </strong>
-      <div className={cn('description')}>
-        The hexadecimal node ID is encoded in the username portion of the URL,
-        separated from the host by an @ sign. The hostname can only be given as
-        an IP address, DNS domain names are not allowed. The port in the host
-        name section is the TCP listening port.
-      </div>
-      <VotingInputArea
-        name='newNode'
-        // placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-        placeholder={'Enter Address'}
-        disabled={loading}
-        onChange={handleChange}
-        errType={newNodeErr}
-        errText='Invalid Node'
-      />
-    </div>
+
     <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
