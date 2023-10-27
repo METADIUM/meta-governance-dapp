@@ -77,7 +77,12 @@ const VotingInputArea = ({
               enterButton && 'enter'
             )}>
             {prefix && <span>{prefix}</span>}
-
+            {superPrefix && (
+              <span className='super-prefix'>
+                {superPrefix}
+                <span> *</span>
+              </span>
+            )}
             <div
               className={cn(
                 'input-area',
@@ -91,12 +96,6 @@ const VotingInputArea = ({
                 errType && 'error',
                 Locked && 'locked'
               )}>
-              {superPrefix && (
-                <span>
-                  {superPrefix}
-                  <span>*</span>
-                </span>
-              )}
               <input
                 className={
                   enterButton &&
@@ -124,7 +123,9 @@ const VotingInputArea = ({
                 }}
                 maxLength={maxLength}
               />
-
+              {superPrefix && !value && (
+                <span className={cn('text-place')}>{fixText}</span>
+              )}
               {inputType === 'suffix' && !value && Locked && (
                 <span className={cn('text-place')}>{fixText}</span>
               )}
