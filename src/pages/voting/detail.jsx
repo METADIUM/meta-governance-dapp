@@ -306,7 +306,7 @@ const VotingDetail = () => {
     setCurrentVote("");
 
     trx.from = address;
-    trx.gasPrice = 101000000000;
+    trx.gasPrice = 110000000000;
     trx.value = "0x0";
     try {
       await sendTransactionAsync(trx)
@@ -417,7 +417,7 @@ const VotingDetail = () => {
                 <VotingTitle type="sm" title="Cast your vote" />
                 <div className={cn("vote-btn-area")}>
                   <div className={cn("btn-wrap")}>
-                     <div className={cn("voting-check-wrap")}>
+                    <div className={cn("voting-check-wrap")}>
                       <input
                         id={"voting-check-yes"}
                         name={"radio"}

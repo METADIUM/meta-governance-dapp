@@ -98,7 +98,7 @@ const StakingModal = ({
   const sendStakingTransaction = async (trx) => {
     try {
       trx.from = defaultAccount;
-      trx.gasPrice = 101000000000;
+      trx.gasPrice = 110000000000;
       // trx.maxFeePerGas = 101000000000;
       // trx.maxPriorityFeePerGas = 100000000000;
       await sendTransactionAsync(trx).then(({ hash }) => {

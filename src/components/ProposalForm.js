@@ -89,7 +89,7 @@ class ProposalForm extends React.Component {
     if (!/^0x[a-fA-F0-9]{40}$/.test(addr)) {
       this.props.getErrModal(
         "Staking Address is Invalid.",
-        "Proposal Submit Error",
+        "Proposal Submit Error"
       );
       this.setState({ showLockAmount: "" });
       return;
@@ -99,7 +99,7 @@ class ProposalForm extends React.Component {
     if (!(await callContractMethod(web3Instance, "GovImp", "isMember", addr))) {
       this.props.getErrModal(
         "Non-existing Member Address.",
-        "Proposal Submit Error",
+        "Proposal Submit Error"
       );
       this.setState({ showLockAmount: "" });
       return;
@@ -110,7 +110,7 @@ class ProposalForm extends React.Component {
         web3Instance,
         "Staking",
         "lockedBalanceOf",
-        addr,
+        addr
       );
       this.setState({
         showLockAmount: util.convertWeiToEther(lockedBalance),
@@ -145,7 +145,7 @@ class ProposalForm extends React.Component {
 
     // for getting addresses
     const isMyInfo = ENV_MY_INFO_PROPOSAL_LIST.filter(
-      (item) => item.value === topic,
+      (item) => item.value === topic
     )[0];
     if (isMyInfo) {
       await this.getMyInfo();
@@ -229,7 +229,7 @@ class ProposalForm extends React.Component {
             votDurationErr: util.checkNumberRange(
               "min",
               votDurationMin,
-              votDurationMax,
+              votDurationMax
             ),
           });
         }
@@ -243,7 +243,7 @@ class ProposalForm extends React.Component {
             votDurationErr: util.checkNumberRange(
               "max",
               votDurationMin,
-              votDurationMax,
+              votDurationMax
             ),
           });
         }
@@ -259,11 +259,11 @@ class ProposalForm extends React.Component {
               util.checkNumberRange(
                 "min",
                 authMemSkAmountMin,
-                authMemSkAmountMax,
+                authMemSkAmountMax
               ) ||
               util.checkMemberStakingAmount(
                 authMemSkAmountMin,
-                authMemSkAmountMax,
+                authMemSkAmountMax
               ),
           });
         }
@@ -278,11 +278,11 @@ class ProposalForm extends React.Component {
               util.checkNumberRange(
                 "max",
                 authMemSkAmountMin,
-                authMemSkAmountMax,
+                authMemSkAmountMax
               ) ||
               util.checkMemberStakingAmount(
                 authMemSkAmountMin,
-                authMemSkAmountMax,
+                authMemSkAmountMax
               ),
           });
         }
@@ -313,7 +313,7 @@ class ProposalForm extends React.Component {
             };
             // get total
             const newTotal = Object.values(updatedBlockRates).reduce(
-              (p, c) => p + c,
+              (p, c) => p + c
             );
             return {
               blockRates: updatedBlockRates,
@@ -398,13 +398,13 @@ class ProposalForm extends React.Component {
         web3Instance,
         "GovImp",
         "isMember",
-        this.props.defaultAccount,
+        this.props.defaultAccount
       )) &&
       !constants.debugMode
     ) {
       return this.props.getErrModal(
         "You are not Governance Member.",
-        "Proposal Submit Error",
+        "Proposal Submit Error"
       );
     }
     const { selectedTopic } = this.state;
@@ -418,37 +418,37 @@ class ProposalForm extends React.Component {
             web3Instance,
             "Staking",
             "availableBalanceOf",
-            staker,
-          ),
+            staker
+          )
         );
         // check if addresses already exist
         const isMember = await callContractMethod(
           web3Instance,
           "GovImp",
           "isMember",
-          staker,
+          staker
         );
         if (isMember) {
           return this.props.getErrModal(
             "Existing Member Address.",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         // check if addresses already voted
         const inBallotMember = this.props.newMemberaddr.some(
-          (addr) => addr === staker,
+          (addr) => addr === staker
         );
         if (inBallotMember) {
           return this.props.getErrModal(
             "Address with Existing Ballot.",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         // check if staking address has wemix
         if (balance < newLockedAmount) {
           return this.props.getErrModal(
             "Not Enough WEMIX to Stake.",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         return false;
@@ -461,27 +461,27 @@ class ProposalForm extends React.Component {
           web3Instance,
           "Staking",
           "lockedBalanceOf",
-          oldStaker,
+          oldStaker
         );
         const newMemberBalance = Number(
           await callContractMethod(
             web3Instance,
             "Staking",
             "availableBalanceOf",
-            staker,
-          ),
+            staker
+          )
         );
         // check if old address does not exist
         const isMemberOldAddr = await callContractMethod(
           web3Instance,
           "GovImp",
           "isMember",
-          oldStaker,
+          oldStaker
         );
         if (!isMemberOldAddr) {
           return this.props.getErrModal(
             "Non-existing Member Address (Old).",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         // check if new addresses already exist
@@ -489,32 +489,32 @@ class ProposalForm extends React.Component {
           web3Instance,
           "GovImp",
           "isMember",
-          staker,
+          staker
         );
         if (isMemberNewAddr) {
           return this.props.getErrModal(
             "Existing Member Address.",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         // check if old address already voted
         const inBallotOldMember = this.props.oldMemberaddr.some(
-          (addr) => addr === oldStaker,
+          (addr) => addr === oldStaker
         );
         if (inBallotOldMember) {
           return this.props.getErrModal(
             "Address with Existing Ballot (Old).",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         // check if new address already voted
         const isBallotNewMember = this.props.newMemberaddr.some(
-          (addr) => addr === staker,
+          (addr) => addr === staker
         );
         if (isBallotNewMember) {
           return this.props.getErrModal(
             "Address with Existing Ballot (New).",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         // check the balance of the old address is not same as lockAmount
@@ -525,17 +525,17 @@ class ProposalForm extends React.Component {
               <br />,
               `(Old Address: ${util.convertWeiToEther(
                 oldMemberBalance,
-                "ether",
+                "ether"
               )} WEMIX Locked)`,
             ],
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         // check if staking address has wemix
         if (newMemberBalance < newLockedAmount) {
           return this.props.getErrModal(
             "Not Enough WEMIX Stake (New)",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         return false;
@@ -546,7 +546,7 @@ class ProposalForm extends React.Component {
           web3Instance,
           "Staking",
           "lockedBalanceOf",
-          staker,
+          staker
         );
         const lockedAmount = Number(lockAmount);
 
@@ -555,29 +555,29 @@ class ProposalForm extends React.Component {
           web3Instance,
           "GovImp",
           "isMember",
-          staker,
+          staker
         );
         if (!isMember) {
           return this.props.getErrModal(
             "Non-existing Member Address.",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         // check if new address already voted
         const isBallotMember = this.props.newMemberaddr.some(
-          (addr) => addr === staker,
+          (addr) => addr === staker
         );
         if (isBallotMember) {
           return this.props.getErrModal(
             "Address with Existing Ballot.",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         // check if the balance is small
         if (balance < lockedAmount) {
           return this.props.getErrModal(
             "Locked Amount must be less than or equal to Unlocked Amount.",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         return false;
@@ -589,7 +589,7 @@ class ProposalForm extends React.Component {
         if (code === "0x") {
           return this.props.getErrModal(
             "Address is not a Contract Address.",
-            "Proposal Submit Error",
+            "Proposal Submit Error"
           );
         }
         return false;
@@ -632,7 +632,7 @@ class ProposalForm extends React.Component {
               web3Instance,
               "GovImp",
               "addProposalToAddMember",
-              trx,
+              trx
             );
           checkData = {
             staker: newAddr,
@@ -679,7 +679,7 @@ class ProposalForm extends React.Component {
               web3Instance,
               "GovImp",
               "addProposalToChangeMember",
-              trx,
+              trx
             );
           checkData = {
             staker: newAddr,
@@ -709,7 +709,7 @@ class ProposalForm extends React.Component {
               web3Instance,
               "GovImp",
               "addProposalToRemoveMember",
-              trx,
+              trx
             );
           checkData = {
             staker: stakingAddr,
@@ -732,7 +732,7 @@ class ProposalForm extends React.Component {
               web3Instance,
               "GovImp",
               "addProposalToChangeGov",
-              trx,
+              trx
             );
           checkData = {
             newGovAddr,
@@ -751,21 +751,21 @@ class ProposalForm extends React.Component {
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
-            ENV_NAMES.ENV_BALLOT_DURATION_MIN_MAX,
+            ENV_NAMES.ENV_BALLOT_DURATION_MIN_MAX
           );
           const envVal = util.encodeParameters(
             ["uint256", "uint256"],
             [
               util.convertDayToSeconds(votDurationMin),
               util.convertDayToSeconds(votDurationMax),
-            ],
+            ]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
               "GovImp",
               "addProposalToChangeEnv",
-              trx,
+              trx
             );
           checkData = {
             envName,
@@ -788,21 +788,21 @@ class ProposalForm extends React.Component {
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
-            ENV_NAMES.ENV_STAKING_MIN_MAX,
+            ENV_NAMES.ENV_STAKING_MIN_MAX
           );
           const envVal = util.encodeParameters(
             ["uint256", "uint256"],
             [
               util.convertEtherToWei(authMemSkAmountMin),
               util.convertEtherToWei(authMemSkAmountMax),
-            ],
+            ]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
               "GovImp",
               "addProposalToChangeEnv",
-              trx,
+              trx
             );
           checkData = {
             envName,
@@ -825,19 +825,19 @@ class ProposalForm extends React.Component {
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
-            ENV_NAMES.ENV_BLOCK_CREATION_TIME,
+            ENV_NAMES.ENV_BLOCK_CREATION_TIME
           );
           // convert ms
           const envVal = util.encodeParameters(
             ["uint256"],
-            [(blockCreation * 1000).toFixed(0)],
+            [(blockCreation * 1000).toFixed(0)]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
               "GovImp",
               "addProposalToChangeEnv",
-              trx,
+              trx
             );
           checkData = {
             envName,
@@ -860,18 +860,18 @@ class ProposalForm extends React.Component {
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
-            ENV_NAMES.ENV_BLOCK_REWARD_AMOUNT,
+            ENV_NAMES.ENV_BLOCK_REWARD_AMOUNT
           );
           const envVal = util.encodeParameters(
             ["uint256"],
-            [util.convertEtherToWei(blockRewardAmount)],
+            [util.convertEtherToWei(blockRewardAmount)]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
               "GovImp",
               "addProposalToChangeEnv",
-              trx,
+              trx
             );
           checkData = {
             envName,
@@ -902,7 +902,7 @@ class ProposalForm extends React.Component {
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
-            ENV_NAMES.ENV_BLOCK_REWARD_DISTRIBUTION,
+            ENV_NAMES.ENV_BLOCK_REWARD_DISTRIBUTION
           );
           // remove decimals
           const envVal = util.encodeParameters(
@@ -912,14 +912,14 @@ class ProposalForm extends React.Component {
               (Number(blockRate2) * 100).toFixed(0),
               (Number(blockRate3) * 100).toFixed(0),
               (Number(blockRate4) * 100).toFixed(0),
-            ],
+            ]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
               "GovImp",
               "addProposalToChangeEnv",
-              trx,
+              trx
             );
           checkData = {
             envName,
@@ -945,18 +945,18 @@ class ProposalForm extends React.Component {
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
-            ENV_NAMES.ENV_MAX_PRIORITY_FEE_PER_GAS,
+            ENV_NAMES.ENV_MAX_PRIORITY_FEE_PER_GAS
           );
           const envVal = util.encodeParameters(
             ["uint256"],
-            [util.convertGWeiToWei(maxPriorityFeePerGas)],
+            [util.convertGWeiToWei(maxPriorityFeePerGas)]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
               "GovImp",
               "addProposalToChangeEnv",
-              trx,
+              trx
             );
           checkData = {
             envName,
@@ -1005,7 +1005,7 @@ class ProposalForm extends React.Component {
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
-            ENV_NAMES.ENV_GASLIMIT_AND_BASE_FEE,
+            ENV_NAMES.ENV_GASLIMIT_AND_BASE_FEE
           );
           const envVal = util.encodeParameters(
             ["uint256", "uint256", "uint256", "uint256"],
@@ -1014,14 +1014,14 @@ class ProposalForm extends React.Component {
               maxBaseFee,
               baseFeeMaxChangeRate,
               gasTargetPercentage,
-            ],
+            ]
           );
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
               "GovImp",
               "addProposalToChangeEnv",
-              trx,
+              trx
             );
           checkData = {
             envName,
@@ -1056,7 +1056,7 @@ class ProposalForm extends React.Component {
               web3Instance,
               "GovImp",
               "addProposalToChangeMember",
-              trx,
+              trx
             );
           checkData = {
             staker,
@@ -1096,7 +1096,7 @@ class ProposalForm extends React.Component {
               web3Instance,
               "GovImp",
               "addProposalToChangeMember",
-              trx,
+              trx
             );
           checkData = {
             staker,
@@ -1162,7 +1162,7 @@ class ProposalForm extends React.Component {
           from: this.props.defaultAccount,
           to: trx.to,
           data: trx.data,
-          gasPrice: 101000000000,
+          gasPrice: 110000000000,
           // maxFeePerGas: 101000000000,
           // maxPriorityFeePerGas: 100000000000,
         },
@@ -1185,13 +1185,13 @@ class ProposalForm extends React.Component {
                 this.props.getErrModal(
                   "The transaction could not be sent normally.",
                   "Proposal Submit Error",
-                  receipt.transactionHash,
+                  receipt.transactionHash
                 );
                 this.props.convertLoading(false);
               }
             });
           }
-        },
+        }
       );
     } catch (err) {
       console.log(err);
@@ -1208,13 +1208,13 @@ class ProposalForm extends React.Component {
         web3Instance,
         "GovImp",
         "getNode",
-        memberIdx,
+        memberIdx
       );
       const lockAmount = await callContractMethod(
         web3Instance,
         "Staking",
         "lockedBalanceOf",
-        defaultAccount,
+        defaultAccount
       );
       this.data.formData = {
         staker: defaultAccount,

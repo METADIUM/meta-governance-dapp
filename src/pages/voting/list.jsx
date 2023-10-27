@@ -143,7 +143,7 @@ const VotingList = () => {
         from: address,
         to,
         data: trx,
-        gasPrice: 101000000000,
+        gasPrice: 110000000000,
         value: "0x0",
       })
         .then(({ hash }) => {
