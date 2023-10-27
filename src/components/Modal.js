@@ -20,8 +20,8 @@ import {
   encodeABIValueInTrx,
   web3Instance,
 } from "../web3";
-import { useModal } from "../hooks/useModal";
 import { ModalContext } from "../contexts/ModalContext";
+import { AuthCtx } from "../contexts/AuthContext";
 
 const Option = Select.Option;
 
@@ -41,11 +41,29 @@ const StakingModal = ({
   const [errStaking, setErrStaking] = useState(false);
 
   const { sendTransactionAsync } = useSendTransaction();
+  const { lockedBalance, myBalance } = useContext(AuthCtx);
 
   const submitWemixStaking = () => {
     if (!/^[1-9]\d*$/.test(stakingAmount)) {
       setErrStaking(true);
       return;
+    }
+    if (stakingTopic === "withdraw") {
+      const checkBalance = Number(myBalance) - Number(lockedBalance);
+      if (checkBalance <= 0) {
+        getErrModal(
+          "There is no amount available for withdrawal.",
+          "Staking Submit Error"
+        );
+        return;
+      }
+      if (checkBalance < Number(stakingAmount)) {
+        getErrModal(
+          "The amount entered must be smaller than the amount that can be withdrawn.",
+          "Staking Submit Error"
+        );
+        return;
+      }
     }
 
     let trx = {};
