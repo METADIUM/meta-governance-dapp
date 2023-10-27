@@ -339,20 +339,19 @@ a {
             position: absolute;
             top: 0;
             right: 0;
-            -webkit-transition: all .5s;
-            transition: all .5s;
+            -webkit-transition: all 0.5s;
+            transition: all 0.5s;
             opacity: 1;
-            background: $white;           
+            background: $white;
           }
 
           &:hover {
             .cover-bar {
               opacity: 0;
-              -webkit-transition: all .5s;
-              transition: all .5s;
+              -webkit-transition: all 0.5s;
+              transition: all 0.5s;
             }
           }
-          
         }
       }
     }
@@ -362,9 +361,9 @@ a {
     flex-direction: column;
     border-radius: 8px;
     border: 1px solid $gray4;
-    padding: 24px 20px;
+    padding: 24px 20px 0;
     background: $white;
-    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+    box-shadow: $shadow;
 
     > div {
       width: 100%;
@@ -548,12 +547,23 @@ a {
     }
   }
 
+  .ant-select-open {
+    .ant-select-selection {
+      border-right-width: 0 !important;
+    }
+  }
+
   .ant-select-selection {
     height: 48px;
     width: 212px;
     border-radius: 8px 0 0 8px;
+    border-width: 1px 0 1px 1px;
     border-color: $gray4;
     box-shadow: 0px 8px 8px 0px #0000000d;
+
+    &:hover {
+      border-right-width: 0 !important;
+    }
 
     .ant-select-selection__rendered {
       @include R14;
@@ -591,7 +601,7 @@ a {
     .search-input {
       height: 100%;
       width: 100%;
-      border-width: 1px 1px 1px 0;
+      border-width: 1px;
       border-style: solid;
       border-color: $gray4;
       color: $gray;
@@ -602,10 +612,6 @@ a {
       background-size: 24px 24px;
       border-radius: 0 8px 8px 0;
 
-      &::placeholder {
-        color: $gray3;
-      }
-
       & + .search-close-btn {
         display: block;
         position: absolute;
@@ -615,6 +621,10 @@ a {
         path {
           fill: $gray60;
         }
+      }
+
+      &:focus {
+        border-color: $blue1;
       }
 
       @include xsm {
@@ -805,7 +815,7 @@ a {
             background: $gray4;
             border-radius: 4px;
             overflow: hidden;
-            
+
             .graph-positive {
               background-color: $mint;
             }
@@ -834,7 +844,6 @@ a {
 }
 
 .voting-top-wrap {
-
   .box {
     display: flex;
     flex-direction: row;
@@ -844,7 +853,7 @@ a {
     .btn-prev {
       margin-right: 8px;
     }
-    
+
     .top-status-wrap {
       margin-right: 12px;
 
@@ -881,7 +890,7 @@ a {
         border-radius: 8px;
         border: 1px solid $gray4;
         background: $white;
-        box-shadow: 0px 8px 8px 0px #0000000D;
+        box-shadow: 0px 8px 8px 0px #0000000d;
       }
     }
 
@@ -890,7 +899,7 @@ a {
 
       .voting-title {
         flex-grow: 1;
-        padding:12px 0 20px 32px;
+        padding: 12px 0 20px 32px;
       }
 
       .btn-wrap {
@@ -901,7 +910,6 @@ a {
           flex: 1;
         }
       }
-
     }
   }
 
@@ -912,7 +920,7 @@ a {
       border: 1px solid $gray4;
       padding: 0 24px;
       border-radius: 8px;
-      box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+      box-shadow: $shadow;
       background: $white;
 
       @include xsm {
@@ -928,7 +936,6 @@ a {
         &:nth-child(1) {
           border-top: 0;
         }
-
 
         > dt {
           width: 161px;
@@ -976,7 +983,6 @@ a {
                     display: none;
                   }
                 }
-
               }
             }
 
@@ -1000,12 +1006,12 @@ a {
           flex-direction: column;
 
           > dt {
-          width: 100%;
-        }
+            width: 100%;
+          }
 
-        > dd {
-          width: 100%;
-        }
+          > dd {
+            width: 100%;
+          }
         }
       }
     }
@@ -1057,8 +1063,7 @@ a {
     @include xsm {
       width: 100%;
     }
-    
-    
+
     .chart-area {
       display: flex;
       flex-direction: column;
@@ -1106,9 +1111,9 @@ a {
         @include xsm {
           margin-top: 0;
         }
-        
+
         .voting-check-wrap {
-           width: 100%;
+          width: 100%;
           position: relative;
 
           label {
@@ -1122,9 +1127,8 @@ a {
             @include B16;
             color: $gray;
           }
-          
 
-          input[type="radio"] {
+          input[type='radio'] {
             visibility: hidden;
             position: absolute;
             width: 100%;
@@ -1219,6 +1223,5 @@ a {
     white-space: normal;
     word-wrap: break-word;
     word-break: keep-all;
-
   }
 }
