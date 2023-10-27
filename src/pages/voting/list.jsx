@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
 import cn from "classnames/bind";
 import VotingTopList from "../../components/voting/VotingTopList.jsx";
 import VotingListBlock from "../../components/voting/VotingListBlock.jsx";
@@ -13,8 +19,6 @@ import {
   TESTNET_CONTRACTS,
 } from "../../constants.js";
 
-import { useModal } from "../../hooks/useModal.jsx";
-
 import { web3Instance } from "../../web3.js";
 import { useNavigate } from "react-router-dom";
 import { checkUndefined } from "../../util.js";
@@ -26,6 +30,9 @@ import MoreButton from "../../components/voting/GovButton.jsx";
 import { AuthCtx } from "../../contexts/AuthContext.js";
 import { ModalContext } from "../../contexts/ModalContext.jsx";
 
+// 화면에  뿌릴 갯수
+const viewingCount = 5;
+
 const VotingList = () => {
   const { address, isMember, isLoggedIn } = useContext(AuthCtx);
   const { getErrModal } = useContext(ModalContext);
@@ -35,7 +42,6 @@ const VotingList = () => {
     ballotMemberOriginData,
     ballotBasicOriginData,
     authorityNames,
-    waitBallotMemberOriginData,
     waitBallotBasicOriginData,
   } = data;
   const { sendTransactionAsync } = useSendTransaction();
@@ -46,14 +52,11 @@ const VotingList = () => {
   const [proposalItems, setProposalItems] = useState([]);
   const [finalizedItems, setFinalizedItems] = useState([]);
   const [revokeItems, setRevokeItems] = useState([]);
-  // finalized에서 보여질 아이템의갯수
-  const [viewingFinalizedItems, setViewingFinalizedItems] = useState(5);
   // 상태 별 항목의 개수
   const [itemCount, setItemCount] = useState({});
   // filtering
   const [currentSelect, setCurrentSelect] = useState("All");
   const [visibleActiveItems, setVisibleActiveItems] = useState([]);
-  const [visibleProposalItems, setVisibleProposalItems] = useState([]);
   const [visibleFinalizedItems, setVisibleFinalizedItems] = useState([]);
   const [renderSelectedItems, setRenderSelectedItems] = useState(<></>);
 
@@ -62,10 +65,13 @@ const VotingList = () => {
   const [errMessage, setErrMessage] = useState("");
 
   const navigate = useNavigate();
-  const finalizedItemsLength = Object.values(ballotBasicOriginData).length;
 
   // select 옵션
   const filterData = ["All", "Active & Proposal", "Finalized"];
+
+  // finalized에서 보여질 아이템의갯수
+  const viewingActiveItems = useRef(viewingCount);
+  const viewingFinalizedItems = useRef(viewingCount);
 
   // -------------------- useEffect
   useEffect(() => {
@@ -95,13 +101,7 @@ const VotingList = () => {
   // 검색 후 리스트 업데이트
   useEffect(() => {
     handleSelect(currentSelect);
-  }, [
-    visibleActiveItems,
-    visibleProposalItems,
-    visibleFinalizedItems,
-    handleSelect,
-    currentSelect,
-  ]);
+  }, [visibleActiveItems, visibleFinalizedItems, handleSelect, currentSelect]);
 
   const openErrModal = (e) => {
     const _msg = e?.details || "Unknown Error";
@@ -215,8 +215,6 @@ const VotingList = () => {
     // 일반 proposal
 
     Object.values(ballotBasicOriginData).forEach((item, index) => {
-      const isView = index + 1 <= viewingFinalizedItems;
-
       list.push(
         <VotingListBlock
           key={index}
@@ -226,24 +224,9 @@ const VotingList = () => {
           setTopic={(item) => setTopic(item)}
           onClick={sendTransaction}
           isMember={isMember}
-          style={{ display: !isView && "none" }}
         />
       );
     });
-    // wait 안건
-    // Object.values(waitBallotBasicOriginData).forEach((item, index) => {
-    //   list.push(
-    //     <VotingListBlock
-    //       key={`wait-${index}`}
-    //       item={item}
-    //       authorityName={authorityNames.get(item.creator) || "-"}
-    //       ballotMemberOriginData={waitBallotMemberOriginData[item.id]}
-    //       setTopic={(item) => setTopic(item)}
-    //       onClick={(id) => sendTransaction(id)}
-    //       isMember={isMember}
-    //     />
-    //   );
-    // });
     setBallotBasicOriginItems(list.reverse());
   };
 
@@ -299,9 +282,10 @@ const VotingList = () => {
     setFinalizedItems(sortFinalizedList);
     setRevokeItems(revokeList);
 
-    setVisibleActiveItems(activeList);
-    setVisibleProposalItems(proposalList);
-    setVisibleFinalizedItems(sortFinalizedList);
+    setVisibleActiveItems(
+      [...activeList, ...proposalList].slice(0, viewingCount)
+    );
+    setVisibleFinalizedItems(sortFinalizedList.slice(0, viewingCount));
 
     setItemCount({
       ...itemCount,
@@ -386,8 +370,10 @@ const VotingList = () => {
       return;
     }
 
-    setVisibleActiveItems(filteringBallot(activeItems, str));
-    setVisibleProposalItems(filteringBallot(proposalItems, str));
+    setVisibleActiveItems([
+      ...filteringBallot(activeItems, str),
+      ...filteringBallot(proposalItems, str),
+    ]);
     setVisibleFinalizedItems(filteringBallot(finalizedItems, str));
   };
 
@@ -398,14 +384,14 @@ const VotingList = () => {
     if (e === filterData[0] || e === filterData[1]) {
       props.push({
         title: filterData[1],
-        count: `${visibleActiveItems.length + visibleProposalItems.length}`,
-        items: [...visibleActiveItems, ...visibleProposalItems],
+        count: `${activeItems.length + proposalItems.length}`,
+        items: visibleActiveItems,
       });
     }
     if (e === filterData[0] || e === filterData[2]) {
       props.push({
         title: filterData[2],
-        count: `${finalizedItemsLength}`,
+        count: `${finalizedItems.length}`,
         items: visibleFinalizedItems,
       });
     }
@@ -420,7 +406,42 @@ const VotingList = () => {
             isMember={isMember}
           />
           {prop.items.length ? (
-            <div className={cn("section-inner")}>{prop.items}</div>
+            <>
+              <div className={cn("section-inner")}>{prop.items}</div>
+              {prop.title === "Finalized" &&
+                finalizedItems.length >= 1 &&
+                finalizedItems.length > visibleFinalizedItems.length && (
+                  <MoreButton
+                    text={"+ more"}
+                    onClick={() => {
+                      viewingFinalizedItems.current += viewingCount;
+                      setVisibleFinalizedItems([
+                        ...finalizedItems.slice(
+                          0,
+                          viewingFinalizedItems.current
+                        ),
+                      ]);
+                    }}
+                  />
+                )}
+              {prop.title !== "Finalized" &&
+                activeItems.length + proposalItems.length >= 1 &&
+                activeItems.length + proposalItems.length >
+                  visibleActiveItems.length && (
+                  <MoreButton
+                    text={"+ more"}
+                    onClick={() => {
+                      viewingActiveItems.current += viewingCount;
+                      setVisibleActiveItems([
+                        ...[...activeItems, ...proposalItems].slice(
+                          0,
+                          viewingActiveItems.current
+                        ),
+                      ]);
+                    }}
+                  />
+                )}
+            </>
           ) : (
             <div className="section-inner empty">
               <div className={cn("empty-area")}>
@@ -432,17 +453,6 @@ const VotingList = () => {
               </div>
             </div>
           )}
-
-          {prop.title === "Finalized" &&
-            finalizedItemsLength >= 5 &&
-            finalizedItemsLength > viewingFinalizedItems && (
-              <MoreButton
-                text={"+ more"}
-                onClick={() => {
-                  setViewingFinalizedItems((prev) => prev + 5);
-                }}
-              />
-            )}
         </div>
       );
     });
