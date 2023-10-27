@@ -1,5 +1,5 @@
-@import "./variables";
-@import "./mixin";
+@import './variables';
+@import './mixin';
 
 .proposal-top-wrap {
   //   background-color: blueviolet;
@@ -626,7 +626,16 @@
 
   .input-top-area {
     width: 100%;
-
+    .super-prefix {
+      display: block;
+      @include B14;
+      margin-bottom: 12px;
+      color: $gray;
+      line-height: 1;
+      span:last-child {
+        color: red;
+      }
+    }
     &.prefix {
       display: flex;
       flex-direction: row;
@@ -752,31 +761,12 @@
           }
         }
         &.superPrefix {
-          display: flex;
-          flex-direction: column;
-          border: none;
-          span {
-            @include R14;
-            width: 45%;
-            font-weight: 700;
-            color: black;
-            margin-bottom: 12px;
-          }
-          span:last-child {
-            color: red;
-          }
-
           input {
-            padding: 10px;
-            border-radius: 10px;
-
-            background-color: #fff;
-            border: 1px solid rgb(212, 212, 212);
-          }
-          .text-place {
-            display: none;
+            background-color: #fff !important;
+            border: none;
           }
         }
+
         input {
           @include R14;
           color: $gray;
