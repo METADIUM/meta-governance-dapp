@@ -133,6 +133,7 @@ const StakingModal = ({
 
   const handleSelectChange = (topic) => {
     setStakingTopic(topic);
+    setStakingAmount("");
   };
 
   const handleInputChange = (event) => {
@@ -171,6 +172,7 @@ const StakingModal = ({
           className="voting-ok-btn"
           onClick={submitWemixStaking}
           loading={isLoading}
+          disabled={errStaking}
         >
           Submit
         </Button>,
