@@ -469,24 +469,28 @@ textarea {
       border: 1px solid $gray4;
       padding: 16px 20px;
       border-radius: 8px;
+
       &.my-form {
         @include R14;
-        padding: 0;
         height: auto;
         background-color: transparent;
+        height: 46px;
 
         textarea {
-          overflow: hidden;
-          border: 1px solid $gray4 !important;
-          padding: 16px 20px;
-          height: 46px;
-          background-color: $gray5;
-          border-radius: 8px;
-          line-height: 100%;
+          line-height: 1;
+          white-space: normal;
+          word-wrap: break-word;
+          word-break: break-all;
         }
-        @media screen and (max-width: 465px) {
+
+        @include xsm {
+          height: auto;
+          max-height: 74px;
+
           textarea {
             height: auto;
+            line-height: 1.5;
+            max-height: 74px;
           }
         }
 
@@ -864,6 +868,12 @@ textarea {
     .textarea-wrap {
       &.focus-on {
         border: 1px solid $blue1;
+      }
+    }
+
+    &.disabled {
+      .textarea-wrap {
+        background: $gray5;
       }
     }
   }

@@ -661,6 +661,8 @@ a {
 }
 
 .voting-list-section {
+  margin-bottom: 60px;
+
   .section-inner {
     border: 1px solid $gray4;
     border-radius: 8px;
@@ -668,7 +670,6 @@ a {
     display: flex;
     flex-direction: column;
     padding: 0 24px;
-    margin-bottom: 60px;
 
     &.empty {
       border: 0;
