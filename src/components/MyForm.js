@@ -40,19 +40,7 @@ export const VotingAddress = ({
         errType={newVotingAddrErr}
         errText='Invalid Address'
       />
-      {/* <div className={cn("description")}>
-        Enter the old Voting Address and the new Voting Address to change the
-        Voting Address.
-      </div> */}
     </div>
-    {/* <div className="myinfo-footer">
-      <VotingButton
-        text="Submit"
-        disabled={loading || newVotingAddrErr}
-        type="bg"
-        loading={loading}
-      />
-    </div> */}
     <GovButton
       text={'Submit'}
       disabled={loading || newVotingAddrErr}
@@ -72,40 +60,34 @@ export const RewardAddress = ({
   handleSubmit = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn("voting-input-wrap")}>
       <strong>
-        Old Reward Address <span className='required'>*</span>
-      </strong>
-      <VotingInputArea name='oldRewardAddr' value={oldRewardAddr} disabled />
-    </div>
-    <div className={cn('voting-input-wrap')}>
-      <strong>
-        New Reward Address <span className='required'>*</span>
+        Old Reward Address <span className="required">*</span>
       </strong>
       <VotingInputArea
-        name='newRewardAddr'
+        myForm={true}
+        inputType={"multiline"}
+        name="oldRewardAddr"
+        value={oldRewardAddr}
+        disabled
+      />
+    </div>
+    <div className={cn("voting-input-wrap")}>
+      <strong>
+        New Reward Address <span className="required">*</span>
+      </strong>
+      <VotingInputArea
+        name="newRewardAddr"
         disabled={loading}
         onChange={handleChange}
         errType={newRewardAddrErr}
-        errText='Invalid Address'
+        errText="Invalid Address"
       />
-      {/* <div className={cn('description')}>
-        Enter the old Reward Address and the new Reward Address to change the
-        Reward Address.
-      </div> */}
     </div>
-    {/* <div className="myinfo-footer">
-      <VotingButton
-        text="Submit"
-        disabled={loading || newRewardAddrErr}
-        type="bg"
-        loading={loading}
-      />
-    </div> */}
     <GovButton
-      text={'Submit'}
+      text={"Submit"}
       disabled={loading || newRewardAddrErr}
-      type='bg'
+      type="bg"
       loading={loading}
     />
   </Form>

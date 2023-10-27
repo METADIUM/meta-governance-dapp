@@ -412,7 +412,8 @@ const VotingList = () => {
                 finalizedItems.length >= 1 &&
                 finalizedItems.length > visibleFinalizedItems.length && (
                   <MoreButton
-                    text={"+ more"}
+                    text={"More"}
+                    type={"more-btn"}
                     onClick={() => {
                       viewingFinalizedItems.current += viewingCount;
                       setVisibleFinalizedItems([
@@ -429,7 +430,8 @@ const VotingList = () => {
                 activeItems.length + proposalItems.length >
                   visibleActiveItems.length && (
                   <MoreButton
-                    text={"+ more"}
+                    text={"More"}
+                    type={"more-btn"}
                     onClick={() => {
                       viewingActiveItems.current += viewingCount;
                       setVisibleActiveItems([

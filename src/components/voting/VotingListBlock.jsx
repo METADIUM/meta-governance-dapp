@@ -6,7 +6,6 @@ import VotingChartMini from "./VotingChartMini.jsx";
 import { loginAcc, shouldPass, timeConverter } from "../../util.js";
 import { Link } from "react-router-dom";
 import RevokeButton from "./Button";
-import MoreButton from "./GovButton.jsx";
 
 // case 확인을 위한 props
 const VotingListBlock = ({
