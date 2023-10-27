@@ -13,6 +13,7 @@ import RockxLogo from "./assets/images/partners/ic-rockx-logo.svg";
 
 import { ReactComponent as TempImage } from "./assets/images/temp_image.svg";
 
+import GovButton from "./components/voting/GovButton";
 
 let partners = [
   {
@@ -83,6 +84,13 @@ let partners = [
 const Home = () => {
 
   const [isMobile, setIsMobile] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+
+  const visibleItems = showAll ? partners : partners.slice(0, 10);
+
+  const handleShow = () => {
+    setShowAll(true);
+  }
 
   const checkMobile = () => {
     if (window.innerWidth < 720) {
@@ -100,8 +108,6 @@ const Home = () => {
       window.removeEventListener('resize', checkMobile);
     }
   }, [])
-
-  
   
   const mobileShowInfo = (e) => {
     if (isMobile) {
@@ -181,30 +187,38 @@ const Home = () => {
           </div>
           {/* list */}
           <div className="partners-list">
-            {partners.map((partner, index) => (
+            {visibleItems.map((item, index) => (
               <div key={index} onClick={mobileShowInfo}>
                 <ul>
                   <li>
-                    <img src={partner.logo} alt={partner.company} />
+                    <img src={item.logo} alt={item.company} />
                   </li>
                   <li>
                     <a
-                      href={partner.link}
+                      href={item.link}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {partner.company}
+                      {item.company}
                     </a>
                   </li>
-                  <li>Address: {partner.address}</li>
+                  <li>Address: {item.address}</li>
                   <li>
-                    <span className="desc">{partner.desc}</span>
+                    <span className="desc">{item.desc}</span>
                     <span className="cover-bar"></span>
                   </li>
                 </ul>
               </div>
             ))}
           </div>
+          {/* more 버튼 */}
+          {partners.length > 10 && !showAll && (
+            <GovButton
+              text={"More"}
+              type={"more-btn"}
+              onClick={handleShow}
+            />
+          )}
         </div>
       </div>
     </Layout>

@@ -1,8 +1,49 @@
 @import './variables';
 @import './mixin';
 
+input {
+  outline: none;
+  
+  &::placeholder {
+    color: $gray3;
+  }
+  &::-webkit-placeholder {
+    color: $gray3;
+  }
+  &:disabled {
+    color: $gray3;
+  }
+}
+
+//  autofill - background 삭제
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 1) inset !important;
+  transition: background-color 0.01s ease-in-out 0s;
+  border: 0;
+}
+
+textarea {
+  &::placeholder {
+    color: $gray3;
+  }
+  &::-webkit-placeholder {
+    color: $gray3;
+  }
+
+  &:disabled {
+    color: $gray3;
+  }
+}
+
 .proposal-top-wrap {
-  //   background-color: blueviolet;
   display: flex;
   flex-direction: column;
   margin-bottom: 40px;
@@ -38,10 +79,9 @@
 
     .ant-select-selection--single {
       color: $gray;
-
       height: auto;
       padding: 16px 20px;
-      box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+      box-shadow: $shadow;
       border-radius: 8px;
       margin: 0;
       border: 1px solid $gray4;
@@ -62,7 +102,7 @@
   background-color: #fff;
   border-radius: 8px;
   border: 1px solid $gray4;
-  box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+  box-shadow: $shadow;
   // proposal input
   .textfield-contain {
     width: 100%;
@@ -96,18 +136,16 @@
         &.distribution {
           .input-area {
             input {
+              @include R14;
+              line-height: 1;
               background-color: white;
               text-align: end;
               padding-right: 0px;
             }
             &.not-value {
-              border: none;
+              // border: none;
               input {
                 padding-right: 20px;
-              }
-              input::placeholder {
-                @include R14;
-                line-height: 100%;
               }
             }
           }
@@ -120,7 +158,7 @@
               background-color: white;
             }
             &.not-value {
-              border: none;
+              // border: none;
             }
           }
         }
@@ -236,10 +274,6 @@
             margin-bottom: 0px;
           }
           .input-wrap {
-            // width: calc(
-            //   ((741px - 32.5px * var(--hyphen-count)) / var(--input-count))
-            // );
-
             @include xsm {
               width: 100%;
             }
@@ -255,9 +289,7 @@
         }
         .description {
           @include R12;
-          line-height: 150%;
-          display: block;
-          color: #8c8c8c;
+          color: $gray2;
           width: 100%;
           margin-bottom: 12px;
           @include sm {
@@ -279,11 +311,11 @@
         }
 
         .important {
-          color: red;
+          color: $red;
         }
 
         .required {
-          color: red;
+          color: $red;
         }
 
         .double-input-box {
@@ -291,10 +323,6 @@
           flex-direction: column;
           width: 100%;
           line-height: 12px;
-          input {
-            border: none !important;
-            background-color: white !important;
-          }
 
           .box-wrap {
             display: flex;
@@ -339,9 +367,7 @@
 
     .voting-duration {
       display: flex;
-
       width: 100%;
-
       justify-content: space-between;
       @include sm {
         flex-direction: column;
@@ -351,7 +377,6 @@
       .voting-duration-wrap {
         display: flex;
         flex-direction: column;
-
         justify-content: space-between;
         width: 100%;
         @include sm {
@@ -363,14 +388,13 @@
           }
         }
         .ant-select-selection--single {
-          // width: 65%;
           height: 46px;
           height: auto;
           padding: 16px 20px;
           border-radius: 8px;
           border-radius: 8px;
           border: 1px solid $gray4;
-          background: #fff;
+          
         }
         .ant-select-selection__rendered {
           @include R14;
@@ -384,17 +408,17 @@
         }
 
         .important {
-          color: red;
+          color: $red;
         }
 
         .required {
-          color: red;
+          color: $red;
         }
       }
 
       .submit-btn {
-        color: #fff;
-        background-color: #323cff;
+        color: $white;
+        background-color: $blue1;
         opacity: 0.3;
         border-radius: 0;
         border: none;
@@ -406,21 +430,11 @@
         }
       }
     }
-
-    // my info footer
-    .myinfo-footer {
-      display: flex;
-      border-top: 1px solid #d9d9d9;
-      width: 100%;
-      margin-top: 40px;
-      padding-top: 24px;
-      justify-content: flex-end;
-    }
   }
 
   .voting-proposal {
     padding: 30px;
-    background-color: #fff;
+    background-color: $white;
     @include sm {
       padding: 16px;
     }
@@ -437,84 +451,13 @@
     width: 100%;
   }
 
-  &.disabled {
-    .input-area {
-      // background-color: #f2f2f2;
-      &.default {
-        background-color: $gray5;
-        input:disabled {
-          @include R14;
-          line-height: 150%; /* 21px */
-
-          color: $gray3;
-        }
-      }
-
-      input {
-        font-feature-settings: 'calt' off;
-        &::input-placeholder {
-          color: #a6a6a6;
-        }
-
-        &:placeholder {
-          color: #a6a6a6;
-        }
-
-        &::placeholder {
-          color: #a6a6a6;
-        }
-
-        &:input-placeholder {
-          color: #a6a6a6;
-        }
-      }
-    }
-    .textarea-wrap {
-      background-color: #f2f2f2;
-      border: none !important;
-
-      span {
-        color: #a6a6a6 !important;
-      }
-      textarea {
-        font-feature-settings: 'calt' off;
-        border: none !important;
-      }
-
-      textarea {
-        &::input-placeholder {
-          color: #a6a6a6;
-        }
-
-        &:placeholder {
-          color: #a6a6a6;
-        }
-
-        &::placeholder {
-          color: #a6a6a6;
-        }
-
-        &:input-placeholder {
-          color: #a6a6a6;
-        }
-      }
-    }
-  }
-
   &.multiline {
-    align-items: flex-start;
-
     @include sm {
-      display: flex;
       flex-direction: column;
-      align-items: flex-start;
     }
     .description {
-      font-weight: 400;
-      font-size: 12px;
-      line-height: 200%;
-      color: #8c8c8c;
-      display: block;
+      @include R12;
+      color: $gray2;
     }
     .error-massage {
       @include errMsgState;
@@ -531,7 +474,6 @@
         padding: 0;
         height: auto;
         background-color: transparent;
-        line-height: 150%;
 
         textarea {
           overflow: hidden;
@@ -548,10 +490,6 @@
           }
         }
 
-        textarea:disabled {
-          color: $gray3;
-        }
-
         .addr-wrap {
           display: none;
         }
@@ -559,13 +497,9 @@
           display: none;
         }
       }
-      &.focus-on {
-        border: 1px solid #323cff;
-      }
 
       textarea {
         padding: 0px;
-        font-feature-settings: 'calt' off;
         background-color: transparent;
         border: none;
         width: 100%;
@@ -574,27 +508,14 @@
         text-align: start;
         @include R14;
         color: $gray;
-        line-height: 200%; /* 28px */
-        letter-spacing: -0.3px;
+
         @include sm {
           width: 100%;
-          font-size: 14px;
-        }
-
-        &:disabled {
-          opacity: 1;
-          color: #d9d9d9;
         }
         &:focus {
           outline: none;
           border: none;
         }
-      }
-      textarea::placeholder {
-        @include R14;
-        color: $gray;
-        line-height: 200%; /* 28px */
-        letter-spacing: -0.3px;
       }
 
       .addr-wrap {
@@ -603,7 +524,6 @@
         position: absolute;
         right: 1px;
         top: -28px;
-        // transform: translate(-2%, -5%);
         color: $gray3;
         @include sm {
           top: -29px;
@@ -641,11 +561,6 @@
       flex-direction: row;
       align-items: center;
 
-      @include sm {
-        > span {
-        }
-      }
-
       > span {
         @include R14;
         line-height: 100%;
@@ -657,11 +572,6 @@
         line-height: 100%;
         color: $gray;
       }
-      > input::placeholder {
-        @include R14;
-        line-height: 100%;
-        color: $gray3;
-      }
     }
     // enter 버튼이 있을 때
     &.enter {
@@ -670,21 +580,8 @@
 
       border: none;
       .input-area {
-        // border: none;
         width: 100%;
         border-radius: 8px;
-        // border: 1px solid $gray4;
-
-        // &.default {
-        //   border: 1px solid $gray4;
-        // }
-        // &.focus-on {
-        //   border: 1px solid $blue1;
-        // }
-        // &.error {
-        //   border: 1px solid $critical;
-        //   background: none;
-        // }
       }
       .error-massage {
         position: absolute;
@@ -701,9 +598,7 @@
       width: 100%;
     }
     .description {
-      font-weight: 400;
-      font-size: 12px;
-      line-height: 18px;
+      @include R12;
       color: #8c8c8c;
       margin-top: 4px;
       display: block;
@@ -719,13 +614,11 @@
       display: flex;
       border-radius: 8px;
       max-height: 46px;
+
       input {
         border-radius: 8px;
       }
 
-      &.focus-on {
-        border: 1px solid #323cff;
-      }
       //에러 케이스
       &.error {
         border: 1px solid $critical;
@@ -753,13 +646,6 @@
       }
       //suffix일때 케이스
       &.suffix {
-        &.not-value {
-          input {
-            border-radius: 8px;
-            border: 1px solid $gray4;
-            background: $gray5;
-          }
-        }
         &.superPrefix {
           input {
             background-color: #fff !important;
@@ -881,15 +767,12 @@
 
         &:read-only {
           opacity: 1;
-          color: $gray20;
+          color: $gray3;
         }
 
         &:focus {
           outline: none;
         }
-      }
-      input::placeholder {
-        color: $gray3;
       }
     }
   }
@@ -908,6 +791,21 @@
 
   @include xsm {
     width: 100%;
+  }
+
+  &.more-btn {
+    width: 100%;
+    margin-top: 20px;
+    border: 1px solid $gray4;
+    background: $white;
+    padding: 0;
+    box-shadow: $shadow;
+
+    > button {
+      @include B16;
+      color: $gray;
+      line-height: 40px;
+      }
   }
 }
 
@@ -958,5 +856,70 @@
         // transform: translate(0, -50%);
       }
     }
+  }
+}
+
+.input-wrap {
+  &.multiline {
+    .textarea-wrap {
+      &.focus-on {
+        border: 1px solid $blue1;
+      }
+    }
+  }
+
+  &.disabled {
+    .input-area {
+      background: $gray5;
+
+      &.default {
+        background: $gray5;
+      }
+
+      .text-place {
+        color: $gray3 !important;
+      }
+    }
+
+    .textarea-wrap {
+      background: $gray5;
+    }
+  }
+  .textarea-wrap {
+    &.focus-on {
+      border: 1px solid $blue1;
+    }
+  }
+
+  .input-area {
+    &.focus-on {
+      border: 1px solid $blue1;
+    }
+  }
+}
+
+textarea {
+  &:disabled {
+    color: $gray3 !important;
+  }
+}
+
+input {
+  &:disabled {
+    color: $gray3 !important;
+  }
+}
+
+// override
+.ant-select-disabled {
+  .ant-select-selection {
+    background: $gray5;
+    .ant-select-selection__rendered {
+      color: $gray3;
+    }
+  }
+
+  .ant-select-selection--single {
+    background: $gray5;
   }
 }

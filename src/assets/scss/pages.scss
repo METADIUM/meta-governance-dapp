@@ -361,9 +361,9 @@ a {
     flex-direction: column;
     border-radius: 8px;
     border: 1px solid $gray4;
-    padding: 24px 20px;
+    padding: 24px 20px 0;
     background: $white;
-    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+    box-shadow: $shadow;
 
     > div {
       width: 100%;
@@ -547,12 +547,23 @@ a {
     }
   }
 
+  .ant-select-open {
+    .ant-select-selection {
+      border-right-width: 0 !important;
+    }
+  }
+
   .ant-select-selection {
     height: 48px;
     width: 212px;
     border-radius: 8px 0 0 8px;
+    border-width: 1px 0 1px 1px;
     border-color: $gray4;
     box-shadow: 0px 8px 8px 0px #0000000d;
+
+    &:hover {
+      border-right-width: 0 !important;
+    }
 
     .ant-select-selection__rendered {
       @include R14;
@@ -590,7 +601,7 @@ a {
     .search-input {
       height: 100%;
       width: 100%;
-      border-width: 1px 1px 1px 0;
+      border-width: 1px;
       border-style: solid;
       border-color: $gray4;
       color: $gray;
@@ -601,10 +612,6 @@ a {
       background-size: 24px 24px;
       border-radius: 0 8px 8px 0;
 
-      &::placeholder {
-        color: $gray3;
-      }
-
       & + .search-close-btn {
         display: block;
         position: absolute;
@@ -614,6 +621,10 @@ a {
         path {
           fill: $gray60;
         }
+      }
+
+      &:focus {
+        border-color: $blue1;
       }
 
       @include xsm {
@@ -909,7 +920,7 @@ a {
       border: 1px solid $gray4;
       padding: 0 24px;
       border-radius: 8px;
-      box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+      box-shadow: $shadow;
       background: $white;
 
       @include xsm {
