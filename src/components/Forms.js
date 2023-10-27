@@ -658,7 +658,7 @@ export const BlockCreationTime = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap creative')}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
         Block Creation Time <span className={cn('required')}>*</span>
       </strong>
@@ -711,7 +711,7 @@ export const BlockRewardAmount = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap creative')}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
         Block Reward Amount <span className={cn('required')}>*</span>
       </strong>
@@ -952,7 +952,7 @@ export const GasLimitBaseFeeForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap creative')}>
+    <div className={cn('voting-input-wrap ')}>
       <strong>
         Gas Limit <span className={cn('required')}>*</span>
       </strong>
@@ -972,7 +972,7 @@ export const GasLimitBaseFeeForm = ({
         errText='Invalid Gas Limit'
       />
     </div>
-    <div className={cn('voting-input-wrap creative')}>
+    <div className={cn('voting-input-wrap ')}>
       <strong>
         Max base Fee <span className={cn('required')}>*</span>
       </strong>

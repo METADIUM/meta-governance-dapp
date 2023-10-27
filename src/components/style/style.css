@@ -672,7 +672,7 @@
   margin: 1px 0 0 8px;
 }
 
-.contentVotingDiv .proposalBody button[type="submit"] {
+.contentVotingDiv .proposalBody button[type='submit'] {
   border-radius: 4px;
   width: 208px;
   height: 40px;
@@ -716,13 +716,13 @@
 }
 
 .loading:before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 0;
   width: 206px;
   height: 60px;
-  background-image: url("./loading.png");
+  background-image: url('./loading.png');
   background-position: 0 0;
 }
 
@@ -855,21 +855,7 @@
   border-top: none !important;
 } */
 
-.dis-connect-foot .ant-modal-footer {
-  border-top: none !important;
-  display: flex;
-  justify-content: space-between;
-  height: 80px;
-}
-
-.ant-btn.discon-cancel-btn {
-  flex: 1;
-  height: 100%;
-}
 .ant-btn.discon-ok-btn {
-  flex: 1;
   color: #ffffff;
-  height: 100%;
-
   background: rgb(45, 35, 249);
 }

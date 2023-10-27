@@ -25,15 +25,8 @@
     width: 100%;
     flex-direction: column;
     justify-content: center;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgb(217, 217, 217);
-    font-size: medium;
   }
-  .staking-modal-title {
-    display: flex;
-    justify-content: center;
-    border-bottom: #989797;
-  }
+
   &.scroll {
     .ant-modal-body {
       max-height: 132px;
@@ -52,85 +45,25 @@
   }
 
   .ant-modal-content {
-    border-radius: 10px;
-    @include sm {
-      border-radius: 8px;
-    }
+    // error modal
+    .error-icon {
+      gap: 5px;
 
-    .ant-modal-header {
-      padding: 18px 48px;
-      text-align: center;
-      border-radius: 8px 8px 0px 0px;
-      border-bottom: 1px solid $gray4;
-      @include sm {
-        padding: 16px 48px;
-        margin-bottom: 40px;
-      }
-
-      .ant-modal-title {
-        @include R12;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: -0.3px;
-        line-height: 100%;
-      }
-
-      .sub-title {
-        font-size: 14px;
-        font-weight: 400;
-        color: $gray40;
-        line-height: 20px;
-      }
-    }
-
-    .ant-modal-body {
-      display: flex;
       flex-direction: column;
-      padding: 40px 24px 0px 24px;
-      gap: 32px;
-      // error modal
-      .error-icon {
-        // padding: 50px 0 74px;
-        gap: 5px;
-
-        flex-direction: column;
-        .modal-info-wrapper {
-          display: flex;
-          width: 100%;
-          padding: 10px;
-          background-color: #f4f4f4;
-          border-radius: 5px;
-          align-items: center;
-          div {
-            margin-left: 10px;
-          }
+      .modal-info-wrapper {
+        display: flex;
+        width: 100%;
+        padding: 10px;
+        background-color: #f4f4f4;
+        border-radius: 5px;
+        align-items: center;
+        div {
+          margin-left: 10px;
         }
-        .sub-title {
-          color: black;
-          margin-bottom: 10px;
-          font-size: medium;
-        }
-      }
-
-      > div {
-        word-break: break-all;
-      }
-
-      @include sm {
-        padding: 0 20px;
       }
     }
 
     .ant-modal-footer {
-      display: flex;
-      padding: 32px 28px 40px 28px;
-      justify-content: center;
-      border-top: none;
-      gap: 8px;
-      @include xsm {
-        padding: 32px 24px 40px 24px;
-        border-radius: 8px;
-      }
       span {
         @include B16;
         line-height: 1;
@@ -168,7 +101,6 @@
           background-color: white;
           color: $mint;
           border: 1px solid;
-          max-width: 120px;
           border-radius: 10px;
         }
       }
@@ -183,50 +115,28 @@
         }
       }
     }
-
-    .ant-modal-close {
-      top: 14px;
-      right: 28px;
-
-      @include sm {
-        top: 12px;
-        right: 20px;
-      }
-      .ant-modal-close-x {
-        width: 24px;
-        height: 24px;
-        line-height: inherit;
-        background-image: url('../images/ic_cancel.svg');
-        // background-color: #989797;
-        background-repeat: no-repeat;
-        background-position: center center;
-        i {
-          display: none;
-        }
-      }
-    }
   }
 
-  @include xsm {
-    position: fixed;
-    top: 25%;
-    display: block;
-    width: 100% !important;
-    -webkit-animation: drawer 0.3s forwards;
-    animation: drawer 0.3s forwards;
-    overflow: hidden;
-    max-width: inherit;
-    padding: 20px;
-    margin: 0;
+  // @include xsm {
+  //   position: fixed;
+  //   top: 25%;
+  //   display: block;
+  //   width: 100% !important;
+  //   -webkit-animation: drawer 0.3s forwards;
+  //   animation: drawer 0.3s forwards;
+  //   overflow: hidden;
+  //   max-width: inherit;
+  //   padding: 20px;
+  //   margin: 0;
 
-    .ant-modal-footer {
-      border-top: none;
-    }
+  //   .ant-modal-footer {
+  //     border-top: none;
+  //   }
 
-    .voting-cancel-btn {
-      display: none;
-    }
-  }
+  //   .voting-cancel-btn {
+  //     display: none;
+  //   }
+  // }
 
   @-webkit-keyframes drawer {
     0% {
@@ -250,186 +160,187 @@
 }
 
 // TxHashAddModal
-.tx-hash-add-modal {
-  width: 700px !important;
-  position: relative;
+// .tx-hash-add-modal {
+//   width: 700px !important;
+//   position: relative;
 
-  &.scroll {
-    .ant-modal-body {
-      position: relative;
-      min-height: 360px;
-      max-height: 360px;
-      overflow-y: scroll;
+//   &.scroll {
+//     .ant-modal-body {
+//       position: relative;
+//       min-height: 360px;
+//       max-height: 360px;
+//       overflow-y: scroll;
 
-      @include sm {
-        min-height: 160px;
-        max-height: calc(($vh * 100) - 136px - 80px);
-      }
-    }
-  }
+//       @include sm {
+//         min-height: 160px;
+//         max-height: calc(($vh * 100) - 136px - 80px);
+//       }
+//     }
+//   }
 
-  &.tx-hash-add-leave {
-    opacity: 0;
+//   &.tx-hash-add-leave {
+//     opacity: 0;
 
-    @include sm {
-      opacity: 1;
-      -webkit-animation: drawerClose 0.3s forwards;
-      animation: drawerClose 0.3s forwards;
-    }
-  }
+//     @include sm {
+//       opacity: 1;
+//       -webkit-animation: drawerClose 0.3s forwards;
+//       animation: drawerClose 0.3s forwards;
+//     }
+//   }
 
-  .ant-modal-content {
-    border-radius: 0;
-    @include sm {
-      border-radius: 12px 12px 0 0;
-    }
+//   .ant-modal-content {
+//     border-radius: 0;
+//     @include sm {
+//       border-radius: 12px 12px 0 0;
+//     }
 
-    .ant-modal-header {
-      border-bottom: none;
-      padding: 24px 28px;
+//     .ant-modal-header {
+//       border-bottom: none;
+//       padding: 24px 28px;
 
-      @include sm {
-        padding: 16px 20px 20px 20px;
-      }
+//       @include sm {
+//         padding: 16px 20px 20px 20px;
+//       }
 
-      .ant-modal-title {
-        font-size: 20px;
-        font-weight: 700;
-        line-height: 32px;
-      }
+//       .ant-modal-title {
+//         font-size: 20px;
+//         font-weight: 700;
+//         line-height: 32px;
+//       }
 
-      .sub-title {
-        font-size: 14px;
-        font-weight: 400;
-        color: $gray40;
-        line-height: 20px;
-      }
-    }
+//       .sub-title {
+//         font-size: 14px;
+//         font-weight: 400;
+//         color: $gray40;
+//         line-height: 20px;
+//       }
+//     }
 
-    .ant-modal-body {
-      padding: 0 28px;
-      margin-bottom: 24px;
+//     .ant-modal-body {
+//       padding: 0 28px;
+//       margin-bottom: 24px;
 
-      @include sm {
-        padding: 0 20px;
-      }
-    }
+//       @include sm {
+//         padding: 0 20px;
+//       }
+//     }
 
-    .ant-modal-footer {
-      display: flex;
-      padding: 12px 28px 24px 28px;
+//     .ant-modal-footer {
+//       display: flex;
+//       padding: 12px 28px 24px 28px;
 
-      @include sm {
-        padding: 0 20px 16px 20px;
-      }
-      button {
-        // min-height: 52px;
-        flex: 1;
-        font-size: 16px;
-        border-radius: 0;
+//       @include sm {
+//         padding: 0 20px 16px 20px;
+//       }
+//       button {
+//         // min-height: 52px;
+//         flex: 1;
+//         font-size: 16px;
+//         border-radius: 0;
 
-        &:disabled {
-          cursor: default;
-          opacity: 0.5;
-        }
+//         &:disabled {
+//           cursor: default;
+//           opacity: 0.5;
+//         }
 
-        @include sm {
-          & + button {
-            margin-left: 0;
-          }
-        }
-      }
+//         @include sm {
+//           & + button {
+//             margin-left: 0;
+//           }
+//         }
+//       }
 
-      .tx-hash-add-apply-btn {
-        background-color: $deepBlue;
-        color: $gray100;
-        border: none;
-      }
+//       .tx-hash-add-apply-btn {
+//         background-color: $deepBlue;
+//         color: $gray100;
+//         border: none;
+//       }
 
-      // error go to explorer btn
-      a {
-        &.ant-btn {
-          min-height: 52px;
-          display: flex;
-          align-items: center;
-          justify-items: center;
-        }
-      }
-    }
+//       // error go to explorer btn
+//       a {
+//         &.ant-btn {
+//           min-height: 52px;
+//           display: flex;
+//           align-items: center;
+//           justify-items: center;
+//         }
+//       }
+//     }
 
-    .ant-modal-close {
-      top: 28px;
-      right: 28px;
+//     .ant-modal-close {
+//       top: 28px;
+//       right: 28px;
 
-      @include sm {
-        top: 20px;
-        right: 20px;
-      }
-      .ant-modal-close-x {
-        width: 24px;
-        height: 24px;
-        line-height: inherit;
-      }
-    }
-  }
+//       @include sm {
+//         top: 20px;
+//         right: 20px;
+//       }
+//       .ant-modal-close-x {
+//         width: 24px;
+//         height: 24px;
+//         line-height: inherit;
+//       }
+//     }
+//   }
 
-  @include sm {
-    position: fixed;
-    top: auto;
-    display: block;
-    bottom: -100%;
-    opacity: 1;
-    width: 100% !important;
-    -webkit-animation: drawer 0.3s forwards;
-    animation: drawer 0.3s forwards;
-    overflow: hidden;
-    max-width: inherit;
-    padding: 0;
-    margin: 0;
+//   @include sm {
+//     position: fixed;
+//     top: auto;
+//     display: block;
+//     bottom: -100%;
+//     opacity: 1;
+//     width: 100% !important;
+//     -webkit-animation: drawer 0.3s forwards;
+//     animation: drawer 0.3s forwards;
+//     overflow: hidden;
+//     max-width: inherit;
+//     padding: 0;
+//     margin: 0;
 
-    .ant-modal-footer {
-      border-top: none;
-    }
+//     .ant-modal-footer {
+//       border-top: none;
+//     }
 
-    .tx-hash-add-cancel-btn {
-      display: none;
-    }
-  }
+//     .tx-hash-add-cancel-btn {
+//       display: none;
+//     }
+//   }
 
-  @-webkit-keyframes drawer {
-    0% {
-      bottom: -100%;
-    }
+//   @-webkit-keyframes drawer {
+//     0% {
+//       bottom: -100%;
+//     }
 
-    100% {
-      bottom: 0;
-    }
-  }
+//     100% {
+//       bottom: 0;
+//     }
+//   }
 
-  @keyframes drawer {
-    0% {
-      bottom: -100%;
-    }
+//   @keyframes drawer {
+//     0% {
+//       bottom: -100%;
+//     }
 
-    100% {
-      bottom: 0;
-    }
-  }
-}
+//     100% {
+//       bottom: 0;
+//     }
+//   }
+// }
 
-@keyframes drawerClose {
-  0% {
-    bottom: 0%;
-  }
+// @keyframes drawerClose {
+//   0% {
+//     bottom: 0%;
+//   }
 
-  100% {
-    bottom: -100%;
-  }
-}
+//   100% {
+//     bottom: -100%;
+//   }
+// }
 
 .staking-wrap {
   display: flex;
   flex-direction: column;
+  width: 100%;
   gap: 32px;
   // ant-select-dropdown-menu-item ant-select-dropdown-menu-item-selected
   [class*='ant-select-selection__rendered'] {
@@ -502,7 +413,6 @@
 }
 .sub-info {
   width: 100%;
-
   padding: 0px 20px;
   background-color: #f1f2f9;
   display: flex;
@@ -532,6 +442,9 @@
         font-weight: 700;
         margin-right: 5px;
       }
+    }
+    &:last-child {
+      border-bottom: none;
     }
   }
 }
@@ -574,6 +487,108 @@
       width: 36px;
       height: 36px;
       background: url('#{$rootPath}/ico_unknown.svg') no-repeat center center;
+    }
+  }
+}
+
+.ant-modal {
+  max-width: 480px;
+  @include xsm {
+    width: 100% !important;
+    // margin: 0;
+  }
+}
+.ant-modal-wrap {
+  @include xsm {
+    top: 10%;
+    padding: 20px;
+  }
+}
+.ant-modal-content {
+  border-radius: 8px;
+  @include xsm {
+    width: 100%;
+    margin: 0;
+  }
+
+  .ant-modal-header {
+    width: 100%;
+    display: flex;
+    padding: 16px 48px 16px 48px !important;
+    justify-content: center;
+    border-radius: 8px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    align-items: center;
+    align-self: stretch;
+    border-bottom: 1px solid $gray4;
+    .ant-modal-title {
+      @include B12;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      line-height: 100%;
+      color: black;
+    }
+  }
+  .ant-modal-close {
+    top: 11px;
+    right: 28px;
+
+    @include sm {
+      top: 12px;
+      right: 20px;
+    }
+    .ant-modal-close-x {
+      width: 24px;
+      height: 24px;
+      line-height: inherit;
+      background-image: url('../images/ic_cancel.svg');
+      // background-color: #989797;
+      background-repeat: no-repeat;
+      background-position: center center;
+      i {
+        display: none;
+      }
+    }
+  }
+  .ant-modal-body {
+    display: flex;
+    flex-direction: column;
+    padding: 40px 24px 0px 24px;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    align-self: stretch;
+  }
+
+  .ant-modal-footer {
+    display: flex;
+    padding: 32px 28px 40px 28px;
+    border-top: none;
+    gap: 8px;
+    border-radius: 8px;
+    justify-content: space-around;
+    @include xsm {
+      padding: 32px 24px 40px 24px;
+    }
+    button {
+      width: 100%;
+
+      display: flex;
+      padding: 12px 16px;
+      justify-content: center;
+      align-items: center;
+      align-self: stretch;
+      border-radius: 8px;
+      border: 1px solid var(--Gray2, #7a7a89);
+      background: #fff;
+      height: auto !important;
+      span {
+        @include B16;
+        line-height: 1;
+        color: $gray;
+      }
     }
   }
 }
