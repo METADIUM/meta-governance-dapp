@@ -34,7 +34,7 @@ const VotingTopDetail = ({
   setTrx,
   waitBallotMemberOriginData,
 }) => {
-  const { id, creator, ballotType, state, memo } = ballotBasicData;
+  const { id, creator, ballotType, state, memo, duration } = ballotBasicData;
   const {
     lockAmount,
     envVariableName,
@@ -87,8 +87,10 @@ const VotingTopDetail = ({
 
   // -------------------- useEffect
   useEffect(() => {
-    setVotingDuration();
-  }, [setVotingDuration]);
+    if (votingDurationMin && votingDurationMax) {
+      setVotingDuration();
+    }
+  }, [votingDurationMin, votingDurationMax]);
 
   const resize = useCallback(() => {
     setOffset({
