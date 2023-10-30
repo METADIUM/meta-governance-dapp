@@ -87,10 +87,10 @@ const VotingTopDetail = ({
 
   // -------------------- useEffect
   useEffect(() => {
-    if (votingDurationMin && votingDurationMax) {
+    if (votingDurationMin && votingDurationMax && duration) {
       setVotingDuration();
     }
-  }, [votingDurationMin, votingDurationMax]);
+  }, [votingDurationMin, votingDurationMax, duration]);
 
   const resize = useCallback(() => {
     setOffset({
@@ -98,6 +98,7 @@ const VotingTopDetail = ({
       height: window.innerHeight,
     });
   }, []);
+
   useEffect(() => {
     resize();
     window.addEventListener("resize", throttle(resize, 200));
@@ -124,7 +125,9 @@ const VotingTopDetail = ({
       };
       setOptions((prev) => [...prev, duration]);
     }
-  }, [votingDurationMax, votingDurationMin]);
+
+    setSelectedDuration(duration);
+  }, [votingDurationMax, votingDurationMin, duration]);
 
   // 투표 기간 변경 or 투표 삭제 처리
   const updateProposal = async (topic) => {
@@ -621,6 +624,7 @@ const VotingTopDetail = ({
                   name={"radio"}
                   type="radio"
                   value={t.value}
+                  checked={t.value === selectedDuration}
                   onChange={() => setSelectedDuration(t.value)}
                 />
                 <label htmlFor={`dayCheck${i}`}>{t.label}</label>
