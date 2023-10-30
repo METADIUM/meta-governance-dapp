@@ -90,7 +90,7 @@ const VotingTopDetail = ({
     if (votingDurationMin && votingDurationMax && duration) {
       setVotingDuration();
     }
-  }, [votingDurationMin, votingDurationMax, duration]);
+  }, [votingDurationMin, votingDurationMax, duration, setVotingDuration]);
 
   const resize = useCallback(() => {
     setOffset({
@@ -201,7 +201,7 @@ const VotingTopDetail = ({
             value: newStakerAddress,
           },
           {
-            title: "WEMIX to be locked",
+            title: "META to be locked",
             class: "text-bold",
             value: `${util.addCommasToNumber(locked)} META`,
           }
@@ -240,7 +240,7 @@ const VotingTopDetail = ({
             },
             { title: "New Authority Address", value: newStakerAddress },
             {
-              title: "WEMIX to be locked",
+              title: "META to be locked",
               class: "text-bold",
               value: `${util.addCommasToNumber(locked)} META`,
             }
@@ -289,13 +289,13 @@ const VotingTopDetail = ({
           contents.push({
             value: `${util.convertWeiToEther(
               decodeValue[0]
-            )}-${util.convertWeiToEther(decodeValue[1])} WEMIX`,
+            )}-${util.convertWeiToEther(decodeValue[1])} META`,
           });
         } else if (envVariableName === "Block Creation Time") {
           contents.push({ value: `${decodeValue[0] / 1000} s` });
         } else if (envVariableName === "Block Reward Amount") {
           contents.push({
-            value: `${util.convertWeiToEther(decodeValue[0])} WEMIX/Block`,
+            value: `${util.convertWeiToEther(decodeValue[0])} META/Block`,
           });
         } else if (envVariableName === "Block Reward Distribution Method") {
           contents.push({
@@ -448,7 +448,7 @@ const VotingTopDetail = ({
       // 트랜잭션의 value가 0인지 확인
       if (!parseInt(tx.value)) {
         setErrText(
-          "The transaction cannot be entered if the investment execution amount is 0 WEMIX."
+          "The transaction cannot be entered if the investment execution amount is 0 META."
         );
         return;
       }
