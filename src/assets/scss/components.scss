@@ -228,11 +228,11 @@ body {
           }
         }
         dd {
+          color: $white;
           @include sm {
             color: $black2;
             @include B20;
           }
-          color: $white;
         }
         & + div {
           position: relative;
@@ -587,10 +587,14 @@ body {
   }
 }
 
-.ant-select-dropdown-menu-item-active:not(.ant-select-dropdown-menu-item-disabled) {
+.ant-select-dropdown-menu-item-active:not(
+    .ant-select-dropdown-menu-item-disabled
+  ) {
   background: rgba(177, 190, 255, 0.2);
 }
 
-.ant-select-dropdown-menu-item:hover:not(.ant-select-dropdown-menu-item-disabled) {
+.ant-select-dropdown-menu-item:hover:not(
+    .ant-select-dropdown-menu-item-disabled
+  ) {
   background: rgba(177, 190, 255, 0.2);
 }

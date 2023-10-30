@@ -7,12 +7,12 @@ import { convertSecondsToDay, addCommasToNumber } from '../util';
 
 // import "./style/style.css";
 import '../assets/scss/modal.scss';
-
+import '../assets/scss/proposal.scss';
 // 2023.02.24 수정 voting 페이지 팝업 추가 관련코드 추가
 import cn from 'classnames/bind';
-import { ReactComponent as IconPopupClose } from '../assets/images/ico_popup_close.svg';
+// import { ReactComponent as IconPopupClose } from '../assets/images/ico_popup_close.svg';
 import VotingInputArea from './voting/VotingInputArea';
-import { use } from 'i18next';
+// import { use } from 'i18next';
 
 // 2023.07.04 App.js의 Staking 관련 로직 Modal로 이동
 import * as util from '../util';
@@ -162,13 +162,12 @@ const StakingModal = ({
             if (!isLoading) {
               setStakingModalVisible(false);
             }
-          }}
-          className='voting-cancel-btn'>
+          }}>
           Cancel
         </Button>,
         <Button
           key='submit'
-          className='voting-ok-btn'
+          className='gov_btn'
           onClick={submitWemixStaking}
           loading={isLoading}
           disabled={errStaking}>
@@ -276,26 +275,26 @@ const ErrModal = () => {
               </a>,
               <Button
                 key='ok'
-                className='voting-ok-btn'
+                className='gov_btn'
                 onClick={() => setIsModalOpened(false)}>
                 Okay
               </Button>,
             ]
           : [
-              <Button
-                key='ok'
-                className='voting-ok-btn proposal-error'
-                onClick={() => setIsModalOpened(false)}>
+              <Button key='ok' onClick={() => setIsModalOpened(false)}>
                 Okay
               </Button>,
             ]
       }>
-      <div className='flex error-icon'>
-        <p className={cn('sub-title')} style={{ color: 'black' }}>
-          Please revises the following information!
-        </p>
+      <div className='error-wrap'>
+        {/* <p className={cn('sub-title')} style={{ color: 'black' }}>
+          Please revises the following i
+        nformation!
+        </p> */}
+        <div className='error-wrap-image'></div>
+
         <div className='modal-info-wrapper'>
-          <Icon type='exclamation-circle' />
+          {/* <Icon type='exclamation-circle' /> */}
           <div>{content === 'RPC error' ? <RPCErrorMSG /> : content}</div>
         </div>
       </div>
@@ -376,13 +375,10 @@ const DisConnectWalletModal = ({
       onCancel={() => setDisConnectView(false)}
       onOk={onDisConnect}
       footer={[
-        <Button
-          key='cancel'
-          className='discon-cancel-btn'
-          onClick={() => setDisConnectView(false)}>
+        <Button key='cancel' onClick={() => setDisConnectView(false)}>
           Cancel
         </Button>,
-        <Button key='ok' className='discon-ok-btn' onClick={onDisConnect}>
+        <Button key='ok' className='gov_btn' onClick={onDisConnect}>
           Okay
         </Button>,
       ]}>
@@ -424,7 +420,7 @@ const VotingModal = ({
             Cancel
           </Button>
         ),
-        <Button key='ok' className='voting-ok-btn' onClick={() => onOk()}>
+        <Button key='ok' className='gov_btn' onClick={() => onOk()}>
           {btn.btnName}
         </Button>,
       ]}>

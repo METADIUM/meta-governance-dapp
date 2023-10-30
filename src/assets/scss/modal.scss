@@ -46,18 +46,29 @@
 
   .ant-modal-content {
     // error modal
-    .error-icon {
-      gap: 5px;
-
+    .error-wrap {
+      display: flex;
       flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      .error-wrap-image {
+        width: 72px;
+        height: 72px;
+        background-color: #7a7a89;
+        background-image: url('../images/ic_error.svg');
+        background-position: center;
+        background-repeat: no-repeat;
+      }
       .modal-info-wrapper {
         display: flex;
         width: 100%;
-        padding: 10px;
-        background-color: #f4f4f4;
+
         border-radius: 5px;
         align-items: center;
         div {
+          @include B14;
+          line-height: 1;
+          color: red;
           margin-left: 10px;
         }
       }
@@ -86,23 +97,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100%;
-      }
-      .voting-cancel-btn {
-        border: 1px solid $gray2;
-        background: #fff;
-      }
-      .voting-ok-btn {
-        background-color: $deepBlue;
-        color: $gray100;
-        border: none;
-
-        &.proposal-error {
-          background-color: white;
-          color: $mint;
-          border: 1px solid;
-          border-radius: 10px;
-        }
+        max-height: 40px;
       }
 
       // error go to explorer btn
@@ -117,46 +112,25 @@
     }
   }
 
-  // @include xsm {
-  //   position: fixed;
-  //   top: 25%;
-  //   display: block;
-  //   width: 100% !important;
-  //   -webkit-animation: drawer 0.3s forwards;
-  //   animation: drawer 0.3s forwards;
-  //   overflow: hidden;
-  //   max-width: inherit;
-  //   padding: 20px;
-  //   margin: 0;
-
-  //   .ant-modal-footer {
-  //     border-top: none;
+  // @-webkit-keyframes drawer {
+  //   0% {
+  //     bottom: -100%;
   //   }
 
-  //   .voting-cancel-btn {
-  //     display: none;
+  //   100% {
+  //     bottom: 0;
   //   }
   // }
 
-  @-webkit-keyframes drawer {
-    0% {
-      bottom: -100%;
-    }
+  // @keyframes drawer {
+  //   0% {
+  //     bottom: -100%;
+  //   }
 
-    100% {
-      bottom: 0;
-    }
-  }
-
-  @keyframes drawer {
-    0% {
-      bottom: -100%;
-    }
-
-    100% {
-      bottom: 0;
-    }
-  }
+  //   100% {
+  //     bottom: 0;
+  //   }
+  // }
 }
 
 // TxHashAddModal
@@ -532,8 +506,8 @@
     }
   }
   .ant-modal-close {
-    top: 11px;
-    right: 28px;
+    top: 11.5px;
+    right: 23px;
 
     @include sm {
       top: 12px;
@@ -560,6 +534,11 @@
     align-items: center;
     gap: 40px;
     align-self: stretch;
+    .modal-disconnect-title {
+      @include B14;
+      line-height: 1;
+      color: $gray;
+    }
   }
 
   .ant-modal-footer {
