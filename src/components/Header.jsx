@@ -109,7 +109,7 @@ const Header = () => {
 
   return (
     <header className={cn("header")}>
-      {offset.width > 1240 ? (
+      {offset.width > 1141 ? (
         <>
           <div className="header-logo-wrap">
             <HeaderLogo />

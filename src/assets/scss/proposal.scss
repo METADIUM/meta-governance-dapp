@@ -781,19 +781,27 @@ textarea {
   }
 }
 
-.gov_btn_wrapper {
+.gov_btn {
   @include B16;
   display: flex;
   width: 190px;
   padding: 12px 16px;
   justify-content: center;
   align-items: center;
-  background-color: $blue1;
+  background-color: $blue1 !important;
   color: white;
   border-radius: 8px;
-
+  max-height: 40px;
+  span {
+    color: white !important;
+  }
   @include xsm {
     width: 100%;
+  }
+  // error시(임시)
+  &.error {
+    background-color: white;
+    border: 1px $critical;
   }
 
   &.more-btn {
@@ -814,12 +822,9 @@ textarea {
 }
 
 .reference-wrap {
-  margin-top: 24px;
-
+  margin-top: 42px;
   .reference-title {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
+    @include B12;
     color: $gray;
     display: flex;
     align-items: center;
@@ -830,23 +835,21 @@ textarea {
       width: 16px;
       height: 16px;
       margin-right: 4px;
-      background: url('#{$rootPath}/ico_desc_warning.svg') no-repeat;
+      background: url('#{$rootPath}/ic_info.svg') no-repeat;
     }
   }
 
   .reference-list {
-    padding: 0 15px;
-    margin-top: 7px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
     .reference-list-info {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
+      @include R12;
+      line-height: 1;
       color: $gray;
-      display: flex;
       position: relative;
-      align-items: center;
       padding-left: 15px;
-
       &::before {
         content: '';
         position: absolute;
@@ -856,7 +859,7 @@ textarea {
         border-radius: 50%;
         background-color: $gray;
         left: 0;
-        top: 8px;
+        top: 3.5px;
         // transform: translate(0, -50%);
       }
     }
