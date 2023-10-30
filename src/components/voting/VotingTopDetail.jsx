@@ -113,7 +113,7 @@ const VotingTopDetail = ({
 
   // -------------------- function
   // 투표 기간 설정
-  const setVotingDuration = () => {
+  const setVotingDuration = useCallback(() => {
     const max = util.convertSecondsToDay(votingDurationMax);
     const min = util.convertSecondsToDay(votingDurationMin);
 
@@ -124,7 +124,11 @@ const VotingTopDetail = ({
       };
       setOptions((prev) => [...prev, duration]);
     }
-  };
+  }, [votingDurationMax, votingDurationMin]);
+
+  useEffect(() => {
+    setVotingDuration();
+  }, [setVotingDuration]);
 
   // 투표 기간 변경 or 투표 삭제 처리
   const updateProposal = async (topic) => {
@@ -198,9 +202,9 @@ const VotingTopDetail = ({
             value: newStakerAddress,
           },
           {
-            title: "META to be locked",
+            title: "WEMIX to be locked",
             class: "text-bold",
-            value: `${locked} META`,
+            value: `${util.addCommasToNumber(locked)} META`,
           }
         );
         break;
@@ -237,9 +241,9 @@ const VotingTopDetail = ({
             },
             { title: "New Authority Address", value: newStakerAddress },
             {
-              title: "META to be locked",
+              title: "WEMIX to be locked",
               class: "text-bold",
-              value: `${locked} META`,
+              value: `${util.addCommasToNumber(locked)} META`,
             }
           );
         }
@@ -253,7 +257,7 @@ const VotingTopDetail = ({
           {
             title: "META to be locked",
             class: "text-bold",
-            value: `${locked} META`,
+            value: `${util.addCommasToNumber(locked)} META`,
           }
         );
         break;
@@ -286,13 +290,13 @@ const VotingTopDetail = ({
           contents.push({
             value: `${util.convertWeiToEther(
               decodeValue[0]
-            )}-${util.convertWeiToEther(decodeValue[1])} META`,
+            )}-${util.convertWeiToEther(decodeValue[1])} WEMIX`,
           });
         } else if (envVariableName === "Block Creation Time") {
           contents.push({ value: `${decodeValue[0] / 1000} s` });
         } else if (envVariableName === "Block Reward Amount") {
           contents.push({
-            value: `${util.convertWeiToEther(decodeValue[0])} META/Block`,
+            value: `${util.convertWeiToEther(decodeValue[0])} WEMIX/Block`,
           });
         } else if (envVariableName === "Block Reward Distribution Method") {
           contents.push({
@@ -350,7 +354,7 @@ const VotingTopDetail = ({
           contents.push({
             title: "META to be locked",
             class: "text-bold",
-            value: `${locked} META`,
+            value: `${util.addCommasToNumber(locked)} META`,
           });
         }
         break;
@@ -445,7 +449,7 @@ const VotingTopDetail = ({
       // 트랜잭션의 value가 0인지 확인
       if (!parseInt(tx.value)) {
         setErrText(
-          "The transaction cannot be entered if the investment execution amount is 0 META."
+          "The transaction cannot be entered if the investment execution amount is 0 WEMIX."
         );
         return;
       }

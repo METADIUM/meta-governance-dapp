@@ -159,6 +159,17 @@ a {
           @include R14;
         }
       }
+
+      > img {
+        width: 320px;
+        height: 200px;
+
+        @include xsm {
+          width: 100%;
+          max-width: 320px;
+          height: auto;
+        }
+      }
     }
   }
   @include xsm {
