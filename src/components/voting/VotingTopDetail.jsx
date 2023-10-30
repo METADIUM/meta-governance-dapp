@@ -126,10 +126,6 @@ const VotingTopDetail = ({
     }
   }, [votingDurationMax, votingDurationMin]);
 
-  useEffect(() => {
-    setVotingDuration();
-  }, [setVotingDuration]);
-
   // 투표 기간 변경 or 투표 삭제 처리
   const updateProposal = async (topic) => {
     let trx;
