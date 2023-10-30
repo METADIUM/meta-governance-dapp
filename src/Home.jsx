@@ -82,27 +82,6 @@ let partners = [
     address: "0xa996EEFfe2d9d3CFFdCe5B7FC51C357DA7aBeA6D",
     desc: "RockX is a leader in blockchain staking, leading the public blockchain. With a strong technical background and community driven operation, RockX provides secure validators to offer staking rewards for their cryptocurrency holders. RockX plans to build a Metadium staking pool in the future.",
   },
-  {
-    logo: RockxLogo,
-    company: "RockX",
-    link: "https://www.rockx.com/",
-    address: "0xa996EEFfe2d9d3CFFdCe5B7FC51C357DA7aBeA6D",
-    desc: "RockX is a leader in blockchain staking, leading the public blockchain. With a strong technical background and community driven operation, RockX provides secure validators to offer staking rewards for their cryptocurrency holders. RockX plans to build a Metadium staking pool in the future.",
-  },
-  {
-    logo: RockxLogo,
-    company: "RockX",
-    link: "https://www.rockx.com/",
-    address: "0xa996EEFfe2d9d3CFFdCe5B7FC51C357DA7aBeA6D",
-    desc: "RockX is a leader in blockchain staking, leading the public blockchain. With a strong technical background and community driven operation, RockX provides secure validators to offer staking rewards for their cryptocurrency holders. RockX plans to build a Metadium staking pool in the future.",
-  },
-  {
-    logo: RockxLogo,
-    company: "RockX",
-    link: "https://www.rockx.com/",
-    address: "0xa996EEFfe2d9d3CFFdCe5B7FC51C357DA7aBeA6D",
-    desc: "RockX is a leader in blockchain staking, leading the public blockchain. With a strong technical background and community driven operation, RockX provides secure validators to offer staking rewards for their cryptocurrency holders. RockX plans to build a Metadium staking pool in the future.",
-  },
 ];
 
 const Home = () => {
