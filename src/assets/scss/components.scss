@@ -586,7 +586,9 @@ body {
     }
   }
 }
-
+.ant-select-dropdown {
+  z-index: 99;
+}
 .ant-select-dropdown-menu-item-active:not(
     .ant-select-dropdown-menu-item-disabled
   ) {
