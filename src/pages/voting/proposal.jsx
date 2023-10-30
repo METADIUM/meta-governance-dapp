@@ -354,7 +354,7 @@ const Proposal = () => {
       case "stakingAddr":
         setErrState({
           ...errState,
-          stakingAddrErr: !util.checkAddress(e.target.targetValue),
+          stakingAddrErr: !util.checkAddress(targetValue),
         });
         break;
       case "oldLockAmount":
