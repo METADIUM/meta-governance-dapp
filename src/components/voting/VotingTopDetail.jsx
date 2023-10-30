@@ -135,14 +135,14 @@ const VotingTopDetail = ({
           "BallotStorage",
           "updateBallotDuration",
           id,
-          util.convertDayToSeconds(selectedDuration)
+          util.convertDayToSeconds(selectedDuration),
         );
       } else {
         trx = await encodeABIValueInMethod(
           web3Instance,
           "BallotStorage",
           "cancelBallot",
-          id
+          id,
         );
       }
       // 트랜잭션을 날리기 위해 부모 컴포넌트로 데이터를 보내줌
@@ -196,10 +196,10 @@ const VotingTopDetail = ({
             value: newStakerAddress,
           },
           {
-            title: "META to be locked",
+            title: "WEMIX to be locked",
             class: "text-bold",
-            value: `${locked} META`,
-          }
+            value: `${locked} WEMIX`,
+          },
         );
         break;
       // Replace Authority Member
@@ -224,7 +224,7 @@ const VotingTopDetail = ({
               {
                 title: "New Authority Address",
                 value: newStakerAddress,
-              }
+              },
             );
           }
         } else {
@@ -235,25 +235,12 @@ const VotingTopDetail = ({
             },
             { title: "New Authority Address", value: newStakerAddress },
             {
-              title: "META to be locked",
+              title: "WEMIX to be locked",
               class: "text-bold",
-              value: `${locked} META`,
-            }
+              value: `${locked} WEMIX`,
+            },
           );
         }
-        break;
-      case constants.ballotTypes.RemoveAuthorityMember:
-        contents.push(
-          {
-            title: "Remove Address",
-            value: oldStakerAddress,
-          },
-          {
-            title: "META to be locked",
-            class: "text-bold",
-            value: `${locked} META`,
-          }
-        );
         break;
       //  Governance Contract Address
       case constants.ballotTypes.GovernanceContractAddress:
@@ -277,20 +264,20 @@ const VotingTopDetail = ({
         if (envVariableName === "Voting Duration Setting") {
           contents.push({
             value: `${util.convertSecondsToDay(
-              decodeValue[0]
+              decodeValue[0],
             )}-${util.convertSecondsToDay(decodeValue[1])} day`,
           });
         } else if (envVariableName === "Authority Member Staking Amount") {
           contents.push({
             value: `${util.convertWeiToEther(
-              decodeValue[0]
-            )}-${util.convertWeiToEther(decodeValue[1])} META`,
+              decodeValue[0],
+            )}-${util.convertWeiToEther(decodeValue[1])} WEMIX`,
           });
         } else if (envVariableName === "Block Creation Time") {
           contents.push({ value: `${decodeValue[0] / 1000} s` });
         } else if (envVariableName === "Block Reward Amount") {
           contents.push({
-            value: `${util.convertWeiToEther(decodeValue[0])} META/Block`,
+            value: `${util.convertWeiToEther(decodeValue[0])} WEMIX/Block`,
           });
         } else if (envVariableName === "Block Reward Distribution Method") {
           contents.push({
@@ -307,7 +294,7 @@ const VotingTopDetail = ({
         } else if (envVariableName === "Gas Limit & baseFee") {
           contents.push({
             value: `Gas Limit: ${util.convertWeiToGWei(
-              decodeValue[0]
+              decodeValue[0],
             )} GWei\nMax baseFee: ${
               decodeValue[1]
             } GWei\nBaseFee Max Change Rate: ${
@@ -348,7 +335,7 @@ const VotingTopDetail = ({
           contents.push({
             title: "META to be locked",
             class: "text-bold",
-            value: `${locked} META`,
+            value: `${locked} WEMIX`,
           });
         }
         break;
@@ -414,7 +401,7 @@ const VotingTopDetail = ({
       const checkDuplicated = txHashArr.filter((hash) => hash === txHash);
       if (!checkDuplicated) {
         setErrText(
-          "This transaction has already been included in another proposal."
+          "This transaction has already been included in another proposal.",
         );
         return;
       }
@@ -429,21 +416,21 @@ const VotingTopDetail = ({
       const isDuplicated = dpList.find((hash) => hash !== undefined);
       if (isDuplicated) {
         setErrText(
-          "This transaction has already been included in another proposal."
+          "This transaction has already been included in another proposal.",
         );
         return;
       }
       // 트랜잭션의 to address가 현재 안건에 등록된 address와 동일한지 확인
       if (tx.to !== companyAddress) {
         setErrText(
-          "Please check this is the transaction sent to the company wallet address."
+          "Please check this is the transaction sent to the company wallet address.",
         );
         return;
       }
       // 트랜잭션의 value가 0인지 확인
       if (!parseInt(tx.value)) {
         setErrText(
-          "The transaction cannot be entered if the investment execution amount is 0 META."
+          "The transaction cannot be entered if the investment execution amount is 0 WEMIX.",
         );
         return;
       }
@@ -469,7 +456,7 @@ const VotingTopDetail = ({
       {
         id,
         txHashArr,
-      }
+      },
     );
     setTrx(trx);
   };
@@ -512,18 +499,19 @@ const VotingTopDetail = ({
           </div>
           {/* title */}
           <div className={cn("voting-title")}>{setTopic()}</div>
-          {state === "1" && creator === defaultAccount && (
-            <div className={cn("btn-wrap")}>
-              <button
-                onClick={() => {
-                  setIsVotingDurationModal(true);
-                }}
-              >
-                Change
-              </button>
-              <button onClick={() => updateProposal("revoke")}>Revoke</button>
-            </div>
-          )}
+          {state === "1" &&
+            creator === defaultAccount && (
+              <div className={cn("btn-wrap")}>
+                <button
+                  onClick={() => {
+                    setIsVotingDurationModal(true);
+                  }}
+                >Change</button>
+                <button
+                  onClick={() => updateProposal("revoke")}
+                >Revoke</button>
+              </div>
+            )}
         </div>
 
         {/*  모바일 popover 메뉴 */}

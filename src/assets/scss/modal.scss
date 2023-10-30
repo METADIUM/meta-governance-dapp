@@ -52,9 +52,8 @@
       align-items: center;
       gap: 20px;
       .error-wrap-image {
-        width: 72px;
-        height: 72px;
-        background-color: #7a7a89;
+        width: 60px;
+        height: 60px;
         background-image: url('../images/ic_error.svg');
         background-position: center;
         background-repeat: no-repeat;
@@ -569,5 +568,60 @@
         color: $gray;
       }
     }
+  }
+}
+
+.ant-message {
+  top: initial !important;
+  bottom: 40px;
+
+  .ant-message-notice {
+    // animation: ant_notice_animation 1s;
+    // animation-iteration-count: 1;
+
+    .ant-message-notice-content {
+      display: inline-flex;
+      padding: 12px 20px;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+
+      .ant-message-custom-content {
+        @include B12;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        i {
+          width: 24px;
+          height: 24px;
+          background-image: url('../images/ic_toast_error.svg');
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+        svg {
+          display: none;
+        }
+        .anticon {
+          top: 0px;
+          margin-right: 0px;
+        }
+      }
+    }
+  }
+}
+@keyframes ant_notice_animation {
+  from {
+    transform: translateY(100%);
+  }
+
+  50% {
+    transform: translateY(0%);
+  }
+
+  to {
+    transform: translateY(100%);
   }
 }
