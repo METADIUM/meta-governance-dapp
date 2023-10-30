@@ -82,10 +82,10 @@ export const MAINNET_CONTRACTS = [
   },
 ];
 
-// wemix chain info
+// METADIUM chain info
 export const DEVNET_CHAIN_INFO = {
   chainId: "0x459",
-  chainName: "Wemix Devnet",
+  chainName: "METADIUM Devnet",
   rpcUrls: "https://devnet-en.wemix.co",
   blockExplorerUrls: "https://explorer.test.wemix.com",
   name: "WEMIX",
@@ -103,12 +103,12 @@ export const TESTNET_CHAIN_INFO = {
 };
 export const MAINNET_CHAIN_INFO = {
   chainId: "0x457",
-  chainName: "Wemix Mainnet",
-  rpcUrls: "https://api.wemix.com",
-  blockExplorerUrls: "https://explorer.wemix.com",
-  name: "WEMIX",
+  chainName: "METADIUM Mainnet",
+  rpcUrls: "https://api.metadium.com/prod",
+  blockExplorerUrls: "https://explorer.metadium.com",
+  name: "META",
   decimals: 18,
-  symbol: "WEMIX",
+  symbol: "META",
 };
 
 // proposal list

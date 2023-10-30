@@ -38,10 +38,9 @@ const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
         <br />
         <h3>[Wallet Connect]</h3>
         <p>
-          Wallet Connect supports mobile wallets that support the WEMIX 3.0
+          Wallet Connect supports mobile wallets that support the METADIUM
           network.
         </p>
-        <p>*Connectable with WEMIX Wallet App</p>
       </div>
       <Button
         className="walletlist-cancel-btn"

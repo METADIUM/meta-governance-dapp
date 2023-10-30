@@ -630,10 +630,10 @@ const Proposal = () => {
             "Proposal Submit Error"
           );
         }
-        // check if staking address has wemix
+        // check if staking address has META
         if (balance < newLockedAmount) {
           return getErrModal(
-            "Not Enough WEMIX to Stake.",
+            "Not Enough META to Stake.",
             "Proposal Submit Error"
           );
         }
@@ -705,20 +705,20 @@ const Proposal = () => {
         if (Number(oldMemberBalance) !== newLockedAmount) {
           return getErrModal(
             [
-              "Invalid Replace WEMIX Amount",
+              "Invalid Replace META Amount",
               <br />,
               `(Old Address: ${util.convertWeiToEther(
                 oldMemberBalance,
                 "ether"
-              )} WEMIX Locked)`,
+              )} META Locked)`,
             ],
             "Proposal Submit Error"
           );
         }
-        // check if staking address has wemix
+        // check if staking address has META
         if (newMemberBalance < newLockedAmount) {
           return getErrModal(
-            "Not Enough WEMIX Stake (New)",
+            "Not Enough META Stake (New)",
             "Proposal Submit Error"
           );
         }

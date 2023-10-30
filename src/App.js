@@ -12,7 +12,6 @@ import "./assets/scss/common.scss";
 
 import i18n from "./i18n";
 
-import OGHeader from "./components/OGHeader";
 import { AuthCtx } from "./contexts/AuthContext";
 import { usePrevious } from "./hooks/usePrevious";
 import { web3Instance } from "./web3";
@@ -78,7 +77,6 @@ const App = ({ children }) => {
         ) : (
           <>
             {/* <div className='flex-column voting-wrap'> */}
-            <OGHeader />
             <Content>
               {isWeb3Loaded ? (
                 <div>
@@ -89,7 +87,7 @@ const App = ({ children }) => {
                 </div>
               ) : (
                 getErrModal(
-                  "This is an unknown network. Please connect to WEMIX network",
+                  "This is an unknown network. Please connect to METADIUM network",
                   "Connecting Error"
                 )
               )}

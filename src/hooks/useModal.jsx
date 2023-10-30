@@ -9,7 +9,7 @@ const useModal = () => {
   const getErrModal = (
     _err = "Unknown Error",
     _title = "Unknown Error",
-    _link = false,
+    _link = false
   ) => {
     if (_err.includes("error:")) _err = _err.split("error:")[1];
 
@@ -17,9 +17,9 @@ const useModal = () => {
     setContent(_err);
     if (_link) {
       setErrLink(
-        `https://microscope.${
-          process.env.REACT_APP_MODE === "production" ? "" : "test."
-        }wemix.com/${_link}`,
+        `https://${
+          process.env.REACT_APP_MODE === "production" ? "" : "testnet"
+        }explorer.metadium.com/${_link}`
       );
     } else setErrLink(false);
     setIsModalOpened(true);

@@ -3,7 +3,7 @@ import { Button, Menu, Input, Affix } from "antd";
 
 import "./style/style.css";
 
-// TODO Wemix apply form 생기면 아래 코드 수정 필요
+// TODO META apply form 생기면 아래 코드 수정 필요
 const SubHeader = ({
   netName,
   placeholder,

@@ -11,11 +11,11 @@ import { publicProvider } from "wagmi/providers/public";
 import { CURRENT_SPEC, PROJECT_ID } from "../constants";
 // import { mainnet } from "wagmi/chains";
 
-export const WEMIX = {
+export const META = {
   ...CURRENT_SPEC,
 };
 
-const chains = [WEMIX];
+const chains = [META];
 const projectId = PROJECT_ID;
 
 const { publicClient } = configureChains(chains, [
@@ -36,7 +36,7 @@ const WalletConnector = ({ children }) => {
       {children}
       {/* Header z-index is 100 */}
       <Web3Modal
-        defaultChain={WEMIX}
+        defaultChain={META}
         projectId={projectId}
         ethereumClient={ethereumClient}
         themeVariables={{ "--w3m-z-index": 101 }}

@@ -444,10 +444,10 @@ class ProposalForm extends React.Component {
             "Proposal Submit Error"
           );
         }
-        // check if staking address has wemix
+        // check if staking address has META
         if (balance < newLockedAmount) {
           return this.props.getErrModal(
-            "Not Enough WEMIX to Stake.",
+            "Not Enough META to Stake.",
             "Proposal Submit Error"
           );
         }
@@ -521,20 +521,20 @@ class ProposalForm extends React.Component {
         if (Number(oldMemberBalance) !== newLockedAmount) {
           return this.props.getErrModal(
             [
-              "Invalid Replace WEMIX Amount",
+              "Invalid Replace META Amount",
               <br />,
               `(Old Address: ${util.convertWeiToEther(
                 oldMemberBalance,
                 "ether"
-              )} WEMIX Locked)`,
+              )} META Locked)`,
             ],
             "Proposal Submit Error"
           );
         }
-        // check if staking address has wemix
+        // check if staking address has META
         if (newMemberBalance < newLockedAmount) {
           return this.props.getErrModal(
-            "Not Enough WEMIX Stake (New)",
+            "Not Enough META Stake (New)",
             "Proposal Submit Error"
           );
         }

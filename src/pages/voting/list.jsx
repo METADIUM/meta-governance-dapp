@@ -137,7 +137,7 @@ const VotingList = () => {
     )[0].address;
     try {
       /* 
-        from, to, data, gasPrice, value 중 어느값이 없으면 Wemix wallet이 데이터를 화면에 그리지 못합니다.
+        from, to, data, gasPrice, value 중 어느값이 없으면 데이터를 화면에 그리지 못합니다.
       **/
       await sendTransactionAsync({
         from: address,

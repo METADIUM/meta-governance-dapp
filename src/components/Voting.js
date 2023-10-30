@@ -191,7 +191,7 @@ class Voting extends React.Component {
           <p className="description flex-full">
             Authority Address: {newStakerAddress}
             <br />
-            WEMIX To be Locked: {lockAmount} WEMIX
+            META To be Locked: {lockAmount} META
           </p>
         );
       }
@@ -232,7 +232,7 @@ class Voting extends React.Component {
               <br />
               New Authority Address: {newStakerAddress}
               <br />
-              WEMIX To be Locked: {lockAmount} WEMIX
+              META To be Locked: {lockAmount} META
             </p>
           );
         }
@@ -267,13 +267,11 @@ class Voting extends React.Component {
         } else if (envVariableName === "Authority Member Staking Amount") {
           description += `${util.convertWeiToEther(
             decodeValue[0]
-          )}-${util.convertWeiToEther(decodeValue[1])} WEMIX`;
+          )}-${util.convertWeiToEther(decodeValue[1])} META`;
         } else if (envVariableName === "Block Creation Time") {
           description += `${decodeValue[0] / 1000} s`;
         } else if (envVariableName === "Block Reward Amount") {
-          description += `${util.convertWeiToEther(
-            decodeValue[0]
-          )} WEMIX/Block`;
+          description += `${util.convertWeiToEther(decodeValue[0])} META/Block`;
         } else if (envVariableName === "Block Reward Distribution Method") {
           description = `Distribution Rate: ${
             decodeValue[0] / 100
@@ -309,7 +307,7 @@ class Voting extends React.Component {
       default:
         return (
           <p className="description flex-full">
-            WEMIX To be Locked: {lockAmount} WEMIX
+            META To be Locked: {lockAmount} META
           </p>
         );
     }
