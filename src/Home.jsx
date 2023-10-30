@@ -11,7 +11,10 @@ import VistalabsLogo from "./assets/images/partners/ic-vistalabs-logo.svg";
 import FbgLogo from "./assets/images/partners/ic-fbg-logo.svg";
 import RockxLogo from "./assets/images/partners/ic-rockx-logo.svg";
 
-import { ReactComponent as TempImage } from "./assets/images/temp_image.svg";
+
+import StakingImage from "./assets/images/staking-illust.png";
+import VotingImage from "./assets/images/voting-illust.png";
+
 
 import GovButton from "./components/voting/GovButton";
 
@@ -149,8 +152,7 @@ const Home = () => {
                   disclosure is made.
                 </p>
               </div>
-              {/* img 임시 처리 */}
-              <TempImage />
+              <img src={StakingImage} alt="staking illust" />
             </li>
             <li>
               <div>
@@ -163,8 +165,7 @@ const Home = () => {
                   to start new voting.
                 </p>
               </div>
-              {/* img 임시 처리 */}
-              <TempImage />
+              <img src={VotingImage} alt="voting illust" />
             </li>
           </ul>
         </div>
@@ -213,11 +214,7 @@ const Home = () => {
           </div>
           {/* more 버튼 */}
           {partners.length > 10 && !showAll && (
-            <GovButton
-              text={"More"}
-              type={"more-btn"}
-              onClick={handleShow}
-            />
+            <GovButton text={"More"} type={"more-btn"} onClick={handleShow} />
           )}
         </div>
       </div>

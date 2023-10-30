@@ -185,13 +185,13 @@ const Header = () => {
                         <div>
                           <dt>Locked</dt>
                           <dd>
-                            {lockedBalance} <span>META</span>
+                            {addCommasToNumber(lockedBalance)} <span>META</span>
                           </dd>
                         </div>
                         <div>
                           <dt>Staked</dt>
                           <dd>
-                            {myBalance} <span>META</span>
+                            {addCommasToNumber(myBalance)} <span>META</span>
                           </dd>
                         </div>
                       </dl>
