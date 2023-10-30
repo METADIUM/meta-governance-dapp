@@ -85,10 +85,6 @@ const VotingTopDetail = ({
       ? DEVMETANET_WHITE_LIST
       : DEVMETANET_WHITE_LIST;
 
-  // -------------------- useEffect
-  useEffect(() => {
-    setVotingDuration();
-  }, [setVotingDuration]);
 
   const resize = useCallback(() => {
     setOffset({
@@ -111,7 +107,7 @@ const VotingTopDetail = ({
 
   // -------------------- function
   // 투표 기간 설정
-  const setVotingDuration = () => {
+  const setVotingDuration = useCallback(() => {
     const max = util.convertSecondsToDay(votingDurationMax);
     const min = util.convertSecondsToDay(votingDurationMin);
 
@@ -122,7 +118,11 @@ const VotingTopDetail = ({
       };
       setOptions((prev) => [...prev, duration]);
     }
-  };
+  }, [votingDurationMax, votingDurationMin]);
+
+    useEffect(() => {
+      setVotingDuration();
+    }, [setVotingDuration]);
 
   // 투표 기간 변경 or 투표 삭제 처리
   const updateProposal = async (topic) => {
@@ -198,8 +198,8 @@ const VotingTopDetail = ({
           {
             title: "WEMIX to be locked",
             class: "text-bold",
-            value: `${locked} WEMIX`,
-          },
+            value: `${util.addCommasToNumber(locked)} META`,
+          }
         );
         break;
       // Replace Authority Member
@@ -237,10 +237,23 @@ const VotingTopDetail = ({
             {
               title: "WEMIX to be locked",
               class: "text-bold",
-              value: `${locked} WEMIX`,
-            },
+              value: `${util.addCommasToNumber(locked)} META`,
+            }
           );
         }
+        break;
+      case constants.ballotTypes.RemoveAuthorityMember:
+        contents.push(
+          {
+            title: "Remove Address",
+            value: oldStakerAddress,
+          },
+          {
+            title: "META to be locked",
+            class: "text-bold",
+            value: `${util.addCommasToNumber(locked)} META`,
+          }
+        );
         break;
       //  Governance Contract Address
       case constants.ballotTypes.GovernanceContractAddress:
@@ -335,7 +348,7 @@ const VotingTopDetail = ({
           contents.push({
             title: "META to be locked",
             class: "text-bold",
-            value: `${locked} WEMIX`,
+            value: `${util.addCommasToNumber(locked)} META`,
           });
         }
         break;
