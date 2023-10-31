@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Layout } from "antd";
 // partners logo
 import MetadiumLogo from "./assets/images/partners/ic-metadium-logo.svg";
@@ -84,16 +84,17 @@ let partners = [
   },
 ];
 
+const veiwingCount = 10;
+
 const Home = () => {
 
   const [isMobile, setIsMobile] = useState(false);
-  const [showAll, setShowAll] = useState(false);
+  const [showMore, setShowMore] = useState(partners);
 
-  const visibleItems = showAll ? partners : partners.slice(0, 10);
+  const visibleItem = useRef(veiwingCount);;
 
-  const handleShow = () => {
-    setShowAll(true);
-  }
+
+
 
   const checkMobile = () => {
     if (window.innerWidth < 720) {
@@ -188,7 +189,7 @@ const Home = () => {
           </div>
           {/* list */}
           <div className="partners-list">
-            {visibleItems.map((item, index) => (
+            {partners.slice(0, visibleItem.current).map((item, index) => (
               <div key={index} onClick={mobileShowInfo}>
                 <ul>
                   <li>
@@ -213,8 +214,12 @@ const Home = () => {
             ))}
           </div>
           {/* more 버튼 */}
-          {partners.length > 10 && !showAll && (
-            <GovButton text={"More"} type={"more-btn"} onClick={handleShow} />
+          {partners.length > visibleItem.current && (
+            <GovButton text={"More"} type={"more-btn"} onClick={() => {
+              visibleItem.current += veiwingCount;
+              setShowMore(partners.slice(0, visibleItem.current));
+            }
+            } />
           )}
         </div>
       </div>
