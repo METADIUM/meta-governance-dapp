@@ -2,23 +2,22 @@ import React from "react";
 import { hydrate, render } from "react-dom";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import * as serviceWorker from "./serviceWorker";
-import { GovInitProvider } from "./contexts/GovernanceInitContext";
-import { ModalProvider } from "./contexts/ModalContext";
-import { AuthProvider } from "./contexts/AuthContext";
 
 import App from "./App";
 import "./index.css";
 import "./i18n";
-import Header from "./components/Header";
 import Footer from "./components/Footer";
-
-import Loading from "./Loading";
+import Header from "./components/Header";
 import WalletConnector from "./components/WalletConnector";
+import { AuthProvider } from "./contexts/AuthContext";
+import { GovInitProvider } from "./contexts/GovernanceInitContext";
+import { ModalProvider } from "./contexts/ModalContext";
 import Home from "./Home";
+import Loading from "./Loading";
 import VotingDetail from "./pages/voting/detail";
 import VotingList from "./pages/voting/list";
 import Proposal from "./pages/voting/proposal";
+import * as serviceWorker from "./serviceWorker";
 
 const renderApp = () => (
   <BrowserRouter>

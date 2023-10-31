@@ -1,4 +1,6 @@
 import Web3 from "web3";
+
+import * as abis from "./abis/index";
 import {
   MAINNET_CHAIN_INFO,
   TESTNET_CHAIN_INFO,
@@ -9,7 +11,6 @@ import {
   walletTypes,
   DEVMETANET_CONTRACTS,
 } from "./constants";
-import * as abis from "./abis/index";
 
 const type = process.env.REACT_APP_MODE;
 const network = process.env.REACT_APP_NETWORK_TYPE;

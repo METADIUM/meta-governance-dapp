@@ -1,19 +1,12 @@
+import cn from 'classnames/bind';
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import cn from 'classnames/bind';
-import VotingTopProposal from '../../components/voting/VotingTopProposal.jsx';
-import '../../assets/scss/proposal.scss';
-
-import {
-  callContractMethod,
-  encodeABIValueInMethod,
-  web3Instance,
-} from '../../web3';
+import { useSendTransaction } from 'wagmi';
 
 import * as PComponent from '../../components/Forms';
 import * as MComponent from '../../components/MyForm';
-import * as util from '../../util';
-import { removeCommasFromNumber, addCommasToNumber } from '../../util';
+import VotingTopProposal from '../../components/voting/VotingTopProposal.jsx';
+import '../../assets/scss/proposal.scss';
 
 import {
   constants,
@@ -21,17 +14,21 @@ import {
   ENV_NAMES,
   ENV_VOTING_PROPOSAL_LIST,
 } from '../../constants';
+import { AuthCtx } from '../../contexts/AuthContext.js';
+import { GovInitCtx } from '../../contexts/GovernanceInitContext.jsx';
+import { ModalContext } from '../../contexts/ModalContext.jsx';
+import { removeCommasFromNumber, addCommasToNumber } from '../../util';
+import * as util from '../../util';
+import {
+  callContractMethod,
+  encodeABIValueInMethod,
+  web3Instance,
+} from '../../web3';
 import {
   DEVMETANET_WHITE_LIST,
   MAINNET_WHITE_LIST,
   TESTNET_WHITE_LIST,
 } from '../../whitelist.js';
-
-import { GovInitCtx } from '../../contexts/GovernanceInitContext.jsx';
-
-import { useSendTransaction } from 'wagmi';
-import { ModalContext } from '../../contexts/ModalContext.jsx';
-import { AuthCtx } from '../../contexts/AuthContext.js';
 
 const Proposal = () => {
   const { getErrModal } = useContext(ModalContext);

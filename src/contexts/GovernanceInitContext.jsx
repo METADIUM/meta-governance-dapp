@@ -1,6 +1,10 @@
 import React, { createContext, useEffect, useContext } from "react";
-
 import { useState, useRef } from "react";
+
+import { constants, ENV_VOTING_PROPOSAL_LIST } from "../constants";
+import { ModalContext } from "../contexts/ModalContext";
+import AuthorityList from "../static/AuthorityList.json";
+import * as util from "../util";
 import getWeb3Instance, {
   callBatchMethod,
   callContractMethod,
@@ -8,10 +12,6 @@ import getWeb3Instance, {
   onlyCallContractMethod,
   web3Instance,
 } from "../web3";
-import * as util from "../util";
-import { constants, ENV_VOTING_PROPOSAL_LIST } from "../constants";
-import AuthorityList from "../static/AuthorityList.json";
-import { ModalContext } from "../contexts/ModalContext";
 
 const initData = {
   ballotTypeData: [],

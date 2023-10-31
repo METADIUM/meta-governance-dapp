@@ -1,6 +1,6 @@
 import React, { createContext } from "react";
-import { ErrModal } from "../components";
 
+import { ErrModal } from "../components";
 import { useModal } from "../hooks/useModal";
 
 const ModalContext = createContext();

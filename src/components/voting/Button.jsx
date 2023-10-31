@@ -1,5 +1,6 @@
-import React from "react";
 import cn from "classnames/bind";
+import React from "react";
+
 import { ReactComponent as IconWallet } from "../../assets/images/ico_wallet.svg";
 
 const Button = ({

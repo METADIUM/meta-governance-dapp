@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
 import cn from "classnames/bind";
-import { useNavigate } from "react-router-dom";
 import { throttle } from "lodash";
-import { addCommasToNumber } from "../util";
-import { AuthCtx } from "../contexts/AuthContext";
-import { GovInitCtx } from "../contexts/GovernanceInitContext";
-import { DisConnectWalletModal, ErrModal } from "./Modal";
-import { web3Instance } from "../web3";
-import { StakingModal } from "./Modal";
+import React, { useState, useEffect, useCallback, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { ReactComponent as IconClose } from "../assets/images/ico_close.svg";
-import { ReactComponent as IconMenu } from "../assets/images/ico_menu.svg";
-import { loginAcc } from "../util";
-import Button from "./voting/Button";
-import { ModalContext } from "../contexts/ModalContext";
 import HeaderLogo from "./HeaderLogo";
 import HeaderMenu from "./HeaderMenu";
+import { StakingModal } from "./Modal";
+import { DisConnectWalletModal, ErrModal } from "./Modal";
+import Button from "./voting/Button";
+import { ReactComponent as IconClose } from "../assets/images/ico_close.svg";
+import { ReactComponent as IconMenu } from "../assets/images/ico_menu.svg";
+import { AuthCtx } from "../contexts/AuthContext";
+import { GovInitCtx } from "../contexts/GovernanceInitContext";
+import { ModalContext } from "../contexts/ModalContext";
+import { addCommasToNumber } from "../util";
+import { loginAcc } from "../util";
+import { web3Instance } from "../web3";
+
 const Header = () => {
   const { isWeb3Loaded, isContractReady } = useContext(GovInitCtx);
 

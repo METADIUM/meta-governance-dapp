@@ -1,7 +1,7 @@
+import { Menu } from "antd";
+import cn from "classnames/bind";
 import React, { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import cn from "classnames/bind";
-import { Menu } from "antd";
 // TODO:  path는 상황에 맞게 넣어주세요. voting, myinfo 페이지에 layout 내용 넣을 때 props로 activate="menu-voting" or activate="menu-myinfo" 이런식으로 메뉴 키값에 맞게 넣어주세요.
 const menuList = [
   {

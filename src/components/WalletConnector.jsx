@@ -1,4 +1,3 @@
-import React from "react";
 // WalletConnect
 import {
   EthereumClient,
@@ -6,8 +5,10 @@ import {
   w3mProvider,
 } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
+import React from "react";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
+
 import { CURRENT_SPEC, PROJECT_ID } from "../constants";
 // import { mainnet } from "wagmi/chains";
 

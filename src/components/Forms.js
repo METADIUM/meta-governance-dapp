@@ -1,11 +1,12 @@
-import React from 'react';
 import { Input, Form, Select } from 'antd';
+import cn from 'classnames/bind';
+import React from 'react';
 
-import { convertSecondsToDay, shouldPass } from '../util';
+import GovButton from './voting/GovButton';
 import VotingInputArea from './voting/VotingInputArea';
 import { ReactComponent as IconArrowDown } from '../assets/images/ic-select-arrow.svg';
-import cn from 'classnames/bind';
-import GovButton from './voting/GovButton';
+import { convertSecondsToDay, shouldPass } from '../util';
+
 import '../assets/scss/proposal.scss';
 
 const { TextArea } = Input;

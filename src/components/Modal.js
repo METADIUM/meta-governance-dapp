@@ -1,20 +1,12 @@
-import React, { useContext, useState } from "react";
 import { Button, Modal, Select, Icon, Slider } from "antd";
+import React, { useContext, useState } from "react";
 import { useSendTransaction } from "wagmi";
-import { removeCommasFromNumber } from "../util";
 
-import { convertSecondsToDay, addCommasToNumber } from "../util";
-
-// import "./style/style.css";
-import "../assets/scss/modal.scss";
-import "../assets/scss/proposal.scss";
-// 2023.02.24 수정 voting 페이지 팝업 추가 관련코드 추가
-import cn from "classnames/bind";
-// import { ReactComponent as IconPopupClose } from '../assets/images/ico_popup_close.svg';
 import VotingInputArea from "./voting/VotingInputArea";
-// import { use } from 'i18next';
-
-// 2023.07.04 App.js의 Staking 관련 로직 Modal로 이동
+import { AuthCtx } from "../contexts/AuthContext";
+import { ModalContext } from "../contexts/ModalContext";
+import { removeCommasFromNumber } from "../util";
+import { convertSecondsToDay, addCommasToNumber } from "../util";
 import * as util from "../util";
 import {
   encodeABIValueInMethod,
@@ -22,8 +14,17 @@ import {
   web3Instance,
 } from "../web3";
 
-import { ModalContext } from "../contexts/ModalContext";
-import { AuthCtx } from "../contexts/AuthContext";
+
+// import "./style/style.css";
+import "../assets/scss/modal.scss";
+import "../assets/scss/proposal.scss";
+// 2023.02.24 수정 voting 페이지 팝업 추가 관련코드 추가
+import cn from "classnames/bind";
+// import { ReactComponent as IconPopupClose } from '../assets/images/ico_popup_close.svg';
+// import { use } from 'i18next';
+
+// 2023.07.04 App.js의 Staking 관련 로직 Modal로 이동
+
 
 const Option = Select.Option;
 

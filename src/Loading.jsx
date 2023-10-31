@@ -1,5 +1,5 @@
-import React from "react";
 import cn from "classnames";
+import React from "react";
 
 const Loading = ({ txLoading = false }) => {
   return (

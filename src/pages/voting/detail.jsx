@@ -1,30 +1,32 @@
-import React, { useEffect, useState, useContext } from 'react';
-import VotingTopDetail from '../../components/voting/VotingTopDetail.jsx';
-import VotingTitle from '../../components/voting/VotingTitle.jsx';
-import VotingStickChart from '../../components/voting/VotingStickChart';
-import cn from 'classnames/bind';
-
 import { message, Table } from 'antd';
+import cn from 'classnames/bind';
+import React, { useEffect, useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSendTransaction } from 'wagmi';
+
+import { VotingModal } from '../../components/Modal.js';
+import VotingStickChart from '../../components/voting/VotingStickChart';
+import VotingTitle from '../../components/voting/VotingTitle.jsx';
+import VotingTopDetail from '../../components/voting/VotingTopDetail.jsx';
+import { constants } from '../../constants.js';
+import { AuthCtx } from '../../contexts/AuthContext.js';
+import { GovInitCtx } from '../../contexts/GovernanceInitContext.jsx';
+import { useModal } from '../../hooks/useModal.jsx';
+import Loading from '../../Loading';
+import { checkUndefined, timeConverter } from '../../util.js';
 import {
   callContractMethod,
   encodeABIValueInMethod,
   onlyCallContractMethod,
   web3Instance,
 } from '../../web3.js';
-import { checkUndefined, timeConverter } from '../../util.js';
-import { constants } from '../../constants.js';
-import Loading from '../../Loading';
-import { VotingModal } from '../../components/Modal.js';
 import {
   DEVMETANET_WHITE_LIST,
   MAINNET_WHITE_LIST,
   TESTNET_WHITE_LIST,
 } from '../../whitelist.js';
-import { GovInitCtx } from '../../contexts/GovernanceInitContext.jsx';
-import { useModal } from '../../hooks/useModal.jsx';
-import { useSendTransaction } from 'wagmi';
-import { AuthCtx } from '../../contexts/AuthContext.js';
+
+
 import '../../assets/scss/modal.scss';
 
 const VotingDetail = () => {

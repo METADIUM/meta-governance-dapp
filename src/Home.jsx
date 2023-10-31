@@ -1,21 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
 import { Layout } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+
 // partners logo
-import MetadiumLogo from "./assets/images/partners/ic-metadium-logo.svg";
-import CplabsLogo from "./assets/images/partners/ic-cplabs-logo.svg";
-import OntolgyLogo from "./assets/images/partners/ic-ontology-logo.png"
-import MblockLogo from "./assets/images/partners/ic-mblock-logo.svg";
-import PlaydappLogo from "./assets/images/partners/ic-playdapp-logo.svg";
 import BifrostLogo from "./assets/images/partners/ic-bifrost-logo.svg";
-import VistalabsLogo from "./assets/images/partners/ic-vistalabs-logo.svg";
+import CplabsLogo from "./assets/images/partners/ic-cplabs-logo.svg";
 import FbgLogo from "./assets/images/partners/ic-fbg-logo.svg";
+import MblockLogo from "./assets/images/partners/ic-mblock-logo.svg";
+import MetadiumLogo from "./assets/images/partners/ic-metadium-logo.svg";
+import OntolgyLogo from "./assets/images/partners/ic-ontology-logo.png"
+import PlaydappLogo from "./assets/images/partners/ic-playdapp-logo.svg";
 import RockxLogo from "./assets/images/partners/ic-rockx-logo.svg";
-
-
+import VistalabsLogo from "./assets/images/partners/ic-vistalabs-logo.svg";
 import StakingImage from "./assets/images/staking-illust.png";
 import VotingImage from "./assets/images/voting-illust.png";
-
-
 import GovButton from "./components/voting/GovButton";
 
 let partners = [

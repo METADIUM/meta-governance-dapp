@@ -1,22 +1,22 @@
-import React from "react";
 import { Button, Select, Icon } from "antd";
+import React from "react";
 
-import {
-  callContractMethod,
-  encodeABIValueInMethod,
-  web3Instance,
-} from "../web3";
 
 import * as PComponent from "./Forms";
 import * as MComponent from "./MyForm";
-import * as util from "../util";
-
 import {
   constants,
   ENV_MY_INFO_PROPOSAL_LIST,
   ENV_NAMES,
   ENV_VOTING_PROPOSAL_LIST,
 } from "../constants";
+import * as util from "../util";
+import {
+  callContractMethod,
+  encodeABIValueInMethod,
+  web3Instance,
+} from "../web3";
+
 
 class ProposalForm extends React.Component {
   data = {

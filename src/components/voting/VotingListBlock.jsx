@@ -1,11 +1,15 @@
-import React, { useCallback } from "react"; // 23.04.20 수정: useCallback 추가
 import cn from "classnames/bind";
-import Status from "./Status.jsx";
+import React, { useCallback } from "react"; // 23.04.20 수정: useCallback 추가
+import { Link } from "react-router-dom";
+
+
+import RevokeButton from "./Button";
 import IconWithText from "./IconWithText.jsx";
+import Status from "./Status.jsx";
 import VotingChartMini from "./VotingChartMini.jsx";
 import { loginAcc, timeConverter } from "../../util.js";
-import { Link } from "react-router-dom";
-import RevokeButton from "./Button";
+
+
 
 // case 확인을 위한 props
 const VotingListBlock = ({

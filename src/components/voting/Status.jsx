@@ -1,5 +1,6 @@
-import React from "react";
 import cn from "classnames/bind";
+import React from "react";
+
 import { constants } from "../../constants";
 
 const Status = ({ status }) => {
