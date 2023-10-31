@@ -97,6 +97,13 @@
         align-items: center;
         justify-content: center;
         max-height: 40px;
+
+        &.gov_btn {
+          background: $blue1;
+          > span {
+            color: $white;
+          }
+        }
       }
 
       // error go to explorer btn
@@ -110,6 +117,24 @@
       }
     }
   }
+
+  
+    .ant-modal-content {
+      .ant-modal-footer {
+        .ant-btn {
+          &.gov_btn {
+            background: $blue1;
+
+            > span {
+              color: $white;
+            }
+          }
+        }
+      }
+    }
+  
+  
+  
 
   // @-webkit-keyframes drawer {
   //   0% {
@@ -552,7 +577,6 @@
     }
     button {
       width: 100%;
-
       display: flex;
       padding: 12px 16px;
       justify-content: center;
@@ -566,6 +590,15 @@
         @include B16;
         line-height: 1;
         color: $gray;
+      }
+
+      &.gov_btn {
+        background: $blue1;
+        border: none;
+
+        > span {
+          color: $white;
+        }
       }
     }
   }
