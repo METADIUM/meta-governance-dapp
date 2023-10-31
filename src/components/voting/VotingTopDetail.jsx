@@ -1,27 +1,28 @@
-import React, { useState, useCallback, useEffect } from "react";
+import { Dropdown } from "antd";
 import cn from "classnames/bind";
+import { throttle } from "lodash";
+import React, { useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Button from "./Button.jsx";
 import Status from "./Status.jsx";
 import { ReactComponent as IconPrev } from "../../assets/images/ic-prev.svg";
-
-/* 23.04.20 수정: TxHashAddModal, VotingInputArea 추가 */
-import { VotingModal, TxHashAddModal } from "../../components/Modal.js";
-import VotingInputArea from "../voting/VotingInputArea";
-
-import { throttle } from "lodash";
-import { Dropdown } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import * as util from "../../util";
-import { constants, ENV_PARAMETER_COUNT } from "../../constants.js";
-import { encodeABIValueInMethod, web3Instance } from "../../web3.js";
-
-/* 23.04.20 수정: IconDelete 추가 */
 import { ReactComponent as IconDelete } from "../../assets/images/ico_popup_close.svg";
+import { VotingModal, TxHashAddModal } from "../../components/Modal.js";
+import { constants, ENV_PARAMETER_COUNT } from "../../constants.js";
+import * as util from "../../util";
+import { encodeABIValueInMethod, web3Instance } from "../../web3.js";
 import {
   DEVMETANET_WHITE_LIST,
   MAINNET_WHITE_LIST,
   TESTNET_WHITE_LIST,
 } from "../../whitelist.js";
+import VotingInputArea from "../voting/VotingInputArea";
+
+
+/* 23.04.20 수정: TxHashAddModal, VotingInputArea 추가 */
+
+/* 23.04.20 수정: IconDelete 추가 */
 
 const VotingTopDetail = ({
   isWait,

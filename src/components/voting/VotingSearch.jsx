@@ -1,7 +1,6 @@
+import cn from "classnames/bind";
 import React, { useState } from "react";
 
-import { ReactComponent as IconPopupClose } from "../../assets/images/ico_popup_close.svg";
-import cn from "classnames/bind";
 
 export default function VotingSearch({
   setIsFilter,

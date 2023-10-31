@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
 import cn from "classnames/bind";
+import React, { useState } from "react";
+
 import "../style/style.css";
+import Button from "./Button";
 import VotingInputArea from "./VotingInputArea";
 import VotingSelect from "./VotingSelect";
-import Button from "./Button";
 
 const VotingTextfield = () => {
   const [inputValueAddress, setValueAddress] = useState("default value");

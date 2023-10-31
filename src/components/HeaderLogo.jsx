@@ -1,6 +1,7 @@
+import cn from "classnames/bind";
 import React from "react";
 import { Link } from "react-router-dom";
-import cn from "classnames/bind";
+
 import { ReactComponent as IconSymbol } from "../assets/images/header-logo-white.svg";
 
 const HeaderLogo = () => {

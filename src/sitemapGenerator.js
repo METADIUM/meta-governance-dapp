@@ -1,6 +1,7 @@
 require("@babel/register");
 
 const router = require("./sitemapRoutes").default;
+
 const Sitemap = require("react-router-sitemap").default;
 
 function generateSitemap() {

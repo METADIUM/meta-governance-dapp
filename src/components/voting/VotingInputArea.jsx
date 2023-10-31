@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
 import cn from 'classnames/bind';
+import React, { useState } from 'react';
+
 import { removeCommasFromNumber } from '../../util';
 
 const VotingInputArea = ({

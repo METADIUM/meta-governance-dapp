@@ -1,21 +1,21 @@
-import React, { useState, useContext, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { Layout } from "antd";
-import { AccessFailedModal } from "./components";
-import Loading from "./Loading";
+import React, { useContext, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
+import { AccessFailedModal } from "./components";
+import { AuthCtx } from "./contexts/AuthContext";
 import { GovInitCtx } from "./contexts/GovernanceInitContext";
+import { ModalContext } from "./contexts/ModalContext";
+import { usePrevious } from "./hooks/usePrevious";
+import i18n from "./i18n";
+import Loading from "./Loading";
+import { web3Instance } from "./web3";
+
 
 import "./App.css";
 import "./components/style/style.css";
 import "./assets/scss/common.scss";
 
-import i18n from "./i18n";
-
-import { AuthCtx } from "./contexts/AuthContext";
-import { usePrevious } from "./hooks/usePrevious";
-import { web3Instance } from "./web3";
-import { ModalContext } from "./contexts/ModalContext";
 
 const { Content } = Layout;
 

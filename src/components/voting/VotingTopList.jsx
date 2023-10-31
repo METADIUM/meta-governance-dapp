@@ -1,8 +1,6 @@
 import React from "react";
-import cn from "classnames/bind";
-import Button from "./Button.jsx";
+
 import VotingTopDashBoard from "./VotingTopDashBoard.jsx";
-import { Link } from "react-router-dom";
 
 const VotingTopList = ({
   isMember,

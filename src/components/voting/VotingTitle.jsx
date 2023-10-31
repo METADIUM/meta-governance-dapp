@@ -1,8 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
 import cn from 'classnames/bind';
-import VotingSearch from '../../components/voting/VotingSearch';
-import VotingSelect from './VotingSelect';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import VotingSelect from './VotingSelect';
+import VotingSearch from '../../components/voting/VotingSearch';
+
+
 
 const VotingTitle = ({
   type = "md",

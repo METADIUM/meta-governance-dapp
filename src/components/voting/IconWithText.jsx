@@ -1,5 +1,6 @@
-import React, { useCallback } from "react";
 import cn from "classnames/bind";
+import React, { useCallback } from "react";
+
 import { ReactComponent as IconTime } from "../../assets/images/ic-clock.svg";
 import { ReactComponent as IconPerson } from "../../assets/images/ic-member.svg";
 

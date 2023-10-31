@@ -1,3 +1,4 @@
+import cn from "classnames/bind";
 import React, {
   useContext,
   useEffect,
@@ -5,12 +6,17 @@ import React, {
   useCallback,
   useRef,
 } from "react";
-import cn from "classnames/bind";
-import VotingTopList from "../../components/voting/VotingTopList.jsx";
-import VotingListBlock from "../../components/voting/VotingListBlock.jsx";
-import VotingTitle from "../../components/voting/VotingTitle.jsx";
+import { useNavigate } from "react-router-dom";
+import { useSendTransaction } from "wagmi";
+
 
 // import { ReactComponent as IconEmpty } from "../../assets/images/ico_empty.svg";
+
+
+import MoreButton from "../../components/voting/GovButton.jsx";
+import VotingListBlock from "../../components/voting/VotingListBlock.jsx";
+import VotingTitle from "../../components/voting/VotingTitle.jsx";
+import VotingTopList from "../../components/voting/VotingTopList.jsx";
 import {
   constants,
   DEVMETANET_CONTRACTS,
@@ -18,17 +24,11 @@ import {
   MAINNET_CONTRACTS,
   TESTNET_CONTRACTS,
 } from "../../constants.js";
-
-import { web3Instance } from "../../web3.js";
-import { useNavigate } from "react-router-dom";
-import { checkUndefined } from "../../util.js";
-
-import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx";
-
-import { useSendTransaction } from "wagmi";
-import MoreButton from "../../components/voting/GovButton.jsx";
 import { AuthCtx } from "../../contexts/AuthContext.js";
+import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx";
 import { ModalContext } from "../../contexts/ModalContext.jsx";
+import { checkUndefined } from "../../util.js";
+import { web3Instance } from "../../web3.js";
 
 // 화면에  뿌릴 갯수
 const viewingCount = 5;

@@ -8,8 +8,8 @@ import {
   SubNav,
   ChangeModal,
 } from "./";
+import { constants, ENV_PARAMETER_COUNT } from "../constants";
 import Loading from "../Loading";
-
 import * as util from "../util";
 import {
   callContractMethod,
@@ -17,7 +17,7 @@ import {
   onlyCallContractMethod,
   web3Instance,
 } from "../web3";
-import { constants, ENV_PARAMETER_COUNT } from "../constants";
+
 
 // import "./style/style.css";
 

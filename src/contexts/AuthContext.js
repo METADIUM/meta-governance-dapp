@@ -1,9 +1,10 @@
+import { useWeb3Modal } from "@web3modal/react";
 import React, { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { web3Instance, callContractMethod } from "../web3";
-import * as util from "../util";
 import { useAccount, useNetwork, useDisconnect } from "wagmi";
-import { useWeb3Modal } from "@web3modal/react";
+
+import * as util from "../util";
+import { web3Instance, callContractMethod } from "../web3";
 
 const AuthCtx = createContext();
 
