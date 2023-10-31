@@ -124,7 +124,7 @@ export const AddProposalForm = ({
         New Authority Address <span className={cn('required')}>*</span>
       </strong>
       <div className={cn('description')}>
-        When registering the first Authority Address, the Stking Address, Voting
+        When registering the first Authority Address, the Staking Address, Voting
         Address, and Reward Address are the same.
       </div>
       <VotingInputArea

@@ -474,7 +474,7 @@ textarea {
         height: auto;
         background-color: transparent;
         height: 46px;
-
+        line-height: 1;
         textarea {
           line-height: 1;
           white-space: normal;
@@ -792,7 +792,7 @@ textarea {
   color: white;
   border-radius: 8px;
   max-height: 40px;
-  
+
   @include xsm {
     width: 100%;
   }

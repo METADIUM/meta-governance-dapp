@@ -53,8 +53,10 @@
     "build:testnet": "CI=false && yarn run pbuild:testnet && dotenv -e .env.testnet react-app-rewired build && yarn postbuild",
     "build:mainnet": "CI=false && yarn run pbuild:mainnet && dotenv -e .env.production react-app-rewired build && yarn postbuild",
     "build:mainnet2": "CI=false && yarn run pbuild:mainnet2 && dotenv -e .env.mainnet2 react-app-rewired build && yarn postbuild",
-    "test": "eslint './src/**/*.{js,jsx}'",
-    "fix": "eslint './src/**/*.{js,jsx}' --fix",
+    "test": "standard --parser babel-eslint",
+    "fix": "standard --parser babel-eslint --fix",
+    "test:lint": "eslint './src/**/*.{js,jsx}'",
+    "fix:lint": "eslint './src/**/*.{js,jsx}' --fix",
     "eject": "react-scripts eject",
     "postbuild": "react-snap"
   },
