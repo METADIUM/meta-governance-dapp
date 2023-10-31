@@ -394,6 +394,7 @@ textarea {
           border-radius: 8px;
           border-radius: 8px;
           border: 1px solid $gray4;
+          box-shadow: none;
         }
         .ant-select-selection__rendered {
           @include R14;

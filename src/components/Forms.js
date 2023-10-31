@@ -69,7 +69,7 @@ const ProposalFormFooter = ({
           {useVotingDuration && (
             <>
               <strong>
-                Voting Duration<span className={cn('required')}>*</span>
+                Voting Duration<span className={cn('required')}> *</span>
               </strong>
               <Select
                 defaultValue={label(min)}
@@ -124,8 +124,8 @@ export const AddProposalForm = ({
         New Authority Address <span className={cn('required')}>*</span>
       </strong>
       <div className={cn('description')}>
-        When registering the first Authority Address, the Staking Address, Voting
-        Address, and Reward Address are the same.
+        When registering the first Authority Address, the Staking Address,
+        Voting Address, and Reward Address are the same.
       </div>
       <VotingInputArea
         name='newAddr'
