@@ -44,7 +44,7 @@ const GovInitProvider = ({ children }) => {
 
   useEffect(() => {
     init();
-  }, []);
+  }, [init]);
 
   const init = async () => {
     await getWeb3Instance().then(

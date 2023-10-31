@@ -1,9 +1,8 @@
 import React from 'react';
-import { Input, Form, Icon, Button } from 'antd';
+import { Form } from 'antd';
 
 import { shouldPass } from '../util';
 import VotingInputArea from './voting/VotingInputArea';
-import VotingButton from '../components/voting/Button';
 import cn from 'classnames/bind';
 import GovButton from './voting/GovButton';
 

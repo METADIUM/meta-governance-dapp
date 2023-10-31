@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import { Button, Modal, Select, Icon, Slider, Input } from "antd";
-import { useSendTransaction, useWaitForTransaction } from "wagmi";
+import { Button, Modal, Select, Icon, Slider } from "antd";
+import { useSendTransaction } from "wagmi";
 import { removeCommasFromNumber } from "../util";
 
 import { convertSecondsToDay, addCommasToNumber } from "../util";

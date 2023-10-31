@@ -10,7 +10,7 @@ import VotingInputArea from "../voting/VotingInputArea";
 
 import { throttle } from "lodash";
 import { Dropdown } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as util from "../../util";
 import { constants, ENV_PARAMETER_COUNT } from "../../constants.js";
 import { encodeABIValueInMethod, web3Instance } from "../../web3.js";

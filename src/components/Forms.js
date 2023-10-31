@@ -1,13 +1,12 @@
-import React from "react";
-import { Button, Input, Form, Icon, Select } from "antd";
-import VotingButton from "../components/voting/Button";
+import React from 'react';
+import { Input, Form, Select } from 'antd';
 
-import { convertSecondsToDay, shouldPass } from "../util";
-import VotingInputArea from "./voting/VotingInputArea";
-import { ReactComponent as IconArrowDown } from "../assets/images/ic-select-arrow.svg";
-import cn from "classnames/bind";
-import GovButton from "./voting/GovButton";
-import "../assets/scss/proposal.scss";
+import { convertSecondsToDay, shouldPass } from '../util';
+import VotingInputArea from './voting/VotingInputArea';
+import { ReactComponent as IconArrowDown } from '../assets/images/ic-select-arrow.svg';
+import cn from 'classnames/bind';
+import GovButton from './voting/GovButton';
+import '../assets/scss/proposal.scss';
 
 const { TextArea } = Input;
 
@@ -64,21 +63,20 @@ const ProposalFormFooter = ({
   };
   return (
     <>
-      <div className="voting-duration">
-        <div className="voting-duration-wrap">
+      <div className='voting-duration'>
+        <div className='voting-duration-wrap'>
           {useVotingDuration && (
             <>
               <strong>
-                Voting Duration<span className={cn("required")}>*</span>
+                Voting Duration<span className={cn('required')}>*</span>
               </strong>
               <Select
                 defaultValue={label(min)}
-                name="votDuration"
+                name='votDuration'
                 disabled={loading}
-                className="voting-filter proposal"
+                className='voting-filter proposal'
                 suffixIcon={<IconArrowDown />}
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 {selectOption()}
               </Select>
             </>
@@ -93,9 +91,9 @@ const ProposalFormFooter = ({
           loading={loading}
         /> */}
         <GovButton
-          text="Submit"
+          text='Submit'
           disabled={loading || disabled}
-          type="bg"
+          type='bg'
           loading={loading}
           onClick={() => {}}
         />
@@ -120,81 +118,81 @@ export const AddProposalForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        New Authority Address <span className={cn("required")}>*</span>
+        New Authority Address <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         When registering the first Authority Address, the Stking Address, Voting
         Address, and Reward Address are the same.
       </div>
       <VotingInputArea
-        name="newAddr"
-        inputType={"default"}
-        placeholder={"Enter Address"}
+        name='newAddr'
+        inputType={'default'}
+        placeholder={'Enter Address'}
         disabled={loading}
         onChange={handleChange}
         errType={newAddrErr}
-        errText="Invalid Address"
+        errText='Invalid Address'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Node Name <span className={cn("required")}>*</span>
+        Node Name <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        name="newName"
-        inputType={"default"}
-        placeholder={"Enter node name"}
+        name='newName'
+        inputType={'default'}
+        placeholder={'Enter node name'}
         disabled={loading}
         onChange={handleChange}
         errType={newNameErr}
-        errText="Invalid Name"
+        errText='Invalid Name'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        META Amount to be locked <span className={cn("required")}>*</span>
+        META Amount to be locked <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        inputType="suffix"
-        fixText={"META"}
-        name="newLockAmount"
-        value={newLockAmount || ""}
+        inputType='suffix'
+        fixText={'META'}
+        name='newLockAmount'
+        value={newLockAmount || ''}
         defaultValue={stakingMin}
         disabled={loading}
         onChange={handleChange}
         errType={newLockAmountErr}
-        errText="Invalid Amount"
+        errText='Invalid Amount'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        New Authority Node Description <span className={cn("required")}>*</span>
+        New Authority Node Description <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         The hexadecimal node ID is encoded in the username portion of the URL,
         separated from the host by an @ sign. The hostname can only be given as
         an IP address, DNS domain names are not allowed. The port in the host
         name section is the TCP listening port.
       </div>
       <VotingInputArea
-        name="newNode"
+        name='newNode'
         // placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-        placeholder={"Enter Address"}
+        placeholder={'Enter Address'}
         disabled={loading}
         onChange={handleChange}
         errType={newNodeErr}
-        errText="Invalid Node"
+        errText='Invalid Node'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -227,87 +225,87 @@ export const ReplaceProposalForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Old Authority Address <span className={cn("required")}>*</span>
+        Old Authority Address <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        name="stakingAddr"
-        placeholder={"Staking Address"}
+        name='stakingAddr'
+        placeholder={'Staking Address'}
         disabled={loading}
         onChange={handleChange}
         errType={stakingAddrErr}
-        errText="Invalid Address"
+        errText='Invalid Address'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        New Authority Address <span className={cn("required")}>*</span>
+        New Authority Address <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        name="newAddr"
-        placeholder={"Enter Address"}
+        name='newAddr'
+        placeholder={'Enter Address'}
         disabled={loading}
         onChange={handleChange}
         errType={newAddrErr}
-        errText="Invalid Address"
+        errText='Invalid Address'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Node Name <span className={cn("required")}>*</span>
+        Node Name <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        name="newName"
-        placeholder={"Enter node name"}
+        name='newName'
+        placeholder={'Enter node name'}
         disabled={loading}
         onChange={handleChange}
         errType={newNameErr}
-        errText="Invalid Name"
+        errText='Invalid Name'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Replace META Amount <span className={cn("required")}>*</span>
+        Replace META Amount <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        inputType="suffix"
-        fixText={"META"}
-        name="newLockAmount"
+        inputType='suffix'
+        fixText={'META'}
+        name='newLockAmount'
         value={newLockAmount}
         disabled={loading}
         onChange={handleChange}
         errType={newLockAmountErr}
-        errText="Invalid Amount"
+        errText='Invalid Amount'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        New Authority Node Description <span className={cn("required")}>*</span>
+        New Authority Node Description <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         The hexadecimal node ID is encoded in the username portion of the URL,
         separated from the host by an @ sign. The hostname can only be given as
         an IP address, DNS domain names are not allowed. The port in the host
         name section is the TCP listening port.
       </div>
       <VotingInputArea
-        name="newNode"
+        name='newNode'
         // placeholder="6f8a80d1....66ad92a0@10.3.58.6:30303"
-        placeholder={"Enter Address"}
+        placeholder={'Enter Address'}
         disabled={loading}
         onChange={handleChange}
         errType={newNodeErr}
-        errText="Invalid Node"
+        errText='Invalid Node'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -348,64 +346,64 @@ export const RemoveProposalForm = ({
   getLockAmount = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap check-balance")}>
+    <div className={cn('voting-input-wrap check-balance')}>
       <strong>
-        Address to be removed <span className={cn("required")}>*</span>
+        Address to be removed <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("button-input-box")}>
+      <div className={cn('button-input-box')}>
         <VotingInputArea
-          name="stakingAddr"
-          placeholder="Enter Staking Address"
+          name='stakingAddr'
+          placeholder='Enter Staking Address'
           disabled={loading}
           onChange={handleChange}
           errType={stakingAddrErr}
-          errText="Invalid Address"
-          enterButton="Check Balance"
+          errText='Invalid Address'
+          enterButton='Check Balance'
           onClick={(addr) => {
             getLockAmount(addr);
           }}
         />
       </div>
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Locked META Amount <span className={cn("required")}>*</span>
+        Locked META Amount <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        inputType="suffix"
-        fixText="META"
+        inputType='suffix'
+        fixText='META'
         Locked={true}
-        name="showLockAmount"
-        value={showLockAmount || ""}
+        name='showLockAmount'
+        value={showLockAmount || ''}
         errType={showLockAmountErr}
-        errText={"Click the Check Balance button"}
+        errText={'Click the Check Balance button'}
         readonly={true}
         disabled={loading}
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        <p className="subtitle">META Amount to be unlocked</p>
+        <p className='subtitle'>META Amount to be unlocked</p>
       </strong>
       <VotingInputArea
-        inputType="suffix"
-        fixText="META"
-        name="oldLockAmount"
+        inputType='suffix'
+        fixText='META'
+        name='oldLockAmount'
         value={oldLockAmount}
         disabled={loading}
         onChange={handleChange}
         errType={oldLockAmountErr}
-        errText="Invalid Amount"
+        errText='Invalid Amount'
       />
     </div>
 
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -432,27 +430,27 @@ export const GovernanceContractAddressForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
         New Governance Contract Address
-        <span className={cn("required")}>*</span>
+        <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        name="newGovAddr"
-        placeholder={"Enter Address"}
+        name='newGovAddr'
+        placeholder={'Enter Address'}
         disabled={loading}
         onChange={handleChange}
         errType={newGovAddrErr}
-        errText="Invalid Address"
+        errText='Invalid Address'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -481,68 +479,68 @@ export const VotingDurationSettingForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap double-box")}>
+    <div className={cn('voting-input-wrap double-box')}>
       <strong>
-        Voting Duration Setting <span className={cn("required")}>*</span>
+        Voting Duration Setting <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         The minimum value for Voting Duration is 1 day.
       </div>
-      <div className={"double-input-box"}>
-        <div className={"box-wrap"}>
+      <div className={'double-input-box'}>
+        <div className={'box-wrap'}>
           <VotingInputArea
-            inputType="suffix"
-            fixText="day"
-            prefix={"MIN"}
-            name="votDurationMin"
-            value={votDurationMin || ""}
-            placeholder={"Enter day"}
+            inputType='suffix'
+            fixText='day'
+            prefix={'MIN'}
+            name='votDurationMin'
+            value={votDurationMin || ''}
+            placeholder={'Enter day'}
             disabled={loading}
             onChange={handleChange}
             errType={
-              votDurationErr === "min" ||
-              (votDurationErr && votDurationErr !== "max")
+              votDurationErr === 'min' ||
+              (votDurationErr && votDurationErr !== 'max')
             }
           />
-          {votDurationErr === "min" && (
-            <p className={"error-massage"}>Invalid Min Date Setting</p>
+          {votDurationErr === 'min' && (
+            <p className={'error-massage'}>Invalid Min Date Setting</p>
           )}
           <div>&nbsp;</div>
           <VotingInputArea
-            inputType={"suffix"}
-            fixText="day"
-            prefix="MAX"
-            name="votDurationMax"
-            value={votDurationMax || ""}
-            placeholder={"Enter day"}
+            inputType={'suffix'}
+            fixText='day'
+            prefix='MAX'
+            name='votDurationMax'
+            value={votDurationMax || ''}
+            placeholder={'Enter day'}
             onChange={handleChange}
             disabled={loading}
             errType={
-              votDurationErr === "max" ||
-              (votDurationErr && votDurationErr !== "min")
+              votDurationErr === 'max' ||
+              (votDurationErr && votDurationErr !== 'min')
             }
           />
         </div>
         {votDurationErr && (
-          <p className={"error-massage"}>
+          <p className={'error-massage'}>
             {`${
-              votDurationErr === "max"
-                ? "Invalid Max Date Setting"
-                : votDurationErr !== "min"
-                ? "Invalid Duration Setting"
-                : ""
+              votDurationErr === 'max'
+                ? 'Invalid Max Date Setting'
+                : votDurationErr !== 'min'
+                ? 'Invalid Duration Setting'
+                : ''
             }`}
           </p>
         )}
       </div>
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -571,68 +569,68 @@ export const AuthorityMemberStakingAmountForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Staking Amount <span className={cn("required")}>*</span>
+        Staking Amount <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         The maximum amount of staking that can be set is 4,980,000 META.
       </div>
-      <div className={"double-input-box"}>
-        <div className={"box-wrap"}>
+      <div className={'double-input-box'}>
+        <div className={'box-wrap'}>
           <VotingInputArea
-            inputType="suffix"
-            fixText="META"
-            prefix={"MIN"}
-            name="authMemSkAmountMin"
-            value={authMemSkAmountMin || ""}
-            placeholder={"Enter amount"}
+            inputType='suffix'
+            fixText='META'
+            prefix={'MIN'}
+            name='authMemSkAmountMin'
+            value={authMemSkAmountMin || ''}
+            placeholder={'Enter amount'}
             onChange={handleChange}
             disabled={loading}
             errType={
-              authMemSkAmountErr === "min" ||
-              (authMemSkAmountErr && authMemSkAmountErr !== "max")
+              authMemSkAmountErr === 'min' ||
+              (authMemSkAmountErr && authMemSkAmountErr !== 'max')
             }
           />
-          {authMemSkAmountErr === "min" && (
-            <p className={"error-massage"}>{"Invalid Min Amount"}</p>
+          {authMemSkAmountErr === 'min' && (
+            <p className={'error-massage'}>{'Invalid Min Amount'}</p>
           )}
           <div>&nbsp;</div>
           <VotingInputArea
-            inputType={"suffix"}
-            fixText="META"
-            prefix={"MAX"}
-            name="authMemSkAmountMax"
-            value={authMemSkAmountMax || ""}
-            placeholder={"Enter amount"}
+            inputType={'suffix'}
+            fixText='META'
+            prefix={'MAX'}
+            name='authMemSkAmountMax'
+            value={authMemSkAmountMax || ''}
+            placeholder={'Enter amount'}
             onChange={handleChange}
             disabled={loading}
             errType={
-              authMemSkAmountErr === "max" ||
-              (authMemSkAmountErr && authMemSkAmountErr !== "min")
+              authMemSkAmountErr === 'max' ||
+              (authMemSkAmountErr && authMemSkAmountErr !== 'min')
             }
           />
         </div>
         {authMemSkAmountErr && (
-          <p className={"error-massage"}>
+          <p className={'error-massage'}>
             {`${
-              authMemSkAmountErr === "max"
-                ? "Invalid Max Amout"
-                : authMemSkAmountErr !== "min"
-                ? "Invalid Staking Amount"
-                : ""
+              authMemSkAmountErr === 'max'
+                ? 'Invalid Max Amout'
+                : authMemSkAmountErr !== 'min'
+                ? 'Invalid Staking Amount'
+                : ''
             }`}
           </p>
         )}
       </div>
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -660,32 +658,32 @@ export const BlockCreationTime = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Block Creation Time <span className={cn("required")}>*</span>
+        Block Creation Time <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         Block Creation time is possible from at least 1s.
       </div>
       <VotingInputArea
-        inputType="suffix"
-        fixText={"s"}
-        name="blockCreation"
-        value={blockCreation || ""}
-        placeholder={"Enter time"}
+        inputType='suffix'
+        fixText={'s'}
+        name='blockCreation'
+        value={blockCreation || ''}
+        placeholder={'Enter time'}
         onChange={handleChange}
         disabled={loading}
         errType={blockCreationErr}
-        errText="Invalid Block Creation Time"
+        errText='Invalid Block Creation Time'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -713,32 +711,32 @@ export const BlockRewardAmount = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Block Reward Amount <span className={cn("required")}>*</span>
+        Block Reward Amount <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         Block Rewards are available from at least 1META/Block.
       </div>
       <VotingInputArea
-        inputType="suffix"
-        fixText="META/Block"
-        name="blockRewardAmount"
-        value={blockRewardAmount || ""}
-        placeholder={"Enter block reward amount"}
+        inputType='suffix'
+        fixText='META/Block'
+        name='blockRewardAmount'
+        value={blockRewardAmount || ''}
+        placeholder={'Enter block reward amount'}
         onChange={handleChange}
         disabled={loading}
         errType={blockRewardAmountErr}
-        errText="Invalid Block Reward Amount"
+        errText='Invalid Block Reward Amount'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -770,84 +768,83 @@ export const BlockRewardDistributionMethod = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap distribution")}>
+    <div className={cn('voting-input-wrap distribution')}>
       <strong>
-        Distribution Rate<span className={cn("required")}>*</span>
+        Distribution Rate<span className={cn('required')}>*</span>
       </strong>
-      <span className={cn("description")}>
+      <span className={cn('description')}>
         For the Block reward distribution rate, the sum of Default, Block
         Producer, Ecosystem, and Maintenance should be 100.
       </span>
-      <div className={cn("box-wrap")}>
+      <div className={cn('box-wrap')}>
         {/* !! input 갯수, 하이픈 갯수 css 변수로 추가 필요 */}
         <div
-          className={cn("multi-input-box")}
-          style={{ "--input-count": 5, "--hyphen-count": 4 }}
-        >
-          <div className={cn("input-cell")}>
-            <strong className={cn("input-cell-title")}>Block Producer</strong>
+          className={cn('multi-input-box')}
+          style={{ '--input-count': 5, '--hyphen-count': 4 }}>
+          <div className={cn('input-cell')}>
+            <strong className={cn('input-cell-title')}>Block Producer</strong>
             <VotingInputArea
-              inputType={"suffix"}
-              fixText={"%"}
-              placeholder={"0%"}
-              name="blockRate1"
-              value={blockRate1 || ""}
+              inputType={'suffix'}
+              fixText={'%'}
+              placeholder={'0%'}
+              name='blockRate1'
+              value={blockRate1 || ''}
               onChange={handleChange}
               disabled={loading}
               errType={blockRewardDisMthErr}
             />
           </div>
-          <span className={cn("hyphen")}>+</span>
-          <div className={cn("input-cell")}>
-            <strong className={cn("input-cell-title")}>Staking Reward</strong>
+          <span className={cn('hyphen')}>+</span>
+          <div className={cn('input-cell')}>
+            <strong className={cn('input-cell-title')}>Staking Reward</strong>
             <VotingInputArea
-              inputType={"suffix"}
-              fixText={"%"}
-              placeholder={"0%"}
-              name="blockRate2"
-              value={blockRate2 || ""}
+              inputType={'suffix'}
+              fixText={'%'}
+              placeholder={'0%'}
+              name='blockRate2'
+              value={blockRate2 || ''}
               onChange={handleChange}
               disabled={loading}
               errType={blockRewardDisMthErr}
             />
           </div>
-          <span className={cn("hyphen")}>+</span>
-          <div className={cn("input-cell")}>
-            <strong className={cn("input-cell-title")}>Ecosystem</strong>
+          <span className={cn('hyphen')}>+</span>
+          <div className={cn('input-cell')}>
+            <strong className={cn('input-cell-title')}>Ecosystem</strong>
             <VotingInputArea
-              inputType={"suffix"}
-              fixText={"%"}
-              placeholder={"0%"}
-              name="blockRate3"
-              value={blockRate3 || ""}
+              inputType={'suffix'}
+              fixText={'%'}
+              placeholder={'0%'}
+              name='blockRate3'
+              value={blockRate3 || ''}
               onChange={handleChange}
               disabled={loading}
               errType={blockRewardDisMthErr}
             />
           </div>
-          <span className={cn("hyphen")}>+</span>
-          <div className={cn("input-cell")}>
-            <strong className={cn("input-cell-title")}>Maintenance</strong>
+          <span className={cn('hyphen')}>+</span>
+          <div className={cn('input-cell')}>
+            <strong className={cn('input-cell-title')}>Maintenance</strong>
             <VotingInputArea
-              inputType={"suffix"}
-              fixText={"%"}
-              placeholder={"0%"}
-              name="blockRate4"
-              value={blockRate4 || ""}
+              inputType={'suffix'}
+              fixText={'%'}
+              placeholder={'0%'}
+              name='blockRate4'
+              value={blockRate4 || ''}
               onChange={handleChange}
               disabled={loading}
               errType={blockRewardDisMthErr}
             />
           </div>
-          <span className={cn("hyphen")}>=</span>
-          <div className={cn("input-cell")}>
-            <strong className={cn("input-cell-title")}>Sum</strong>
+          <span className={cn('hyphen')}>=</span>
+          <div className={cn('input-cell')}>
+            <strong className={cn('input-cell-title')}>Sum</strong>
             <VotingInputArea
-              inputType={"suffix"}
-              fixText={"%"}
-              placeholder={"0%"}
-              name="blockRateTotal"
-              value={blockRateTotal || ""}
+              inputType={'suffix'}
+              fixText={'%'}
+              placeholder={'0%'}
+              name='blockRateTotal'
+              value={blockRateTotal || ''}
               onChange={handleChange}
               disabled={true}
               errType={blockRewardDisMthErr}
@@ -856,19 +853,19 @@ export const BlockRewardDistributionMethod = ({
           </div>
         </div>
         {blockRewardDisMthErr && (
-          <p className={"error-massage"}>
+          <p className={'error-massage'}>
             Only numbers can be entered, and Sum must be 100.
           </p>
         )}
       </div>
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -896,32 +893,32 @@ export const MaxPriorityFeePerGasForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap creative")}>
+    <div className={cn('voting-input-wrap creative')}>
       <strong>
-        MaxPriorityFeePerGas <span className={cn("required")}>*</span>
+        MaxPriorityFeePerGas <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         Specifies the fee returned to the miner
       </div>
       <VotingInputArea
-        inputType="suffix"
-        fixText={"GWei"}
-        name="maxPriorityFeePerGas"
-        value={maxPriorityFeePerGas || ""}
-        placeholder={"Enter fee"}
+        inputType='suffix'
+        fixText={'GWei'}
+        name='maxPriorityFeePerGas'
+        value={maxPriorityFeePerGas || ''}
+        placeholder={'Enter fee'}
         onChange={handleChange}
         disabled={loading}
         errType={maxPriorityFeePerGasErr}
-        errText="Invalid MaxPriorityFeePerGas"
+        errText='Invalid MaxPriorityFeePerGas'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -955,91 +952,91 @@ export const GasLimitBaseFeeForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap ")}>
+    <div className={cn('voting-input-wrap ')}>
       <strong>
-        Gas Limit <span className={cn("required")}>*</span>
+        Gas Limit <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         Gas Limit is the maximum amount of gas to be consumed when processing a
         transaction.
       </div>
       <VotingInputArea
-        inputType={"suffix"}
-        fixText="GWei"
-        name="gasLimit"
-        value={gasLimit || ""}
-        placeholder={"Enter gas limit"}
+        inputType={'suffix'}
+        fixText='GWei'
+        name='gasLimit'
+        value={gasLimit || ''}
+        placeholder={'Enter gas limit'}
         onChange={handleChange}
         disabled={loading}
         errType={gasLimitErr}
-        errText="Invalid Gas Limit"
+        errText='Invalid Gas Limit'
       />
     </div>
-    <div className={cn("voting-input-wrap ")}>
+    <div className={cn('voting-input-wrap ')}>
       <strong>
-        Max base Fee <span className={cn("required")}>*</span>
+        Max base Fee <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         MAX baseFee is the maximum to which baseFee can be increased.
       </div>
       <VotingInputArea
-        inputType={"suffix"}
-        fixText="Gwei"
-        name="maxBaseFee"
-        value={maxBaseFee || ""}
-        placeholder={"Enter max base fee"}
+        inputType={'suffix'}
+        fixText='Gwei'
+        name='maxBaseFee'
+        value={maxBaseFee || ''}
+        placeholder={'Enter max base fee'}
         onChange={handleChange}
         disabled={loading}
         errType={maxBaseFeeErr}
-        errText="Invalid Max baseFee"
+        errText='Invalid Max baseFee'
       />
     </div>
-    <div className={cn("voting-input-wrap creative")}>
+    <div className={cn('voting-input-wrap creative')}>
       <strong>
-        BaseFee Max Change Rate <span className={cn("required")}>*</span>
+        BaseFee Max Change Rate <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         Specifies how full the block must be to increase the baseFee.
       </div>
       <VotingInputArea
-        inputType={"suffix"}
-        fixText="%"
-        name="baseFeeMaxChangeRate"
-        value={baseFeeMaxChangeRate || ""}
-        placeholder={"Enter change rate"}
+        inputType={'suffix'}
+        fixText='%'
+        name='baseFeeMaxChangeRate'
+        value={baseFeeMaxChangeRate || ''}
+        placeholder={'Enter change rate'}
         onChange={handleChange}
         disabled={loading}
         errType={baseFeeMaxChangeRateErr}
-        errText="Invalid BaseFee Max Change Rate"
+        errText='Invalid BaseFee Max Change Rate'
       />
     </div>
-    <div className={cn("voting-input-wrap creative")}>
+    <div className={cn('voting-input-wrap creative')}>
       <strong>
-        Gas Target Percentage <span className={cn("required")}>*</span>
+        Gas Target Percentage <span className={cn('required')}>*</span>
       </strong>
-      <div className={cn("description")}>
+      <div className={cn('description')}>
         Determines what percentage to increase when baseFee is increased.
         ex&#41; 8&rarr; 1/8 = 12.5%
       </div>
       <VotingInputArea
-        inputType={"suffix"}
-        fixText="%"
-        name="gasTargetPercentage"
-        value={gasTargetPercentage || ""}
-        placeholder={"Enter gas target percentage"}
+        inputType={'suffix'}
+        fixText='%'
+        name='gasTargetPercentage'
+        value={gasTargetPercentage || ''}
+        placeholder={'Enter gas target percentage'}
         onChange={handleChange}
         disabled={loading}
         errType={gasTargetPercentageErr}
-        errText="Invalid Gas Target Percentage"
+        errText='Invalid Gas Target Percentage'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={256}
-        placeholder="Enter desc. max 256"
+        placeholder='Enter desc. max 256'
         disabled={loading}
         onChange={handleChange}
       />
@@ -1072,71 +1069,71 @@ export const AddWaitProposalForm = ({
   handleChange = shouldPass(),
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Company Name <span className={cn("required")}>*</span>
+        Company Name <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        name="companyName"
-        inputType={"default"}
+        name='companyName'
+        inputType={'default'}
         maxLength={50}
-        placeholder={"Enter company name"}
+        placeholder={'Enter company name'}
         disabled={loading}
         onChange={handleChange}
         errType={companyNameErr}
-        errText="Invalid Name"
+        errText='Invalid Name'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Company Wallet Address <span className={cn("required")}>*</span>
+        Company Wallet Address <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        name="companyAddress"
-        inputType={"default"}
-        placeholder={"Enter company wallet address"}
+        name='companyAddress'
+        inputType={'default'}
+        placeholder={'Enter company wallet address'}
         disabled={loading}
         onChange={handleChange}
         errType={companyAddressErr}
-        errText="Invalid Address"
+        errText='Invalid Address'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>
-        Investment Amount <span className={cn("required")}>*</span>
+        Investment Amount <span className={cn('required')}>*</span>
       </strong>
       <VotingInputArea
-        inputType="suffix"
-        fixText={"META"}
-        name="investmentAmount"
-        value={investmentAmount || ""}
-        placeholder={"Enter investment amount"}
+        inputType='suffix'
+        fixText={'META'}
+        name='investmentAmount'
+        value={investmentAmount || ''}
+        placeholder={'Enter investment amount'}
         disabled={loading}
         onChange={handleChange}
         errType={investmentAmountErr}
-        errText="Invalid Investment Amount"
+        errText='Invalid Investment Amount'
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Description</strong>
       <VotingInputArea
-        inputType="multiline"
-        name="memo"
+        inputType='multiline'
+        name='memo'
         maxLength={8000}
-        placeholder="Enter desc. max 8000"
+        placeholder='Enter desc. max 8000'
         disabled={loading}
         onChange={handleChange}
       />
     </div>
-    <div className={cn("voting-input-wrap")}>
+    <div className={cn('voting-input-wrap')}>
       <strong>Link </strong>
       <VotingInputArea
-        name="link"
-        inputType={"default"}
-        placeholder={"Enter link"}
+        name='link'
+        inputType={'default'}
+        placeholder={'Enter link'}
         disabled={loading}
         onChange={handleChange}
-        errText="Invalid link"
+        errText='Invalid link'
       />
     </div>
     <ProposalFormFooter

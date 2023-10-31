@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react"; // 23.04.20 수정: useCallback 추가
+import React, { useCallback } from "react"; // 23.04.20 수정: useCallback 추가
 import cn from "classnames/bind";
 import Status from "./Status.jsx";
 import IconWithText from "./IconWithText.jsx";
 import VotingChartMini from "./VotingChartMini.jsx";
-import { loginAcc, shouldPass, timeConverter } from "../../util.js";
+import { loginAcc, timeConverter } from "../../util.js";
 import { Link } from "react-router-dom";
 import RevokeButton from "./Button";
 

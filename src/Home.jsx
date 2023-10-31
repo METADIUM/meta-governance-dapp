@@ -91,7 +91,7 @@ const Home = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [showMore, setShowMore] = useState(partners);
 
-  const visibleItem = useRef(veiwingCount);;
+  const visibleItem = useRef(veiwingCount);
 
 
 
