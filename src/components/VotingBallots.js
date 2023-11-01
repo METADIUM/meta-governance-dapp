@@ -1,5 +1,5 @@
-import React from "react";
 import { Button, Progress } from "antd";
+import React from "react";
 
 import { constants } from "../constants";
 import { shouldPass } from "../util";
@@ -48,7 +48,7 @@ const VotingBallots = ({
               newStakerAddress,
               oldStakerAddress,
               newVoterAddress,
-              newRewardAddress
+              newRewardAddress,
             )}
           </p>
           <p className="company text-small">{authorityName}</p>
@@ -121,7 +121,7 @@ const VotingBallots = ({
                 <div>
                   <div className="flex">
                     <span>Start : </span>
-                    <span>{item.startTime}</span>
+                    <span>{item.startTimeConverted}</span>
                   </div>
                   <div className="flex">
                     <span>End : </span>
@@ -188,6 +188,7 @@ const ShowBallots = ({
       Active
     </p>
     {visibleActiveItems}
+    <div className="vote-sectionline"></div>
     <p
       className="stateTitle text-heavy"
       ref={(ref) => {
@@ -209,6 +210,7 @@ const ShowBallots = ({
           </Button>
         </div>
       )}
+    <div className="vote-sectionline"></div>
     <p
       className="stateTitle text-heavy"
       ref={(ref) => {

@@ -5,7 +5,7 @@ columns.ballotColumns = [
     // Ballot creator
     title: "Creator",
     key: "creator",
-    value: "WEMIX",
+    value: "METADIUM",
   },
   {
     title: "Ballot Type",

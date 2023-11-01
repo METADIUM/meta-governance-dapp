@@ -1,20 +1,18 @@
-# WEMIX Governance dApp
+# METADIUM Governance dApp
 
-## Preview
+## Requirements
+
+| Name | Version  |
+| ---- | -------- |
+| node | v16.18.1 |
+
+## Installation / Preview
+
+- yarn 설치 시 코드에 포함된 yarn-lock.lock 파일을 yarn.lock 으로 변경한 후 설치해 주세요. (의존성 문제 발생)
 
 ```bash
-$ npm install
-$ npm start
-```
-
-## Deploy
-
-```bash
-# testnet
-$ npm run-script build:testnet
-
-$ npm install -g serve
-$ serve -l 3005 -s build
+$ yarn
+$ yarn start:devmeta
 ```
 
 ## What more

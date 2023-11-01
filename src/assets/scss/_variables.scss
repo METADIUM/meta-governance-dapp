@@ -1,0 +1,48 @@
+/* Break Point */
+$breakpointXsm: 840px;
+$breakpointSm: 1141px;
+$breakpointMd: 1440px;
+$breakpointLg: 2560px;
+
+/* Color => 확인 후 삭제 */
+$gray10: #000000; // black1
+$gray20: #1a1a1a;
+$gray30: #2e2e2e;
+$gray40: #404040;
+$gray50: #464646;
+$gray60: #858585;
+$gray70: #a7a7a7;
+$gray80: #d1d1d1;
+$gray90: #f2f2f2;
+$gray100: #fff;
+$purple: #a484ff;
+$purple2: #8458ff;
+$purple3: #66529e;
+$skyblue: #8db1e8;
+$bgColor: #f1f2f9;
+$primary: #5e5ff5;
+$positive: #21d78a;
+$critical: #eb524f;
+$deepBlue: #5e5ff5;
+
+// governance color
+$black1: #000000;
+$black2: #2a2a2a;
+$gray: #474757;
+$gray2: #7a7a7a;
+$gray3: #a7a7bb;
+$gray4: #ebeaf3;
+$gray5: #f7f7fc;
+$gray6: #F8F8F8;
+$white: #fff;
+$blue1: #4e57ff;
+$blue2: #3030cd;
+$blue3: #b1beff;
+$mint: #00cdb0;
+$pink: #ff1e61;
+$red: #ff0000;
+$shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.05);
+
+$rootPath: "../images/";
+
+$vh: var(--vh, 1vh);

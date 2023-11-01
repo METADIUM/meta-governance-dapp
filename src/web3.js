@@ -1,18 +1,35 @@
 import Web3 from "web3";
+
+import * as abis from "./abis/index";
 import {
   MAINNET_CHAIN_INFO,
   TESTNET_CHAIN_INFO,
+  DEVNET_CHAIN_INFO,
   MAINNET_CONTRACTS,
   TESTNET_CONTRACTS,
+  DEVNET_CONTRACTS,
   walletTypes,
+  DEVMETANET_CONTRACTS,
 } from "./constants";
-import * as abis from "./abis/index";
 
-const isDev = process.env.REACT_APP_MODE === "development";
+const type = process.env.REACT_APP_MODE;
+const network = process.env.REACT_APP_NETWORK_TYPE;
 
 // get network deploy informations
-export const chainInfo = isDev ? TESTNET_CHAIN_INFO : MAINNET_CHAIN_INFO;
-const contracts = isDev ? TESTNET_CONTRACTS : MAINNET_CONTRACTS;
+export const chainInfo =
+  type === "production"
+    ? MAINNET_CHAIN_INFO
+    : network === "devmeta"
+    ? DEVNET_CHAIN_INFO
+    : TESTNET_CHAIN_INFO;
+const contracts =
+  network === "mainnet"
+    ? MAINNET_CONTRACTS
+    : network === "testnet"
+    ? TESTNET_CONTRACTS
+    : network === "devmeta"
+    ? DEVNET_CONTRACTS
+    : DEVMETANET_CONTRACTS;
 
 // set contracts
 const initContracts = async (web3) => {
@@ -30,28 +47,54 @@ const initContracts = async (web3) => {
 
 let web3Instance;
 const getWeb3Instance = () => {
-  return new Promise((resolve, reject) => {
-    window.addEventListener("load", async () => {
-      // set default web3 instance
-      const { rpcUrls } = chainInfo;
-      const web3 = new Web3(rpcUrls);
+  return new Promise(async (resolve, reject) => {
+    // set default web3 instance
+    const { rpcUrls } = chainInfo;
+    const web3 = new Web3(rpcUrls);
 
-      if (web3) {
-        const web3Contracts = await initContracts(web3);
-        web3Instance = {
-          web3,
-          web3Contracts,
-          isDev,
-          netName: isDev ? "TESTNET" : "MAINNET",
-        };
-        resolve(web3Instance);
-      } else {
-        // web3 is not found
-        reject(new Error("No web3 instance injected."));
-        return;
-      }
-    });
+    if (web3) {
+      const web3Contracts = await initContracts(web3);
+      web3Instance = {
+        web3,
+        web3Contracts,
+        netName:
+          network === "testnet"
+            ? "TESTNET"
+            : network === "mainnet"
+            ? "MAINNET"
+            : network === "devnet"
+            ? "DEVNET"
+            : "DEVMETANET",
+      };
+      resolve(web3Instance);
+    } else {
+      // web3 is not found
+      reject(new Error("No web3 instance injected."));
+      return;
+    }
   });
+};
+
+// batch method (only call)
+export const onlyCallBatchMethod = (web3, contract, method) => {
+  const data = web3.web3Contracts[contract].methods[method]().call.request({});
+  return data;
+};
+
+// batch method (with value)
+export const callBatchMethod = (web3, contract, method, ...value) => {
+  let data;
+  if (method === "hasAlreadyVoted") {
+    const { id, voter } = value[0];
+    data = web3.web3Contracts.BallotStorage.methods
+      .hasAlreadyVoted(id, voter)
+      .call.request({});
+  } else {
+    data = web3.web3Contracts[contract].methods[method](value[0]).call.request(
+      {}
+    );
+  }
+  return data;
 };
 
 // call contract method (no value)
@@ -96,6 +139,13 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
       envName,
       envType,
       envVal,
+      companyName,
+      companyAddress,
+      investmentAmount,
+      description,
+      link,
+      id,
+      txHashArr,
     } = value[0];
     switch (method) {
       case "addProposalToAddMember":
@@ -148,6 +198,23 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
           .addProposalToChangeEnv(envName, envType, envVal, memo, duration)
           .encodeABI();
         break;
+      case "addProposal":
+        trxData.data = web3.web3Contracts.WaitGovernance.methods
+          .addProposal([
+            companyName,
+            companyAddress,
+            investmentAmount,
+            description,
+            link,
+            [],
+          ])
+          .encodeABI();
+        break;
+      case "setTransactionHashes":
+        trxData.data = web3.web3Contracts.WaitGovernance.methods
+          .setTransactionHashes(id, txHashArr)
+          .encodeABI();
+        break;
       default:
         trxData.data = web3.web3Contracts[contract].methods[method](
           ...value
@@ -177,7 +244,6 @@ export const encodeABIValueInTrx = (web3, contract, method, value) => {
 
 // get contract address
 const getContractAddr = (contract) => {
-  const contracts = isDev ? TESTNET_CONTRACTS : MAINNET_CONTRACTS;
   const address = contracts.filter((item) => {
     return item.name === contract;
   })[0].address;
@@ -189,7 +255,6 @@ const getContractAddr = (contract) => {
 export const getAccounts = async (walletType) => {
   const { META_MASK, WALLET_CONNECT, COIN_BASE } = walletTypes;
   let account;
-
   switch (walletType) {
     case META_MASK:
       account = await web3Instance.web3.eth.requestAccounts();

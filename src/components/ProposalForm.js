@@ -1,22 +1,22 @@
-import React from "react";
 import { Button, Select, Icon } from "antd";
+import React from "react";
 
-import {
-  callContractMethod,
-  encodeABIValueInMethod,
-  web3Instance,
-} from "../web3";
 
 import * as PComponent from "./Forms";
 import * as MComponent from "./MyForm";
-import * as util from "../util";
-
 import {
   constants,
   ENV_MY_INFO_PROPOSAL_LIST,
   ENV_NAMES,
   ENV_VOTING_PROPOSAL_LIST,
 } from "../constants";
+import * as util from "../util";
+import {
+  callContractMethod,
+  encodeABIValueInMethod,
+  web3Instance,
+} from "../web3";
+
 
 class ProposalForm extends React.Component {
   data = {
@@ -75,7 +75,10 @@ class ProposalForm extends React.Component {
 
   componentDidUpdate(props) {
     // changes due to the use of the same component
-    if (props.selectedMenu === "2" && this.props.selectedMenu === "3") {
+    if (
+      props.selectedMenu === "menu-voting" &&
+      this.props.selectedMenu === "menu-myinfo"
+    ) {
       // setting select default value (Myinfo)
       this.data.selectedTopic = "";
       this.setState({ selectedTopic: "" });
@@ -441,10 +444,10 @@ class ProposalForm extends React.Component {
             "Proposal Submit Error"
           );
         }
-        // check if staking address has wemix
+        // check if staking address has META
         if (balance < newLockedAmount) {
           return this.props.getErrModal(
-            "Not Enough WEMIX to Stake.",
+            "Not Enough META to Stake.",
             "Proposal Submit Error"
           );
         }
@@ -518,20 +521,20 @@ class ProposalForm extends React.Component {
         if (Number(oldMemberBalance) !== newLockedAmount) {
           return this.props.getErrModal(
             [
-              "Invalid Replace WEMIX Amount",
+              "Invalid Replace META Amount",
               <br />,
               `(Old Address: ${util.convertWeiToEther(
                 oldMemberBalance,
                 "ether"
-              )} WEMIX Locked)`,
+              )} META Locked)`,
             ],
             "Proposal Submit Error"
           );
         }
-        // check if staking address has wemix
+        // check if staking address has META
         if (newMemberBalance < newLockedAmount) {
           return this.props.getErrModal(
-            "Not Enough WEMIX Stake (New)",
+            "Not Enough META Stake (New)",
             "Proposal Submit Error"
           );
         }
@@ -766,7 +769,7 @@ class ProposalForm extends React.Component {
             );
           checkData = {
             envName,
-            envType: String(2),
+            envType: String(3),
             envVal,
             memo,
             duration: votDuration,
@@ -803,7 +806,7 @@ class ProposalForm extends React.Component {
             );
           checkData = {
             envName,
-            envType: String(2),
+            envType: String(3),
             envVal,
             memo,
             duration: votDuration,
@@ -920,7 +923,7 @@ class ProposalForm extends React.Component {
             );
           checkData = {
             envName,
-            envType: String(2),
+            envType: String(5),
             envVal,
             memo,
             duration: votDuration,
@@ -1022,7 +1025,7 @@ class ProposalForm extends React.Component {
             );
           checkData = {
             envName,
-            envType: String(2),
+            envType: String(5),
             envVal,
             memo,
             duration: votDuration,
@@ -1159,6 +1162,9 @@ class ProposalForm extends React.Component {
           from: this.props.defaultAccount,
           to: trx.to,
           data: trx.data,
+          gasPrice: 110000000000,
+          // maxFeePerGas: 101000000000,
+          // maxPriorityFeePerGas: 100000000000,
         },
         (err, hash) => {
           if (err) {
@@ -1169,7 +1175,7 @@ class ProposalForm extends React.Component {
             this.props.waitForReceipt(hash, async (receipt) => {
               // console.log("Updated :", receipt);
               if (receipt.status) {
-                if (this.props.selectedMenu === "3") {
+                if (this.props.selectedMenu === "menu-myinfo") {
                   window.location.reload();
                 } else {
                   await this.props.convertComponent("voting");
@@ -1369,14 +1375,14 @@ class ProposalForm extends React.Component {
     const { convertComponent, buttonLoading, selectedMenu } = this.props;
     const { selectedTopic } = this.state;
     const options =
-      selectedMenu === "3"
+      selectedMenu === "menu-myinfo"
         ? ENV_MY_INFO_PROPOSAL_LIST
         : ENV_VOTING_PROPOSAL_LIST;
     return (
       <div>
         <div className="contentDiv container">
           <div className="backBtnDiv">
-            {selectedMenu === "3" ? null : (
+            {selectedMenu === "menu-myinfo" ? null : (
               <Button
                 className={
                   "btn-fill-white flex flex-center-horizontal text-large " +
@@ -1396,12 +1402,20 @@ class ProposalForm extends React.Component {
             <div className="proposalHead">
               <div className="title flex">
                 <p className="flex-full text-heavy">
-                  {selectedMenu === "3" ? "MyInfo" : "New Proposal"}
+                  {selectedMenu === "menu-myinfo" ? "MyInfo" : "New Proposal"}
                 </p>
                 <p>* Mandatory</p>
               </div>
+              {selectedMenu === "menu-myinfo" && (
+                <>
+                  <div className="flex-full flex-column text-container">
+                    <span>Voting Address: {this.props.oldVotingAddr}</span>
+                    <span>Reward Address: {this.props.oldRewardAddr}</span>
+                  </div>
+                </>
+              )}
               <p className="subtitle">
-                {selectedMenu === "3" ? (
+                {selectedMenu === "menu-myinfo" ? (
                   "Replace List"
                 ) : (
                   <>
@@ -1426,7 +1440,7 @@ class ProposalForm extends React.Component {
             {selectedTopic !== "" && <div>{this.showProposalForm()}</div>}
           </div>
           {/* reference memo */}
-          {selectedMenu === "3" ? null : (
+          {selectedMenu === "menu-myinfo" ? null : (
             <div className="contentRefDiv">
               <p>[Reference]</p>
               <ol>

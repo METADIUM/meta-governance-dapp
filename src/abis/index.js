@@ -7,6 +7,7 @@ import GovChecker from "./GovChecker.json";
 import GovImp from "./GovImp.json";
 import Registry from "./Registry.json";
 import Staking from "./Staking.json";
+import WaitGovernance from "./WaitGovernance.json";
 
 export {
   BallotStorage,
@@ -18,4 +19,5 @@ export {
   GovImp,
   Registry,
   Staking,
+  WaitGovernance,
 };

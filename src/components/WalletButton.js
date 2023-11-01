@@ -1,7 +1,9 @@
-import React from "react";
 import { Button } from "antd";
-import { web3Modal } from "../web3Modal";
+import React from "react";
+
+// import { web3Modal } from "../web3Modal";
 import "./style/style.css";
+import { loginAcc } from "../util";
 export default ({
   isLogin,
   setWalletModal,
@@ -9,9 +11,7 @@ export default ({
   nowWalletType,
   setDisConnectView,
 }) => {
-  const wallets = web3Modal.userOptions;
-
-  const loginAcc = (acc) => `${acc.slice(0, 2)}...${acc.slice(-10)}`;
+  const wallets = []
 
   const getWallet = wallets.find((v) => v.id === nowWalletType);
 

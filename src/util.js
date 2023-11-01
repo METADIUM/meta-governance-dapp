@@ -4,21 +4,28 @@ const secondsInDay = 86400;
 
 // ---------- time ---------- //
 // convert UNIX timestamp to readable
-const timeConverter = (timestamp) => {
-  let a = new Date(timestamp * 1000);
-  return (
-    a.getFullYear() +
-    "/" +
-    +0 +
-    (a.getMonth() + 1) +
-    "/" +
-    a.getDate() +
-    " " +
-    a.getHours() +
-    ":" +
-    a.getMinutes() +
-    "(UTC)"
-  );
+export const timeConverter = (
+  timestamp,
+  isFullText = false,
+  utc = false,
+  showSeconds = false,
+) => {
+  const a = new Date(timestamp * 1000);
+  // set month, date, hours, minute
+  const convert = (d) => (d.toString().length === 1 ? `0${d}` : d);
+  const month = convert(a.getMonth() + 1);
+  const date = convert(a.getDate());
+  const hours = convert(a.getHours());
+  const minute = convert(a.getMinutes());
+  const seconds = convert(a.getSeconds());
+
+  return `${a.getFullYear()}-${month}-${date}${
+    isFullText
+      ? ` ${hours}:${minute}${showSeconds ? `:${seconds}` : ""} ${
+          utc ? "UTC+9" : "(KST)"
+        }`
+      : ""
+  }`;
 };
 
 // convert day -> seconds
@@ -49,6 +56,8 @@ export const checkUndefined = (param) => param === undefined;
 export const encodeStringToSha3 = (input) => {
   return web3Instance.web3.utils.sha3(input);
 };
+
+export const loginAcc = (acc) => `${acc.slice(0, 6)}...${acc.slice(-4)}`;
 
 // ---------- refine data ---------- //
 // convert wei -> gwei
@@ -104,7 +113,7 @@ export const refineBallotBasic = (m) => {
         m[key] = web3Instance.web3.utils.toChecksumAddress(m[key]);
         break;
       case "startTime":
-        m[key] = timeConverter(m[key]);
+        m.startTimeConverted = timeConverter(m[key]);
         break;
       case "endTime":
         m.endTimeConverted = timeConverter(m[key]);
@@ -124,7 +133,23 @@ export const refineBallotBasic = (m) => {
         break;
     }
   });
-  return m;
+
+  // wait protocol의 경우 power 값 재계산
+  if (m.isWait) {
+    // 0: 투표 안한 사람, 1: 찬성 투표율, 2: 반대 투표율, 3: 기권율
+    const [notVoters, approves, rejects, abstains] = m.powers;
+    const powers = [];
+    powers.push(notVoters);
+    powers.push(parseInt(approves) ? parseInt(approves) / 100 : 0);
+    powers.push(parseInt(rejects) ? parseInt(rejects) / 100 : 0);
+    powers.push(parseInt(abstains) ? parseInt(abstains) / 100 : 0);
+
+    m = {
+      ...m,
+      powers,
+    };
+    return m;
+  }
 };
 
 // override data format for send transaction
@@ -147,9 +172,11 @@ export const refineSubmitData = (m) => {
       case "newGovAddr":
       case "newVotingAddr":
       case "newRewardAddr":
+      case "companyAddress":
         copy[key] = web3Instance.web3.utils.toChecksumAddress(copy[key]);
         break;
       case "lockAmount":
+      case "investmentAmount":
         copy[key] = convertEtherToWei(copy[key]);
         break;
       case "memo":
@@ -170,9 +197,19 @@ export const checkName = (name) => {
   return /^[A-Za-z0-9+]{1,64}$/.test(name);
 };
 
+// wait protocol company name check -> 영어 한글 숫자 입력 가능, 앞글자 공백 불가
+export const checkCompanyName = (name) => {
+  return /^\S[a-zA-Z0-9가-힣 ]*$/.test(name);
+};
+
 // numbers only
 export const checkPrice = (price) => {
   return /^[0-9]{1,}$/.test(price);
+};
+
+// numbers + decimal 8
+export const checkInvestmentAmount = (amount) => {
+  return /^\d{1,}.?\d{0,8}$/.test(amount);
 };
 
 // start with 0x, hexadecimal only 40 characters
@@ -180,15 +217,21 @@ export const checkAddress = (address) => {
   return /^0x[a-fA-F0-9]{40}$/.test(address);
 };
 
+// start with 0x, hexadecimal only 40 characters
+export const checkTxHash = (hash) => {
+  return /^0x[a-fA-F0-9]{64}$/.test(hash);
+};
+
 // up to 128 character hexadecimal, @ after that, ip:port
 export const checkNode = (node) => {
-  return /^([a-fA-F0-9]{128})+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{5})$/.test(
-    node
+  return /^([a-fA-F0-9]{128})+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{2,5})$/.test(
+    node,
   );
 };
 
 // at least 0.1
 export const checkBlockCreationTime = (time) => {
+  if (Number(time) < 1) return false;
   return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1})?|0?\.[1-9]{1})?$/.test(time);
 };
 
@@ -203,13 +246,14 @@ export const checkNumberRange = (type, min, max) => {
   const newMax = parseInt(max);
 
   // when no value
-  if (!(min && max) || min < 1 || max < 1) return true;
-
-  if (type === "min") {
-    return newMin > newMax ? type : null;
-  } else if (type === "max") {
-    return newMax < newMin ? type : null;
-  } else return;
+  if (!(min && max) || newMin < 1 || newMax < 1) return true;
+  else {
+    if (type === "min") {
+      return newMin > newMax ? type : null;
+    } else if (type === "max") {
+      return newMax < newMin ? type : null;
+    } else return false;
+  }
 };
 
 // check max member staking amount
@@ -218,6 +262,11 @@ export const checkMemberStakingAmount = (min, max) => {
   const newMax = parseInt(max);
 
   return !(newMin < newMax && newMax <= 4980000);
+};
+
+// ---------- number ----------
+export const hexToNumberJs = (hex) => {
+  return parseInt(hex, 16);
 };
 
 // ---------- etc ----------
@@ -232,13 +281,25 @@ const save = (key, obj) =>
   window.localStorage.setItem(key, JSON.stringify(obj));
 const load = (key) => JSON.parse(window.localStorage.getItem(key));
 
-export const getBallotBasicFromLocal = () => load("metaBallotBasic");
-export const getBallotMemberFromLocal = () => load("metaBallotMember");
-export const getUpdatedTimeFromLocal = () => load("metaUpdatedTime");
-export const getAuthorityFromLocal = () => load("metaAuthority");
-export const getModifiedFromLocal = () => load("metaModifiedBlock");
-export const setBallotBasicToLocal = (obj) => save("metaBallotBasic", obj);
-export const setBallotMemberToLocal = (obj) => save("metaBallotMember", obj);
-export const setAuthorityToLocal = (obj) => save("metaAuthority", obj);
-export const setUpdatedTimeToLocal = (obj) => save("metaUpdatedTime", obj);
-export const setModifiedToLocal = (obj) => save("metaModifiedBlock", obj);
+export const getBallotBasicFromLocal = () => load("wmBallotBasic");
+export const getBallotMemberFromLocal = () => load("wmBallotMember");
+export const getUpdatedTimeFromLocal = () => load("wmUpdatedTime");
+export const getAuthorityFromLocal = () => load("wmAuthority");
+export const getModifiedFromLocal = () => load("wmModifiedBlock");
+export const setBallotBasicToLocal = (obj) => save("wmBallotBasic", obj);
+export const setBallotMemberToLocal = (obj) => save("wmBallotMember", obj);
+export const setAuthorityToLocal = (obj) => save("wmAuthority", obj);
+export const setUpdatedTimeToLocal = (obj) => save("wmUpdatedTime", obj);
+export const setModifiedToLocal = (obj) => save("wmModifiedBlock", obj);
+
+//-- 3자리마다 콤마 추가하기
+export function addCommasToNumber(number) {
+  if (number) {
+    const numValue = number.replaceAll(",", ""); // 잠시 콤마를 때주고
+    return numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+}
+//-- 3자리마다 콤마 제거하기--
+export function removeCommasFromNumber(formattedNumber) {
+  return formattedNumber.replace(/,/g, "");
+}

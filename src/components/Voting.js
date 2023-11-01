@@ -7,9 +7,9 @@ import {
   SubHeader,
   SubNav,
   ChangeModal,
-  BaseLoader,
 } from "./";
-
+import { constants, ENV_PARAMETER_COUNT } from "../constants";
+import Loading from "../Loading";
 import * as util from "../util";
 import {
   callContractMethod,
@@ -17,7 +17,7 @@ import {
   onlyCallContractMethod,
   web3Instance,
 } from "../web3";
-import { constants, ENV_PARAMETER_COUNT } from "../constants";
+
 
 // import "./style/style.css";
 
@@ -123,7 +123,7 @@ class Voting extends React.Component {
         case constants.ballotState.Ready:
           proposalList.push(item);
           break; // Ready
-        case constants.ballotState.Accepted: // Aceepted, Rejected
+        case constants.ballotState.Approved: // Approved, Rejected
         case constants.ballotState.Rejected:
           finalizedList.push(item);
           break;
@@ -191,7 +191,7 @@ class Voting extends React.Component {
           <p className="description flex-full">
             Authority Address: {newStakerAddress}
             <br />
-            WEMIX To be Locked: {lockAmount} WEMIX
+            META To be Locked: {lockAmount} META
           </p>
         );
       }
@@ -232,19 +232,16 @@ class Voting extends React.Component {
               <br />
               New Authority Address: {newStakerAddress}
               <br />
-              WEMIX To be Locked: {lockAmount} WEMIX
+              META To be Locked: {lockAmount} META
             </p>
           );
         }
       }
       //  Governance Contract Address
       case constants.ballotTypes.GovernanceContractAddress: {
-        const { oldGovernanceAddress, newGovernanceAddress } =
-          this.props.ballotMemberOriginData[id];
+        const { newGovernanceAddress } = this.props.ballotMemberOriginData[id];
         return (
           <p className="description flex-full">
-            Old Governance Address: {oldGovernanceAddress}
-            <br />
             New Governnce Address: {newGovernanceAddress}
           </p>
         );
@@ -270,13 +267,11 @@ class Voting extends React.Component {
         } else if (envVariableName === "Authority Member Staking Amount") {
           description += `${util.convertWeiToEther(
             decodeValue[0]
-          )}-${util.convertWeiToEther(decodeValue[1])} WEMIX`;
+          )}-${util.convertWeiToEther(decodeValue[1])} META`;
         } else if (envVariableName === "Block Creation Time") {
           description += `${decodeValue[0] / 1000} s`;
         } else if (envVariableName === "Block Reward Amount") {
-          description += `${util.convertWeiToEther(
-            decodeValue[0]
-          )} WEMIX/Block`;
+          description += `${util.convertWeiToEther(decodeValue[0])} META/Block`;
         } else if (envVariableName === "Block Reward Distribution Method") {
           description = `Distribution Rate: ${
             decodeValue[0] / 100
@@ -288,7 +283,9 @@ class Voting extends React.Component {
         } else if (envVariableName === "Gas Limit & baseFee") {
           description = `Gas Limit: ${util.convertWeiToGWei(
             decodeValue[0]
-          )} GWei\nMax baseFee: ${decodeValue[1]}\nBaseFee Max Change Rate: ${
+          )} GWei\nMax baseFee: ${
+            decodeValue[1]
+          } GWei\nBaseFee Max Change Rate: ${
             decodeValue[2]
           }\nGas Target Percentage: ${decodeValue[3]}`;
         } else {
@@ -310,7 +307,7 @@ class Voting extends React.Component {
       default:
         return (
           <p className="description flex-full">
-            WEMIX To be Locked: {lockAmount} WEMIX
+            META To be Locked: {lockAmount} META
           </p>
         );
     }
@@ -425,7 +422,7 @@ class Voting extends React.Component {
     // only those who voted are allowed
     if (creator !== this.props.defaultAccount) {
       this.props.getErrModal(
-        "You don't have premission to Change or Revoke.",
+        "You don't have permission to Change or Revoke.",
         "Voting Error"
       );
       return;
@@ -463,9 +460,15 @@ class Voting extends React.Component {
   };
 
   sendTransaction(trx, type, init = false) {
-    try {
-      trx.from = this.props.defaultAccount;
-      web3Instance.web3.eth.sendTransaction(trx, (err, hash) => {
+    this.props.convertLoading(true);
+
+    trx.from = this.props.defaultAccount;
+    trx.gasPrice = 110000000000;
+    // trx.maxFeePerGas = 101000000000;
+    // trx.maxPriorityFeePerGas = 100000000000;
+
+    web3Instance.web3.eth.sendTransaction(trx, (err, hash) => {
+      try {
         if (err) {
           throw err;
         } else {
@@ -480,14 +483,14 @@ class Voting extends React.Component {
                 receipt.transactionHash
               );
             }
+            this.props.convertLoading(false);
           });
         }
-      });
-    } catch (err) {
-      this.props.getErrModal(err.message, err.name);
-    } finally {
-      this.props.convertLoading(false);
-    }
+      } catch (err) {
+        this.props.convertLoading(false);
+        this.props.getErrModal(err.message, err.name);
+      }
+    });
   }
 
   onClickSubMenu = (e) => {
@@ -605,7 +608,7 @@ class Voting extends React.Component {
             />
 
             {(!this.state.isBallotLoading || this.props.loading) && (
-              <BaseLoader />
+              <Loading txLoading={true} />
             )}
             <ShowBallots
               titles={this.titles}

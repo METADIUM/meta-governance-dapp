@@ -1,54 +1,114 @@
-// contract addresses
-export const TESTNET_CONTRACTS = [
-  { name: "Registry", address: "0xb6F259F6A0EfC2030BA4401143d2F008bf5FDad3" },
+// contract addresses (dev-staking 사이트)
+export const DEVNET_CONTRACTS = [
+  { name: "Registry", address: "0x15e8f4e6f169b3cccc8846f2b454d26ecf836c3a" },
   {
     name: "EnvStorageImp",
-    address: "0x09f9FCEfDeeeB5CD89c032eCC0637FC2CfBb5108",
+    address: "0x1310a767d534a93Db338fed3D68963812F603F1d",
   },
-  { name: "EnvStorage", address: "0x09f9FCEfDeeeB5CD89c032eCC0637FC2CfBb5108" },
+  { name: "EnvStorage", address: "0x1310a767d534a93Db338fed3D68963812F603F1d" },
   {
     name: "BallotStorage",
-    address: "0xd01eA97c79Cf92C1d6a0a698033AEefA0a53b2E8",
+    address: "0x3ADb1c8E8A559DE7670c2eA7f2d175249baf2240",
   },
-  { name: "Staking", address: "0x17F209d9C075A3D8c8372f285BC682fD19F7E7CD" },
-  { name: "GovImp", address: "0xcbC89753D0C4FEF1063c21f4734B4dA5B836984d" },
-  { name: "Gov", address: "0xcbC89753D0C4FEF1063c21f4734B4dA5B836984d" },
+  { name: "Staking", address: "0xBF83258c72749F66B0F8778B7BAe32d3191092F0" },
+  { name: "GovImp", address: "0x669662C6fAD4f2D9688fdbEc0BF017381B35D252" },
+  { name: "Gov", address: "0x669662C6fAD4f2D9688fdbEc0BF017381B35D252" },
+  // WaitGovernance Contract가 Devnet에 배포되어 있지 않습니다.
+  {
+    name: "WaitGovernance",
+    address: "0x631FE9c57de28dDC2642ea70005fb61e14f0374D",
+  },
+];
+// for wmgov
+export const DEVMETANET_CONTRACTS = [
+  { name: "Registry", address: "0x06c13fc771abc31a44d017368176e6b3cba5eed8" },
+  {
+    name: "EnvStorageImp",
+    address: "0x3f7F9B356b9f5308d39684126De821751902338e",
+  },
+  { name: "EnvStorage", address: "0x3f7F9B356b9f5308d39684126De821751902338e" },
+  {
+    name: "BallotStorage",
+    address: "0x83d7Bf709aDD8d0112434193B62901b2396555e3",
+  },
+  { name: "Staking", address: "0x4c9552B876acd6EE90567986150600C38416eD56" },
+  { name: "GovImp", address: "0x6c2604D8671F941bdCDb7d43b9CEce5023008FCa" },
+  { name: "Gov", address: "0x6c2604D8671F941bdCDb7d43b9CEce5023008FCa" },
+  {
+    name: "WaitGovernance",
+    address: "0xc2f8B7e0A7EF1397F749632D4Da49cf159f39B4f",
+  },
+  // lending 노드 번호 없는 버전 wait governance contract
+  // 0x9c9b2833d1619f6cf700e5fe524e61ebe74d409b
+];
+// for testnet
+export const TESTNET_CONTRACTS = [
+  { name: "Registry", address: "0xc27344926ddf38206f25c67Aaa95d765f5152C9f" },
+  {
+    name: "EnvStorageImp",
+    address: "0x5a31311f6a1Ca5dCA395766e13df07d1bd6F08ac",
+  },
+  { name: "EnvStorage", address: "0x5a31311f6a1Ca5dCA395766e13df07d1bd6F08ac" },
+  {
+    name: "BallotStorage",
+    address: "0x21cCE1B31cbe849243c389dAB90035d63ba1f2d8",
+  },
+  { name: "Staking", address: "0xD32B058a93C4ccB08A73472573c178b2981BCE50" },
+  { name: "GovImp", address: "0x3dAE75B816FFCC07da68421a7939e3f2a37AF7EB" },
+  { name: "Gov", address: "0x3dAE75B816FFCC07da68421a7939e3f2a37AF7EB" },
+  {
+    name: "WaitGovernance",
+    address: "0xef49F4B544065DCc2D990594a4EF6C4b6BE7ef30",
+  },
 ];
 
 export const MAINNET_CONTRACTS = [
-  { name: "Registry", address: "0x31455db91Dc663c81d7062dFB662F59713c33e7d" },
+  { name: "Registry", address: "0x06c13fc771abc31a44d017368176e6b3cba5eed8" },
   {
     name: "EnvStorageImp",
-    address: "0x33197Adc46D41ce816C2472E50ae702a8dB761cf",
+    address: "0x3f7F9B356b9f5308d39684126De821751902338e",
   },
-  { name: "EnvStorage", address: "0xdF19250B5D1Ebe6df05F7fdb169b0856297C5153" },
+  { name: "EnvStorage", address: "0x3f7F9B356b9f5308d39684126De821751902338e" },
   {
     name: "BallotStorage",
-    address: "0xB96F108819425EBB5b3EF180e2B6CaC06f624D39",
+    address: "0x83d7Bf709aDD8d0112434193B62901b2396555e3",
   },
-  { name: "Staking", address: "0x301584bd9aA6CEd0d617f7DeDF3912863C1d3cf7" },
-  { name: "GovImp", address: "0x33197Adc46D41ce816C2472E50ae702a8dB761cf" },
-  { name: "Gov", address: "0xdF19250B5D1Ebe6df05F7fdb169b0856297C5153" },
+  { name: "Staking", address: "0x4c9552b876acd6ee90567986150600c38416ed56" },
+  { name: "GovImp", address: "0x6c2604d8671f941bdcdb7d43b9cece5023008fca" },
+  { name: "Gov", address: "0x6c2604d8671f941bdcdb7d43b9cece5023008fca" },
+  {
+    name: "WaitGovernance",
+    address: "0x631FE9c57de28dDC2642ea70005fb61e14f0374D",
+  },
 ];
 
-// wemix chain info
-export const TESTNET_CHAIN_INFO = {
-  chainId: "0x458",
-  chainName: "Wemix Testnet",
-  rpcUrls: "https://api.test.wemix.com",
-  blockExplorerUrls: "https://microscope.test.wemix.com",
-  name: "WEMIX",
+// METADIUM chain info
+export const DEVNET_CHAIN_INFO = {
+  chainId: "0xb",
+  chainName: "METADIUM Testnet",
+  rpcUrls: "http://3.38.235.244:6588",
+  blockExplorerUrls: "",
+  name: "META",
   decimals: 18,
-  symbol: "WEMIX",
+  symbol: "META",
+};
+export const TESTNET_CHAIN_INFO = {
+  chainId: "0xc",
+  chainName: "METADIUM Testnet",
+  rpcUrls: "https://api.metadium.com/dev",
+  blockExplorerUrls: "https://testnetexplorer.metadium.com",
+  name: "META",
+  decimals: 18,
+  symbol: "META",
 };
 export const MAINNET_CHAIN_INFO = {
-  chainId: "0x458",
-  chainName: "Wemix Mainnet",
-  rpcUrls: "https://api.wemix.com",
-  blockExplorerUrls: "https://microscope.wemix.com",
-  name: "WEMIX",
+  chainId: "0xb",
+  chainName: "METADIUM Mainnet",
+  rpcUrls: "https://api.metadium.com/prod",
+  blockExplorerUrls: "https://explorer.metadium.com",
+  name: "META",
   decimals: 18,
-  symbol: "WEMIX",
+  symbol: "META",
 };
 
 // proposal list
@@ -85,7 +145,7 @@ export const ENV_VOTING_PROPOSAL_LIST = [
     id: "Block Reward Distribution Method",
     value: "BlockRewardDistributionMethod",
     sha3Name:
-      "0x3a9129cf69b4fa0fbe5d48e0d50863014e21ae09ffabcd72cebe10b1835251b9",
+      "0x9b2e0c7fdae148f225bae7deb92d7e7bd24bb77edb12956e8fa7204900dd8a22",
   },
   {
     id: "MaxPriorityFeePerGas",
@@ -99,6 +159,7 @@ export const ENV_VOTING_PROPOSAL_LIST = [
     sha3Name:
       "0x04f7b94450bbcad85f37ea47cd1062728f884bb2040e357738f8fd53056134bc",
   },
+  { id: "Add Wait Proposal", value: "AddWaitProposal" },
 ];
 export const ENV_MY_INFO_PROPOSAL_LIST = [
   { id: "Voting Address", value: "VotingAddress" },
@@ -122,7 +183,7 @@ export const ENV_NAMES = {
   ENV_STAKING_MIN_MAX: "stakingMinMax",
   ENV_BLOCK_CREATION_TIME: "blockCreationTime",
   ENV_BLOCK_REWARD_AMOUNT: "blockRewardAmount",
-  ENV_BLOCK_REWARD_DISTRIBUTION: "blockRewardDistrbution",
+  ENV_BLOCK_REWARD_DISTRIBUTION: "blockRewardDistribution",
   ENV_MAX_PRIORITY_FEE_PER_GAS: "maxPriorityFeePerGas",
   ENV_GASLIMIT_AND_BASE_FEE: "gasLimitAndBaseFee",
 };
@@ -146,7 +207,7 @@ const constants = {
     Invalid: "0",
     Ready: "1",
     InProgress: "2",
-    Accepted: "3",
+    Approved: "3",
     Rejected: "4",
     Canceled: "5",
   },
@@ -162,7 +223,7 @@ const constants = {
     "Invalid",
     "Ready",
     "InProgress",
-    "Accepted",
+    "Approved",
     "Rejected",
     "Canceled",
   ],
@@ -179,3 +240,34 @@ const constants = {
 };
 
 export { constants };
+
+const MODE = process.env.REACT_APP_MODE;
+const NETWORK = process.env.REACT_APP_NETWORK_TYPE;
+
+const CHAIN_INFO =
+  MODE === "production"
+    ? MAINNET_CHAIN_INFO
+    : NETWORK === "devnet"
+    ? DEVNET_CHAIN_INFO
+    : TESTNET_CHAIN_INFO;
+
+const NETWORK_SPECIFICATION = {
+  id: parseInt(CHAIN_INFO.chainId),
+  name: CHAIN_INFO.chainName,
+  network: "homestead",
+  nativeCurrency: {
+    decimals: 18,
+    name: CHAIN_INFO.name,
+    symbol: CHAIN_INFO.symbol,
+  },
+  rpcUrls: {
+    public: { http: [CHAIN_INFO.rpcUrls] },
+    default: { http: [CHAIN_INFO.rpcUrls] },
+  },
+};
+
+const CURRENT_SPEC = NETWORK_SPECIFICATION;
+
+const PROJECT_ID = "1faac271d9fe1528c3014fbf28ebad55";
+
+export { CURRENT_SPEC, PROJECT_ID };

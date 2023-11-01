@@ -1,5 +1,4 @@
 /* header */
-
 .ant-layout-header {
   padding: 0;
   z-index: 100;
@@ -31,6 +30,10 @@
 }
 .ant-layout-header .header-menu.TESTNET {
   border-left: #595959 solid 2px;
+}
+
+.header-gnb.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: transparent;
 }
 
 .ant-layout-header .header-menu .ant-menu-horizontal {
@@ -106,13 +109,6 @@
 .ant-layout-header .ant-row .header-staking div .staked.TESTNET {
   color: #ffffff;
 }
-.ant-layout-header .ant-row .header-staking div .wemix.MAINNET {
-  font-size: 12px;
-}
-.ant-layout-header .ant-row .header-staking div .wemix.TESTNET {
-  font-size: 12px;
-  color: #c2c4c4;
-}
 
 .ant-layout-header .ant-row .header-staking button {
   height: 40px;
@@ -184,7 +180,7 @@
 }
 
 .sub-header .functionDiv.MAINNET {
-  padding: 8px 16px 16px 16px;
+  padding: 16px 16px 16px 16px;
 }
 .sub-header .functionDiv.TESTNET {
   padding: 16px 16px 16px 16px;
@@ -551,6 +547,10 @@
   width: 208px;
 }
 
+.moreDiv {
+  margin-bottom: 16px;
+}
+
 .moreDiv button {
   height: 40px;
   width: 208px;
@@ -595,6 +595,7 @@
 .contentRefDiv,
 .contentVotingDiv .proposalHead {
   padding: 24px 16px;
+  word-wrap: break-word;
 }
 
 .contentVotingDiv .proposalHead .title {
@@ -663,7 +664,7 @@
   margin: 1px 0 0 8px;
 }
 
-.contentVotingDiv .proposalBody button[type="submit"] {
+.contentVotingDiv .proposalBody button[type='submit'] {
   border-radius: 4px;
   width: 208px;
   height: 40px;
@@ -707,13 +708,13 @@
 }
 
 .loading:before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 0;
   width: 206px;
   height: 60px;
-  background-image: url("./loading.png");
+  background-image: url('./loading@2x.png');
   background-position: 0 0;
 }
 
@@ -835,32 +836,7 @@
   margin: auto;
 }
 
-.modal-disconnect-title {
-  color: black;
-  font-weight: 700;
-  font-size: 16px;
-  text-align: center;
-}
-
-/* .disconnect-modal.ant-modal-footer {
-  border-top: none !important;
-} */
-
-.dis-connect-foot .ant-modal-footer {
-  border-top: none !important;
-  display: flex;
-  justify-content: space-between;
-  height: 80px;
-}
-
-.ant-btn.discon-cancel-btn {
-  flex: 1;
-  height: 100%;
-}
 .ant-btn.discon-ok-btn {
-  flex: 1;
   color: #ffffff;
-  height: 100%;
-
-  background: #1a1a1a;
+  background: rgb(45, 35, 249);
 }
