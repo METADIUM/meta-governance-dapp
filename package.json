@@ -45,10 +45,8 @@
     "build:devmeta": "CI=false && dotenv -e .env.devmeta react-app-rewired build",
     "build:testnet": "CI=false && dotenv -e .env.testnet react-app-rewired build",
     "build:mainnet": "CI=false && dotenv -e .env.production react-app-rewired build",
-    "test": "standard --parser babel-eslint",
-    "fix": "standard --parser babel-eslint --fix",
-    "test:lint": "eslint './src/**/*.{js,jsx}'",
-    "fix:lint": "eslint './src/**/*.{js,jsx}' --fix",
+    "test": "eslint './src/**/*.{js,jsx}'",
+    "fix": "eslint './src/**/*.{js,jsx}' --fix",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

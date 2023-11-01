@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useSendTransaction } from 'wagmi'
 
+import * as abis from '../../abis/index'
 import * as PComponent from '../../components/Forms'
 import * as MComponent from '../../components/MyForm'
 import VotingTopProposal from '../../components/voting/VotingTopProposal.jsx'
@@ -17,11 +18,9 @@ import {
 import { AuthCtx } from '../../contexts/AuthContext.js'
 import { GovInitCtx } from '../../contexts/GovernanceInitContext.jsx'
 import { ModalContext } from '../../contexts/ModalContext.jsx'
+import AuthorityList from '../../static/AuthorityList.json'
 import { removeCommasFromNumber, addCommasToNumber } from '../../util'
 import * as util from '../../util'
-import * as abis from '../../abis/index'
-import AuthorityList from '../../static/AuthorityList.json'
-
 import {
   callContractMethod,
   encodeABIValueInMethod,

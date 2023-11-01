@@ -1,4 +1,3 @@
-import { Dropdown } from 'antd'
 import cn from 'classnames/bind'
 import { throttle } from 'lodash'
 import React, { useState, useCallback, useEffect } from 'react'
