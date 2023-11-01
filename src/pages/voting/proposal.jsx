@@ -811,10 +811,18 @@ const Proposal = () => {
           addr
         );
         const convertLockedBalance = util.convertWeiToEther(lockedBalance);
-        if (
-          convertLockedBalance < inputStakingMin ||
-          convertLockedBalance > inputStakingMax
-        ) {
+        if (convertLockedBalance < inputStakingMin) {
+          getErrModal(
+            `Currently, the minimum staking amount is ${convertLockedBalance}. Please input less than this quantity.`,
+            "Proposal Submit Error"
+          );
+          return false;
+        }
+        if (convertLockedBalance > inputStakingMax) {
+          getErrModal(
+            `Currently, the maximum staking amount is ${convertLockedBalance}. Please input larger than this quantity.`,
+            "Proposal Submit Error"
+          );
           return false;
         }
       }
@@ -1101,7 +1109,6 @@ const Proposal = () => {
             authMemSkAmountMax
           );
           if (!checkLockedBalance) {
-            alert("Error!");
             setOnLoading(false);
             return;
           }
