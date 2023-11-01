@@ -1,38 +1,38 @@
-import cn from "classnames/bind";
-import { throttle } from "lodash";
-import React, { useState, useEffect, useCallback, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import cn from 'classnames/bind'
+import { throttle } from 'lodash'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import HeaderLogo from "./HeaderLogo";
-import HeaderMenu from "./HeaderMenu";
-import { StakingModal } from "./Modal";
-import { DisConnectWalletModal, ErrModal } from "./Modal";
-import Button from "./voting/Button";
-import { ReactComponent as IconClose } from "../assets/images/ico_close.svg";
-import { ReactComponent as IconMenu } from "../assets/images/ico_menu.svg";
-import { AuthCtx } from "../contexts/AuthContext";
-import { GovInitCtx } from "../contexts/GovernanceInitContext";
-import { ModalContext } from "../contexts/ModalContext";
-import { addCommasToNumber } from "../util";
-import { loginAcc } from "../util";
-import { web3Instance } from "../web3";
+import HeaderLogo from './HeaderLogo'
+import HeaderMenu from './HeaderMenu'
+import { StakingModal } from './Modal'
+import { DisConnectWalletModal, ErrModal } from './Modal'
+import Button from './voting/Button'
+import { ReactComponent as IconClose } from '../assets/images/ico_close.svg'
+import { ReactComponent as IconMenu } from '../assets/images/ico_menu.svg'
+import { AuthCtx } from '../contexts/AuthContext'
+import { GovInitCtx } from '../contexts/GovernanceInitContext'
+import { ModalContext } from '../contexts/ModalContext'
+import { addCommasToNumber } from '../util'
+import { loginAcc } from '../util'
+import { web3Instance } from '../web3'
 
 const Header = () => {
-  const { isWeb3Loaded, isContractReady } = useContext(GovInitCtx);
+  const { isWeb3Loaded, isContractReady } = useContext(GovInitCtx)
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [offset, setOffset] = useState({
     width: 0,
-    height: 0,
-  });
+    height: 0
+  })
   const resize = useCallback(() => {
     setOffset({
       width: window.innerWidth,
-      height: window.innerHeight,
-    });
-  }, []);
+      height: window.innerHeight
+    })
+  }, [])
 
-  const { getErrModal } = useContext(ModalContext);
+  const { getErrModal } = useContext(ModalContext)
   const {
     address,
     isMember,
@@ -43,76 +43,76 @@ const Header = () => {
     onLogin,
     onLogout,
     updateAccountData,
-    setStakingEventsWatch,
-  } = useContext(AuthCtx);
-  const [isShowStakingModal, setIsShowStakingModal] = useState(false);
+    setStakingEventsWatch
+  } = useContext(AuthCtx)
+  const [isShowStakingModal, setIsShowStakingModal] = useState(false)
 
   // address, web3Instance가 있다면 ctx 업데이트
   useEffect(() => {
     if (address && web3Instance) {
-      updateAccountData(address);
+      updateAccountData(address)
     }
-  }, [address, updateAccountData]);
+  }, [address, updateAccountData])
   // ---------- wallet modal state start ----------
-  const [isGnbOpen, setIsGnbOpen] = useState(false);
-  const [disConnectView, setDisConnectView] = useState(false);
-  const [errVisible, setErrVisible] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
+  const [isGnbOpen, setIsGnbOpen] = useState(false)
+  const [disConnectView, setDisConnectView] = useState(false)
+  const [errVisible, setErrVisible] = useState(false)
+  const [errMsg, setErrMsg] = useState('')
   // ---------- wallet modal state end ----------
 
-  function resizeVh() {
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  function resizeVh () {
+    const vh = window.innerHeight * 0.01
+    document.documentElement.style.setProperty('--vh', `${vh}px`)
   }
 
   useEffect(() => {
-    resize();
-    window.addEventListener("resize", throttle(resize, 200));
+    resize()
+    window.addEventListener('resize', throttle(resize, 200))
     return () => {
-      window.removeEventListener("resize", resize);
-    };
-  }, [resize]);
+      window.removeEventListener('resize', resize)
+    }
+  }, [resize])
 
-  const onClickToggle = () => setIsGnbOpen((prev) => !prev);
+  const onClickToggle = () => setIsGnbOpen((prev) => !prev)
   // const onMenuClick = () => {};
   // ---------- wallet modal useEffect stsart ----------
 
   // check login data & auto login
   useEffect(() => {
-    resizeVh();
-    window.addEventListener("resize", resizeVh);
+    resizeVh()
+    window.addEventListener('resize', resizeVh)
     return () => {
-      window.removeEventListener("resize", resizeVh);
-    };
-  }, []);
+      window.removeEventListener('resize', resizeVh)
+    }
+  }, [])
 
   const onDisConnect = () => {
-    setDisConnectView(false);
-    onLogout();
-  };
+    setDisConnectView(false)
+    onLogout()
+  }
 
   const handleAccountsChanged = async (accounts) => {
-    navigate(0);
-    await updateAccountData(accounts[0], true);
-  };
+    navigate(0)
+    await updateAccountData(accounts[0], true)
+  }
 
   const openErrModal = (err) => {
-    setErrVisible(true);
-    setErrMsg(err);
-  };
+    setErrVisible(true)
+    setErrMsg(err)
+  }
 
   const closeErrModal = () => {
-    setErrVisible(false);
-    setErrMsg("");
-  };
+    setErrVisible(false)
+    setErrMsg('')
+  }
 
   // ---------- wallet modal method end ----------
 
   return (
-    <header className={cn("header")}>
+    <header className={cn('header')}>
       {offset.width > 1141 ? (
         <>
-          <div className="header-logo-wrap">
+          <div className='header-logo-wrap'>
             <HeaderLogo />
             <HeaderMenu
               isConnect={isConnect}
@@ -121,8 +121,8 @@ const Header = () => {
               setIsGnbOpen={setIsGnbOpen}
             />
           </div>
-          <div className={cn("header-utils")}>
-            <div className={cn("header-my-info")}>
+          <div className={cn('header-utils')}>
+            <div className={cn('header-my-info')}>
               {isConnect ? (
                 <>
                   <dl>
@@ -135,18 +135,18 @@ const Header = () => {
                       <dd>{addCommasToNumber(myBalance)} META </dd>
                     </div>
                   </dl>
-                  <div className="btns-wrap">
+                  <div className='btns-wrap'>
                     <Button
-                      text="META Staking"
-                      type="outline"
-                      size="sm"
+                      text='META Staking'
+                      type='outline'
+                      size='sm'
                       onClick={() => {
-                        setIsShowStakingModal(true);
+                        setIsShowStakingModal(true)
                       }}
                     />
                     <Button
-                      type="outline"
-                      size="sm"
+                      type='outline'
+                      size='sm'
                       text={address && loginAcc(address)}
                       onClick={() => setDisConnectView(true)}
                     />
@@ -154,9 +154,9 @@ const Header = () => {
                 </>
               ) : (
                 <Button
-                  type="outline"
-                  size="sm"
-                  text="Connect Wallet"
+                  type='outline'
+                  size='sm'
+                  text='Connect Wallet'
                   onClick={onLogin}
                 />
               )}
@@ -166,21 +166,21 @@ const Header = () => {
       ) : (
         // mobile toggle open
         <>
-          <div className="header-logo-wrap">
+          <div className='header-logo-wrap'>
             <HeaderLogo />
-            <div className={cn("mobile-gnb", isGnbOpen && "show")}>
-              <div className={cn("gnb-inner")}>
-                <button onClick={onClickToggle} className={cn("btn-close")}>
+            <div className={cn('mobile-gnb', isGnbOpen && 'show')}>
+              <div className={cn('gnb-inner')}>
+                <button onClick={onClickToggle} className={cn('btn-close')}>
                   <IconClose />
                 </button>
-                <div className={cn("header-content")}>
+                <div className={cn('header-content')}>
                   <HeaderMenu
                     isConnect={isConnect}
                     isMember={isMember}
                     isStaker={isStaker}
                     setIsGnbOpen={setIsGnbOpen}
                   />
-                  <div className={cn("header-my-info")}>
+                  <div className={cn('header-my-info')}>
                     {isConnect && (
                       <dl>
                         <div>
@@ -198,28 +198,28 @@ const Header = () => {
                       </dl>
                     )}
                     {isConnect ? (
-                      <div className="btns-wrap">
+                      <div className='btns-wrap'>
                         <Button
-                          text="META Staking"
-                          type="outline"
-                          size="sm"
+                          text='META Staking'
+                          type='outline'
+                          size='sm'
                           onClick={() => {
-                            setIsShowStakingModal(true);
+                            setIsShowStakingModal(true)
                           }}
                         />
 
                         <Button
-                          type="outline"
-                          size="sm"
+                          type='outline'
+                          size='sm'
                           text={address && loginAcc(address)}
                           onClick={() => setDisConnectView(true)}
                         />
                       </div>
                     ) : (
                       <Button
-                        type="outline"
-                        size="sm"
-                        text="Connect Wallet"
+                        type='outline'
+                        size='sm'
+                        text='Connect Wallet'
                         onClick={onLogin}
                       />
                     )}
@@ -228,7 +228,7 @@ const Header = () => {
               </div>
             </div>
           </div>
-          <div className="header-utils">
+          <div className='header-utils'>
             <button onClick={onClickToggle}>
               <IconMenu />
             </button>
@@ -244,7 +244,7 @@ const Header = () => {
           />
           <ErrModal
             netName={web3Instance.netName}
-            title="Error"
+            title='Error'
             err={errMsg}
             visible={errVisible}
             coloseErrModal={closeErrModal}
@@ -254,7 +254,7 @@ const Header = () => {
             isMember={isMember}
             accountBalance={{
               balance: myBalance,
-              lockedBalance: lockedBalance,
+              lockedBalance: lockedBalance
             }}
             stakingModalVisible={isShowStakingModal}
             scrollType={false}
@@ -265,7 +265,7 @@ const Header = () => {
         </>
       )}
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

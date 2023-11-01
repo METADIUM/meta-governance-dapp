@@ -1,31 +1,29 @@
-import { Button, Select, Icon } from "antd";
-import React from "react";
+import { Button, Select, Icon } from 'antd'
+import React from 'react'
 
-
-import * as PComponent from "./Forms";
-import * as MComponent from "./MyForm";
+import * as PComponent from './Forms'
+import * as MComponent from './MyForm'
 import {
   constants,
   ENV_MY_INFO_PROPOSAL_LIST,
   ENV_NAMES,
-  ENV_VOTING_PROPOSAL_LIST,
-} from "../constants";
-import * as util from "../util";
+  ENV_VOTING_PROPOSAL_LIST
+} from '../constants'
+import * as util from '../util'
 import {
   callContractMethod,
   encodeABIValueInMethod,
-  web3Instance,
-} from "../web3";
-
+  web3Instance
+} from '../web3'
 
 class ProposalForm extends React.Component {
   data = {
     formData: {},
-    selectedTopic: "",
+    selectedTopic: ''
   };
 
   state = {
-    selectedTopic: "",
+    selectedTopic: '',
     // Add Authority Member
     // Replace Authority Member
     newAddrErr: false,
@@ -47,7 +45,7 @@ class ProposalForm extends React.Component {
       blockRate1: 0,
       blockRate2: 0,
       blockRate3: 0,
-      blockRate4: 0,
+      blockRate4: 0
     },
     blockRateTotal: 0,
     blockRewardDisMthErr: false,
@@ -62,578 +60,562 @@ class ProposalForm extends React.Component {
     stakingAddrErr: false,
     // Remove Authority Member
     oldLockAmountErr: false,
-    showLockAmount: "",
+    showLockAmount: '',
     // Voting Address
     newVotingAddrErr: false,
     // Reward Address
-    newRewardAddrErr: false,
+    newRewardAddrErr: false
   };
 
-  async componentDidMount() {
-    await this.getMyInfo();
+  async componentDidMount () {
+    await this.getMyInfo()
   }
 
-  componentDidUpdate(props) {
+  componentDidUpdate (props) {
     // changes due to the use of the same component
     if (
-      props.selectedMenu === "menu-voting" &&
-      this.props.selectedMenu === "menu-myinfo"
+      props.selectedMenu === 'menu-voting' &&
+      this.props.selectedMenu === 'menu-myinfo'
     ) {
       // setting select default value (Myinfo)
-      this.data.selectedTopic = "";
-      this.setState({ selectedTopic: "" });
+      this.data.selectedTopic = ''
+      this.setState({ selectedTopic: '' })
     }
   }
 
   getLockAmount = async (addr) => {
     if (!/^0x[a-fA-F0-9]{40}$/.test(addr)) {
       this.props.getErrModal(
-        "Staking Address is Invalid.",
-        "Proposal Submit Error"
-      );
-      this.setState({ showLockAmount: "" });
-      return;
+        'Staking Address is Invalid.',
+        'Proposal Submit Error'
+      )
+      this.setState({ showLockAmount: '' })
+      return
     } else if (!web3Instance.web3.utils.checkAddressChecksum(addr)) {
-      addr = web3Instance.web3.utils.toChecksumAddress(addr);
+      addr = web3Instance.web3.utils.toChecksumAddress(addr)
     }
-    if (!(await callContractMethod(web3Instance, "GovImp", "isMember", addr))) {
+    if (!(await callContractMethod(web3Instance, 'GovImp', 'isMember', addr))) {
       this.props.getErrModal(
-        "Non-existing Member Address.",
-        "Proposal Submit Error"
-      );
-      this.setState({ showLockAmount: "" });
-      return;
+        'Non-existing Member Address.',
+        'Proposal Submit Error'
+      )
+      this.setState({ showLockAmount: '' })
+      return
     }
 
     try {
       let lockedBalance = await callContractMethod(
         web3Instance,
-        "Staking",
-        "lockedBalanceOf",
+        'Staking',
+        'lockedBalanceOf',
         addr
-      );
+      )
       this.setState({
-        showLockAmount: util.convertWeiToEther(lockedBalance),
-      });
+        showLockAmount: util.convertWeiToEther(lockedBalance)
+      })
     } catch (err) {
-      console.log(err);
-      this.props.getErrModal(err.message, err.name);
-      this.props.convertLoading(false);
-      this.setState({ showLockAmount: "" });
+      console.log(err)
+      this.props.getErrModal(err.message, err.name)
+      this.props.convertLoading(false)
+      this.setState({ showLockAmount: '' })
     }
   };
 
-  resetForm() {
+  resetForm () {
     if (window.document.forms[0]) {
-      const elements = window.document.forms[0].elements;
+      const elements = window.document.forms[0].elements
       Object.keys(elements).forEach((key) => {
         switch (elements[key].name) {
-          case "newLockAmount":
-          case "oldLockAmount":
-            elements[key].value = this.props.stakingMin;
-            break;
+          case 'newLockAmount':
+          case 'oldLockAmount':
+            elements[key].value = this.props.stakingMin
+            break
           default:
-            elements[key].value = "";
+            elements[key].value = ''
         }
-      });
+      })
     }
   }
 
   // only, when the topic has changed
   handleSelectTopicChange = async (topic) => {
-    const { stakingMin, votingDurationMin, votingDurationMax } = this.props;
+    const { stakingMin, votingDurationMin, votingDurationMax } = this.props
 
     // for getting addresses
     const isMyInfo = ENV_MY_INFO_PROPOSAL_LIST.filter(
       (item) => item.value === topic
-    )[0];
+    )[0]
     if (isMyInfo) {
-      await this.getMyInfo();
+      await this.getMyInfo()
     }
 
-    this.data.selectedTopic = topic;
-    this.setState({ selectedTopic: topic });
+    this.data.selectedTopic = topic
+    this.setState({ selectedTopic: topic })
     this.data.formData = {
       ...this.data.formData,
       newLockAmount: stakingMin,
       oldLockAmount: stakingMin,
       votingDurationMin,
-      votingDurationMax,
-    };
-    this.resetForm();
+      votingDurationMax
+    }
+    this.resetForm()
 
     Object.keys(this.state)
-      .filter((key) => key.indexOf("Err") > 0)
+      .filter((key) => key.indexOf('Err') > 0)
       .forEach((key) => {
-        this.setState({ [key]: false });
-      });
+        this.setState({ [key]: false })
+      })
   };
 
   // when the select option has changed
-  handleSelectChange(e) {
-    let [name, value] = e.split("_");
-    this.data.formData[name] = value;
+  handleSelectChange (e) {
+    let [name, value] = e.split('_')
+    this.data.formData[name] = value
   }
 
   handleChange = (e) => {
     // if selected value is topic
-    if (typeof e === "string") {
-      this.handleSelectChange(e);
-      return;
+    if (typeof e === 'string') {
+      this.handleSelectChange(e)
+      return
     }
-    const originStr = this.data.formData[e.target.name];
-    this.data.formData[e.target.name] = e.target.value;
+    const originStr = this.data.formData[e.target.name]
+    this.data.formData[e.target.name] = e.target.value
     switch (e.target.name) {
       // Add Authority Member
-      case "newAddr":
-        this.setState({ newAddrErr: !util.checkAddress(e.target.value) });
-        break;
-      case "newName":
-        this.setState({ newNameErr: !util.checkName(e.target.value) });
-        break;
-      case "newLockAmount":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else
+      case 'newAddr':
+        this.setState({ newAddrErr: !util.checkAddress(e.target.value) })
+        break
+      case 'newName':
+        this.setState({ newNameErr: !util.checkName(e.target.value) })
+        break
+      case 'newLockAmount':
+        if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
-            newLockAmountErr: !this.checkLockAmount(e.target.value),
-          });
-        break;
-      case "newNode":
-        this.setState({ newNodeErr: !util.checkNode(e.target.value) });
-        break;
+            newLockAmountErr: !this.checkLockAmount(e.target.value)
+          })
+        }
+        break
+      case 'newNode':
+        this.setState({ newNodeErr: !util.checkNode(e.target.value) })
+        break
       // Replace Authority Member
-      case "stakingAddr":
-        this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) });
-        break;
+      case 'stakingAddr':
+        this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) })
+        break
       // Remove Authority Member
-      case "oldLockAmount":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else
+      case 'oldLockAmount':
+        if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
-            oldLockAmountErr: !this.checkLockAmount(e.target.value),
-          });
-        break;
+            oldLockAmountErr: !this.checkLockAmount(e.target.value)
+          })
+        }
+        break
       // Governance Contract Address
-      case "newGovAddr":
-        this.setState({ newGovAddrErr: !util.checkAddress(e.target.value) });
-        break;
+      case 'newGovAddr':
+        this.setState({ newGovAddrErr: !util.checkAddress(e.target.value) })
+        break
       // Voting Duration Setting
-      case "votDurationMin":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else {
-          const { votDurationMin, votDurationMax } = this.data.formData;
+      case 'votDurationMin':
+        if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
+          const { votDurationMin, votDurationMax } = this.data.formData
           this.setState({
             votDurationErr: util.checkNumberRange(
-              "min",
+              'min',
               votDurationMin,
               votDurationMax
-            ),
-          });
+            )
+          })
         }
-        break;
-      case "votDurationMax":
+        break
+      case 'votDurationMax':
         if (!/^([0-9]*)$/.test(e.target.value)) {
-          this.data.formData[e.target.name] = originStr;
+          this.data.formData[e.target.name] = originStr
         } else {
-          const { votDurationMin, votDurationMax } = this.data.formData;
+          const { votDurationMin, votDurationMax } = this.data.formData
           this.setState({
             votDurationErr: util.checkNumberRange(
-              "max",
+              'max',
               votDurationMin,
               votDurationMax
-            ),
-          });
+            )
+          })
         }
-        break;
-      //Authority Member Staking Amount
-      case "authMemSkAmountMin":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else {
-          const { authMemSkAmountMin, authMemSkAmountMax } = this.data.formData;
+        break
+      // Authority Member Staking Amount
+      case 'authMemSkAmountMin':
+        if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
+          const { authMemSkAmountMin, authMemSkAmountMax } = this.data.formData
           this.setState({
             authMemSkAmountErr:
               util.checkNumberRange(
-                "min",
+                'min',
                 authMemSkAmountMin,
                 authMemSkAmountMax
               ) ||
               util.checkMemberStakingAmount(
                 authMemSkAmountMin,
                 authMemSkAmountMax
-              ),
-          });
+              )
+          })
         }
-        break;
-      case "authMemSkAmountMax":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else {
-          const { authMemSkAmountMin, authMemSkAmountMax } = this.data.formData;
+        break
+      case 'authMemSkAmountMax':
+        if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
+          const { authMemSkAmountMin, authMemSkAmountMax } = this.data.formData
           this.setState({
             authMemSkAmountErr:
               util.checkNumberRange(
-                "max",
+                'max',
                 authMemSkAmountMin,
                 authMemSkAmountMax
               ) ||
               util.checkMemberStakingAmount(
                 authMemSkAmountMin,
                 authMemSkAmountMax
-              ),
-          });
+              )
+          })
         }
-        break;
+        break
       // Block Creation Time
-      case "blockCreation":
-        if (!/^([0-9.]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else
+      case 'blockCreation':
+        if (!/^([0-9.]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
-            blockCreationErr: !util.checkBlockCreationTime(e.target.value),
-          });
-        break;
+            blockCreationErr: !util.checkBlockCreationTime(e.target.value)
+          })
+        }
+        break
       // Block Reward Distribution Method
-      case "blockRate1":
-      case "blockRate2":
-      case "blockRate3":
-      case "blockRate4":
+      case 'blockRate1':
+      case 'blockRate2':
+      case 'blockRate3':
+      case 'blockRate4':
         if (!/^[0-9]*\.?([0-9]{1,2})?$/.test(e.target.value)) {
-          this.data.formData[e.target.name] = originStr;
+          this.data.formData[e.target.name] = originStr
         } else {
-          const { value, name } = e.target;
-          const parsedValue = Number(value) || 0;
+          const { value, name } = e.target
+          const parsedValue = Number(value) || 0
           this.setState((prevState) => {
             const updatedBlockRates = {
               ...prevState.blockRates,
-              [name]: parsedValue,
-            };
+              [name]: parsedValue
+            }
             // get total
             const newTotal = Object.values(updatedBlockRates).reduce(
               (p, c) => p + c
-            );
+            )
             return {
               blockRates: updatedBlockRates,
               blockRateTotal: newTotal,
-              blockRewardDisMthErr: newTotal !== 100,
-            };
-          });
+              blockRewardDisMthErr: newTotal !== 100
+            }
+          })
         }
-        break;
+        break
       // Block Reward Amount
-      case "blockRewardAmount":
-        if (!/^([0-9.]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else
+      case 'blockRewardAmount':
+        if (!/^([0-9.]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
-            blockRewardAmountErr: !util.checkRewardAmount(e.target.value),
-          });
-        break;
+            blockRewardAmountErr: !util.checkRewardAmount(e.target.value)
+          })
+        }
+        break
       // maxPriorityFeePerGas
-      case "maxPriorityFeePerGas":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else
+      case 'maxPriorityFeePerGas':
+        if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
-            maxPriorityFeePerGasErr: !util.checkPrice(e.target.value),
-          });
-        break;
+            maxPriorityFeePerGasErr: !util.checkPrice(e.target.value)
+          })
+        }
+        break
       // Gas Limit & baseFee
-      case "gasLimit":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else this.setState({ gasLimitErr: !util.checkPrice(e.target.value) });
-        break;
-      case "maxBaseFee":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else
+      case 'gasLimit':
+        if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else this.setState({ gasLimitErr: !util.checkPrice(e.target.value) })
+        break
+      case 'maxBaseFee':
+        if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
-            maxBaseFeeErr: !util.checkPrice(e.target.value),
-          });
-        break;
-      case "baseFeeMaxChangeRate":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else
+            maxBaseFeeErr: !util.checkPrice(e.target.value)
+          })
+        }
+        break
+      case 'baseFeeMaxChangeRate':
+        if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
-            baseFeeMaxChangeRateErr: !util.checkPrice(e.target.value),
-          });
-        break;
-      case "gasTargetPercentage":
-        if (!/^([0-9]*)$/.test(e.target.value))
-          this.data.formData[e.target.name] = originStr;
-        else
+            baseFeeMaxChangeRateErr: !util.checkPrice(e.target.value)
+          })
+        }
+        break
+      case 'gasTargetPercentage':
+        if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
-            gasTargetPercentageErr: !util.checkPrice(e.target.value),
-          });
-        break;
+            gasTargetPercentageErr: !util.checkPrice(e.target.value)
+          })
+        }
+        break
       // Voting Address
-      case "newVotingAddr":
-        this.setState({ newVotingAddrErr: !util.checkAddress(e.target.value) });
-        break;
+      case 'newVotingAddr':
+        this.setState({ newVotingAddrErr: !util.checkAddress(e.target.value) })
+        break
       // Reward Address
-      case "newRewardAddr":
-        this.setState({ newRewardAddrErr: !util.checkAddress(e.target.value) });
-        break;
+      case 'newRewardAddr':
+        this.setState({ newRewardAddrErr: !util.checkAddress(e.target.value) })
+        break
       default:
-        break;
+        break
     }
   };
 
-  checkLockAmount(amount) {
+  checkLockAmount (amount) {
     return (
       Number(amount) <= this.props.stakingMax &&
       Number(amount) >= this.props.stakingMin
-    );
+    )
   }
 
   // check before sending transaction
-  async handleProposalError(refineData) {
+  async handleProposalError (refineData) {
     if (
       !(await callContractMethod(
         web3Instance,
-        "GovImp",
-        "isMember",
+        'GovImp',
+        'isMember',
         this.props.defaultAccount
       )) &&
       !constants.debugMode
     ) {
       return this.props.getErrModal(
-        "You are not Governance Member.",
-        "Proposal Submit Error"
-      );
+        'You are not Governance Member.',
+        'Proposal Submit Error'
+      )
     }
-    const { selectedTopic } = this.state;
+    const { selectedTopic } = this.state
     switch (selectedTopic) {
-      case "AddAuthorityMember": {
-        const { staker, lockAmount } = refineData;
-        const newLockedAmount = Number(lockAmount);
+      case 'AddAuthorityMember': {
+        const { staker, lockAmount } = refineData
+        const newLockedAmount = Number(lockAmount)
         // get the balance of staking address
         const balance = Number(
           await callContractMethod(
             web3Instance,
-            "Staking",
-            "availableBalanceOf",
+            'Staking',
+            'availableBalanceOf',
             staker
           )
-        );
+        )
         // check if addresses already exist
         const isMember = await callContractMethod(
           web3Instance,
-          "GovImp",
-          "isMember",
+          'GovImp',
+          'isMember',
           staker
-        );
+        )
         if (isMember) {
           return this.props.getErrModal(
-            "Existing Member Address.",
-            "Proposal Submit Error"
-          );
+            'Existing Member Address.',
+            'Proposal Submit Error'
+          )
         }
         // check if addresses already voted
         const inBallotMember = this.props.newMemberaddr.some(
           (addr) => addr === staker
-        );
+        )
         if (inBallotMember) {
           return this.props.getErrModal(
-            "Address with Existing Ballot.",
-            "Proposal Submit Error"
-          );
+            'Address with Existing Ballot.',
+            'Proposal Submit Error'
+          )
         }
         // check if staking address has META
         if (balance < newLockedAmount) {
           return this.props.getErrModal(
-            "Not Enough META to Stake.",
-            "Proposal Submit Error"
-          );
+            'Not Enough META to Stake.',
+            'Proposal Submit Error'
+          )
         }
-        return false;
+        return false
       }
-      case "ReplaceAuthorityMember": {
-        const { oldStaker, staker, lockAmount } = refineData;
-        const newLockedAmount = Number(lockAmount);
+      case 'ReplaceAuthorityMember': {
+        const { oldStaker, staker, lockAmount } = refineData
+        const newLockedAmount = Number(lockAmount)
         // get the balance of old, new addresses
         const oldMemberBalance = await callContractMethod(
           web3Instance,
-          "Staking",
-          "lockedBalanceOf",
+          'Staking',
+          'lockedBalanceOf',
           oldStaker
-        );
+        )
         const newMemberBalance = Number(
           await callContractMethod(
             web3Instance,
-            "Staking",
-            "availableBalanceOf",
+            'Staking',
+            'availableBalanceOf',
             staker
           )
-        );
+        )
         // check if old address does not exist
         const isMemberOldAddr = await callContractMethod(
           web3Instance,
-          "GovImp",
-          "isMember",
+          'GovImp',
+          'isMember',
           oldStaker
-        );
+        )
         if (!isMemberOldAddr) {
           return this.props.getErrModal(
-            "Non-existing Member Address (Old).",
-            "Proposal Submit Error"
-          );
+            'Non-existing Member Address (Old).',
+            'Proposal Submit Error'
+          )
         }
         // check if new addresses already exist
         const isMemberNewAddr = await callContractMethod(
           web3Instance,
-          "GovImp",
-          "isMember",
+          'GovImp',
+          'isMember',
           staker
-        );
+        )
         if (isMemberNewAddr) {
           return this.props.getErrModal(
-            "Existing Member Address.",
-            "Proposal Submit Error"
-          );
+            'Existing Member Address.',
+            'Proposal Submit Error'
+          )
         }
         // check if old address already voted
         const inBallotOldMember = this.props.oldMemberaddr.some(
           (addr) => addr === oldStaker
-        );
+        )
         if (inBallotOldMember) {
           return this.props.getErrModal(
-            "Address with Existing Ballot (Old).",
-            "Proposal Submit Error"
-          );
+            'Address with Existing Ballot (Old).',
+            'Proposal Submit Error'
+          )
         }
         // check if new address already voted
         const isBallotNewMember = this.props.newMemberaddr.some(
           (addr) => addr === staker
-        );
+        )
         if (isBallotNewMember) {
           return this.props.getErrModal(
-            "Address with Existing Ballot (New).",
-            "Proposal Submit Error"
-          );
+            'Address with Existing Ballot (New).',
+            'Proposal Submit Error'
+          )
         }
         // check the balance of the old address is not same as lockAmount
         if (Number(oldMemberBalance) !== newLockedAmount) {
           return this.props.getErrModal(
             [
-              "Invalid Replace META Amount",
+              'Invalid Replace META Amount',
               <br />,
               `(Old Address: ${util.convertWeiToEther(
                 oldMemberBalance,
-                "ether"
-              )} META Locked)`,
+                'ether'
+              )} META Locked)`
             ],
-            "Proposal Submit Error"
-          );
+            'Proposal Submit Error'
+          )
         }
         // check if staking address has META
         if (newMemberBalance < newLockedAmount) {
           return this.props.getErrModal(
-            "Not Enough META Stake (New)",
-            "Proposal Submit Error"
-          );
+            'Not Enough META Stake (New)',
+            'Proposal Submit Error'
+          )
         }
-        return false;
+        return false
       }
-      case "RemoveAuthorityMember": {
-        const { staker, lockAmount } = refineData;
+      case 'RemoveAuthorityMember': {
+        const { staker, lockAmount } = refineData
         const balance = await callContractMethod(
           web3Instance,
-          "Staking",
-          "lockedBalanceOf",
+          'Staking',
+          'lockedBalanceOf',
           staker
-        );
-        const lockedAmount = Number(lockAmount);
+        )
+        const lockedAmount = Number(lockAmount)
 
         // check if addresses already exist
         const isMember = await callContractMethod(
           web3Instance,
-          "GovImp",
-          "isMember",
+          'GovImp',
+          'isMember',
           staker
-        );
+        )
         if (!isMember) {
           return this.props.getErrModal(
-            "Non-existing Member Address.",
-            "Proposal Submit Error"
-          );
+            'Non-existing Member Address.',
+            'Proposal Submit Error'
+          )
         }
         // check if new address already voted
         const isBallotMember = this.props.newMemberaddr.some(
           (addr) => addr === staker
-        );
+        )
         if (isBallotMember) {
           return this.props.getErrModal(
-            "Address with Existing Ballot.",
-            "Proposal Submit Error"
-          );
+            'Address with Existing Ballot.',
+            'Proposal Submit Error'
+          )
         }
         // check if the balance is small
         if (balance < lockedAmount) {
           return this.props.getErrModal(
-            "Locked Amount must be less than or equal to Unlocked Amount.",
-            "Proposal Submit Error"
-          );
+            'Locked Amount must be less than or equal to Unlocked Amount.',
+            'Proposal Submit Error'
+          )
         }
-        return false;
+        return false
       }
-      case "GovernanceContractAddress": {
-        const { newGovAddr } = refineData;
+      case 'GovernanceContractAddress': {
+        const { newGovAddr } = refineData
         // check if address is contract code
-        const code = await web3Instance.web3.eth.getCode(newGovAddr);
-        if (code === "0x") {
+        const code = await web3Instance.web3.eth.getCode(newGovAddr)
+        if (code === '0x') {
           return this.props.getErrModal(
-            "Address is not a Contract Address.",
-            "Proposal Submit Error"
-          );
+            'Address is not a Contract Address.',
+            'Proposal Submit Error'
+          )
         }
-        return false;
+        return false
       }
       default:
-        return false;
+        return false
     }
   }
 
   // check the data error handling
-  async checkSubmitData(data) {
-    const { selectedTopic } = this.state;
-    const { memo, votDuration } = data;
-    let checkData, refineData, trxFunction;
+  async checkSubmitData (data) {
+    const { selectedTopic } = this.state
+    const { memo, votDuration } = data
+    let checkData, refineData, trxFunction
 
     try {
       switch (selectedTopic) {
-        case "AddAuthorityMember": {
-          const { newAddr, newName, newNode, newLockAmount } = data;
+        case 'AddAuthorityMember': {
+          const { newAddr, newName, newNode, newLockAmount } = data
           // check undefined
           if (util.checkUndefined(newAddr)) {
-            this.setState({ newAddrErr: !this.state.newAddrErr });
-            this.props.convertLoading(false);
-            return;
+            this.setState({ newAddrErr: !this.state.newAddrErr })
+            this.props.convertLoading(false)
+            return
           }
           if (util.checkUndefined(newName)) {
-            this.setState({ newNameErr: !this.state.newNameErr });
-            this.props.convertLoading(false);
-            return;
+            this.setState({ newNameErr: !this.state.newNameErr })
+            this.props.convertLoading(false)
+            return
           }
           if (util.checkUndefined(newNode)) {
-            this.setState({ newNodeErr: !this.state.newNodeErr });
-            this.props.convertLoading(false);
-            return;
+            this.setState({ newNodeErr: !this.state.newNodeErr })
+            this.props.convertLoading(false)
+            return
           }
           // get node information
-          const { node, ip, port } = util.splitNodeInfo(newNode);
+          const { node, ip, port } = util.splitNodeInfo(newNode)
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToAddMember",
+              'GovImp',
+              'addProposalToAddMember',
               trx
-            );
+            )
           checkData = {
             staker: newAddr,
             voter: newAddr,
@@ -644,43 +626,43 @@ class ProposalForm extends React.Component {
             ip,
             port,
             memo,
-            duration: votDuration,
-          };
-          break;
+            duration: votDuration
+          }
+          break
         }
-        case "ReplaceAuthorityMember": {
+        case 'ReplaceAuthorityMember': {
           const { stakingAddr, newAddr, newName, newNode, newLockAmount } =
-            data;
+            data
           // check undefined
           if (util.checkUndefined(stakingAddr)) {
-            this.setState({ stakingAddrErr: !this.state.stakingAddrErr });
-            this.props.convertLoading(false);
-            return;
+            this.setState({ stakingAddrErr: !this.state.stakingAddrErr })
+            this.props.convertLoading(false)
+            return
           }
           if (util.checkUndefined(newAddr)) {
-            this.setState({ newAddrErr: !this.state.newAddrErr });
-            this.props.convertLoading(false);
-            return;
+            this.setState({ newAddrErr: !this.state.newAddrErr })
+            this.props.convertLoading(false)
+            return
           }
           if (util.checkUndefined(newName)) {
-            this.setState({ newNameErr: !this.state.newNameErr });
-            this.props.convertLoading(false);
-            return;
+            this.setState({ newNameErr: !this.state.newNameErr })
+            this.props.convertLoading(false)
+            return
           }
           if (util.checkUndefined(newNode)) {
-            this.setState({ newNodeErr: !this.state.newNodeErr });
-            this.props.convertLoading(false);
-            return;
+            this.setState({ newNodeErr: !this.state.newNodeErr })
+            this.props.convertLoading(false)
+            return
           }
           // get node information
-          const { node, ip, port } = util.splitNodeInfo(newNode);
+          const { node, ip, port } = util.splitNodeInfo(newNode)
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeMember",
+              'GovImp',
+              'addProposalToChangeMember',
               trx
-            );
+            )
           checkData = {
             staker: newAddr,
             voter: newAddr,
@@ -692,372 +674,372 @@ class ProposalForm extends React.Component {
             port,
             memo,
             duration: votDuration,
-            oldStaker: stakingAddr,
-          };
-          break;
+            oldStaker: stakingAddr
+          }
+          break
         }
-        case "RemoveAuthorityMember": {
-          const { stakingAddr, oldLockAmount } = data;
+        case 'RemoveAuthorityMember': {
+          const { stakingAddr, oldLockAmount } = data
           // check undefined
           if (util.checkUndefined(stakingAddr)) {
-            this.setState({ stakingAddrErr: !this.state.stakingAddrErr });
-            this.props.convertLoading(false);
-            return;
+            this.setState({ stakingAddrErr: !this.state.stakingAddrErr })
+            this.props.convertLoading(false)
+            return
           }
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToRemoveMember",
+              'GovImp',
+              'addProposalToRemoveMember',
               trx
-            );
+            )
           checkData = {
             staker: stakingAddr,
             lockAmount: oldLockAmount,
             memo,
-            duration: votDuration,
-          };
-          break;
+            duration: votDuration
+          }
+          break
         }
-        case "GovernanceContractAddress": {
-          const { newGovAddr } = data;
+        case 'GovernanceContractAddress': {
+          const { newGovAddr } = data
           // check undefined
           if (util.checkUndefined(newGovAddr)) {
-            this.setState({ newGovAddrErr: !this.state.newGovAddrErr });
-            this.props.convertLoading(false);
-            return;
+            this.setState({ newGovAddrErr: !this.state.newGovAddrErr })
+            this.props.convertLoading(false)
+            return
           }
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeGov",
+              'GovImp',
+              'addProposalToChangeGov',
               trx
-            );
+            )
           checkData = {
             newGovAddr,
             memo,
-            duration: votDuration,
-          };
-          break;
+            duration: votDuration
+          }
+          break
         }
-        case "VotingDurationSetting": {
-          const { votDurationMin, votDurationMax } = data;
+        case 'VotingDurationSetting': {
+          const { votDurationMin, votDurationMax } = data
           // check undefined
           if (util.checkUndefined(votDurationMin)) {
-            this.setState({ votDurationErr: !this.state.votDurationErr });
-            this.props.convertLoading(false);
-            return;
+            this.setState({ votDurationErr: !this.state.votDurationErr })
+            this.props.convertLoading(false)
+            return
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_BALLOT_DURATION_MIN_MAX
-          );
+          )
           const envVal = util.encodeParameters(
-            ["uint256", "uint256"],
+            ['uint256', 'uint256'],
             [
               util.convertDayToSeconds(votDurationMin),
-              util.convertDayToSeconds(votDurationMax),
+              util.convertDayToSeconds(votDurationMax)
             ]
-          );
+          )
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
-            );
+            )
           checkData = {
             envName,
             envType: String(3),
             envVal,
             memo,
-            duration: votDuration,
-          };
-          break;
+            duration: votDuration
+          }
+          break
         }
-        case "AuthorityMemberStakingAmount": {
-          const { authMemSkAmountMin, authMemSkAmountMax } = data;
+        case 'AuthorityMemberStakingAmount': {
+          const { authMemSkAmountMin, authMemSkAmountMax } = data
           // check undefined
           if (util.checkUndefined(authMemSkAmountMin)) {
             this.setState({
-              authMemSkAmountErr: !this.state.authMemSkAmountErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              authMemSkAmountErr: !this.state.authMemSkAmountErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_STAKING_MIN_MAX
-          );
+          )
           const envVal = util.encodeParameters(
-            ["uint256", "uint256"],
+            ['uint256', 'uint256'],
             [
               util.convertEtherToWei(authMemSkAmountMin),
-              util.convertEtherToWei(authMemSkAmountMax),
+              util.convertEtherToWei(authMemSkAmountMax)
             ]
-          );
+          )
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
-            );
+            )
           checkData = {
             envName,
             envType: String(3),
             envVal,
             memo,
-            duration: votDuration,
-          };
-          break;
+            duration: votDuration
+          }
+          break
         }
-        case "BlockCreationTime": {
-          const { blockCreation } = data;
+        case 'BlockCreationTime': {
+          const { blockCreation } = data
           // check undefined
           if (util.checkUndefined(blockCreation) || !Number(blockCreation)) {
             this.setState({
-              blockCreationErr: !this.state.blockCreationErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              blockCreationErr: !this.state.blockCreationErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_BLOCK_CREATION_TIME
-          );
+          )
           // convert ms
           const envVal = util.encodeParameters(
-            ["uint256"],
+            ['uint256'],
             [(blockCreation * 1000).toFixed(0)]
-          );
+          )
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
-            );
+            )
           checkData = {
             envName,
             envType: String(2),
             envVal,
             memo,
-            duration: votDuration,
-          };
-          break;
+            duration: votDuration
+          }
+          break
         }
-        case "BlockRewardAmount": {
-          const { blockRewardAmount } = data;
+        case 'BlockRewardAmount': {
+          const { blockRewardAmount } = data
           // check undefined
           if (util.checkUndefined(blockRewardAmount)) {
             this.setState({
-              blockRewardAmountErr: !this.state.blockRewardAmountErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              blockRewardAmountErr: !this.state.blockRewardAmountErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_BLOCK_REWARD_AMOUNT
-          );
+          )
           const envVal = util.encodeParameters(
-            ["uint256"],
+            ['uint256'],
             [util.convertEtherToWei(blockRewardAmount)]
-          );
+          )
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
-            );
+            )
           checkData = {
             envName,
             envType: String(2),
             envVal,
             memo,
-            duration: votDuration,
-          };
-          break;
+            duration: votDuration
+          }
+          break
         }
-        case "BlockRewardDistributionMethod": {
+        case 'BlockRewardDistributionMethod': {
           const {
             blockRate1 = 0,
             blockRate2 = 0,
             blockRate3 = 0,
-            blockRate4 = 0,
-          } = data;
+            blockRate4 = 0
+          } = data
           // check undefined
           if (
             this.state.blockRateTotal !== 100 ||
             (!blockRate1 && !blockRate2 && !blockRate3 && !blockRate4)
           ) {
             this.setState({
-              blockRewardDisMthErr: !this.state.blockRewardDisMthErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              blockRewardDisMthErr: !this.state.blockRewardDisMthErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_BLOCK_REWARD_DISTRIBUTION
-          );
+          )
           // remove decimals
           const envVal = util.encodeParameters(
-            ["uint256", "uint256", "uint256", "uint256"],
+            ['uint256', 'uint256', 'uint256', 'uint256'],
             [
               (Number(blockRate1) * 100).toFixed(0),
               (Number(blockRate2) * 100).toFixed(0),
               (Number(blockRate3) * 100).toFixed(0),
-              (Number(blockRate4) * 100).toFixed(0),
+              (Number(blockRate4) * 100).toFixed(0)
             ]
-          );
+          )
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
-            );
+            )
           checkData = {
             envName,
             envType: String(5),
             envVal,
             memo,
-            duration: votDuration,
-          };
-          break;
+            duration: votDuration
+          }
+          break
         }
-        case "MaxPriorityFeePerGas": {
-          const { maxPriorityFeePerGas } = data;
+        case 'MaxPriorityFeePerGas': {
+          const { maxPriorityFeePerGas } = data
           // check undefined
           if (
             util.checkUndefined(maxPriorityFeePerGas) ||
             !Number(maxPriorityFeePerGas)
           ) {
             this.setState({
-              maxPriorityFeePerGasErr: !this.state.maxPriorityFeePerGasErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              maxPriorityFeePerGasErr: !this.state.maxPriorityFeePerGasErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_MAX_PRIORITY_FEE_PER_GAS
-          );
+          )
           const envVal = util.encodeParameters(
-            ["uint256"],
+            ['uint256'],
             [util.convertGWeiToWei(maxPriorityFeePerGas)]
-          );
+          )
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
-            );
+            )
           checkData = {
             envName,
             envType: String(2),
             envVal,
             memo,
-            duration: votDuration,
-          };
-          break;
+            duration: votDuration
+          }
+          break
         }
-        case "GasLimitBaseFee": {
+        case 'GasLimitBaseFee': {
           const {
             gasLimit,
             maxBaseFee,
             baseFeeMaxChangeRate,
-            gasTargetPercentage,
-          } = data;
+            gasTargetPercentage
+          } = data
           // check undefined
           if (util.checkUndefined(gasLimit)) {
             this.setState({
-              gasLimitErr: !this.state.gasLimitErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              gasLimitErr: !this.state.gasLimitErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           if (util.checkUndefined(maxBaseFee)) {
             this.setState({
-              maxBaseFeeErr: !this.state.maxBaseFeeErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              maxBaseFeeErr: !this.state.maxBaseFeeErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           if (util.checkUndefined(baseFeeMaxChangeRate)) {
             this.setState({
-              baseFeeMaxChangeRateErr: !this.state.baseFeeMaxChangeRateErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              baseFeeMaxChangeRateErr: !this.state.baseFeeMaxChangeRateErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           if (util.checkUndefined(gasTargetPercentage)) {
             this.setState({
-              gasTargetPercentageErr: !this.state.gasTargetPercentageErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              gasTargetPercentageErr: !this.state.gasTargetPercentageErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           // setting env variables
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_GASLIMIT_AND_BASE_FEE
-          );
+          )
           const envVal = util.encodeParameters(
-            ["uint256", "uint256", "uint256", "uint256"],
+            ['uint256', 'uint256', 'uint256', 'uint256'],
             [
               util.convertGWeiToWei(gasLimit),
               maxBaseFee,
               baseFeeMaxChangeRate,
-              gasTargetPercentage,
+              gasTargetPercentage
             ]
-          );
+          )
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeEnv",
+              'GovImp',
+              'addProposalToChangeEnv',
               trx
-            );
+            )
           checkData = {
             envName,
             envType: String(5),
             envVal,
             memo,
-            duration: votDuration,
-          };
-          break;
+            duration: votDuration
+          }
+          break
         }
-        case "VotingAddress": {
+        case 'VotingAddress': {
           const { staker, name, lockAmount, enode, ip, port, newVotingAddr } =
-            data;
-          const { oldVotingAddr, oldRewardAddr } = this.props;
+            data
+          const { oldVotingAddr, oldRewardAddr } = this.props
           // check undefined
           if (util.checkUndefined(newVotingAddr)) {
             this.setState({
-              newVotingAddrErr: !this.state.newVotingAddrErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              newVotingAddrErr: !this.state.newVotingAddrErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           if (oldVotingAddr === newVotingAddr) {
             this.setState({
-              newVotingAddrErr: !this.state.newVotingAddrErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              newVotingAddrErr: !this.state.newVotingAddrErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeMember",
+              'GovImp',
+              'addProposalToChangeMember',
               trx
-            );
+            )
           checkData = {
             staker,
             voter: newVotingAddr,
@@ -1068,36 +1050,36 @@ class ProposalForm extends React.Component {
             ip,
             port,
             memo,
-            oldStaker: staker,
-          };
-          break;
+            oldStaker: staker
+          }
+          break
         }
-        case "RewardAddress": {
+        case 'RewardAddress': {
           const { staker, name, lockAmount, enode, ip, port, newRewardAddr } =
-            data;
-          const { oldVotingAddr, oldRewardAddr } = this.props;
+            data
+          const { oldVotingAddr, oldRewardAddr } = this.props
           // check undefined
           if (util.checkUndefined(newRewardAddr)) {
             this.setState({
-              newRewardAddrErr: !this.state.newRewardAddrErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              newRewardAddrErr: !this.state.newRewardAddrErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           if (oldRewardAddr === newRewardAddr) {
             this.setState({
-              newRewardAddrErr: !this.state.newRewardAddrErr,
-            });
-            this.props.convertLoading(false);
-            return;
+              newRewardAddrErr: !this.state.newRewardAddrErr
+            })
+            this.props.convertLoading(false)
+            return
           }
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              "GovImp",
-              "addProposalToChangeMember",
+              'GovImp',
+              'addProposalToChangeMember',
               trx
-            );
+            )
           checkData = {
             staker,
             voter: oldVotingAddr,
@@ -1108,114 +1090,114 @@ class ProposalForm extends React.Component {
             ip,
             port,
             memo,
-            oldStaker: staker,
-          };
-          break;
+            oldStaker: staker
+          }
+          break
         }
         default:
-          return;
+          return
       }
       // sets the default value of memo, votDuration
       checkData = {
         ...checkData,
-        memo: checkData.memo || "",
+        memo: checkData.memo || '',
         duration:
           util.convertDayToSeconds(checkData.duration) ||
-          this.props.votingDurationMin,
-      };
-      // override data for formatting
-      refineData = util.refineSubmitData(checkData);
-      if (typeof (await this.handleProposalError(refineData)) === "undefined") {
-        this.props.convertLoading(false);
-        return;
+          this.props.votingDurationMin
       }
-      return trxFunction(refineData);
+      // override data for formatting
+      refineData = util.refineSubmitData(checkData)
+      if (typeof (await this.handleProposalError(refineData)) === 'undefined') {
+        this.props.convertLoading(false)
+        return
+      }
+      return trxFunction(refineData)
     } catch (err) {
-      console.log(err);
-      this.props.getErrModal(err.message, err.name);
-      this.props.convertLoading(false);
+      console.log(err)
+      this.props.getErrModal(err.message, err.name)
+      this.props.convertLoading(false)
     }
   }
 
   // submit form data
   handleSubmit = async (e) => {
-    e.preventDefault();
-    this.props.convertLoading(true);
+    e.preventDefault()
+    this.props.convertLoading(true)
     try {
-      const trx = await this.checkSubmitData(this.data.formData);
+      const trx = await this.checkSubmitData(this.data.formData)
       // run only if there is data for sending transactions
       if (trx !== undefined) {
-        this.sendTransaction(trx);
+        this.sendTransaction(trx)
       }
     } catch (err) {
-      console.log(err);
-      this.props.getErrModal(err.message, err.name);
-      this.props.convertLoading(false);
+      console.log(err)
+      this.props.getErrModal(err.message, err.name)
+      this.props.convertLoading(false)
     }
   };
 
   // send transaction
-  async sendTransaction(trx) {
+  async sendTransaction (trx) {
     try {
       web3Instance.web3.eth.sendTransaction(
         {
           from: this.props.defaultAccount,
           to: trx.to,
           data: trx.data,
-          gasPrice: 110000000000,
+          gasPrice: 110000000000
           // maxFeePerGas: 101000000000,
           // maxPriorityFeePerGas: 100000000000,
         },
         (err, hash) => {
           if (err) {
-            this.props.getErrModal(err.message, "Proposal Submit Error");
-            this.props.convertLoading(false);
+            this.props.getErrModal(err.message, 'Proposal Submit Error')
+            this.props.convertLoading(false)
           } else {
             // console.log('hash:', hash)
             this.props.waitForReceipt(hash, async (receipt) => {
               // console.log("Updated :", receipt);
               if (receipt.status) {
-                if (this.props.selectedMenu === "menu-myinfo") {
-                  window.location.reload();
+                if (this.props.selectedMenu === 'menu-myinfo') {
+                  window.location.reload()
                 } else {
-                  await this.props.convertComponent("voting");
-                  this.props.convertLoading(false);
+                  await this.props.convertComponent('voting')
+                  this.props.convertLoading(false)
                 }
               } else {
                 this.props.getErrModal(
-                  "The transaction could not be sent normally.",
-                  "Proposal Submit Error",
+                  'The transaction could not be sent normally.',
+                  'Proposal Submit Error',
                   receipt.transactionHash
-                );
-                this.props.convertLoading(false);
+                )
+                this.props.convertLoading(false)
               }
-            });
+            })
           }
         }
-      );
+      )
     } catch (err) {
-      console.log(err);
-      this.props.getErrModal(err.message, err.name);
-      this.props.convertLoading(false);
+      console.log(err)
+      this.props.getErrModal(err.message, err.name)
+      this.props.convertLoading(false)
     }
   }
 
   // get information for send transaction (Myinfo)
-  async getMyInfo() {
+  async getMyInfo () {
     try {
-      const { defaultAccount, memberIdx } = this.props;
+      const { defaultAccount, memberIdx } = this.props
       const { name, enode, ip, port } = await callContractMethod(
         web3Instance,
-        "GovImp",
-        "getNode",
+        'GovImp',
+        'getNode',
         memberIdx
-      );
+      )
       const lockAmount = await callContractMethod(
         web3Instance,
-        "Staking",
-        "lockedBalanceOf",
+        'Staking',
+        'lockedBalanceOf',
         defaultAccount
-      );
+      )
       this.data.formData = {
         staker: defaultAccount,
         name: util.decodeHexToString(name),
@@ -1223,21 +1205,21 @@ class ProposalForm extends React.Component {
         ip,
         port,
         lockAmount: util.convertWeiToEther(lockAmount),
-        oldStaker: defaultAccount,
-      };
+        oldStaker: defaultAccount
+      }
     } catch (err) {
-      console.log(err);
-      this.props.getErrModal(err.message, err.name);
-      this.props.convertLoading(false);
+      console.log(err)
+      this.props.getErrModal(err.message, err.name)
+      this.props.convertLoading(false)
     }
   }
 
   // show components that follow selected topic
-  showProposalForm() {
-    const { selectedTopic } = this.state;
+  showProposalForm () {
+    const { selectedTopic } = this.state
     const TopicComponent = (topic) => {
       switch (topic) {
-        case "AddAuthorityMember":
+        case 'AddAuthorityMember':
           return (
             <PComponent.AddProposalForm
               newAddrErr={this.state.newAddrErr}
@@ -1246,8 +1228,8 @@ class ProposalForm extends React.Component {
               newNodeErr={this.state.newNodeErr}
               newNameErr={this.state.newNameErr}
             />
-          );
-        case "ReplaceAuthorityMember":
+          )
+        case 'ReplaceAuthorityMember':
           return (
             <PComponent.ReplaceProposalForm
               stakingAddrErr={this.state.stakingAddrErr}
@@ -1258,8 +1240,8 @@ class ProposalForm extends React.Component {
               newLockAmountErr={this.state.newLockAmountErr}
               newNodeErr={this.state.newNodeErr}
             />
-          );
-        case "RemoveAuthorityMember":
+          )
+        case 'RemoveAuthorityMember':
           return (
             <PComponent.RemoveProposalForm
               stakingAddrErr={this.state.stakingAddrErr}
@@ -1269,44 +1251,44 @@ class ProposalForm extends React.Component {
               oldLockAmountErr={this.state.oldLockAmountErr}
               getLockAmount={this.getLockAmount}
             />
-          );
-        case "GovernanceContractAddress":
+          )
+        case 'GovernanceContractAddress':
           return (
             <PComponent.GovernanceContractAddressForm
               newGovAddrErr={this.state.newGovAddrErr}
             />
-          );
-        case "VotingDurationSetting":
+          )
+        case 'VotingDurationSetting':
           return (
             <PComponent.VotingDurationSettingForm
               votDurationErr={this.state.votDurationErr}
               votDurationMin={this.data.formData.votDurationMin}
               votDurationMax={this.data.formData.votDurationMax}
             />
-          );
-        case "AuthorityMemberStakingAmount":
+          )
+        case 'AuthorityMemberStakingAmount':
           return (
             <PComponent.AuthorityMemberStakingAmountForm
               authMemSkAmountErr={this.state.authMemSkAmountErr}
               authMemSkAmountMin={this.data.formData.authMemSkAmountMin}
               authMemSkAmountMax={this.data.formData.authMemSkAmountMax}
             />
-          );
-        case "BlockCreationTime":
+          )
+        case 'BlockCreationTime':
           return (
             <PComponent.BlockCreationTime
               blockCreation={this.data.formData.blockCreation}
               blockCreationErr={this.state.blockCreationErr}
             />
-          );
-        case "BlockRewardAmount":
+          )
+        case 'BlockRewardAmount':
           return (
             <PComponent.BlockRewardAmount
               blockRewardAmount={this.data.formData.blockRewardAmount}
               blockRewardAmountErr={this.state.blockRewardAmountErr}
             />
-          );
-        case "BlockRewardDistributionMethod":
+          )
+        case 'BlockRewardDistributionMethod':
           return (
             <PComponent.BlockRewardDistributionMethod
               blockRate1={this.data.formData.blockRate1}
@@ -1316,15 +1298,15 @@ class ProposalForm extends React.Component {
               blockRateTotal={this.state.blockRateTotal}
               blockRewardDisMthErr={this.state.blockRewardDisMthErr}
             />
-          );
-        case "MaxPriorityFeePerGas":
+          )
+        case 'MaxPriorityFeePerGas':
           return (
             <PComponent.MaxPriorityFeePerGasForm
               maxPriorityFeePerGas={this.data.formData.maxPriorityFeePerGas}
               maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}
             />
-          );
-        case "GasLimitBaseFee":
+          )
+        case 'GasLimitBaseFee':
           return (
             <PComponent.GasLimitBaseFeeForm
               gasLimit={this.data.formData.gasLimit}
@@ -1336,25 +1318,25 @@ class ProposalForm extends React.Component {
               gasTargetPercentage={this.data.formData.gasTargetPercentage}
               gasTargetPercentageErr={this.state.gasTargetPercentageErr}
             />
-          );
-        case "VotingAddress":
+          )
+        case 'VotingAddress':
           return (
             <MComponent.VotingAddress
               oldVotingAddr={this.props.oldVotingAddr}
               newVotingAddrErr={this.state.newVotingAddrErr}
             />
-          );
-        case "RewardAddress":
+          )
+        case 'RewardAddress':
           return (
             <MComponent.RewardAddress
               oldRewardAddr={this.props.oldRewardAddr}
               newRewardAddrErr={this.state.newRewardAddrErr}
             />
-          );
+          )
         default:
-          return <></>;
+          return <></>
       }
-    };
+    }
     return (
       /* component for only common props pass */
       <PComponent.PassesCommonProps
@@ -1368,58 +1350,58 @@ class ProposalForm extends React.Component {
         {/* component of selected topic */}
         {TopicComponent(selectedTopic)}
       </PComponent.PassesCommonProps>
-    );
+    )
   }
 
-  render() {
-    const { convertComponent, buttonLoading, selectedMenu } = this.props;
-    const { selectedTopic } = this.state;
+  render () {
+    const { convertComponent, buttonLoading, selectedMenu } = this.props
+    const { selectedTopic } = this.state
     const options =
-      selectedMenu === "menu-myinfo"
+      selectedMenu === 'menu-myinfo'
         ? ENV_MY_INFO_PROPOSAL_LIST
-        : ENV_VOTING_PROPOSAL_LIST;
+        : ENV_VOTING_PROPOSAL_LIST
     return (
       <div>
-        <div className="contentDiv container">
-          <div className="backBtnDiv">
-            {selectedMenu === "menu-myinfo" ? null : (
+        <div className='contentDiv container'>
+          <div className='backBtnDiv'>
+            {selectedMenu === 'menu-myinfo' ? null : (
               <Button
                 className={
-                  "btn-fill-white flex flex-center-horizontal text-large " +
+                  'btn-fill-white flex flex-center-horizontal text-large ' +
                   web3Instance.netName
                 }
-                onClick={() => convertComponent("voting")}
+                onClick={() => convertComponent('voting')}
                 loading={buttonLoading}
               >
                 <span>
-                  <Icon type="left" />
+                  <Icon type='left' />
                 </span>
-                <span className="text_btn">Back to Voting</span>
+                <span className='text_btn'>Back to Voting</span>
               </Button>
             )}
           </div>
-          <div className="contentVotingDiv">
-            <div className="proposalHead">
-              <div className="title flex">
-                <p className="flex-full text-heavy">
-                  {selectedMenu === "menu-myinfo" ? "MyInfo" : "New Proposal"}
+          <div className='contentVotingDiv'>
+            <div className='proposalHead'>
+              <div className='title flex'>
+                <p className='flex-full text-heavy'>
+                  {selectedMenu === 'menu-myinfo' ? 'MyInfo' : 'New Proposal'}
                 </p>
                 <p>* Mandatory</p>
               </div>
-              {selectedMenu === "menu-myinfo" && (
+              {selectedMenu === 'menu-myinfo' && (
                 <>
-                  <div className="flex-full flex-column text-container">
+                  <div className='flex-full flex-column text-container'>
                     <span>Voting Address: {this.props.oldVotingAddr}</span>
                     <span>Reward Address: {this.props.oldRewardAddr}</span>
                   </div>
                 </>
               )}
-              <p className="subtitle">
-                {selectedMenu === "menu-myinfo" ? (
-                  "Replace List"
+              <p className='subtitle'>
+                {selectedMenu === 'menu-myinfo' ? (
+                  'Replace List'
                 ) : (
                   <>
-                    Topic for voting <span className="required">*</span>
+                    Topic for voting <span className='required'>*</span>
                   </>
                 )}
               </p>
@@ -1437,11 +1419,11 @@ class ProposalForm extends React.Component {
                 ))}
               </Select>
             </div>
-            {selectedTopic !== "" && <div>{this.showProposalForm()}</div>}
+            {selectedTopic !== '' && <div>{this.showProposalForm()}</div>}
           </div>
           {/* reference memo */}
-          {selectedMenu === "menu-myinfo" ? null : (
-            <div className="contentRefDiv">
+          {selectedMenu === 'menu-myinfo' ? null : (
+            <div className='contentRefDiv'>
               <p>[Reference]</p>
               <ol>
                 <li>
@@ -1458,8 +1440,8 @@ class ProposalForm extends React.Component {
           )}
         </div>
       </div>
-    );
+    )
   }
 }
 
-export { ProposalForm };
+export { ProposalForm }

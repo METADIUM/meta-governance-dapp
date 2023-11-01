@@ -1,9 +1,9 @@
-import React, { createContext } from "react";
+import React, { createContext } from 'react'
 
-import { ErrModal } from "../components";
-import { useModal } from "../hooks/useModal";
+import { ErrModal } from '../components'
+import { useModal } from '../hooks/useModal'
 
-const ModalContext = createContext();
+const ModalContext = createContext()
 
 const ModalProvider = ({ children }) => {
   const {
@@ -12,8 +12,8 @@ const ModalProvider = ({ children }) => {
     isModalOpened,
     title,
     content,
-    errLink,
-  } = useModal();
+    errLink
+  } = useModal()
   return (
     <ModalContext.Provider
       value={{
@@ -22,13 +22,13 @@ const ModalProvider = ({ children }) => {
         isModalOpened,
         title,
         content,
-        errLink,
+        errLink
       }}
     >
       {children}
       <ErrModal />
     </ModalContext.Provider>
-  );
-};
+  )
+}
 
-export { ModalContext, ModalProvider };
+export { ModalContext, ModalProvider }

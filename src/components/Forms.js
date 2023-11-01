@@ -1,15 +1,15 @@
-import { Input, Form, Select } from 'antd';
-import cn from 'classnames/bind';
-import React from 'react';
+import { Input, Form, Select } from 'antd'
+import cn from 'classnames/bind'
+import React from 'react'
 
-import GovButton from './voting/GovButton';
-import VotingInputArea from './voting/VotingInputArea';
-import { ReactComponent as IconArrowDown } from '../assets/images/ic-select-arrow.svg';
-import { convertSecondsToDay, shouldPass } from '../util';
+import GovButton from './voting/GovButton'
+import VotingInputArea from './voting/VotingInputArea'
+import { ReactComponent as IconArrowDown } from '../assets/images/ic-select-arrow.svg'
+import { convertSecondsToDay, shouldPass } from '../util'
 
-import '../assets/scss/proposal.scss';
+import '../assets/scss/proposal.scss'
 
-const { TextArea } = Input;
+const { TextArea } = Input
 
 // components for communicating common props
 export const PassesCommonProps = ({
@@ -19,7 +19,7 @@ export const PassesCommonProps = ({
   handleChange,
   votingDurationMax,
   votingDurationMin,
-  children,
+  children
 }) => {
   return (
     <>
@@ -29,11 +29,11 @@ export const PassesCommonProps = ({
         handleSubmit,
         handleChange,
         votingDurationMax,
-        votingDurationMin,
+        votingDurationMin
       })}
     </>
-  );
-};
+  )
+}
 
 // voting duration and submit button
 const ProposalFormFooter = ({
@@ -43,25 +43,25 @@ const ProposalFormFooter = ({
   useVotingDuration = true,
   votingDurationMin,
   votingDurationMax,
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
   // handleSubmit = shouldPass(),
 }) => {
-  const min = convertSecondsToDay(votingDurationMin);
-  const max = convertSecondsToDay(votingDurationMax);
-  const label = (day) => (day === 1 ? `${day} day` : `${day} days`);
+  const min = convertSecondsToDay(votingDurationMin)
+  const max = convertSecondsToDay(votingDurationMax)
+  const label = (day) => (day === 1 ? `${day} day` : `${day} days`)
 
   // option component
   const selectOption = () => {
-    let comp = [];
+    let comp = []
     for (let op = min; op <= max; op++) {
       comp.push(
         <Select.Option key={op} value={`votDuration_${op}`}>
           {label(op)}
         </Select.Option>
-      );
+      )
     }
-    return comp;
-  };
+    return comp
+  }
   return (
     <>
       <div className='voting-duration'>
@@ -100,8 +100,8 @@ const ProposalFormFooter = ({
         />
       </div>
     </>
-  );
-};
+  )
+}
 
 // Add Authority Member
 export const AddProposalForm = ({
@@ -116,7 +116,7 @@ export const AddProposalForm = ({
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap')}>
@@ -207,7 +207,7 @@ export const AddProposalForm = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // Replace Authority Member
 export const ReplaceProposalForm = ({
@@ -223,7 +223,7 @@ export const ReplaceProposalForm = ({
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap')}>
@@ -326,7 +326,7 @@ export const ReplaceProposalForm = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // Remove Authority Member
 export const RemoveProposalForm = ({
@@ -344,7 +344,7 @@ export const RemoveProposalForm = ({
   votingDurationMax,
   handleSubmit = shouldPass(),
   handleChange = shouldPass(),
-  getLockAmount = shouldPass(),
+  getLockAmount = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap check-balance')}>
@@ -361,7 +361,7 @@ export const RemoveProposalForm = ({
           errText='Invalid Address'
           enterButton='Check Balance'
           onClick={(addr) => {
-            getLockAmount(addr);
+            getLockAmount(addr)
           }}
         />
       </div>
@@ -373,12 +373,12 @@ export const RemoveProposalForm = ({
       <VotingInputArea
         inputType='suffix'
         fixText='META'
-        Locked={true}
+        Locked
         name='showLockAmount'
         value={showLockAmount || ''}
         errType={showLockAmountErr}
         errText={'Click the Check Balance button'}
-        readonly={true}
+        readonly
         disabled={loading}
       />
     </div>
@@ -418,7 +418,7 @@ export const RemoveProposalForm = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // Governance Contract Address
 export const GovernanceContractAddressForm = ({
@@ -428,7 +428,7 @@ export const GovernanceContractAddressForm = ({
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap')}>
@@ -465,7 +465,7 @@ export const GovernanceContractAddressForm = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // Voting Duration Setting
 export const VotingDurationSettingForm = ({
@@ -477,7 +477,7 @@ export const VotingDurationSettingForm = ({
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap double-box')}>
@@ -528,8 +528,8 @@ export const VotingDurationSettingForm = ({
               votDurationErr === 'max'
                 ? 'Invalid Max Date Setting'
                 : votDurationErr !== 'min'
-                ? 'Invalid Duration Setting'
-                : ''
+                  ? 'Invalid Duration Setting'
+                  : ''
             }`}
           </p>
         )}
@@ -555,7 +555,7 @@ export const VotingDurationSettingForm = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // Authority Member Staking Amount
 export const AuthorityMemberStakingAmountForm = ({
@@ -567,7 +567,7 @@ export const AuthorityMemberStakingAmountForm = ({
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap')}>
@@ -618,8 +618,8 @@ export const AuthorityMemberStakingAmountForm = ({
               authMemSkAmountErr === 'max'
                 ? 'Invalid Max Amout'
                 : authMemSkAmountErr !== 'min'
-                ? 'Invalid Staking Amount'
-                : ''
+                  ? 'Invalid Staking Amount'
+                  : ''
             }`}
           </p>
         )}
@@ -645,7 +645,7 @@ export const AuthorityMemberStakingAmountForm = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // Block Creation Time
 export const BlockCreationTime = ({
@@ -656,7 +656,7 @@ export const BlockCreationTime = ({
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap')}>
@@ -698,7 +698,7 @@ export const BlockCreationTime = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // Block Reward Amount
 export const BlockRewardAmount = ({
@@ -709,7 +709,7 @@ export const BlockRewardAmount = ({
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap')}>
@@ -751,7 +751,7 @@ export const BlockRewardAmount = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // Block Reward Distribution Method
 export const BlockRewardDistributionMethod = ({
@@ -766,7 +766,7 @@ export const BlockRewardDistributionMethod = ({
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap distribution')}>
@@ -847,9 +847,9 @@ export const BlockRewardDistributionMethod = ({
               name='blockRateTotal'
               value={blockRateTotal || ''}
               onChange={handleChange}
-              disabled={true}
+              disabled
               errType={blockRewardDisMthErr}
-              readonly={true}
+              readonly
             />
           </div>
         </div>
@@ -880,7 +880,7 @@ export const BlockRewardDistributionMethod = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // MaxPriorityFeePerGas
 export const MaxPriorityFeePerGasForm = ({
@@ -891,7 +891,7 @@ export const MaxPriorityFeePerGasForm = ({
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap creative')}>
@@ -933,7 +933,7 @@ export const MaxPriorityFeePerGasForm = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // Gas Limit & baseFee
 export const GasLimitBaseFeeForm = ({
@@ -950,7 +950,7 @@ export const GasLimitBaseFeeForm = ({
   votingDurationMin,
   votingDurationMax,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap ')}>
@@ -1056,7 +1056,7 @@ export const GasLimitBaseFeeForm = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)
 
 // Wait Proposal
 export const AddWaitProposalForm = ({
@@ -1067,7 +1067,7 @@ export const AddWaitProposalForm = ({
   investmentAmount,
   investmentAmountErr,
   handleSubmit = shouldPass(),
-  handleChange = shouldPass(),
+  handleChange = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn('voting-input-wrap')}>
@@ -1145,4 +1145,4 @@ export const AddWaitProposalForm = ({
       handleChange={handleChange}
     />
   </Form>
-);
+)

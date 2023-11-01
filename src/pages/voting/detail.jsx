@@ -1,30 +1,30 @@
-import { message, Table } from "antd";
-import cn from "classnames/bind";
-import React, { useEffect, useState, useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useSendTransaction } from "wagmi";
+import { message, Table } from 'antd'
+import cn from 'classnames/bind'
+import React, { useEffect, useState, useContext } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useSendTransaction } from 'wagmi'
 
-import { VotingModal } from "../../components/Modal.js";
-import VotingStickChart from "../../components/voting/VotingStickChart";
-import VotingTitle from "../../components/voting/VotingTitle.jsx";
-import VotingTopDetail from "../../components/voting/VotingTopDetail.jsx";
-import { constants } from "../../constants.js";
-import { AuthCtx } from "../../contexts/AuthContext.js";
-import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx";
-import { useModal } from "../../hooks/useModal.jsx";
-import Loading from "../../Loading";
-import { checkUndefined, timeConverter } from "../../util.js";
+import { VotingModal } from '../../components/Modal.js'
+import VotingStickChart from '../../components/voting/VotingStickChart'
+import VotingTitle from '../../components/voting/VotingTitle.jsx'
+import VotingTopDetail from '../../components/voting/VotingTopDetail.jsx'
+import { constants } from '../../constants.js'
+import { AuthCtx } from '../../contexts/AuthContext.js'
+import { GovInitCtx } from '../../contexts/GovernanceInitContext.jsx'
+import { useModal } from '../../hooks/useModal.jsx'
+import Loading from '../../Loading'
+import { checkUndefined, timeConverter } from '../../util.js'
 import {
   callContractMethod,
   encodeABIValueInMethod,
   onlyCallContractMethod,
-  web3Instance,
-} from "../../web3.js";
+  web3Instance
+} from '../../web3.js'
 
-import "../../assets/scss/modal.scss";
+import '../../assets/scss/modal.scss'
 
 const VotingDetail = () => {
-  const { data } = useContext(GovInitCtx);
+  const { data } = useContext(GovInitCtx)
   const {
     ballotMemberOriginData,
     ballotBasicOriginData,
@@ -32,89 +32,89 @@ const VotingDetail = () => {
     waitBallotBasicOriginData,
     authorityNames,
     votingDurationMax,
-    votingDurationMin,
-  } = data;
-  const { sendTransactionAsync } = useSendTransaction();
-  const { getErrModal } = useModal();
-  const { address, isLoggedIn: isLogin, isMember } = useContext(AuthCtx);
+    votingDurationMin
+  } = data
+  const { sendTransactionAsync } = useSendTransaction()
+  const { getErrModal } = useModal()
+  const { address, isLoggedIn: isLogin, isMember } = useContext(AuthCtx)
   // -------------------- state
-  const [ballotMemberData, setBallotMemberData] = useState({});
-  const [ballotBasicData, setsBallotBasicData] = useState({});
+  const [ballotMemberData, setBallotMemberData] = useState({})
+  const [ballotBasicData, setsBallotBasicData] = useState({})
   // 투표 선택 상태
-  const [currentVote, setCurrentVote] = useState("");
+  const [currentVote, setCurrentVote] = useState('')
 
-  const [loading, setLoading] = useState(false);
-  const [errModal, setErrModal] = useState(false);
-  const [errMessage, setErrMessage] = useState("");
-  const [isWait, setIsWait] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [errModal, setErrModal] = useState(false)
+  const [errMessage, setErrMessage] = useState('')
+  const [isWait, setIsWait] = useState(false)
 
-  const { search } = useLocation();
-  const navigate = useNavigate();
+  const { search } = useLocation()
+  const navigate = useNavigate()
 
-  const { id, state, creator, endTime } = ballotBasicData;
+  const { id, state, creator, endTime } = ballotBasicData
 
   // -------------------- useEffect
   useEffect(() => {
     // 유효한 투표인지 확인
-    const id = new URLSearchParams(search).get("id");
-    const wait = new URLSearchParams(search).get("wait");
+    const id = new URLSearchParams(search).get('id')
+    const wait = new URLSearchParams(search).get('wait')
 
-    const regex = /^[^0]\d*$/;
+    const regex = /^[^0]\d*$/
     if (id === null || !regex.test(id)) {
-      openToast("Invalid Voting ID.");
-      navigate("/voting/list");
-      return;
+      openToast('Invalid Voting ID.')
+      navigate('/voting/list')
+      return
     } // wait 구분 잘못된 경우 튕겨내기
     if (wait !== null && parseInt(wait) !== 1) {
-      openToast("Invalid WAIT Proposal Voting ID.");
-      navigate("/voting/list");
-      return;
+      openToast('Invalid WAIT Proposal Voting ID.')
+      navigate('/voting/list')
+      return
     }
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0)
 
-    getVotingData(id, wait);
-  }, [getVotingData, navigate, search]);
+    getVotingData(id, wait)
+  }, [getVotingData, navigate, search])
 
   // -------------------- function
   const openToast = (content) => {
-    message.destroy();
+    message.destroy()
     message.open({
-      type: "warning",
-      content,
-    });
-  };
+      type: 'warning',
+      content
+    })
+  }
 
-  const getVotingData = (id, wait = "0") => {
+  const getVotingData = (id, wait = '0') => {
     const basicData = parseInt(wait)
       ? waitBallotBasicOriginData
-      : ballotBasicOriginData;
-    const ballotBasic = Object.values(basicData, "id").filter(
+      : ballotBasicOriginData
+    const ballotBasic = Object.values(basicData, 'id').filter(
       (item) => item.id.toString() === id
-    )[0];
+    )[0]
     // wait protocol인 경우 basic id 순서대로 저장되어 있음
     const ballotMember = parseInt(wait)
       ? ballotBasic
         ? waitBallotMemberOriginData[ballotBasic.id]
         : null
       : Object.values(ballotMemberOriginData).filter(
-          (item) => item.id.toString() === id
-        )[0];
+        (item) => item.id.toString() === id
+      )[0]
     // 투표 정보가 없을 경우 리스트로 보내기
     if (!ballotMember || !ballotBasic) {
-      openToast("No Information about this Voting ID.");
-      navigate("/voting/list");
-      return;
+      openToast('No Information about this Voting ID.')
+      navigate('/voting/list')
+      return
     }
     // 투표 정보를 가져올 수 없거나 투표가 캔슬된 경우 리스트로 보내기
-    if (!ballotBasic.state || ballotBasic.state === "5") {
-      navigate("/voting/list");
-      return;
+    if (!ballotBasic.state || ballotBasic.state === '5') {
+      navigate('/voting/list')
+      return
     }
     // console.log("ballotMember", ballotMember, ", ballotBasic", ballotBasic);
-    setBallotMemberData(ballotMember);
-    setsBallotBasicData(ballotBasic);
-    setIsWait(wait === "1");
-  };
+    setBallotMemberData(ballotMember)
+    setsBallotBasicData(ballotBasic)
+    setIsWait(wait === '1')
+  }
 
   const setVoteStatus = () => {
     const {
@@ -123,109 +123,109 @@ const VotingDetail = () => {
       acceptVoters,
       rejectVoters,
       powers,
-      totalVoters,
-    } = ballotBasicData;
+      totalVoters
+    } = ballotBasicData
     // 그 당시 총 멤버 수
     const previousMemberCount = Math.floor(
       (100 * parseInt(totalVoters)) / parseInt(powerOfAccepts + powerOfRejects)
-    );
+    )
     // count (wait 안건은 다르게 표기)
     const countAccepts = isWait
       ? acceptVoters.length
-      : state === "1"
-      ? 0
-      : Math.round(previousMemberCount * powerOfAccepts * 0.01); // 백분율 표기 * 0.01
+      : state === '1'
+        ? 0
+        : Math.round(previousMemberCount * powerOfAccepts * 0.01) // 백분율 표기 * 0.01
     const countRejects = isWait
       ? rejectVoters.length
-      : state === "1"
-      ? 0
-      : Math.round(previousMemberCount * powerOfRejects * 0.01);
+      : state === '1'
+        ? 0
+        : Math.round(previousMemberCount * powerOfRejects * 0.01)
 
     return (
       <>
-        <VotingTitle type="sm" title="Vote status" />
-        <div className={cn("chart-area")}>
+        <VotingTitle type='sm' title='Vote status' />
+        <div className={cn('chart-area')}>
           <VotingStickChart
-            title="Yes"
+            title='Yes'
             count={countAccepts}
             percent={isWait ? powers[1] : powerOfAccepts} // wait protocol
           />
           <VotingStickChart
-            title="No"
+            title='No'
             count={countRejects}
             // Ready 상태일 경우 0으로, 그 외의 상태일 경우
             percent={isWait ? powers[2] : powerOfRejects} // wait protocol
-            type="no-type"
+            type='no-type'
           />
         </div>
       </>
-    );
-  };
+    )
+  }
 
   const setVotingDate = () => {
-    const { startTime, endTime, state } = ballotBasicData;
+    const { startTime, endTime, state } = ballotBasicData
     const percent = () => {
       switch (state) {
-        case "2": {
-          const now = new Date().getTime() / 1000;
+        case '2': {
+          const now = new Date().getTime() / 1000
           // ((현재 시간 - 시작 시간)/(끝 시간 - 시작 시간)) * 100
           const deadline =
-            ((parseInt(now) - startTime) / (endTime - startTime)) * 100;
-          return `${deadline > 100 ? 100 : deadline}`;
+            ((parseInt(now) - startTime) / (endTime - startTime)) * 100
+          return `${deadline > 100 ? 100 : deadline}`
         }
-        case "3": // 투표 종료 시
-        case "4":
-          return "100";
-        case "0": // 투표가 시작되지 않았 거나 기타 등등 케이스
-        case "1":
-        case "5":
+        case '3': // 투표 종료 시
+        case '4':
+          return '100'
+        case '0': // 투표가 시작되지 않았 거나 기타 등등 케이스
+        case '1':
+        case '5':
         default:
-          return "0";
+          return '0'
       }
-    };
+    }
 
     return (
-      <div className={cn("detail-date-cont")}>
-        <p className={cn("unit-date")}>
+      <div className={cn('detail-date-cont')}>
+        <p className={cn('unit-date')}>
           <span>Start Date</span>
           <span>End Date </span>
         </p>
-        <p className={cn("date-value")}>
+        <p className={cn('date-value')}>
           {/* 투표가 시작되지 않은 경우 텍스트로 출력 */}
           <span>
-            {state === "1"
-              ? "To be determined"
+            {state === '1'
+              ? 'To be determined'
               : timeConverter(startTime, true)}
           </span>
           <span>
-            {state === "1" ? "To be determined" : timeConverter(endTime, true)}
+            {state === '1' ? 'To be determined' : timeConverter(endTime, true)}
           </span>
         </p>
-        <VotingStickChart percent={percent()} noUnit={true} type="date-type" />
+        <VotingStickChart percent={percent()} noUnit type='date-type' />
       </div>
-    );
-  };
+    )
+  }
 
   const vote = async () => {
     // 투표 항목을 선택했는지 확인
-    if (currentVote === "") {
-      openToast("Please select a vote.");
-      return;
+    if (currentVote === '') {
+      openToast('Please select a vote.')
+      return
     }
     // web3 있는지 확인
     if (!web3Instance.web3) {
-      openToast("web3 is not exist");
-      return;
+      openToast('web3 is not exist')
+      return
     }
     // 로그인 됐는지 확인
     if (!isLogin) {
-      openToast("Please connect your wallet.");
-      return;
+      openToast('Please connect your wallet.')
+      return
     }
     // 멤버거나 화이트리스트에 추가되어 있는지 확인
     if (!isMember) {
-      openToast("You are not member.");
-      return;
+      openToast('You are not member.')
+      return
     }
 
     // 이미 투표했는지 확인
@@ -234,82 +234,82 @@ const VotingDetail = () => {
         // 찬성, 반대 투표 리스트에 있는지 확인
         const approveVote = ballotBasicData.acceptVoters.filter(
           (voter) => voter === address
-        );
+        )
         const rejectVote = ballotBasicData.rejectVoters.filter(
           (voter) => voter === address
-        );
-        return approveVote.length || rejectVote.length;
+        )
+        return approveVote.length || rejectVote.length
       } else {
         return await callContractMethod(
           web3Instance,
-          "ballotStorage",
-          "hasAlreadyVoted",
+          'ballotStorage',
+          'hasAlreadyVoted',
           {
             id,
-            voter: address,
+            voter: address
           }
-        );
+        )
       }
-    };
+    }
     if (await isVoted()) {
-      openToast("You've already voted.");
-      return;
+      openToast("You've already voted.")
+      return
     }
     // 현재 투표 중인 항목이 있는지 확인
     const isInVoting = await onlyCallContractMethod(
       web3Instance,
-      "GovImp",
-      "getBallotInVoting"
-    );
-    if (!isWait && !(isInVoting === "0" || isInVoting === id.toString())) {
+      'GovImp',
+      'getBallotInVoting'
+    )
+    if (!isWait && !(isInVoting === '0' || isInVoting === id.toString())) {
       // wait 일 경우 투표 중인 항목이 있어도 다른 투표할 수 있음
       openToast(
-        "Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed."
-      );
-      return;
+        'Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed.'
+      )
+      return
     }
     // 투표 시간 확인
     if (
       state === constants.ballotState.InProgress &&
       new Date(endTime * 1000) < Date.now()
     ) {
-      openToast("This Ballot is timeouted");
-      this.reloadVoting(false);
-      return;
+      openToast('This Ballot is timeouted')
+      this.reloadVoting(false)
+      return
     }
 
     const trx = encodeABIValueInMethod(
       web3Instance,
-      isWait ? "WaitGovernance" : "GovImp", // wait protocol 분기 처리
-      "vote",
+      isWait ? 'WaitGovernance' : 'GovImp', // wait protocol 분기 처리
+      'vote',
       id,
-      isWait ? currentVote : currentVote === "Yes" // wait protocol 분기 처리
-    );
-    sendTransaction(trx);
-  };
+      isWait ? currentVote : currentVote === 'Yes' // wait protocol 분기 처리
+    )
+    sendTransaction(trx)
+  }
 
   const sendTransaction = async (trx) => {
-    setLoading(true);
-    setCurrentVote("");
+    setLoading(true)
+    setCurrentVote('')
 
-    trx.from = address;
-    trx.gasPrice = 110000000000;
-    trx.value = "0x0";
+    trx.from = address
+    trx.gasPrice = 110000000000
+    trx.value = '0x0'
     try {
       await sendTransactionAsync(trx)
         .then(({ hash }) => {
           waitForReceipt(hash, (receipt) => {
-            if (receipt.status) navigate(0);
+            if (receipt.status) navigate(0)
             else {
               getErrModal(
-                "The transaction could not be sent normally.",
-                "Proposal Submit Error",
+                'The transaction could not be sent normally.',
+                'Proposal Submit Error',
                 receipt.transactionHash
-              );
+              )
             }
-          });
+          })
         })
-        .catch((e) => openErrModal(e));
+        .catch((e) => openErrModal(e))
 
       // web3Instance.web3.eth.sendTransaction(trx, (e, hash) => {
       //   if (e) openErrModal(e);
@@ -321,68 +321,68 @@ const VotingDetail = () => {
       //   });
       // });
     } catch (e) {
-      console.error(`detail:sendTransaction: ${e}`);
-      setLoading(false);
+      console.error(`detail:sendTransaction: ${e}`)
+      setLoading(false)
     }
-  };
+  }
 
   // 트랜잭션 전송이 완료 됐는지 확인하는 메소드
   const waitForReceipt = (hash, cb) => {
     web3Instance.web3.eth.getTransactionReceipt(hash, (e, receipt) => {
-      if (e) throw e;
+      if (e) throw e
       // 아직 receipt을 받지 못헀다면 다시 확인
       if (checkUndefined(receipt) || receipt === null) {
         setTimeout(() => {
-          waitForReceipt(hash, cb);
-        }, 1000);
+          waitForReceipt(hash, cb)
+        }, 1000)
       } else {
         // receipt을 받았다면 callback 함수 실행
-        if (cb) cb(receipt);
+        if (cb) cb(receipt)
       }
-    });
-  };
+    })
+  }
 
   const openErrModal = (e) => {
-    const defaultMsg = e?.details || "Unknown Error";
-    setLoading(false);
-    setErrMessage(defaultMsg);
-    setErrModal(true);
-  };
+    const defaultMsg = e?.details || 'Unknown Error'
+    setLoading(false)
+    setErrMessage(defaultMsg)
+    setErrModal(true)
+  }
 
   const columnsData = [
     {
-      dataIndex: "voter",
-      key: "voter",
-      align: "left",
+      dataIndex: 'voter',
+      key: 'voter',
+      align: 'left',
       render: (_, { voter }) => {
-        const prefix = voter.slice(0, 6);
-        const suffix = voter.slice(voter.length - 4, voter.length);
-        const middle = voter.slice(6, voter.length - 4);
+        const prefix = voter.slice(0, 6)
+        const suffix = voter.slice(voter.length - 4, voter.length)
+        const middle = voter.slice(6, voter.length - 4)
         return (
-          <span className={cn("unit")}>
+          <span className={cn('unit')}>
             <b>{prefix}</b>
             {middle}
             <b>{suffix}</b>
           </span>
-        );
-      },
+        )
+      }
     },
     {
-      dataIndex: "decision",
-      key: "decision",
-      align: "center",
+      dataIndex: 'decision',
+      key: 'decision',
+      align: 'center',
       render: (_, { decision }) => {
-        return <span className={cn("vote-decision")}>{decision}</span>;
-      },
-    },
-  ];
+        return <span className={cn('vote-decision')}>{decision}</span>
+      }
+    }
+  ]
 
   return loading ? (
-    <Loading txLoading={true} />
+    <Loading txLoading />
   ) : (
     <>
-      <div className="section-body">
-        <div className="wrap">
+      <div className='section-body'>
+        <div className='wrap'>
           <VotingTopDetail
             isWait={isWait}
             ballotMemberData={ballotMemberData}
@@ -390,45 +390,45 @@ const VotingDetail = () => {
             votingDurationMax={votingDurationMax}
             votingDurationMin={votingDurationMin}
             defaultAccount={address}
-            authorityName={authorityNames.get(creator) || "-"}
+            authorityName={authorityNames.get(creator) || '-'}
             setTrx={(trx) => sendTransaction(trx)}
             waitBallotMemberOriginData={waitBallotMemberOriginData}
           />
 
-          <div className={cn("inner")}>
+          <div className={cn('inner')}>
             {/* status content */}
-            <div className={cn("detail-vote-cont")}>
-              <div className={cn("status-content")}>{setVoteStatus()}</div>
+            <div className={cn('detail-vote-cont')}>
+              <div className={cn('status-content')}>{setVoteStatus()}</div>
               {/* cast content */}
-              <div className={cn("cast-content")}>
-                <VotingTitle type="sm" title="Cast your vote" />
-                <div className={cn("vote-btn-area")}>
-                  <div className={cn("btn-wrap")}>
-                    <div className={cn("voting-check-wrap")}>
+              <div className={cn('cast-content')}>
+                <VotingTitle type='sm' title='Cast your vote' />
+                <div className={cn('vote-btn-area')}>
+                  <div className={cn('btn-wrap')}>
+                    <div className={cn('voting-check-wrap')}>
                       <input
-                        id={"voting-check-yes"}
-                        name={"radio"}
-                        type="radio"
-                        onClick={() => setCurrentVote(isWait ? 1 : "Yes")}
-                        disabled={state !== "1" && state !== "2"}
+                        id={'voting-check-yes'}
+                        name={'radio'}
+                        type='radio'
+                        onClick={() => setCurrentVote(isWait ? 1 : 'Yes')}
+                        disabled={state !== '1' && state !== '2'}
                       />
-                      <label htmlFor={"voting-check-yes"}>Yes</label>
+                      <label htmlFor={'voting-check-yes'}>Yes</label>
                     </div>
-                    <div className={cn("voting-check-wrap")}>
+                    <div className={cn('voting-check-wrap')}>
                       <input
-                        id={"voting-check-no"}
-                        name={"radio"}
-                        type="radio"
-                        onClick={() => setCurrentVote(isWait ? 2 : "No")}
-                        disabled={state !== "1" && state !== "2"}
+                        id={'voting-check-no'}
+                        name={'radio'}
+                        type='radio'
+                        onClick={() => setCurrentVote(isWait ? 2 : 'No')}
+                        disabled={state !== '1' && state !== '2'}
                       />
-                      <label htmlFor={"voting-check-no"}>No</label>
+                      <label htmlFor={'voting-check-no'}>No</label>
                     </div>
                   </div>
                   <button
-                    className={cn("text-banner")}
+                    className={cn('text-banner')}
                     onClick={() => vote()}
-                    disabled={state !== "1" && state !== "2"}
+                    disabled={state !== '1' && state !== '2'}
                   >
                     Vote
                   </button>
@@ -438,24 +438,24 @@ const VotingDetail = () => {
             </div>
             {setVotingDate()}
             {/* description */}
-            <div className={cn("detail-date-cont")}>
-              <p className={cn("unit-date")}>
+            <div className={cn('detail-date-cont')}>
+              <p className={cn('unit-date')}>
                 <span>Description</span>
               </p>
-              <p className={cn("description-value")}>
+              <p className={cn('description-value')}>
                 <span>
                   {isWait ? ballotMemberData.description : ballotBasicData.memo}
                 </span>
               </p>
             </div>
             {/* vote list */}
-            {isWait && (state === "3" || state === "4") && ballotBasicData && (
-              <div className={cn("detail-date-cont")}>
-                <p className={cn("vote-list")}>
+            {isWait && (state === '3' || state === '4') && ballotBasicData && (
+              <div className={cn('detail-date-cont')}>
+                <p className={cn('vote-list')}>
                   <span>
                     Votes
-                    <span className={cn("vote-count")}>
-                      {" " +
+                    <span className={cn('vote-count')}>
+                      {' ' +
                         `${
                           ballotBasicData.acceptVoters.length +
                           ballotBasicData.rejectVoters.length
@@ -464,7 +464,7 @@ const VotingDetail = () => {
                   </span>
                 </p>
                 <Table
-                  pagination={true}
+                  pagination
                   columns={columnsData}
                   dataSource={ballotBasicData.votingList}
                   showHeader={false}
@@ -477,22 +477,22 @@ const VotingDetail = () => {
           <VotingModal
             visible={errModal}
             isVotingModal={setErrModal}
-            btn={{ btnName: "Okay", cancel: false }}
+            btn={{ btnName: 'Okay', cancel: false }}
             scrollType={false}
-            title="Unknown Error"
+            title='Unknown Error'
             onOk={() => {
-              setErrMessage("");
-              setErrModal(false);
+              setErrMessage('')
+              setErrModal(false)
             }}
           >
-            <div className={cn("unknown-wrap")}>
-              <span className={cn("error-detail")}>{errMessage}</span>
+            <div className={cn('unknown-wrap')}>
+              <span className={cn('error-detail')}>{errMessage}</span>
             </div>
           </VotingModal>
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default VotingDetail;
+export default VotingDetail
