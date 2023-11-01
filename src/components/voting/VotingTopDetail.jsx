@@ -12,13 +12,7 @@ import { VotingModal, TxHashAddModal } from "../../components/Modal.js";
 import { constants, ENV_PARAMETER_COUNT } from "../../constants.js";
 import * as util from "../../util";
 import { encodeABIValueInMethod, web3Instance } from "../../web3.js";
-import {
-  DEVMETANET_WHITE_LIST,
-  MAINNET_WHITE_LIST,
-  TESTNET_WHITE_LIST,
-} from "../../whitelist.js";
 import VotingInputArea from "../voting/VotingInputArea";
-
 
 /* 23.04.20 수정: TxHashAddModal, VotingInputArea 추가 */
 
@@ -75,16 +69,6 @@ const VotingTopDetail = ({
     height: 0,
   });
   const navigate = useNavigate();
-
-  const network = process.env.REACT_APP_NETWORK_TYPE;
-  const whiteList =
-    network === "mainnet"
-      ? MAINNET_WHITE_LIST
-      : network === "testnet"
-      ? TESTNET_WHITE_LIST
-      : network === "devnet"
-      ? DEVMETANET_WHITE_LIST
-      : DEVMETANET_WHITE_LIST;
 
   // -------------------- useEffect
   useEffect(() => {
@@ -495,26 +479,6 @@ const VotingTopDetail = ({
           </button>
           <div className={cn("top-status-wrap")}>
             {state && <Status status={state} />}
-            {/* TO CHECK: wait에서만 사용되는 지 확인 */}
-            {/* {defaultAccount &&
-              whiteList.includes(defaultAccount) &&
-              offset.width > 1023 &&
-              isWait &&
-              state === "3" && ( // wait 안건이고 가결됐을 때만 tx 추가 가능
-                // 23.04.20 수정: Add Tx Hash 버튼 추가
-                <div className={cn("btn-wrap")}>
-                  <Button
-                    onClick={() => {
-                      setIsTxHashAddModal(true);
-                      setErrText("");
-                    }}
-                    type={"bg-white"}
-                    text={`${txHashes.length ? "Change" : "Add"} Tx Hash (${
-                      txHashes.length
-                    })`}
-                  />
-                </div>
-              )} */}
           </div>
           {/* title */}
           <div className={cn("voting-title")}>{setTopic()}</div>
@@ -561,34 +525,6 @@ const VotingTopDetail = ({
             </Dropdown>
           </div>
         )} */}
-        {defaultAccount &&
-          whiteList.includes(defaultAccount) &&
-          isWait &&
-          state === "3" && (
-            <div className={cn("detail-top-menu")}>
-              <Dropdown
-                overlayClassName="familysite-list-wrap"
-                placement="bottomLeft"
-                overlay={
-                  <div className={cn("detail-menu-list")}>
-                    {/* 23.04.20 수정: Add Tx Hash 버튼 추가 */}
-                    <Button
-                      onClick={() => setIsTxHashAddModal(true)}
-                      text={`${txHashes.length ? "Change" : "Add"} Tx Hash (${
-                        txHashes.length
-                      })`}
-                    />
-                  </div>
-                }
-                trigger={["click"]}
-                getPopupContainer={(triggerNode) => triggerNode.parentNode}
-              >
-                <button type="button">
-                  <span className={cn("more-text")}>···</span>
-                </button>
-              </Dropdown>
-            </div>
-          )}
         {/* 설명 부분 */}
         <div className={cn("detail-top-content")}>
           <dl className={cn("detail-top-list")}>

@@ -138,7 +138,6 @@ export const ENV_VOTING_PROPOSAL_LIST = [
     sha3Name:
       "0x04f7b94450bbcad85f37ea47cd1062728f884bb2040e357738f8fd53056134bc",
   },
-  { id: "Add Wait Proposal", value: "AddWaitProposal" },
 ];
 export const ENV_MY_INFO_PROPOSAL_LIST = [
   { id: "Voting Address", value: "VotingAddress" },
@@ -221,14 +220,13 @@ const constants = {
 export { constants };
 
 const MODE = process.env.REACT_APP_MODE;
-const NETWORK = process.env.REACT_APP_NETWORK_TYPE;
 
 const CHAIN_INFO =
   MODE === "production"
     ? MAINNET_CHAIN_INFO
-    : NETWORK === "devnet"
-    ? DEVNET_CHAIN_INFO
-    : TESTNET_CHAIN_INFO;
+    : MODE === "testnet"
+    ? TESTNET_CHAIN_INFO
+    : DEVNET_CHAIN_INFO;
 
 const NETWORK_SPECIFICATION = {
   id: parseInt(CHAIN_INFO.chainId),

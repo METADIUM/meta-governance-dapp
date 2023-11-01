@@ -27,11 +27,6 @@ import {
   encodeABIValueInMethod,
   web3Instance,
 } from "../../web3";
-import {
-  DEVMETANET_WHITE_LIST,
-  MAINNET_WHITE_LIST,
-  TESTNET_WHITE_LIST,
-} from "../../whitelist.js";
 
 const Proposal = () => {
   const { getErrModal } = useContext(ModalContext);
@@ -1823,16 +1818,6 @@ const Proposal = () => {
       ? ENV_MY_INFO_PROPOSAL_LIST
       : ENV_VOTING_PROPOSAL_LIST;
 
-  const network = process.env.REACT_APP_NETWORK_TYPE;
-  const whiteList =
-    network === "mainnet"
-      ? MAINNET_WHITE_LIST
-      : network === "testnet"
-      ? TESTNET_WHITE_LIST
-      : network === "devnet"
-      ? DEVMETANET_WHITE_LIST
-      : DEVMETANET_WHITE_LIST;
-
   return (
     <>
       <div className="section-body">
@@ -1843,7 +1828,6 @@ const Proposal = () => {
             showProposal={showProposal}
             selectedTopic={selectedTopic}
             handleSelectTopicChange={handleSelectTopicChange}
-            isWhiteList={whiteList.includes(address)}
           />
           <main>
             <div className={"proposal-form"}>

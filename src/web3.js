@@ -18,9 +18,9 @@ const network = process.env.REACT_APP_NETWORK_TYPE;
 export const chainInfo =
   type === "production"
     ? MAINNET_CHAIN_INFO
-    : network === "devmeta"
-    ? DEVNET_CHAIN_INFO
-    : TESTNET_CHAIN_INFO;
+    : type === "testnet"
+    ? TESTNET_CHAIN_INFO
+    : DEVNET_CHAIN_INFO;
 const contracts =
   network === "mainnet"
     ? MAINNET_CONTRACTS
