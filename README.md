@@ -15,6 +15,10 @@ $ yarn
 $ yarn start:devmeta
 ```
 
+## env
+
+사용하는 env 목록은 [confluence](https://coinplugin.atlassian.net/wiki/spaces/MD/pages/3112108069/Governance+dApp)에서 확인해 주세요.
+
 ## What more
 
 - [create-react-app](https://github.com/facebookincubator/create-react-app)
