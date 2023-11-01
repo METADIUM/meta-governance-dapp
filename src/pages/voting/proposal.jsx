@@ -791,35 +791,49 @@ const Proposal = () => {
     }
   };
 
+  // min < authority list locked balance < max 체크
   const checkStakingLockedBalance = async (
     inputStakingMin,
     inputStakingMax
   ) => {
+    let stakingMin = 0;
+    let stakingMax = 0;
     try {
+      // json 파일로 관리하는 authority 목록 가져오기
       const authorityList = AuthorityList[process.env.REACT_APP_MODE] || [];
       for await (const authority of authorityList) {
         const { addr } = authority;
+        // 해당 authority의 locked balance를 가져옴
         const lockedBalance = await callContractMethod(
           web3Instance,
           "Staking",
           "lockedBalanceOf",
           addr
         );
+        // 입력한 min, max값과 비교
         const convertLockedBalance = util.convertWeiToEther(lockedBalance);
-        if (convertLockedBalance < inputStakingMin) {
-          getErrModal(
-            `Currently, the minimum staking amount is ${convertLockedBalance}. Please input less than this quantity.`,
-            "Proposal Submit Error"
-          );
-          return false;
+        if (!stakingMin || Number(convertLockedBalance) < stakingMin) {
+          stakingMin = Number(convertLockedBalance);
         }
-        if (convertLockedBalance > inputStakingMax) {
-          getErrModal(
-            `Currently, the maximum staking amount is ${convertLockedBalance}. Please input larger than this quantity.`,
-            "Proposal Submit Error"
-          );
-          return false;
+        if (!stakingMax || Number(convertLockedBalance) > stakingMax) {
+          stakingMax = Number(convertLockedBalance);
         }
+      }
+      console.log(stakingMin, inputStakingMin, stakingMax, inputStakingMax);
+      // 최종적으로 확인
+      if (stakingMin < Number(inputStakingMin)) {
+        getErrModal(
+          `Currently, the minimum staking amount is ${stakingMin} META. Please input less than this quantity.`,
+          "Proposal Submit Error"
+        );
+        return false;
+      }
+      if (inputStakingMax < Number(stakingMax)) {
+        getErrModal(
+          `Currently, the maximum staking amount is ${stakingMax} META. Please input larger than this quantity.`,
+          "Proposal Submit Error"
+        );
+        return false;
       }
       return true;
     } catch (e) {
@@ -1098,7 +1112,7 @@ const Proposal = () => {
             setOnLoading(false);
             return;
           }
-
+          // authority locked balance를 가지고 입력한 min, max 범위에 있는지 체크
           const checkLockedBalance = await checkStakingLockedBalance(
             authMemSkAmountMin,
             authMemSkAmountMax
