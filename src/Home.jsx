@@ -115,11 +115,17 @@ const Home = () => {
     }
   }
 
+  const openApplyForm = () => {
+    window.open(
+      "https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930"
+    );
+  }
+
   return (
     <Layout>
-      <div className='section-head'>
-        <div className='wrap'>
-          <div className='title'>
+      <div className="section-head">
+        <div className="wrap">
+          <div className="title">
             <span>metadium governance</span>
             <p>
               Metadium uses its advanced technology and experience to provide a
@@ -135,7 +141,7 @@ const Home = () => {
           <ul>
             <li>
               <div>
-                <span className='subject'>Staking</span>
+                <span className="subject">Staking</span>
                 <p>
                   Metadium staking is one of the prerequisites to becoming an
                   authority member. The staking method is possible by sending
@@ -146,11 +152,11 @@ const Home = () => {
                   disclosure is made.
                 </p>
               </div>
-              <img src={StakingImage} alt='staking illust' />
+              <img src={StakingImage} alt="staking illust" />
             </li>
             <li>
               <div>
-                <span className='subject'>Voting</span>
+                <span className="subject">Voting</span>
                 <p>
                   Each voting will be passed when more than 50% of the total
                   amount of staked Metadium is obtained during the voting
@@ -159,15 +165,15 @@ const Home = () => {
                   to start new voting.
                 </p>
               </div>
-              <img src={VotingImage} alt='voting illust' />
+              <img src={VotingImage} alt="voting illust" />
             </li>
           </ul>
         </div>
       </div>
-      <div className='section-body'>
-        <div className='wrap'>
-          <div className='title'>
-            <span className='subject'>Partners</span>
+      <div className="section-body">
+        <div className="wrap">
+          <div className="title">
+            <span className="subject">Partners</span>
             <div>
               <div>
                 <p>
@@ -177,11 +183,13 @@ const Home = () => {
                 {/* 파트너사 9개 고정이라고 함 */}
                 <strong>Total Partners 9</strong>
               </div>
-              <button className='default-btn'>+ Apply for Authority</button>
+              <button className="default-btn" onClick={openApplyForm}>
+                + Apply for Authority
+              </button>
             </div>
           </div>
           {/* list */}
-          <div className='partners-list'>
+          <div className="partners-list">
             {partners.slice(0, visibleItem.current).map((item, index) => (
               <div key={index} onClick={mobileShowInfo}>
                 <ul>
@@ -191,16 +199,16 @@ const Home = () => {
                   <li>
                     <a
                       href={item.link}
-                      target='_blank'
-                      rel='noopener noreferrer'
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
                       {item.company}
                     </a>
                   </li>
                   <li>Address: {item.address}</li>
                   <li>
-                    <span className='desc'>{item.desc}</span>
-                    <span className='cover-bar' />
+                    <span className="desc">{item.desc}</span>
+                    <span className="cover-bar" />
                   </li>
                 </ul>
               </div>
@@ -208,16 +216,19 @@ const Home = () => {
           </div>
           {/* more 버튼 */}
           {partners.length > visibleItem.current && (
-            <GovButton text={'More'} type={'more-btn'} onClick={() => {
-              visibleItem.current += veiwingCount
-              setShowMore(partners.slice(0, visibleItem.current))
-            }
-            } />
+            <GovButton
+              text={"More"}
+              type={"more-btn"}
+              onClick={() => {
+                visibleItem.current += veiwingCount;
+                setShowMore(partners.slice(0, visibleItem.current));
+              }}
+            />
           )}
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
 export default Home
