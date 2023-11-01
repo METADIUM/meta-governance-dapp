@@ -19,7 +19,7 @@ const network = process.env.REACT_APP_NETWORK_TYPE;
 export const chainInfo =
   type === "production"
     ? MAINNET_CHAIN_INFO
-    : network === "devnet"
+    : network === "devmeta"
     ? DEVNET_CHAIN_INFO
     : TESTNET_CHAIN_INFO;
 const contracts =
@@ -27,7 +27,7 @@ const contracts =
     ? MAINNET_CONTRACTS
     : network === "testnet"
     ? TESTNET_CONTRACTS
-    : network === "devnet"
+    : network === "devmeta"
     ? DEVNET_CONTRACTS
     : DEVMETANET_CONTRACTS;
 
@@ -91,7 +91,7 @@ export const callBatchMethod = (web3, contract, method, ...value) => {
       .call.request({});
   } else {
     data = web3.web3Contracts[contract].methods[method](value[0]).call.request(
-      {},
+      {}
     );
   }
   return data;
@@ -179,7 +179,7 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
               memo,
               duration,
             ],
-            oldStaker,
+            oldStaker
           )
           .encodeABI();
         break;
@@ -217,7 +217,7 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
         break;
       default:
         trxData.data = web3.web3Contracts[contract].methods[method](
-          ...value,
+          ...value
         ).encodeABI();
         break;
     }
