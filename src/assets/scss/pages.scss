@@ -657,6 +657,17 @@ a {
     margin-bottom: 40px;
     gap: 0 8px;
 
+    &.exp {
+      flex-wrap: wrap;
+
+      .voting-title-exp {
+        @include R16;
+        color: $gray;
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+
     > span {
       color: $gray2;
     }
@@ -850,6 +861,20 @@ a {
               }
             }
           }
+        }
+      }
+
+      .button-wrap {
+        border: 1px solid $gray4;
+        border-radius: 4px;
+        padding: 0 16px;
+        @include B16;
+        height: 40px;
+        line-height: 40px;
+        margin-bottom: 24px;
+
+        &:hover {
+          border-color: $gray;
         }
       }
     }

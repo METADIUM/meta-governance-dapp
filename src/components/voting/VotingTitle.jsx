@@ -54,7 +54,7 @@ const VotingTitle = ({
   }
 
   return (
-    <div className={cn("voting-title-wrap", type)}>
+    <div className={cn("voting-title-wrap", type, { "exp": exp })}>
       {title && (
         <>
           <strong className="subject">{title}</strong>
