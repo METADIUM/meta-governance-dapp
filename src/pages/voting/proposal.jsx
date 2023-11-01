@@ -20,6 +20,7 @@ import { ModalContext } from "../../contexts/ModalContext.jsx";
 import { removeCommasFromNumber, addCommasToNumber } from "../../util";
 import * as util from "../../util";
 import * as abis from "../../abis/index";
+import AuthorityList from "../../static/AuthorityList.json";
 
 import {
   callContractMethod,
@@ -795,6 +796,34 @@ const Proposal = () => {
     }
   };
 
+  const checkStakingLockedBalance = async (
+    inputStakingMin,
+    inputStakingMax
+  ) => {
+    try {
+      const authorityList = AuthorityList[process.env.REACT_APP_MODE] || [];
+      for await (const authority of authorityList) {
+        const { addr } = authority;
+        const lockedBalance = await callContractMethod(
+          web3Instance,
+          "Staking",
+          "lockedBalanceOf",
+          addr
+        );
+        const convertLockedBalance = util.convertWeiToEther(lockedBalance);
+        if (
+          convertLockedBalance < inputStakingMin ||
+          convertLockedBalance > inputStakingMax
+        ) {
+          return false;
+        }
+      }
+      return true;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   // check the data error handling
   const checkSubmitData = async (data) => {
     const { memo, votDuration } = data;
@@ -1066,6 +1095,17 @@ const Proposal = () => {
             setOnLoading(false);
             return;
           }
+
+          const checkLockedBalance = await checkStakingLockedBalance(
+            authMemSkAmountMin,
+            authMemSkAmountMax
+          );
+          if (!checkLockedBalance) {
+            alert("Error!");
+            setOnLoading(false);
+            return;
+          }
+
           // setting env variables
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_STAKING_MIN_MAX
