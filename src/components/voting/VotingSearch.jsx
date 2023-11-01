@@ -1,29 +1,28 @@
-import cn from "classnames/bind";
-import React, { useState } from "react";
+import cn from 'classnames/bind'
+import React, { useState } from 'react'
 
-
-export default function VotingSearch({
+export default function VotingSearch ({
   setIsFilter,
   searchBallot,
   onClose,
-  onSelect,
+  onSelect
 }) {
-  const [isNonACtive, setIsNonACtive] = useState("active");
-  const [searchValue, setSearchValue] = useState("");
+  const [isNonACtive, setIsNonACtive] = useState('active')
+  const [searchValue, setSearchValue] = useState('')
   // console.log("onClose", onClose);
   return (
-    <div className={cn("voting-search")}>
-      <div className={cn("search-text-area")}>
+    <div className={cn('voting-search')}>
+      <div className={cn('search-text-area')}>
         <input
-          name="authMemSkAmountMax"
-          placeholder="Search by Type, Proposal, Keywords"
-          className={cn("search-input")}
+          name='authMemSkAmountMax'
+          placeholder='Search by Type, Proposal, Keywords'
+          className={cn('search-input')}
           onChange={(e) => {
-            searchBallot(e);
-            setSearchValue(e.target.value);
+            searchBallot(e)
+            setSearchValue(e.target.value)
           }}
           value={searchValue}
-        ></input>
+        />
 
         {/* <button
           type="button"
@@ -41,7 +40,7 @@ export default function VotingSearch({
         </button> */}
       </div>
 
-      <button type="button" className={cn("voting-search-btn")}></button>
+      <button type='button' className={cn('voting-search-btn')} />
     </div>
-  );
+  )
 }

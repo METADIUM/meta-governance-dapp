@@ -1,11 +1,11 @@
-const domain = process.env.REACT_APP_URL;
+const domain = process.env.REACT_APP_URL
 
 module.exports = {
   policy: [
     {
-      userAgent: "*",
-      allow: "/",
-    },
+      userAgent: '*',
+      allow: '/'
+    }
   ],
-  sitemap: `${domain}/sitemap.xml`,
-};
+  sitemap: `${domain}/sitemap.xml`
+}

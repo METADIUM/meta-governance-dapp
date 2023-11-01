@@ -1,80 +1,78 @@
-import { Layout } from "antd";
-import React, { useContext, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { Layout } from 'antd'
+import React, { useContext, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
-import { AccessFailedModal } from "./components";
-import { AuthCtx } from "./contexts/AuthContext";
-import { GovInitCtx } from "./contexts/GovernanceInitContext";
-import { ModalContext } from "./contexts/ModalContext";
-import { usePrevious } from "./hooks/usePrevious";
-import i18n from "./i18n";
-import Loading from "./Loading";
-import { web3Instance } from "./web3";
+import { AccessFailedModal } from './components'
+import { AuthCtx } from './contexts/AuthContext'
+import { GovInitCtx } from './contexts/GovernanceInitContext'
+import { ModalContext } from './contexts/ModalContext'
+import { usePrevious } from './hooks/usePrevious'
+import i18n from './i18n'
+import Loading from './Loading'
+import { web3Instance } from './web3'
 
+import './App.css'
+import './components/style/style.css'
+import './assets/scss/common.scss'
 
-import "./App.css";
-import "./components/style/style.css";
-import "./assets/scss/common.scss";
-
-
-const { Content } = Layout;
+const { Content } = Layout
 
 export const withLocation = (Component) => {
-  return (props) => <Component {...props} location={useLocation()} />;
-};
+  return (props) => <Component {...props} location={useLocation()} />
+}
 
 const App = ({ children }) => {
-  const { getErrModal } = useContext(ModalContext);
+  const { getErrModal } = useContext(ModalContext)
   const { isWeb3Loaded, isContractReady, accessFailMsg } =
-    useContext(GovInitCtx);
-  const { address, chain, onLogout, updateAccountData } = useContext(AuthCtx);
-  const { pathname } = useLocation();
-  const prev = usePrevious(chain);
+    useContext(GovInitCtx)
+  const { address, chain, onLogout, updateAccountData } = useContext(AuthCtx)
+  const { pathname } = useLocation()
+  const prev = usePrevious(chain)
 
-  const _chainId = chain?.id;
-  const _prevChainId = prev.current?.id;
+  const _chainId = chain?.id
+  const _prevChainId = prev.current?.id
 
   // 다국어 처리 새로고침 시에도 적용되게 수정
   useEffect(() => {
-    const language = window.localStorage.getItem("language");
-    i18n.changeLanguage(language);
-  }, []);
+    const language = window.localStorage.getItem('language')
+    i18n.changeLanguage(language)
+  }, [])
 
   useEffect(() => {
-    const isChanged = _chainId !== _prevChainId;
+    const isChanged = _chainId !== _prevChainId
     if (!!_chainId && !!_prevChainId && isChanged) {
-      onLogout();
+      onLogout()
     }
-  }, [_chainId, _prevChainId, onLogout]);
+  }, [_chainId, _prevChainId, onLogout])
 
   useEffect(() => {
     if (address && web3Instance) {
-      updateAccountData(address);
+      updateAccountData(address)
     }
-  }, [address, updateAccountData]);
+  }, [address, updateAccountData])
 
   const checkPath =
-    pathname === "/wait" ||
-    pathname === "/governance" ||
-    pathname === "/wait/" ||
-    pathname === "/governance/" ||
-    pathname === "/governance/detail" ||
-    pathname === "/history" ||
-    pathname === "/history/";
+    pathname === '/wait' ||
+    pathname === '/governance' ||
+    pathname === '/wait/' ||
+    pathname === '/governance/' ||
+    pathname === '/governance/detail' ||
+    pathname === '/history' ||
+    pathname === '/history/'
 
   return (
     <>
       <AccessFailedModal visible={!!accessFailMsg} message={accessFailMsg} />
       {(isContractReady && isWeb3Loaded) ||
-      window.navigator.userAgent === "ReactSnap" ? (
-        checkPath ? (
+      window.navigator.userAgent === 'ReactSnap' ? (
+          checkPath ? (
           <>
             {React.cloneElement(children, {
               getErrModal,
-              address,
+              address
             })}
           </>
-        ) : (
+          ) : (
           <>
             {/* <div className='flex-column voting-wrap'> */}
             <Content>
@@ -82,23 +80,23 @@ const App = ({ children }) => {
                 <div>
                   {React.cloneElement(children, {
                     getErrModal,
-                    address,
+                    address
                   })}
                 </div>
               ) : (
                 getErrModal(
-                  "This is an unknown network. Please connect to METADIUM network",
-                  "Connecting Error"
+                  'This is an unknown network. Please connect to METADIUM network',
+                  'Connecting Error'
                 )
               )}
             </Content>
           </>
-        )
-      ) : (
-        <Loading />
-      )}
+          )
+        ) : (
+          <Loading />
+        )}
     </>
-  );
-};
+  )
+}
 
-export default withLocation(App);
+export default withLocation(App)

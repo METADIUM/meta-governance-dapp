@@ -6,18 +6,18 @@ import langKo from './translations.ko'
 
 const resources = {
   en: {
-    translation: langEn,
+    translation: langEn
   },
   ko: {
-    translation: langKo,
-  },
+    translation: langKo
+  }
 }
 i18n.use(initReactI18next).init({
   resources,
   lng: 'en',
   debug: false, // 디버그 필요할 경우 true 변경
   interpolation: {
-    escapeValue: false, // react already safes from xss
+    escapeValue: false // react already safes from xss
   },
   react: {
     bindI18n: 'languageChanged',
@@ -25,7 +25,7 @@ i18n.use(initReactI18next).init({
     transEmptyNodeValue: '',
     transSupportBasicHtmlNodes: true,
     transKeepBasicHtmlNodesFor: ['br', 'strong', 'i'],
-    useSuspense: true,
-  },
+    useSuspense: true
+  }
 })
 export default i18n

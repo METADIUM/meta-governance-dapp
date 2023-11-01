@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react'
 
-import VotingTopDashBoard from "./VotingTopDashBoard.jsx";
+import VotingTopDashBoard from './VotingTopDashBoard.jsx'
 
 const VotingTopList = ({
   isMember,
@@ -9,43 +9,43 @@ const VotingTopList = ({
   readyCount,
   approvedCount,
   rejectedCount,
-  btnFunction = (f) => f,
+  btnFunction = (f) => f
 }) => {
   return (
-    <div className="section-head">
-      <div className="wrap">
-        <div className="title">
+    <div className='section-head'>
+      <div className='wrap'>
+        <div className='title'>
           <span>Voting</span>
         </div>
-        <div className="boxs">
+        <div className='boxs'>
           <VotingTopDashBoard
             value={totalCount}
-            text="Total Votes"
+            text='Total Votes'
           />
           <VotingTopDashBoard
             value={activeCount}
-            text="Active"
-            status="active"
+            text='Active'
+            status='active'
           />
           <VotingTopDashBoard
             value={readyCount}
-            text="Ready"
-            status="ready"
+            text='Ready'
+            status='ready'
           />
           <VotingTopDashBoard
             value={approvedCount}
-            text="Approved"
-            status="approved"
+            text='Approved'
+            status='approved'
           />
           <VotingTopDashBoard
             value={rejectedCount}
-            text="Rejected"
-            status="rejected"
+            text='Rejected'
+            status='rejected'
           />
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default VotingTopList;
+export default VotingTopList
