@@ -1,24 +1,3 @@
-// contract addresses (dev-staking 사이트)
-export const DEVNET_CONTRACTS = [
-  { name: "Registry", address: "0x15e8f4e6f169b3cccc8846f2b454d26ecf836c3a" },
-  {
-    name: "EnvStorageImp",
-    address: "0x1310a767d534a93Db338fed3D68963812F603F1d",
-  },
-  { name: "EnvStorage", address: "0x1310a767d534a93Db338fed3D68963812F603F1d" },
-  {
-    name: "BallotStorage",
-    address: "0x3ADb1c8E8A559DE7670c2eA7f2d175249baf2240",
-  },
-  { name: "Staking", address: "0xBF83258c72749F66B0F8778B7BAe32d3191092F0" },
-  { name: "GovImp", address: "0x669662C6fAD4f2D9688fdbEc0BF017381B35D252" },
-  { name: "Gov", address: "0x669662C6fAD4f2D9688fdbEc0BF017381B35D252" },
-  // WaitGovernance Contract가 Devnet에 배포되어 있지 않습니다.
-  {
-    name: "WaitGovernance",
-    address: "0x631FE9c57de28dDC2642ea70005fb61e14f0374D",
-  },
-];
 // for wmgov
 export const DEVMETANET_CONTRACTS = [
   { name: "Registry", address: "0x06c13fc771abc31a44d017368176e6b3cba5eed8" },

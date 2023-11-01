@@ -7,7 +7,6 @@ import {
   DEVNET_CHAIN_INFO,
   MAINNET_CONTRACTS,
   TESTNET_CONTRACTS,
-  DEVNET_CONTRACTS,
   walletTypes,
   DEVMETANET_CONTRACTS,
 } from "./constants";
@@ -27,8 +26,6 @@ const contracts =
     ? MAINNET_CONTRACTS
     : network === "testnet"
     ? TESTNET_CONTRACTS
-    : network === "devmeta"
-    ? DEVNET_CONTRACTS
     : DEVMETANET_CONTRACTS;
 
 // set contracts

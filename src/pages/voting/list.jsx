@@ -9,9 +9,7 @@ import React, {
 import { useNavigate } from "react-router-dom";
 import { useSendTransaction } from "wagmi";
 
-
 // import { ReactComponent as IconEmpty } from "../../assets/images/ico_empty.svg";
-
 
 import MoreButton from "../../components/voting/GovButton.jsx";
 import VotingListBlock from "../../components/voting/VotingListBlock.jsx";
@@ -20,7 +18,6 @@ import VotingTopList from "../../components/voting/VotingTopList.jsx";
 import {
   constants,
   DEVMETANET_CONTRACTS,
-  DEVNET_CONTRACTS,
   MAINNET_CONTRACTS,
   TESTNET_CONTRACTS,
 } from "../../constants.js";
@@ -129,8 +126,6 @@ const VotingList = () => {
         ? MAINNET_CONTRACTS
         : network === "testnet"
         ? TESTNET_CONTRACTS
-        : network === "devnet"
-        ? DEVNET_CONTRACTS
         : DEVMETANET_CONTRACTS;
     const to = contracts.filter(
       (item) => item.name === `${id.length ? "WaitGovernance" : "GovImp"}`
