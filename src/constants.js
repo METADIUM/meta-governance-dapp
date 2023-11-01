@@ -65,7 +65,7 @@ export const MAINNET_CONTRACTS = [
 export const DEVNET_CHAIN_INFO = {
   chainId: "0xb",
   chainName: "METADIUM Testnet",
-  rpcUrls: "http://3.38.235.244:6588",
+  rpcUrls: "https://devnet-meta.metadium.club",
   blockExplorerUrls: "",
   name: "META",
   decimals: 18,
