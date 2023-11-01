@@ -818,7 +818,6 @@ const Proposal = () => {
           stakingMax = Number(convertLockedBalance);
         }
       }
-      console.log(stakingMin, inputStakingMin, stakingMax, inputStakingMax);
       // 최종적으로 확인
       if (stakingMin < Number(inputStakingMin)) {
         getErrModal(
