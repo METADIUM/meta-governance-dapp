@@ -43,19 +43,19 @@ export const DEVMETANET_CONTRACTS = [
 ];
 // for testnet
 export const TESTNET_CONTRACTS = [
-  { name: "Registry", address: "0xa68a135ccd37e720000fc30cfcc453b15f8040df" },
+  { name: "Registry", address: "0xc27344926ddf38206f25c67Aaa95d765f5152C9f" },
   {
     name: "EnvStorageImp",
-    address: "0x37779e0d4c9e58c570784879dc755c7833fbedbb",
+    address: "0x5a31311f6a1Ca5dCA395766e13df07d1bd6F08ac",
   },
-  { name: "EnvStorage", address: "0x37779e0d4c9e58c570784879dc755c7833fbedbb" },
+  { name: "EnvStorage", address: "0x5a31311f6a1Ca5dCA395766e13df07d1bd6F08ac" },
   {
     name: "BallotStorage",
-    address: "0x0735eb9864564a6056385a3ec202e40e1fc34021",
+    address: "0x21cCE1B31cbe849243c389dAB90035d63ba1f2d8",
   },
-  { name: "Staking", address: "0xEaed1D41A587f7e2821080829013e352cEc91d75" },
-  { name: "GovImp", address: "0x2f664960a7fbdada8e133dbaf1bfc27dccbadbfb" },
-  { name: "Gov", address: "0x2f664960a7fbdada8e133dbaf1bfc27dccbadbfb" },
+  { name: "Staking", address: "0xD32B058a93C4ccB08A73472573c178b2981BCE50" },
+  { name: "GovImp", address: "0x3dAE75B816FFCC07da68421a7939e3f2a37AF7EB" },
+  { name: "Gov", address: "0x3dAE75B816FFCC07da68421a7939e3f2a37AF7EB" },
   {
     name: "WaitGovernance",
     address: "0xef49F4B544065DCc2D990594a4EF6C4b6BE7ef30",
@@ -84,15 +84,6 @@ export const MAINNET_CONTRACTS = [
 
 // METADIUM chain info
 export const DEVNET_CHAIN_INFO = {
-  chainId: "0x459",
-  chainName: "METADIUM Devnet",
-  rpcUrls: "https://devnet-en.wemix.co",
-  blockExplorerUrls: "https://explorer.test.wemix.com",
-  name: "WEMIX",
-  decimals: 18,
-  symbol: "WEMIX",
-};
-export const TESTNET_CHAIN_INFO = {
   chainId: "0xb",
   chainName: "METADIUM Testnet",
   rpcUrls: "http://3.38.235.244:6588",
@@ -101,8 +92,17 @@ export const TESTNET_CHAIN_INFO = {
   decimals: 18,
   symbol: "META",
 };
+export const TESTNET_CHAIN_INFO = {
+  chainId: "0xc",
+  chainName: "METADIUM Testnet",
+  rpcUrls: "https://api.metadium.com/dev",
+  blockExplorerUrls: "https://testnetexplorer.metadium.com",
+  name: "META",
+  decimals: 18,
+  symbol: "META",
+};
 export const MAINNET_CHAIN_INFO = {
-  chainId: "0x457",
+  chainId: "0xb",
   chainName: "METADIUM Mainnet",
   rpcUrls: "https://api.metadium.com/prod",
   blockExplorerUrls: "https://explorer.metadium.com",
