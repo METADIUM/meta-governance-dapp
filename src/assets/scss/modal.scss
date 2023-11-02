@@ -460,34 +460,6 @@
     }
   }
 }
-.unknown-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100%;
-  padding: 50px 0;
-
-  .error-detail {
-    text-align: center;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
-    color: #1a1a1a;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-
-    &::before {
-      display: inline-block;
-      content: '';
-      width: 36px;
-      height: 36px;
-      background: url('#{$rootPath}/ico_unknown.svg') no-repeat center center;
-    }
-  }
-}
 
 .ant-modal {
   max-width: 480px;
