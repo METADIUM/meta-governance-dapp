@@ -550,7 +550,11 @@ const VotingTopDetail = ({
         <div className={'day-select-wrap'}>
           <ul className={cn('label-list')}>
             {options.map((t, i) => (
-              <li className={cn('label-option')} key={`${t}-${i}`}>
+              <li
+                className={`label-option ${
+                  t.value === selectedDuration ? 'active' : ''
+                }`}
+                key={`${t}-${i}`}>
                 <input
                   id={`dayCheck${i}`}
                   name={'radio'}

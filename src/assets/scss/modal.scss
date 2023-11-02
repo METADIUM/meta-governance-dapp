@@ -588,17 +588,42 @@
   margin: 0;
   padding: 0;
   height: 100%;
-
-  > .label-option {
+  width: 100%;
+  border: 1px solid $gray4;
+  border-radius: 8px;
+  .label-option {
     display: flex;
-    flex-direction: row;
-    gap: 0 4px;
-    height: 30px;
-    align-items: center;
-
-    > label {
+    border-radius: 8px;
+    &.active {
+      label {
+        background: rgba(177, 190, 255, 0.2);
+      }
+    }
+    &.active:first-child {
+      label {
+        border-top-left-radius: 4.5px;
+        border-top-right-radius: 4.5px;
+      }
+    }
+    &.active:last-child {
+      label {
+        border-bottom-left-radius: 4.5px;
+        border-bottom-right-radius: 4.5px;
+      }
+    }
+    label {
+      display: flex;
       @include R14;
       color: $gray;
+      line-height: 1; /* 14px */
+      width: 100%;
+      padding: 8px 20px;
+      gap: 0 4px;
+      height: 40px;
+      align-items: center;
+    }
+    input {
+      display: none;
     }
   }
 }
