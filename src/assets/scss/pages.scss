@@ -904,6 +904,21 @@ a {
         background: rgba(78, 87, 255, 0.1);
         border-radius: 100px;
         color: $blue1;
+
+        &.active {
+          color: $blue1;
+          background: rgba(78, 87, 255, 0.1);
+        }
+
+        &.approved {
+          color: $mint;
+          background: rgba(0, 205, 176, 0.1);
+        }
+
+        &.rejected {
+          color: $red;
+          background: rgba(255, 0, 0, 0.06);
+        }
       }
     }
     .voting-title {

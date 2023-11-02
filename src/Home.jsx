@@ -19,8 +19,8 @@ const Home = () => {
   const visibleItem = useRef(veiwingCount);
 
   const checkMobile = () => {
-    if (window.innerWidth < 720) {
-      setIsMobile(true);
+    if (window.innerWidth < 840) {
+      setIsMobile(true)
     } else {
       setIsMobile(false);
     }
