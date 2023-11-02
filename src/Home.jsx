@@ -109,8 +109,7 @@ const Home = () => {
                   Partners in various fields and industries, collaborating with
                   Metadium to bring about change to your on-chain experience.
                 </p>
-                {/* 파트너사 9개 고정이라고 함 */}
-                <strong>Total Partners 9</strong>
+                <strong>Total Partners { partners.length }</strong>
               </div>
               <button className="default-btn" onClick={openApplyForm}>
                 + Apply for Authority
