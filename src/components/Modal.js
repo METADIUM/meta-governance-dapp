@@ -14,13 +14,10 @@ import {
   web3Instance
 } from '../web3'
 
-// import "./style/style.css";
 import '../assets/scss/modal.scss'
 import '../assets/scss/proposal.scss'
-// 2023.02.24 수정 voting 페이지 팝업 추가 관련코드 추가
 import cn from 'classnames/bind'
 // import { ReactComponent as IconPopupClose } from '../assets/images/ico_popup_close.svg';
-// import { use } from 'i18next';
 
 // 2023.07.04 App.js의 Staking 관련 로직 Modal로 이동
 

@@ -4,7 +4,6 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import App from './App'
 import './index.css'
-import './i18n'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import WalletConnector from './components/WalletConnector'

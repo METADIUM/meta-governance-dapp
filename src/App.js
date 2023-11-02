@@ -7,7 +7,6 @@ import { AuthCtx } from './contexts/AuthContext'
 import { GovInitCtx } from './contexts/GovernanceInitContext'
 import { ModalContext } from './contexts/ModalContext'
 import { usePrevious } from './hooks/usePrevious'
-import i18n from './i18n'
 import Loading from './Loading'
 import { web3Instance } from './web3'
 
@@ -31,12 +30,6 @@ const App = ({ children }) => {
 
   const _chainId = chain?.id
   const _prevChainId = prev.current?.id
-
-  // 다국어 처리 새로고침 시에도 적용되게 수정
-  useEffect(() => {
-    const language = window.localStorage.getItem('language')
-    i18n.changeLanguage(language)
-  }, [])
 
   useEffect(() => {
     const isChanged = _chainId !== _prevChainId
