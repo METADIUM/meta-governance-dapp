@@ -1,14 +1,14 @@
-import { Layout } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import { Layout } from "antd";
+import React, { useEffect, useRef, useState } from "react";
 
 // partners logo
 
-import StakingImage from './assets/images/staking-illust.png';
-import VotingImage from './assets/images/voting-illust.png';
-import GovButton from './components/voting/GovButton';
-import AuthorityList from './static/AuthorityList.js';
+import StakingImage from "./assets/images/staking-illust.png";
+import VotingImage from "./assets/images/voting-illust.png";
+import GovButton from "./components/voting/GovButton";
+import AuthorityList from "./static/AuthorityList.js";
 
-let partners = AuthorityList[process.env.REACT_APP_NETWORK_TYPE];
+let partners = AuthorityList[process.env.REACT_APP_MODE];
 
 const veiwingCount = 10;
 
@@ -20,7 +20,7 @@ const Home = () => {
 
   const checkMobile = () => {
     if (window.innerWidth < 840) {
-      setIsMobile(true)
+      setIsMobile(true);
     } else {
       setIsMobile(false);
     }
@@ -28,10 +28,10 @@ const Home = () => {
 
   useEffect(() => {
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
 
     return () => {
-      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener("resize", checkMobile);
     };
   }, []);
 
@@ -40,7 +40,7 @@ const Home = () => {
       // 모바일일 때만
       e.stopPropagation();
       const el = e.currentTarget;
-      el.classList.toggle('active');
+      el.classList.toggle("active");
     }
   };
 
@@ -48,7 +48,7 @@ const Home = () => {
     window.open(
       "https://docs.google.com/forms/d/e/1FAIpQLSfpSAevry4nqjljMACD1DhVzP8oU9J0OgvN49bGakofcZa49w/viewform?fbzx=2570300132786392930"
     );
-  }
+  };
 
   return (
     <Layout>
@@ -109,7 +109,7 @@ const Home = () => {
                   Partners in various fields and industries, collaborating with
                   Metadium to bring about change to your on-chain experience.
                 </p>
-                <strong>Total Partners { partners.length }</strong>
+                <strong>Total Partners {partners.length}</strong>
               </div>
               <button className="default-btn" onClick={openApplyForm}>
                 + Apply for Authority
@@ -157,6 +157,6 @@ const Home = () => {
       </div>
     </Layout>
   );
-}
+};
 
 export default Home;
