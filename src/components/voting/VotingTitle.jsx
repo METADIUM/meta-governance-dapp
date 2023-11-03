@@ -1,9 +1,9 @@
-import cn from "classnames/bind"
-import React, { useState, useEffect, useCallback } from "react"
-import { useNavigate } from "react-router-dom"
+import cn from "classnames/bind";
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
-import VotingSelect from "./VotingSelect"
-import VotingSearch from "../../components/voting/VotingSearch"
+import VotingSelect from "./VotingSelect";
+import VotingSearch from "../../components/voting/VotingSearch";
 
 const VotingTitle = ({
   type = "md",
@@ -19,36 +19,36 @@ const VotingTitle = ({
   btnFunction,
   isConnect
 }) => {
-  const [isFilter, setIsFilter] = useState(false)
-  const [width, setWidth] = useState(window.innerWidth)
-  const [isMobile, setIsMobile] = useState()
+  const [isFilter, setIsFilter] = useState(false);
+  const [width, setWidth] = useState(window.innerWidth);
+  const [isMobile, setIsMobile] = useState();
   // 필터 보이기 상태변수
-  const [isViewFilter, setIsViewFilter] = useState(false)
-  const [checkedData, setCheckedData] = useState("All")
+  const [isViewFilter, setIsViewFilter] = useState(false);
+  const [checkedData, setCheckedData] = useState("All");
   // console.log(checkedData);
-  let isMobileType = true
-  const navigate = useNavigate()
+  let isMobileType = true;
+  const navigate = useNavigate();
 
   const handleWindowSizeChange = useCallback(() => {
-    setWidth(window.innerWidth)
-    isMobileType = window.innerWidth < 1024
+    setWidth(window.innerWidth);
+    isMobileType = window.innerWidth < 1024;
 
-    isMobileType ? setIsMobile(true) : setIsMobile(false)
-  }, [])
+    isMobileType ? setIsMobile(true) : setIsMobile(false);
+  }, []);
 
   useEffect(() => {
-    handleWindowSizeChange()
-    window.addEventListener("resize", handleWindowSizeChange)
+    handleWindowSizeChange();
+    window.addEventListener("resize", handleWindowSizeChange);
     return () => {
-      window.removeEventListener("resize", handleWindowSizeChange)
-    }
-  }, [handleWindowSizeChange])
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, [handleWindowSizeChange]);
 
   function newProposalBtnClickHandler (event) {
-    event.preventDefault()
-    btnFunction && btnFunction()
-    window.localStorage.removeItem("selectedTopic")
-    navigate("/voting/proposal")
+    event.preventDefault();
+    btnFunction && btnFunction();
+    window.localStorage.removeItem("selectedTopic");
+    navigate("/voting/proposal");
   }
 
   return (
@@ -78,7 +78,7 @@ const VotingTitle = ({
               searchBallot={searchBallot}
               onClose={onClose}
               onSelect={() => {
-                setIsViewFilter(!isViewFilter)
+                setIsViewFilter(!isViewFilter);
               }}
             />
             {isConnect && isMember && (
@@ -94,7 +94,7 @@ const VotingTitle = ({
       )}
       {exp && <div className='voting-title-exp'>{exp}</div>}
     </div>
-  )
-}
+  );
+};
 
-export default VotingTitle
+export default VotingTitle;

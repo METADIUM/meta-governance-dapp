@@ -1,13 +1,13 @@
-import { Button, Progress } from "antd"
-import React from "react"
+import { Button, Progress } from "antd";
+import React from "react";
 
-import { constants } from "../constants"
-import { shouldPass } from "../util"
+import { constants } from "../constants";
+import { shouldPass } from "../util";
 
-import "./style/style.css"
+import "./style/style.css";
 
-const bs = constants.ballotState
-const btArr = constants.ballotStateArr
+const bs = constants.ballotState;
+const btArr = constants.ballotStateArr;
 
 const VotingBallots = ({
   item,
@@ -25,7 +25,7 @@ const VotingBallots = ({
     oldStakerAddress,
     newVoterAddress,
     newRewardAddress
-  } = ballotMemberOriginData
+  } = ballotMemberOriginData;
   return (
     <div
       className={`ballotDiv ${
@@ -165,8 +165,8 @@ const VotingBallots = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 const ShowBallots = ({
   titles,
@@ -182,7 +182,7 @@ const ShowBallots = ({
     <p
       className='stateTitle text-heavy'
       ref={(ref) => {
-        titles.activeTitle = ref
+        titles.activeTitle = ref;
       }}
     >
       Active
@@ -192,7 +192,7 @@ const ShowBallots = ({
     <p
       className='stateTitle text-heavy'
       ref={(ref) => {
-        titles.proposalTitle = ref
+        titles.proposalTitle = ref;
       }}
     >
       Proposals
@@ -214,7 +214,7 @@ const ShowBallots = ({
     <p
       className='stateTitle text-heavy'
       ref={(ref) => {
-        titles.finalizedTitle = ref
+        titles.finalizedTitle = ref;
       }}
     >
       Finalized
@@ -233,6 +233,6 @@ const ShowBallots = ({
       </div>
     )}
   </div>
-)
+);
 
-export { VotingBallots, ShowBallots }
+export { VotingBallots, ShowBallots };

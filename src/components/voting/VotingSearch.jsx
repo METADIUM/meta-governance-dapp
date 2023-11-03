@@ -1,5 +1,5 @@
-import cn from "classnames/bind"
-import React, { useState } from "react"
+import cn from "classnames/bind";
+import React, { useState } from "react";
 
 export default function VotingSearch ({
   setIsFilter,
@@ -7,8 +7,8 @@ export default function VotingSearch ({
   onClose,
   onSelect
 }) {
-  const [isNonACtive, setIsNonACtive] = useState("active")
-  const [searchValue, setSearchValue] = useState("")
+  const [isNonACtive, setIsNonACtive] = useState("active");
+  const [searchValue, setSearchValue] = useState("");
   // console.log("onClose", onClose);
   return (
     <div className={cn("voting-search")}>
@@ -18,8 +18,8 @@ export default function VotingSearch ({
           placeholder='Search by Type, Proposal, Keywords'
           className={cn("search-input")}
           onChange={(e) => {
-            searchBallot(e)
-            setSearchValue(e.target.value)
+            searchBallot(e);
+            setSearchValue(e.target.value);
           }}
           value={searchValue}
         />
@@ -42,5 +42,5 @@ export default function VotingSearch ({
 
       <button type='button' className={cn("voting-search-btn")} />
     </div>
-  )
+  );
 }

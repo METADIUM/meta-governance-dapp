@@ -1,28 +1,28 @@
-import cn from "classnames/bind"
-import React, { useState } from "react"
+import cn from "classnames/bind";
+import React, { useState } from "react";
 
-import "../style/style.css"
-import Button from "./Button"
-import VotingInputArea from "./VotingInputArea"
-import VotingSelect from "./VotingSelect"
+import "../style/style.css";
+import Button from "./Button";
+import VotingInputArea from "./VotingInputArea";
+import VotingSelect from "./VotingSelect";
 
 const VotingTextfield = () => {
-  const [inputValueAddress, setValueAddress] = useState("default value")
-  const [inputValueName, setValueName] = useState("default value")
-  const [inputValueLocked, setValueLocked] = useState("")
-  const [inputValueNode, setValueNode] = useState("")
-  const [inputValueDescription, setValueDescription] = useState("")
-  const [inputValueDescription2, setValueDescription2] = useState("")
-  const [inputValueDescription3, setValueDescription3] = useState("")
-  const [inputValueStaking, setValueStaking] = useState("")
-  const [inputValueStaking2, setValueStaking2] = useState("")
-  const [inputValueMultiBlock1, setInputValueMultiBlock1] = useState("")
-  const [inputValueMultiBlock2, setInputValueMultiBlock2] = useState("")
-  const [inputValueMultiBlock3, setInputValueMultiBlock3] = useState("")
-  const [inputValueMultiBlock4, setInputValueMultiBlock4] = useState("")
-  const [inputValueMultiBlock5, setInputValueMultiBlock5] = useState("0")
-  const [inputValueMultiBlock6, setInputValueMultiBlock6] = useState("")
-  const filterData = ["2days", "3days", "4days", "5days"]
+  const [inputValueAddress, setValueAddress] = useState("default value");
+  const [inputValueName, setValueName] = useState("default value");
+  const [inputValueLocked, setValueLocked] = useState("");
+  const [inputValueNode, setValueNode] = useState("");
+  const [inputValueDescription, setValueDescription] = useState("");
+  const [inputValueDescription2, setValueDescription2] = useState("");
+  const [inputValueDescription3, setValueDescription3] = useState("");
+  const [inputValueStaking, setValueStaking] = useState("");
+  const [inputValueStaking2, setValueStaking2] = useState("");
+  const [inputValueMultiBlock1, setInputValueMultiBlock1] = useState("");
+  const [inputValueMultiBlock2, setInputValueMultiBlock2] = useState("");
+  const [inputValueMultiBlock3, setInputValueMultiBlock3] = useState("");
+  const [inputValueMultiBlock4, setInputValueMultiBlock4] = useState("");
+  const [inputValueMultiBlock5, setInputValueMultiBlock5] = useState("0");
+  const [inputValueMultiBlock6, setInputValueMultiBlock6] = useState("");
+  const filterData = ["2days", "3days", "4days", "5days"];
   return (
     <>
       <div className={cn("textfield-contain")}>
@@ -263,7 +263,7 @@ const VotingTextfield = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default VotingTextfield
+export default VotingTextfield;

@@ -1,8 +1,8 @@
-import cn from "classnames/bind"
-import React from "react"
-import { Link } from "react-router-dom"
+import cn from "classnames/bind";
+import React from "react";
+import { Link } from "react-router-dom";
 
-import { ReactComponent as IconSymbol } from "../assets/images/header-logo-white.svg"
+import { ReactComponent as IconSymbol } from "../assets/images/header-logo-white.svg";
 
 const HeaderLogo = () => {
   return (
@@ -14,7 +14,7 @@ const HeaderLogo = () => {
         </span>
       </Link>
     </h1>
-  )
-}
+  );
+};
 
-export default HeaderLogo
+export default HeaderLogo;

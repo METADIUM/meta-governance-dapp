@@ -366,8 +366,8 @@ const VotingTopDetail = ({
                   {item.title === "Link" ? (
                     <a
                       href={item.value}
-                      target='_blank'
-                      rel='noopener noreferrer'>
+                      target="_blank"
+                      rel="noopener noreferrer">
                       {item.originValue}
                     </a>
                   ) : (
@@ -465,7 +465,7 @@ const VotingTopDetail = ({
   return (
     <>
       <div className={cn("voting-top-wrap")}>
-        <div className='box'>
+        <div className="box">
           {/* <div className={cn("inner")}> */}
           <button
             className={cn("btn-prev")}
@@ -546,7 +546,7 @@ const VotingTopDetail = ({
         btn={{ btnName: "Ok", cancel: true }}
         onOk={() => updateProposal("duration")}
         scrollType
-        title='Voting Duration Change'>
+        title="Voting Duration Change">
         <div className={"day-select-wrap"}>
           <ul className={cn("label-list")}>
             {options.map((t, i) => (
@@ -558,7 +558,7 @@ const VotingTopDetail = ({
                 <input
                   id={`dayCheck${i}`}
                   name={"radio"}
-                  type='radio'
+                  type="radio"
                   value={t.value}
                   checked={t.value === selectedDuration}
                   onChange={() => setSelectedDuration(t.value)}
@@ -576,10 +576,10 @@ const VotingTopDetail = ({
         isVotingModal={setIsVotingUnknownModal}
         btn={{ btnName: "Okay", cancel: false }}
         scrollType={false}
-        title='Unknown Error'>
+        title="Unknown Error">
         <div className={cn("error-wrap")}>
           <div className={cn("error-wrap-image")}></div>
-          <div className='modal-info-wrapper'>
+          <div className="modal-info-wrapper">
             <div>MetaMask Tx Signature: User denied transaction signature</div>
           </div>
         </div>
@@ -601,7 +601,7 @@ const VotingTopDetail = ({
         <div className={cn("tx-hash-add-content-wrap")}>
           <div className={"hash-add-wrap"}>
             <VotingInputArea
-              name='AddTxHash'
+              name="AddTxHash"
               inputType={"default"}
               placeholder={"Add Tx Hash"}
               value={txHash}
@@ -610,9 +610,9 @@ const VotingTopDetail = ({
               errText={errText}
             />
             <Button
-              type='bg'
-              text='Add'
-              size='sm'
+              type="bg"
+              text="Add"
+              size="sm"
               disabled={txInputErr}
               onClick={() => handleTxHashAdd()}
             />
@@ -624,7 +624,7 @@ const VotingTopDetail = ({
                   <span className={cn("hash-number")}>
                     {offset.width > 1023 ? hash : util.loginAcc(hash)}
                   </span>
-                  <button type='button' onClick={() => handleTxHashDelete(i)}>
+                  <button type="button" onClick={() => handleTxHashDelete(i)}>
                     <IconDelete />
                     <span className={cn("a11y")}>delete</span>
                   </button>

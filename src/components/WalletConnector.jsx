@@ -3,33 +3,33 @@ import {
   EthereumClient,
   w3mConnectors,
   w3mProvider
-} from "@web3modal/ethereum"
-import { Web3Modal } from "@web3modal/react"
-import React from "react"
-import { configureChains, createConfig, WagmiConfig } from "wagmi"
-import { publicProvider } from "wagmi/providers/public"
+} from "@web3modal/ethereum";
+import { Web3Modal } from "@web3modal/react";
+import React from "react";
+import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
 
-import { CURRENT_SPEC, PROJECT_ID } from "../constants"
+import { CURRENT_SPEC, PROJECT_ID } from "../constants";
 // import { mainnet } from "wagmi/chains";
 
 export const META = {
   ...CURRENT_SPEC
-}
+};
 
-const chains = [META]
-const projectId = PROJECT_ID
+const chains = [META];
+const projectId = PROJECT_ID;
 
 const { publicClient } = configureChains(chains, [
   w3mProvider({ projectId }),
   publicProvider()
-])
+]);
 
 const wagmiConfig = createConfig({
   autoConnect: true,
   connectors: w3mConnectors({ projectId, version: 2, chains }),
   publicClient
-})
-const ethereumClient = new EthereumClient(wagmiConfig, chains)
+});
+const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 const WalletConnector = ({ children }) => {
   return (
@@ -43,7 +43,7 @@ const WalletConnector = ({ children }) => {
         themeVariables={{ "--w3m-z-index": 101 }}
       />
     </WagmiConfig>
-  )
-}
+  );
+};
 
-export default WalletConnector
+export default WalletConnector;

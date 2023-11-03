@@ -1,12 +1,12 @@
-import cn from "classnames/bind"
-import React, { useCallback } from "react" // 23.04.20 수정: useCallback 추가
-import { Link } from "react-router-dom"
+import cn from "classnames/bind";
+import React, { useCallback } from "react"; // 23.04.20 수정: useCallback 추가
+import { Link } from "react-router-dom";
 
-import RevokeButton from "./Button"
-import IconWithText from "./IconWithText.jsx"
-import Status from "./Status.jsx"
-import VotingChartMini from "./VotingChartMini.jsx"
-import { loginAcc, timeConverter } from "../../util.js"
+import RevokeButton from "./Button";
+import IconWithText from "./IconWithText.jsx";
+import Status from "./Status.jsx";
+import VotingChartMini from "./VotingChartMini.jsx";
+import { loginAcc, timeConverter } from "../../util.js";
 
 // case 확인을 위한 props
 const VotingListBlock = ({
@@ -28,7 +28,7 @@ const VotingListBlock = ({
     description, // wait protocol
     isWait, // wait protocol
     txHashes // wait protocol
-  } = ballotMemberOriginData
+  } = ballotMemberOriginData;
 
   const {
     id,
@@ -44,7 +44,7 @@ const VotingListBlock = ({
     // endTimeConverted,
     memo,
     powers // 0: 투표 안한 사람, 1: 찬성 투표율, 2: 반대 투표율, 3: 기권율
-  } = item
+  } = item;
 
   const title = setTopic({
     creator,
@@ -55,7 +55,7 @@ const VotingListBlock = ({
     newVoterAddress,
     newRewardAddress,
     companyName
-  })
+  });
 
   // 투자 진행 상태 (state가 active거나 가결됐을 때 필요)
   const txState =
@@ -63,12 +63,12 @@ const VotingListBlock = ({
       ? txHashes.length > 0
         ? "tx-complete"
         : "tx-before"
-      : ""
+      : "";
 
   const exFinalizedCode = () => {
-    if (state === "1") return "Proposal Ready"
-    return `${timeConverter(startTime, true)} ~ ${timeConverter(endTime, true)}`
-  }
+    if (state === "1") return "Proposal Ready";
+    return `${timeConverter(startTime, true)} ~ ${timeConverter(endTime, true)}`;
+  };
 
   const chartData = {
     yes: isWait ? powers[1] : powerOfAccepts, // wait protocol
@@ -81,7 +81,7 @@ const VotingListBlock = ({
         : isWait
           ? powers[2]
           : powerOfRejects
-  }
+  };
 
   /* 23.04.20 수정: wait protocol 케이스 추가 */
   const investmentStateAction = useCallback(() => {
@@ -92,13 +92,13 @@ const VotingListBlock = ({
      */
     switch (txState) {
       case "tx-before":
-        return "Investment queued"
+        return "Investment queued";
       case "tx-complete":
-        return "Investment executed"
+        return "Investment executed";
       default:
-        return false
+        return false;
     }
-  }, [txState])
+  }, [txState]);
 
   return (
     <>
@@ -162,7 +162,7 @@ const VotingListBlock = ({
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default VotingListBlock
+export default VotingListBlock;

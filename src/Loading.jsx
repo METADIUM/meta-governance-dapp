@@ -1,5 +1,5 @@
-import cn from "classnames"
-import React from "react"
+import cn from "classnames";
+import React from "react";
 
 const Loading = ({ txLoading = false }) => {
   return (
@@ -14,7 +14,7 @@ const Loading = ({ txLoading = false }) => {
         <div className='loading-dot' />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Loading
+export default Loading;

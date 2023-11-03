@@ -1,4 +1,4 @@
-let columns = {}
+let columns = {};
 
 columns.ballotColumns = [
   {
@@ -22,7 +22,7 @@ columns.ballotColumns = [
     key: "state",
     value: "Ready"
   }
-]
+];
 
 columns.ballotBasicColumns = [
   {
@@ -91,6 +91,6 @@ columns.ballotBasicColumns = [
     key: "duration"
     // width: '20%',
   }
-]
+];
 
-export { columns }
+export { columns };

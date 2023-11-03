@@ -1,7 +1,7 @@
-import cn from "classnames/bind"
-import React, { useState } from "react"
+import cn from "classnames/bind";
+import React, { useState } from "react";
 
-import { removeCommasFromNumber } from "../../util"
+import { removeCommasFromNumber } from "../../util";
 
 const VotingInputArea = ({
   type = "default",
@@ -24,8 +24,8 @@ const VotingInputArea = ({
   Locked,
   maxLength = 256
 }) => {
-  const [isFocus, setIsFocus] = useState(false)
-  const [addrValue, setAddrValue] = useState("")
+  const [isFocus, setIsFocus] = useState(false);
+  const [addrValue, setAddrValue] = useState("");
 
   return (
     <>
@@ -51,14 +51,14 @@ const VotingInputArea = ({
                 disabled={disabled}
                 maxLength={maxLength}
                 onFocus={() => {
-                  setIsFocus(true)
+                  setIsFocus(true);
                 }}
                 onBlur={() => {
-                  setIsFocus(false)
+                  setIsFocus(false);
                 }}
                 onChange={(e) => {
-                  onChange(e)
-                  setAddrValue(e.target.value)
+                  onChange(e);
+                  setAddrValue(e.target.value);
                 }}
                 value={value}
               />
@@ -111,16 +111,16 @@ const VotingInputArea = ({
                 disabled={disabled}
                 readOnly={readonly}
                 onChange={(e) => {
-                  onChange(e)
-                  setAddrValue(removeCommasFromNumber(e.target.value))
+                  onChange(e);
+                  setAddrValue(removeCommasFromNumber(e.target.value));
                 }}
                 value={value}
                 name={name}
                 onFocus={() => {
-                  setIsFocus(true)
+                  setIsFocus(true);
                 }}
                 onBlur={() => {
-                  setIsFocus(false)
+                  setIsFocus(false);
                 }}
                 maxLength={maxLength}
               />
@@ -158,7 +158,7 @@ const VotingInputArea = ({
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default VotingInputArea
+export default VotingInputArea;

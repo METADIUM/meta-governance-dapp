@@ -1,10 +1,10 @@
-import { Button } from "antd"
-import React from "react"
+import { Button } from "antd";
+import React from "react";
 // import { web3Modal } from "../web3Modal";
 
 // Not Use
 const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
-  const wallets = []
+  const wallets = [];
 
   const ConnectButton = ({ wallet, index, size = "30px" }) => {
     if (
@@ -12,7 +12,7 @@ const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
       wallet.name !== "MetaMask" &&
       wallet.name !== "WalletConnect"
     ) {
-      return <></>
+      return <></>;
     }
 
     return (
@@ -24,8 +24,8 @@ const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
         />
         <p>{wallet.name}</p>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -49,7 +49,7 @@ const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
         Cancel
       </Button>
     </div>
-  )
-}
+  );
+};
 
-export default ConnectWalletPage
+export default ConnectWalletPage;
