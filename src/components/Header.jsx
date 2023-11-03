@@ -1,21 +1,21 @@
-import cn from 'classnames/bind'
-import { throttle } from 'lodash'
-import React, { useState, useEffect, useCallback, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import cn from "classnames/bind"
+import { throttle } from "lodash"
+import React, { useState, useEffect, useCallback, useContext } from "react"
+import { useNavigate } from "react-router-dom"
 
-import HeaderLogo from './HeaderLogo'
-import HeaderMenu from './HeaderMenu'
-import { StakingModal } from './Modal'
-import { DisConnectWalletModal, ErrModal } from './Modal'
-import Button from './voting/Button'
-import { ReactComponent as IconClose } from '../assets/images/ico_close.svg'
-import { ReactComponent as IconMenu } from '../assets/images/ico_menu.svg'
-import { AuthCtx } from '../contexts/AuthContext'
-import { GovInitCtx } from '../contexts/GovernanceInitContext'
-import { ModalContext } from '../contexts/ModalContext'
-import { addCommasToNumber } from '../util'
-import { loginAcc } from '../util'
-import { web3Instance } from '../web3'
+import HeaderLogo from "./HeaderLogo"
+import HeaderMenu from "./HeaderMenu"
+import { StakingModal } from "./Modal"
+import { DisConnectWalletModal, ErrModal } from "./Modal"
+import Button from "./voting/Button"
+import { ReactComponent as IconClose } from "../assets/images/ico_close.svg"
+import { ReactComponent as IconMenu } from "../assets/images/ico_menu.svg"
+import { AuthCtx } from "../contexts/AuthContext"
+import { GovInitCtx } from "../contexts/GovernanceInitContext"
+import { ModalContext } from "../contexts/ModalContext"
+import { addCommasToNumber } from "../util"
+import { loginAcc } from "../util"
+import { web3Instance } from "../web3"
 
 const Header = () => {
   const { isWeb3Loaded, isContractReady } = useContext(GovInitCtx)
@@ -57,19 +57,19 @@ const Header = () => {
   const [isGnbOpen, setIsGnbOpen] = useState(false)
   const [disConnectView, setDisConnectView] = useState(false)
   const [errVisible, setErrVisible] = useState(false)
-  const [errMsg, setErrMsg] = useState('')
+  const [errMsg, setErrMsg] = useState("")
   // ---------- wallet modal state end ----------
 
   function resizeVh () {
     const vh = window.innerHeight * 0.01
-    document.documentElement.style.setProperty('--vh', `${vh}px`)
+    document.documentElement.style.setProperty("--vh", `${vh}px`)
   }
 
   useEffect(() => {
     resize()
-    window.addEventListener('resize', throttle(resize, 200))
+    window.addEventListener("resize", throttle(resize, 200))
     return () => {
-      window.removeEventListener('resize', resize)
+      window.removeEventListener("resize", resize)
     }
   }, [resize])
 
@@ -80,9 +80,9 @@ const Header = () => {
   // check login data & auto login
   useEffect(() => {
     resizeVh()
-    window.addEventListener('resize', resizeVh)
+    window.addEventListener("resize", resizeVh)
     return () => {
-      window.removeEventListener('resize', resizeVh)
+      window.removeEventListener("resize", resizeVh)
     }
   }, [])
 
@@ -103,13 +103,13 @@ const Header = () => {
 
   const closeErrModal = () => {
     setErrVisible(false)
-    setErrMsg('')
+    setErrMsg("")
   }
 
   // ---------- wallet modal method end ----------
 
   return (
-    <header className={cn('header')}>
+    <header className={cn("header")}>
       {offset.width > 1141 ? (
         <>
           <div className='header-logo-wrap'>
@@ -121,8 +121,8 @@ const Header = () => {
               setIsGnbOpen={setIsGnbOpen}
             />
           </div>
-          <div className={cn('header-utils')}>
-            <div className={cn('header-my-info')}>
+          <div className={cn("header-utils")}>
+            <div className={cn("header-my-info")}>
               {isConnect ? (
                 <>
                   <dl>
@@ -168,19 +168,19 @@ const Header = () => {
         <>
           <div className='header-logo-wrap'>
             <HeaderLogo />
-            <div className={cn('mobile-gnb', isGnbOpen && 'show')}>
-              <div className={cn('gnb-inner')}>
-                <button onClick={onClickToggle} className={cn('btn-close')}>
+            <div className={cn("mobile-gnb", isGnbOpen && "show")}>
+              <div className={cn("gnb-inner")}>
+                <button onClick={onClickToggle} className={cn("btn-close")}>
                   <IconClose />
                 </button>
-                <div className={cn('header-content')}>
+                <div className={cn("header-content")}>
                   <HeaderMenu
                     isConnect={isConnect}
                     isMember={isMember}
                     isStaker={isStaker}
                     setIsGnbOpen={setIsGnbOpen}
                   />
-                  <div className={cn('header-my-info')}>
+                  <div className={cn("header-my-info")}>
                     {isConnect && (
                       <dl>
                         <div>

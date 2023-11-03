@@ -1,6 +1,6 @@
-import Web3 from 'web3'
+import Web3 from "web3"
 
-import * as abis from './abis/index'
+import * as abis from "./abis/index"
 import {
   MAINNET_CHAIN_INFO,
   TESTNET_CHAIN_INFO,
@@ -9,22 +9,22 @@ import {
   TESTNET_CONTRACTS,
   walletTypes,
   DEVMETANET_CONTRACTS
-} from './constants'
+} from "./constants"
 
 const type = process.env.REACT_APP_MODE
 const network = process.env.REACT_APP_NETWORK_TYPE
 
 // get network deploy informations
 export const chainInfo =
-  type === 'production'
+  type === "production"
     ? MAINNET_CHAIN_INFO
-    : type === 'testnet'
+    : type === "testnet"
       ? TESTNET_CHAIN_INFO
       : DEVNET_CHAIN_INFO
 const contracts =
-  network === 'mainnet'
+  network === "mainnet"
     ? MAINNET_CONTRACTS
-    : network === 'testnet'
+    : network === "testnet"
       ? TESTNET_CONTRACTS
       : DEVMETANET_CONTRACTS
 
@@ -55,18 +55,18 @@ const getWeb3Instance = () => {
         web3,
         web3Contracts,
         netName:
-          network === 'testnet'
-            ? 'TESTNET'
-            : network === 'mainnet'
-              ? 'MAINNET'
-              : network === 'devnet'
-                ? 'DEVNET'
-                : 'DEVMETANET'
+          network === "testnet"
+            ? "TESTNET"
+            : network === "mainnet"
+              ? "MAINNET"
+              : network === "devnet"
+                ? "DEVNET"
+                : "DEVMETANET"
       }
       resolve(web3Instance)
     } else {
       // web3 is not found
-      reject(new Error('No web3 instance injected.'))
+      reject(new Error("No web3 instance injected."))
     }
   })
 }
@@ -80,7 +80,7 @@ export const onlyCallBatchMethod = (web3, contract, method) => {
 // batch method (with value)
 export const callBatchMethod = (web3, contract, method, ...value) => {
   let data
-  if (method === 'hasAlreadyVoted') {
+  if (method === "hasAlreadyVoted") {
     const { id, voter } = value[0]
     data = web3.web3Contracts.BallotStorage.methods
       .hasAlreadyVoted(id, voter)
@@ -102,7 +102,7 @@ export const onlyCallContractMethod = async (web3, contract, method) => {
 // call contract method (with value)
 export const callContractMethod = async (web3, contract, method, ...value) => {
   let data
-  if (method === 'hasAlreadyVoted') {
+  if (method === "hasAlreadyVoted") {
     const { id, voter } = value[0]
     data = await web3.web3Contracts.BallotStorage.methods
       .hasAlreadyVoted(id, voter)
@@ -144,7 +144,7 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
       txHashArr
     } = value[0]
     switch (method) {
-      case 'addProposalToAddMember':
+      case "addProposalToAddMember":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToAddMember([
             staker,
@@ -160,7 +160,7 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
           ])
           .encodeABI()
         break
-      case 'addProposalToChangeMember':
+      case "addProposalToChangeMember":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToChangeMember(
             [
@@ -179,22 +179,22 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
           )
           .encodeABI()
         break
-      case 'addProposalToRemoveMember':
+      case "addProposalToRemoveMember":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToRemoveMember(staker, lockAmount, memo, duration)
           .encodeABI()
         break
-      case 'addProposalToChangeGov':
+      case "addProposalToChangeGov":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToChangeGov(newGovAddr, memo, duration)
           .encodeABI()
         break
-      case 'addProposalToChangeEnv':
+      case "addProposalToChangeEnv":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToChangeEnv(envName, envType, envVal, memo, duration)
           .encodeABI()
         break
-      case 'addProposal':
+      case "addProposal":
         trxData.data = web3.web3Contracts.WaitGovernance.methods
           .addProposal([
             companyName,
@@ -206,7 +206,7 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
           ])
           .encodeABI()
         break
-      case 'setTransactionHashes':
+      case "setTransactionHashes":
         trxData.data = web3.web3Contracts.WaitGovernance.methods
           .setTransactionHashes(id, txHashArr)
           .encodeABI()

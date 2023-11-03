@@ -1,12 +1,12 @@
-import cn from 'classnames/bind'
-import React, { useCallback } from 'react' // 23.04.20 수정: useCallback 추가
-import { Link } from 'react-router-dom'
+import cn from "classnames/bind"
+import React, { useCallback } from "react" // 23.04.20 수정: useCallback 추가
+import { Link } from "react-router-dom"
 
-import RevokeButton from './Button'
-import IconWithText from './IconWithText.jsx'
-import Status from './Status.jsx'
-import VotingChartMini from './VotingChartMini.jsx'
-import { loginAcc, timeConverter } from '../../util.js'
+import RevokeButton from "./Button"
+import IconWithText from "./IconWithText.jsx"
+import Status from "./Status.jsx"
+import VotingChartMini from "./VotingChartMini.jsx"
+import { loginAcc, timeConverter } from "../../util.js"
 
 // case 확인을 위한 props
 const VotingListBlock = ({
@@ -59,14 +59,14 @@ const VotingListBlock = ({
 
   // 투자 진행 상태 (state가 active거나 가결됐을 때 필요)
   const txState =
-    (state === '2' || state === '3') && txHashes
+    (state === "2" || state === "3") && txHashes
       ? txHashes.length > 0
-        ? 'tx-complete'
-        : 'tx-before'
-      : ''
+        ? "tx-complete"
+        : "tx-before"
+      : ""
 
   const exFinalizedCode = () => {
-    if (state === '1') return 'Proposal Ready'
+    if (state === "1") return "Proposal Ready"
     return `${timeConverter(startTime, true)} ~ ${timeConverter(endTime, true)}`
   }
 
@@ -75,7 +75,7 @@ const VotingListBlock = ({
     // 투표가 끝난 경우 rejects 값을 채워줘야 하는데, myInfo 에서 변경한 경우는 안 채워지도록
     no:
       // wait protocol
-      (state === '3' || state === '4') &&
+      (state === "3" || state === "4") &&
       ((isWait && powers[1] && powers[2]) || (powerOfAccepts && powerOfRejects))
         ? 100 - `${isWait ? powers[1] : powerOfAccepts}`
         : isWait
@@ -91,10 +91,10 @@ const VotingListBlock = ({
      * tx 1건 등록 후(투자 진행 완료): tx-complete
      */
     switch (txState) {
-      case 'tx-before':
-        return 'Investment queued'
-      case 'tx-complete':
-        return 'Investment executed'
+      case "tx-before":
+        return "Investment queued"
+      case "tx-complete":
+        return "Investment executed"
       default:
         return false
     }
@@ -104,32 +104,32 @@ const VotingListBlock = ({
     <>
       <div className='proposal-box' style={style}>
         <Link
-          to={`/voting/detail?id=${id}${isWait ? '&wait=1' : ''}`}
+          to={`/voting/detail?id=${id}${isWait ? "&wait=1" : ""}`}
           className={cn(
-            'voting-list-block-wrap',
-            state === '4' && isFinalized === '' && 'revoke'
+            "voting-list-block-wrap",
+            state === "4" && isFinalized === "" && "revoke"
           )}
         >
-          <div className={cn('wallet-info')}>
+          <div className={cn("wallet-info")}>
             <span>{authorityName}</span>
             <span>{loginAcc(creator)}</span>
           </div>
-          <div className={cn('list-title-wrap')}>
+          <div className={cn("list-title-wrap")}>
             <Status status={state} />
-            <strong className={cn('title')}>
+            <strong className={cn("title")}>
               {/* wait protocol 분기 처리 */}
               {isWait ? companyName : title}
             </strong>
           </div>
-          <div className={cn('list-desc-wrap')}>
+          <div className={cn("list-desc-wrap")}>
             {/* wait protocol 분기 처리 */}
             {isWait ? description : memo}
           </div>
-          <div className={cn('list-bottom-info')}>
+          <div className={cn("list-bottom-info")}>
             <IconWithText
               data={[
                 {
-                  icon: 'time',
+                  icon: "time",
                   // 완료된 케이스는 완료 날짜 표시 예시를 위한 코드
                   text: exFinalizedCode()
                 }
@@ -139,7 +139,7 @@ const VotingListBlock = ({
               <IconWithText
                 data={[
                   {
-                    icon: 'person',
+                    icon: "person",
                     // 투표 0건인 케이스 (썸네일 그래프 없음) 예시를 위한 코드
                     text: `${totalVoters} Addresses`
                   }
@@ -156,8 +156,8 @@ const VotingListBlock = ({
           </div>
         </Link>
         {isMember &&
-          (state === '4' || (isWait && (state === '0' || state === '1'))) &&
-          isFinalized === '' && (
+          (state === "4" || (isWait && (state === "0" || state === "1"))) &&
+          isFinalized === "" && (
           <RevokeButton text='Revoke' onClick={() => onClick(id)} />
         )}
       </div>

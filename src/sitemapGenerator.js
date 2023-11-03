@@ -1,8 +1,8 @@
-require('@babel/register')
+require("@babel/register")
 
-const router = require('./sitemapRoutes').default
+const router = require("./sitemapRoutes").default
 
-const Sitemap = require('react-router-sitemap').default
+const Sitemap = require("react-router-sitemap").default
 
 function generateSitemap () {
   const date = new Date().toISOString().slice(0, 10)
@@ -11,7 +11,7 @@ function generateSitemap () {
     sitemap.sitemaps[0].urls[i].lastmod = date
     sitemap.sitemaps[0].urls[i].priority = i ? 0.8 : 1
   }
-  sitemap.save('./public/sitemap.xml')
+  sitemap.save("./public/sitemap.xml")
 }
 
 generateSitemap()

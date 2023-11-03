@@ -1,4 +1,4 @@
-import { web3Instance } from './web3'
+import { web3Instance } from "./web3"
 
 const secondsInDay = 86400
 
@@ -21,10 +21,10 @@ export const timeConverter = (
 
   return `${a.getFullYear()}-${month}-${date}${
     isFullText
-      ? ` ${hours}:${minute}${showSeconds ? `:${seconds}` : ''} ${
-        utc ? 'UTC+9' : '(KST)'
+      ? ` ${hours}:${minute}${showSeconds ? `:${seconds}` : ""} ${
+        utc ? "UTC+9" : "(KST)"
       }`
-      : ''
+      : ""
   }`
 }
 
@@ -45,7 +45,7 @@ export const decodeHexToString = (input) => {
   try {
     return web3Instance.web3.utils.hexToUtf8(input)
   } catch (e) {
-    return ''
+    return ""
   }
 }
 
@@ -62,22 +62,22 @@ export const loginAcc = (acc) => `${acc.slice(0, 6)}...${acc.slice(-4)}`
 // ---------- refine data ---------- //
 // convert wei -> gwei
 export const convertWeiToGWei = (amount) => {
-  return web3Instance.web3.utils.fromWei(amount, 'gwei')
+  return web3Instance.web3.utils.fromWei(amount, "gwei")
 }
 
 // convert gwei -> wei
 export const convertGWeiToWei = (amount) => {
-  return web3Instance.web3.utils.toWei(amount, 'gwei')
+  return web3Instance.web3.utils.toWei(amount, "gwei")
 }
 
 // convert wei -> ether
 export const convertWeiToEther = (amount) => {
-  return web3Instance.web3.utils.fromWei(amount, 'ether')
+  return web3Instance.web3.utils.fromWei(amount, "ether")
 }
 
 // convert ether -> wei
 export const convertEtherToWei = (amount) => {
-  return web3Instance.web3.utils.toWei(amount, 'ether')
+  return web3Instance.web3.utils.toWei(amount, "ether")
 }
 
 // encode parameters (type, name - only string[])
@@ -92,11 +92,11 @@ export const decodeParameters = (type, input) => {
 
 export const splitNodeInfo = (nodeInfo) => {
   let node, ip, port, splitedStr
-  splitedStr = nodeInfo.split('@')
-  node = '0x' + splitedStr[0]
-  splitedStr = splitedStr[1].split(':')
+  splitedStr = nodeInfo.split("@")
+  node = "0x" + splitedStr[0]
+  splitedStr = splitedStr[1].split(":")
   ip = web3Instance.web3.utils.asciiToHex(splitedStr[0])
-  splitedStr = splitedStr[1].split('?')
+  splitedStr = splitedStr[1].split("?")
   port = parseInt(splitedStr[0])
   return { node, ip, port }
 }
@@ -104,32 +104,32 @@ export const splitNodeInfo = (nodeInfo) => {
 // override data format for save storage
 export const refineBallotBasic = (m) => {
   if (!m) return null
-  if (m.state === '2' && m.endTime * 1000 < Date.now()) m.state = '4'
+  if (m.state === "2" && m.endTime * 1000 < Date.now()) m.state = "4"
 
   Object.keys(m).forEach((key) => {
     if (!isNaN(key)) return delete m[key]
     switch (key) {
-      case 'creator':
+      case "creator":
         m[key] = web3Instance.web3.utils.toChecksumAddress(m[key])
         break
-      case 'startTime':
+      case "startTime":
         m.startTimeConverted = timeConverter(m[key])
         break
-      case 'endTime':
+      case "endTime":
         m.endTimeConverted = timeConverter(m[key])
         break
-      case 'memo':
+      case "memo":
         m[key] = decodeHexToString(m[key])
         break
-      case 'duration':
+      case "duration":
         m[key] /= secondsInDay
         break
-      case 'powerOfRejects':
-      case 'powerOfAccepts':
+      case "powerOfRejects":
+      case "powerOfAccepts":
         m[key] = parseInt(m[key]) / 100
         break
       default:
-        if (!m[key]) m[key] = ''
+        if (!m[key]) m[key] = ""
         break
     }
   })
@@ -154,7 +154,7 @@ export const refineBallotBasic = (m) => {
 
 // override data format for send transaction
 export const refineSubmitData = (m) => {
-  if (m === null || typeof m !== 'object') {
+  if (m === null || typeof m !== "object") {
     return m
   }
   let copy = {}
@@ -165,26 +165,26 @@ export const refineSubmitData = (m) => {
   Object.keys(copy).forEach((key) => {
     if (!isNaN(key)) return delete copy[key]
     switch (key) {
-      case 'oldStaker':
-      case 'staker':
-      case 'voter':
-      case 'reward':
-      case 'newGovAddr':
-      case 'newVotingAddr':
-      case 'newRewardAddr':
-      case 'companyAddress':
+      case "oldStaker":
+      case "staker":
+      case "voter":
+      case "reward":
+      case "newGovAddr":
+      case "newVotingAddr":
+      case "newRewardAddr":
+      case "companyAddress":
         copy[key] = web3Instance.web3.utils.toChecksumAddress(copy[key])
         break
-      case 'lockAmount':
-      case 'investmentAmount':
+      case "lockAmount":
+      case "investmentAmount":
         copy[key] = convertEtherToWei(copy[key])
         break
-      case 'memo':
-      case 'name':
+      case "memo":
+      case "name":
         copy[key] = web3Instance.web3.utils.utf8ToHex(copy[key])
         break
       default:
-        if (!copy[key]) copy[key] = ''
+        if (!copy[key]) copy[key] = ""
         break
     }
   })
@@ -248,9 +248,9 @@ export const checkNumberRange = (type, min, max) => {
   // when no value
   if (!(min && max) || newMin < 1 || newMax < 1) return true
   else {
-    if (type === 'min') {
+    if (type === "min") {
       return newMin > newMax ? type : null
-    } else if (type === 'max') {
+    } else if (type === "max") {
       return newMax < newMin ? type : null
     } else return false
   }
@@ -281,25 +281,25 @@ const save = (key, obj) =>
   window.localStorage.setItem(key, JSON.stringify(obj))
 const load = (key) => JSON.parse(window.localStorage.getItem(key))
 
-export const getBallotBasicFromLocal = () => load('wmBallotBasic')
-export const getBallotMemberFromLocal = () => load('wmBallotMember')
-export const getUpdatedTimeFromLocal = () => load('wmUpdatedTime')
-export const getAuthorityFromLocal = () => load('wmAuthority')
-export const getModifiedFromLocal = () => load('wmModifiedBlock')
-export const setBallotBasicToLocal = (obj) => save('wmBallotBasic', obj)
-export const setBallotMemberToLocal = (obj) => save('wmBallotMember', obj)
-export const setAuthorityToLocal = (obj) => save('wmAuthority', obj)
-export const setUpdatedTimeToLocal = (obj) => save('wmUpdatedTime', obj)
-export const setModifiedToLocal = (obj) => save('wmModifiedBlock', obj)
+export const getBallotBasicFromLocal = () => load("wmBallotBasic")
+export const getBallotMemberFromLocal = () => load("wmBallotMember")
+export const getUpdatedTimeFromLocal = () => load("wmUpdatedTime")
+export const getAuthorityFromLocal = () => load("wmAuthority")
+export const getModifiedFromLocal = () => load("wmModifiedBlock")
+export const setBallotBasicToLocal = (obj) => save("wmBallotBasic", obj)
+export const setBallotMemberToLocal = (obj) => save("wmBallotMember", obj)
+export const setAuthorityToLocal = (obj) => save("wmAuthority", obj)
+export const setUpdatedTimeToLocal = (obj) => save("wmUpdatedTime", obj)
+export const setModifiedToLocal = (obj) => save("wmModifiedBlock", obj)
 
 // -- 3자리마다 콤마 추가하기
 export function addCommasToNumber (number) {
   if (number) {
-    const numValue = number.replaceAll(',', '') // 잠시 콤마를 때주고
-    return numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    const numValue = number.replaceAll(",", "") // 잠시 콤마를 때주고
+    return numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   }
 }
 // -- 3자리마다 콤마 제거하기--
 export function removeCommasFromNumber (formattedNumber) {
-  return formattedNumber.replace(/,/g, '')
+  return formattedNumber.replace(/,/g, "")
 }

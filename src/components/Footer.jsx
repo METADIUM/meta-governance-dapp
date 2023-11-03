@@ -1,12 +1,12 @@
-import cn from 'classnames/bind'
-import { throttle } from 'lodash'
-import React, { useState, useEffect, useCallback } from 'react'
+import cn from "classnames/bind"
+import { throttle } from "lodash"
+import React, { useState, useEffect, useCallback } from "react"
 
-import { ReactComponent as IconFooterLogo } from '../assets/images/footer-logo-grey.svg'
-import { ReactComponent as IconDiscord } from '../assets/images/ic_discord.svg'
-import { ReactComponent as IconMedium } from '../assets/images/ic_medium.svg'
-import { ReactComponent as IconTelegram } from '../assets/images/ic_telegram.svg'
-import { ReactComponent as IconTwitter } from '../assets/images/ic_twitter.svg'
+import { ReactComponent as IconFooterLogo } from "../assets/images/footer-logo-grey.svg"
+import { ReactComponent as IconDiscord } from "../assets/images/ic_discord.svg"
+import { ReactComponent as IconMedium } from "../assets/images/ic_medium.svg"
+import { ReactComponent as IconTelegram } from "../assets/images/ic_telegram.svg"
+import { ReactComponent as IconTwitter } from "../assets/images/ic_twitter.svg"
 
 const Footer = () => {
   const [offset, setOffset] = useState({
@@ -22,54 +22,54 @@ const Footer = () => {
 
   const snsList = [
     {
-      title: 'Twitter',
-      link: 'https://twitter.com/MetadiumK',
+      title: "Twitter",
+      link: "https://twitter.com/MetadiumK",
       logo: <IconTwitter />
     },
     {
-      title: 'Telegram',
-      link: 'https://t.me/Metadiumofficialkor',
+      title: "Telegram",
+      link: "https://t.me/Metadiumofficialkor",
       logo: <IconTelegram />
     },
     {
-      title: 'Medium',
-      link: 'https://medium.com/metadium',
+      title: "Medium",
+      link: "https://medium.com/metadium",
       logo: <IconMedium />
     },
     {
-      title: 'Discord',
-      link: 'https://discord.com/invite/ZnaCfYbXw2',
+      title: "Discord",
+      link: "https://discord.com/invite/ZnaCfYbXw2",
       logo: <IconDiscord />
     }
   ]
 
   useEffect(() => {
     resize()
-    window.addEventListener('resize', throttle(resize, 200))
+    window.addEventListener("resize", throttle(resize, 200))
     return () => {
-      window.removeEventListener('resize', resize)
+      window.removeEventListener("resize", resize)
     }
   }, [resize])
 
   return (
-    <footer className={cn('footer-wrap')}>
-      <div className={cn('footer-inner')}>
-        <div className={cn('footer-logo')}>
+    <footer className={cn("footer-wrap")}>
+      <div className={cn("footer-inner")}>
+        <div className={cn("footer-logo")}>
           <IconFooterLogo /> &copy;Metadium Technology Inc. All Rights Reserved.
         </div>
-        <div className={cn('footer-link-wrap')}>
-          <ul className={cn('footer-sns')}>
+        <div className={cn("footer-link-wrap")}>
+          <ul className={cn("footer-sns")}>
             {snsList.map((sns) => (
               <li key={sns.name}>
                 <a
                   href={sns.link}
                   target='_blank'
                   rel='noopener noreferrer'
-                  title={'Open new window'}
-                  className={cn('sns-item', sns.name)}
+                  title={"Open new window"}
+                  className={cn("sns-item", sns.name)}
                 >
                   {sns.logo}
-                  <span className={cn('a11y')}>{sns.name}</span>
+                  <span className={cn("a11y")}>{sns.name}</span>
                 </a>
               </li>
             ))}

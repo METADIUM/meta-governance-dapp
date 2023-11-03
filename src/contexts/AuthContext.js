@@ -1,10 +1,10 @@
-import { useWeb3Modal } from '@web3modal/react'
-import React, { createContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAccount, useNetwork, useDisconnect } from 'wagmi'
+import { useWeb3Modal } from "@web3modal/react"
+import React, { createContext, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAccount, useNetwork, useDisconnect } from "wagmi"
 
-import * as util from '../util'
-import { web3Instance, callContractMethod } from '../web3'
+import * as util from "../util"
+import { web3Instance, callContractMethod } from "../web3"
 
 const AuthCtx = createContext()
 
@@ -14,8 +14,8 @@ const AuthProvider = ({ children }) => {
   const { address, isConnected } = useAccount()
   const { chain } = useNetwork()
   const { disconnect } = useDisconnect()
-  const [myBalance, setMyBalance] = useState('')
-  const [lockedBalance, setLockedBalance] = useState('')
+  const [myBalance, setMyBalance] = useState("")
+  const [lockedBalance, setLockedBalance] = useState("")
 
   const [isMember, setIsMember] = useState(false)
   const [isStaker, setIsStaker] = useState(false)
@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
     redirectTo()
   }
 
-  const redirectTo = () => navigate('/voting/list')
+  const redirectTo = () => navigate("/voting/list")
 
   // update data related to new account
   const updateAccountData = async (newAccount) => {
@@ -59,14 +59,14 @@ const AuthProvider = ({ children }) => {
     setStakingEventsWatch(newAccount)
     const isMember = await callContractMethod(
       web3Instance,
-      'GovImp',
-      'isMember',
+      "GovImp",
+      "isMember",
       newAccount
     )
     const isStaker = await callContractMethod(
       web3Instance,
-      'GovImp',
-      'isStaker',
+      "GovImp",
+      "isStaker",
       newAccount
     )
     setIsMember(isMember)
@@ -82,14 +82,14 @@ const AuthProvider = ({ children }) => {
   const updateAccountBalance = async (defaultAccount = address) => {
     const weiBalance = await callContractMethod(
       web3Instance,
-      'Staking',
-      'balanceOf',
+      "Staking",
+      "balanceOf",
       defaultAccount
     )
     const locked = await callContractMethod(
       web3Instance,
-      'Staking',
-      'lockedBalanceOf',
+      "Staking",
+      "lockedBalanceOf",
       defaultAccount
     )
     const myBalance = util.convertWeiToEther(weiBalance)
@@ -104,13 +104,13 @@ const AuthProvider = ({ children }) => {
     try {
       // for getting only default accounts event
       const filteraddress = web3Instance.web3.eth.abi.encodeParameter(
-        'address',
+        "address",
         defaultAccount
       )
       const result = await web3Instance.web3Contracts.Staking.getPastEvents(
-        'allEvents',
+        "allEvents",
         {
-          fromBlock: 'latest',
+          fromBlock: "latest",
           topics: [null, filteraddress]
         }
       )

@@ -1,17 +1,17 @@
-import React, { createContext, useEffect, useContext } from 'react';
-import { useState, useRef } from 'react';
+import React, { createContext, useEffect, useContext } from "react";
+import { useState, useRef } from "react";
 
-import { constants, ENV_VOTING_PROPOSAL_LIST } from '../constants';
-import { ModalContext } from '../contexts/ModalContext';
-import AuthorityList from '../static/AuthorityList';
-import * as util from '../util';
+import { constants, ENV_VOTING_PROPOSAL_LIST } from "../constants";
+import { ModalContext } from "../contexts/ModalContext";
+import AuthorityList from "../static/AuthorityList";
+import * as util from "../util";
 import getWeb3Instance, {
   callBatchMethod,
   callContractMethod,
   onlyCallBatchMethod,
   onlyCallContractMethod,
   web3Instance,
-} from '../web3';
+} from "../web3";
 
 const initData = {
   ballotTypeData: [],
@@ -40,7 +40,7 @@ const GovInitProvider = ({ children }) => {
   const [isContractReady, setIsContractReady] = useState(false);
   const [isWeb3Loaded, setIsWeb3Loaded] = useState(false);
   const [web3, setWeb3Instance] = useState();
-  const [accessFailMsg, setAccessFailMsg] = useState('');
+  const [accessFailMsg, setAccessFailMsg] = useState("");
 
   useEffect(() => {
     init();
@@ -55,12 +55,12 @@ const GovInitProvider = ({ children }) => {
         await getContractAuthorityBallots();
         // get WAIT Protocol ballot data
         // await getWaitBallots();
-        console.log('debugMode: ', constants.debugMode);
+        console.log("debugMode: ", constants.debugMode);
         setIsWeb3Loaded(true);
         setWeb3Instance(data);
       },
       async (error) => {
-        console.log('getWeb3 error: ', error);
+        console.log("getWeb3 error: ", error);
         setIsWeb3Loaded(false);
         setAccessFailMsg(error.message);
       }
@@ -91,20 +91,20 @@ const GovInitProvider = ({ children }) => {
   const getGovernanceVariables = async () => {
     const br = new web3Instance.web3.BatchRequest();
     // related staking (get the minimum and maximum values that can be staked)
-    br.add(onlyCallBatchMethod(web3Instance, 'EnvStorageImp', 'getStakingMin'));
-    br.add(onlyCallBatchMethod(web3Instance, 'EnvStorageImp', 'getStakingMax'));
+    br.add(onlyCallBatchMethod(web3Instance, "EnvStorageImp", "getStakingMin"));
+    br.add(onlyCallBatchMethod(web3Instance, "EnvStorageImp", "getStakingMax"));
     // related voting duration (get voting duration minium and maximum values)
     br.add(
       onlyCallBatchMethod(
         web3Instance,
-        'EnvStorageImp',
-        'getBallotDurationMinMax'
+        "EnvStorageImp",
+        "getBallotDurationMinMax"
       )
     );
     // related member length
-    br.add(onlyCallBatchMethod(web3Instance, 'GovImp', 'getMemberLength'));
+    br.add(onlyCallBatchMethod(web3Instance, "GovImp", "getMemberLength"));
     // voting length (여태까지 투표된 숫자)
-    br.add(onlyCallBatchMethod(web3Instance, 'GovImp', 'voteLength'));
+    br.add(onlyCallBatchMethod(web3Instance, "GovImp", "voteLength"));
 
     try {
       const [stakingMin, stakingMax, duration, memberLength, voteLength] =
@@ -151,8 +151,8 @@ const GovInitProvider = ({ children }) => {
       if (
         await callContractMethod(
           web3Instance,
-          'GovImp',
-          'isMember',
+          "GovImp",
+          "isMember",
           authorityList[i].addr
         )
       ) {
@@ -179,14 +179,14 @@ const GovInitProvider = ({ children }) => {
 
     const ballotCnt = await onlyCallContractMethod(
       web3Instance,
-      'GovImp',
-      'ballotLength'
+      "GovImp",
+      "ballotLength"
     );
     if (!ballotCnt) return;
     // proposal 데이터 batch 세팅
     for (let i = 1; i <= ballotCnt; i++) {
       brBallotBasic.add(
-        callBatchMethod(web3Instance, 'BallotStorage', 'getBallotBasic', i)
+        callBatchMethod(web3Instance, "BallotStorage", "getBallotBasic", i)
       );
     }
     try {
@@ -198,33 +198,33 @@ const GovInitProvider = ({ children }) => {
         getBallotBasicOriginDataNew(ret, i, ballotBasicFinalizedData);
         // proposal 형태에 따른 투표 내용 batch 세팅
         switch (ret.ballotType) {
-          case '4':
+          case "4":
             brBallotMember.add(
               callBatchMethod(
                 web3Instance,
-                'BallotStorage',
-                'getBallotAddress',
+                "BallotStorage",
+                "getBallotAddress",
                 i
               )
             );
             break;
-          case '5':
+          case "5":
             brBallotMember.add(
               callBatchMethod(
                 web3Instance,
-                'BallotStorage',
-                'getBallotVariable',
+                "BallotStorage",
+                "getBallotVariable",
                 i
               )
             );
             break;
-          case '1':
+          case "1":
           default:
             brBallotMember.add(
               callBatchMethod(
                 web3Instance,
-                'BallotStorage',
-                'getBallotMember',
+                "BallotStorage",
+                "getBallotMember",
                 i
               )
             );
@@ -232,7 +232,7 @@ const GovInitProvider = ({ children }) => {
         }
       });
     } catch (err) {
-      console.log('E', err);
+      console.log("E", err);
       getErrModal(err.message, err.name);
     }
     try {
@@ -267,8 +267,8 @@ const GovInitProvider = ({ children }) => {
     // MyInfo 변경 내용은 화면 출력 X (조건: finalized, ballotType: 3, Accepts: 0)
     if (
       ret.isFinalized &&
-      ret.ballotType === '3' &&
-      ret.powerOfAccepts === '0'
+      ret.ballotType === "3" &&
+      ret.powerOfAccepts === "0"
     ) {
       return;
     }
@@ -296,15 +296,15 @@ const GovInitProvider = ({ children }) => {
   ) => {
     const type = data.ballotTypeData[i];
     // changeEnv의 경우 envVariableName을 세팅해줌
-    if (type === '5') {
+    if (type === "5") {
       const type = ENV_VOTING_PROPOSAL_LIST.filter((key) => {
         return key.sha3Name === result.envVariableName;
-      })[0] || { id: 'Wrong Proposal (This label is only test)' };
+      })[0] || { id: "Wrong Proposal (This label is only test)" };
       result.envVariableName = type.id;
     }
 
     // change governance address 의 경우
-    if (typeof result !== 'object') {
+    if (typeof result !== "object") {
       result = { newGovernanceAddress: result };
     }
     // delete duplicate key values that web3 returns

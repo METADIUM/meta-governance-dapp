@@ -1,16 +1,16 @@
-import { Button } from 'antd'
-import React from 'react'
+import { Button } from "antd"
+import React from "react"
 // import { web3Modal } from "../web3Modal";
 
 // Not Use
 const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
   const wallets = []
 
-  const ConnectButton = ({ wallet, index, size = '30px' }) => {
+  const ConnectButton = ({ wallet, index, size = "30px" }) => {
     if (
       index === 0 &&
-      wallet.name !== 'MetaMask' &&
-      wallet.name !== 'WalletConnect'
+      wallet.name !== "MetaMask" &&
+      wallet.name !== "WalletConnect"
     ) {
       return <></>
     }
@@ -20,7 +20,7 @@ const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
         <img
           src={wallet.logo}
           alt='wallet img'
-          style={{ width: size, height: size, marginRight: '10px' }}
+          style={{ width: size, height: size, marginRight: "10px" }}
         />
         <p>{wallet.name}</p>
       </div>
@@ -28,11 +28,11 @@ const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       {wallets.map((wallet, index) => (
         <ConnectButton key={index} wallet={wallet} index={index} />
       ))}
-      <div style={{ marginTop: '20px', marginBottom: '20px', width: '100%' }}>
+      <div style={{ marginTop: "20px", marginBottom: "20px", width: "100%" }}>
         <h3>[MetaMask, CoinBase Wallet]</h3>
         <p>Metamask and Coinbase Wallet are accessible through extensions.</p>
         <br />

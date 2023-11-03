@@ -1,31 +1,31 @@
-import cn from 'classnames/bind'
+import cn from "classnames/bind"
 import React, {
   useContext,
   useEffect,
   useState,
   useCallback,
   useRef
-} from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useSendTransaction } from 'wagmi'
+} from "react"
+import { useNavigate } from "react-router-dom"
+import { useSendTransaction } from "wagmi"
 
 // import { ReactComponent as IconEmpty } from "../../assets/images/ico_empty.svg";
 
-import MoreButton from '../../components/voting/GovButton.jsx'
-import VotingListBlock from '../../components/voting/VotingListBlock.jsx'
-import VotingTitle from '../../components/voting/VotingTitle.jsx'
-import VotingTopList from '../../components/voting/VotingTopList.jsx'
+import MoreButton from "../../components/voting/GovButton.jsx"
+import VotingListBlock from "../../components/voting/VotingListBlock.jsx"
+import VotingTitle from "../../components/voting/VotingTitle.jsx"
+import VotingTopList from "../../components/voting/VotingTopList.jsx"
 import {
   constants,
   DEVMETANET_CONTRACTS,
   MAINNET_CONTRACTS,
   TESTNET_CONTRACTS
-} from '../../constants.js'
-import { AuthCtx } from '../../contexts/AuthContext.js'
-import { GovInitCtx } from '../../contexts/GovernanceInitContext.jsx'
-import { ModalContext } from '../../contexts/ModalContext.jsx'
-import { checkUndefined } from '../../util.js'
-import { web3Instance } from '../../web3.js'
+} from "../../constants.js"
+import { AuthCtx } from "../../contexts/AuthContext.js"
+import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx"
+import { ModalContext } from "../../contexts/ModalContext.jsx"
+import { checkUndefined } from "../../util.js"
+import { web3Instance } from "../../web3.js"
 
 // 화면에  뿌릴 갯수
 const viewingCount = 5
@@ -52,19 +52,19 @@ const VotingList = () => {
   // 상태 별 항목의 개수
   const [itemCount, setItemCount] = useState({})
   // filtering
-  const [currentSelect, setCurrentSelect] = useState('All')
+  const [currentSelect, setCurrentSelect] = useState("All")
   const [visibleActiveItems, setVisibleActiveItems] = useState([])
   const [visibleFinalizedItems, setVisibleFinalizedItems] = useState([])
   const [renderSelectedItems, setRenderSelectedItems] = useState(<></>)
 
   const [loading, setLoading] = useState(false)
   const [errModal, setErrModal] = useState(false)
-  const [errMessage, setErrMessage] = useState('')
+  const [errMessage, setErrMessage] = useState("")
 
   const navigate = useNavigate()
 
   // select 옵션
-  const filterData = ['All', 'Active & Proposal', 'Finalized']
+  const filterData = ["All", "Active & Proposal", "Finalized"]
 
   // finalized에서 보여질 아이템의갯수
   const viewingActiveItems = useRef(viewingCount)
@@ -101,14 +101,14 @@ const VotingList = () => {
   }, [visibleActiveItems, visibleFinalizedItems, handleSelect, currentSelect])
 
   const openErrModal = (e) => {
-    const _msg = e?.details || 'Unknown Error'
+    const _msg = e?.details || "Unknown Error"
     setLoading(false)
     setErrMessage(_msg)
     setErrModal(true)
   }
 
   // 현재 진행 중인 투표를 다 close
-  const sendTransaction = async (id = '') => {
+  const sendTransaction = async (id = "") => {
     if (!isMember) return
     setLoading(true)
     const trx = id.length
@@ -122,13 +122,13 @@ const VotingList = () => {
     // 각 네트워크에 맞는 GovImp address (또는 WaitGovernance address) 가져오기
     const network = process.env.REACT_APP_NETWORK_TYPE
     const contracts =
-      network === 'mainnet'
+      network === "mainnet"
         ? MAINNET_CONTRACTS
-        : network === 'testnet'
+        : network === "testnet"
           ? TESTNET_CONTRACTS
           : DEVMETANET_CONTRACTS
     const to = contracts.filter(
-      (item) => item.name === `${id.length ? 'WaitGovernance' : 'GovImp'}`
+      (item) => item.name === `${id.length ? "WaitGovernance" : "GovImp"}`
     )[0].address
     try {
       /*
@@ -139,15 +139,15 @@ const VotingList = () => {
         to,
         data: trx,
         gasPrice: 110000000000,
-        value: '0x0'
+        value: "0x0"
       })
         .then(({ hash }) => {
           waitForReceipt(hash, async (receipt) => {
             if (receipt.status) navigate(0)
             else {
               getErrModal(
-                'The transaction could not be sent normally.',
-                'Proposal Submit Error',
+                "The transaction could not be sent normally.",
+                "Proposal Submit Error",
                 receipt.transactionHash
               )
             }
@@ -179,8 +179,8 @@ const VotingList = () => {
       // );
     } catch (e) {
       getErrModal(
-        'The transaction could not be sent normally.',
-        'Proposal Submit Error',
+        "The transaction could not be sent normally.",
+        "Proposal Submit Error",
         e
       )
       setLoading(false)
@@ -214,7 +214,7 @@ const VotingList = () => {
         <VotingListBlock
           key={index}
           item={item}
-          authorityName={authorityNames.get(item.creator) || '-'}
+          authorityName={authorityNames.get(item.creator) || "-"}
           ballotMemberOriginData={ballotMemberOriginData[item.id]}
           setTopic={(item) => setTopic(item)}
           onClick={sendTransaction}
@@ -254,7 +254,7 @@ const VotingList = () => {
           break
         case constants.ballotState.Rejected:
           // 투표 기간이 지나 자동으로 rejected된 proposal
-          if (item.props.item.isFinalized === '') {
+          if (item.props.item.isFinalized === "") {
             revokeList.push(item)
           } else {
             finalizedList.push(item)
@@ -325,7 +325,7 @@ const VotingList = () => {
     if (ballotType === constants.ballotTypes.ChangedEnv) return envVariableName
     else if (parseInt(ballotType) > 0) { return constants.ballotTypesArr[parseInt(ballotType)] }
     // wait protocol 항목 검색 가능하도록 추가
-    return companyName || '-'
+    return companyName || "-"
   }
 
   const searchBallot = (e) => {
@@ -359,7 +359,7 @@ const VotingList = () => {
 
     const str = e.target.value.toLowerCase()
     // 입력한 값이 없다면 전체 리스트를 보여줌
-    if (str === '') {
+    if (str === "") {
       getBallotDetailInfo()
       return
     }
@@ -392,7 +392,7 @@ const VotingList = () => {
 
     const render = props.map((prop) => {
       return (
-        <div className={cn('voting-list-section')} key={prop.title}>
+        <div className={cn("voting-list-section")} key={prop.title}>
           <VotingTitle
             type='md'
             title={prop.title}
@@ -401,13 +401,13 @@ const VotingList = () => {
           />
           {prop.items.length ? (
             <>
-              <div className={cn('section-inner')}>{prop.items}</div>
-              {prop.title === 'Finalized' &&
+              <div className={cn("section-inner")}>{prop.items}</div>
+              {prop.title === "Finalized" &&
                 finalizedItems.length >= 1 &&
                 finalizedItems.length > visibleFinalizedItems.length && (
                 <MoreButton
-                  text={'More'}
-                  type={'more-btn'}
+                  text={"More"}
+                  type={"more-btn"}
                   onClick={() => {
                     viewingFinalizedItems.current += viewingCount
                     setVisibleFinalizedItems([
@@ -419,13 +419,13 @@ const VotingList = () => {
                   }}
                 />
               )}
-              {prop.title !== 'Finalized' &&
+              {prop.title !== "Finalized" &&
                 activeItems.length + proposalItems.length >= 1 &&
                 activeItems.length + proposalItems.length >
                   visibleActiveItems.length && (
                   <MoreButton
-                  text={'More'}
-                  type={'more-btn'}
+                  text={"More"}
+                  type={"more-btn"}
                   onClick={() => {
                     viewingActiveItems.current += viewingCount
                     setVisibleActiveItems([
@@ -440,11 +440,11 @@ const VotingList = () => {
             </>
           ) : (
             <div className='section-inner empty'>
-              <div className={cn('empty-area')}>
-                <div className={cn('empty-notice')}>
+              <div className={cn("empty-area")}>
+                <div className={cn("empty-notice")}>
                   {/* 23.04.11 수정: 아이콘 삭제 */}
                   {/* <IconEmpty /> */}
-                  <strong className={cn('empty-title')}>No result</strong>
+                  <strong className={cn("empty-title")}>No result</strong>
                 </div>
               </div>
             </div>
@@ -467,11 +467,11 @@ const VotingList = () => {
       />
       <div className='section-body'>
         <div className='wrap'>
-          <div className={cn('content-filter-wrap')}>
+          <div className={cn("content-filter-wrap")}>
             <VotingTitle
               type='sm'
               title=''
-              count={''}
+              count={""}
               searchName='search-type'
               searchBallot={(e) => searchBallot(e)}
               filterData={filterData}
@@ -480,16 +480,16 @@ const VotingList = () => {
               isMember={isMember}
               isConnect={isLoggedIn}
             />
-            <div className={cn('filter-wrap')} />
+            <div className={cn("filter-wrap")} />
             {/* filter-wrap?? */}
           </div>
           {/* voting time over - filter와 상관없이 고정 */}
           {revokeItems.length > 0 && (
-            <div className={cn('voting-list-section', 'revoke-item')}>
-              {console.log('revoke', revokeItems)}
+            <div className={cn("voting-list-section", "revoke-item")}>
+              {console.log("revoke", revokeItems)}
               <VotingTitle
                 type='md'
-                title={'Voting Time Over'}
+                title={"Voting Time Over"}
                 count={revokeItems.length}
                 exp={
                   <>
@@ -501,7 +501,7 @@ const VotingList = () => {
                   </>
                 }
               />
-              <div className={cn('section-inner')}>{revokeItems}</div>
+              <div className={cn("section-inner")}>{revokeItems}</div>
             </div>
           )}
           {renderSelectedItems}

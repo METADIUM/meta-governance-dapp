@@ -1,18 +1,18 @@
-import { Layout } from 'antd'
-import React, { useContext, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Layout } from "antd"
+import React, { useContext, useEffect } from "react"
+import { useLocation } from "react-router-dom"
 
-import { AccessFailedModal } from './components'
-import { AuthCtx } from './contexts/AuthContext'
-import { GovInitCtx } from './contexts/GovernanceInitContext'
-import { ModalContext } from './contexts/ModalContext'
-import { usePrevious } from './hooks/usePrevious'
-import Loading from './Loading'
-import { web3Instance } from './web3'
+import { AccessFailedModal } from "./components"
+import { AuthCtx } from "./contexts/AuthContext"
+import { GovInitCtx } from "./contexts/GovernanceInitContext"
+import { ModalContext } from "./contexts/ModalContext"
+import { usePrevious } from "./hooks/usePrevious"
+import Loading from "./Loading"
+import { web3Instance } from "./web3"
 
-import './App.css'
-import './components/style/style.css'
-import './assets/scss/common.scss'
+import "./App.css"
+import "./components/style/style.css"
+import "./assets/scss/common.scss"
 
 const { Content } = Layout
 
@@ -45,19 +45,19 @@ const App = ({ children }) => {
   }, [address, updateAccountData])
 
   const checkPath =
-    pathname === '/wait' ||
-    pathname === '/governance' ||
-    pathname === '/wait/' ||
-    pathname === '/governance/' ||
-    pathname === '/governance/detail' ||
-    pathname === '/history' ||
-    pathname === '/history/'
+    pathname === "/wait" ||
+    pathname === "/governance" ||
+    pathname === "/wait/" ||
+    pathname === "/governance/" ||
+    pathname === "/governance/detail" ||
+    pathname === "/history" ||
+    pathname === "/history/"
 
   return (
     <>
       <AccessFailedModal visible={!!accessFailMsg} message={accessFailMsg} />
       {(isContractReady && isWeb3Loaded) ||
-      window.navigator.userAgent === 'ReactSnap' ? (
+      window.navigator.userAgent === "ReactSnap" ? (
           checkPath ? (
           <>
             {React.cloneElement(children, {
@@ -78,8 +78,8 @@ const App = ({ children }) => {
                 </div>
               ) : (
                 getErrModal(
-                  'This is an unknown network. Please connect to METADIUM network',
-                  'Connecting Error'
+                  "This is an unknown network. Please connect to METADIUM network",
+                  "Connecting Error"
                 )
               )}
             </Content>

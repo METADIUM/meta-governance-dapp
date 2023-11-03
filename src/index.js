@@ -1,21 +1,21 @@
-import React from 'react'
-import { hydrate, render } from 'react-dom'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import React from "react"
+import { hydrate, render } from "react-dom"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 
-import App from './App'
-import './index.css'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import WalletConnector from './components/WalletConnector'
-import { AuthProvider } from './contexts/AuthContext'
-import { GovInitProvider } from './contexts/GovernanceInitContext'
-import { ModalProvider } from './contexts/ModalContext'
-import Home from './Home'
-import Loading from './Loading'
-import VotingDetail from './pages/voting/detail'
-import VotingList from './pages/voting/list'
-import Proposal from './pages/voting/proposal'
-import * as serviceWorker from './serviceWorker'
+import App from "./App"
+import "./index.css"
+import Footer from "./components/Footer"
+import Header from "./components/Header"
+import WalletConnector from "./components/WalletConnector"
+import { AuthProvider } from "./contexts/AuthContext"
+import { GovInitProvider } from "./contexts/GovernanceInitContext"
+import { ModalProvider } from "./contexts/ModalContext"
+import Home from "./Home"
+import Loading from "./Loading"
+import VotingDetail from "./pages/voting/detail"
+import VotingList from "./pages/voting/list"
+import Proposal from "./pages/voting/proposal"
+import * as serviceWorker from "./serviceWorker"
 
 const renderApp = () => (
   <BrowserRouter>
@@ -43,7 +43,7 @@ const renderApp = () => (
   </BrowserRouter>
 )
 
-const rootElement = document.getElementById('root')
+const rootElement = document.getElementById("root")
 if (rootElement.hasChildNodes()) {
   hydrate(renderApp(), rootElement)
 } else {
