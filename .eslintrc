@@ -2,6 +2,7 @@
   "extends": ["react-app", "eslint:recommended"],
   "plugins": ["unused-imports", "import"],
   "rules": {
+    "quotes": ["error", "double"],
     "import/order": [
       "error",
       {

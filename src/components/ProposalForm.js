@@ -1,29 +1,29 @@
-import { Button, Select, Icon } from 'antd'
-import React from 'react'
+import { Button, Select, Icon } from "antd"
+import React from "react"
 
-import * as PComponent from './Forms'
-import * as MComponent from './MyForm'
+import * as PComponent from "./Forms"
+import * as MComponent from "./MyForm"
 import {
   constants,
   ENV_MY_INFO_PROPOSAL_LIST,
   ENV_NAMES,
   ENV_VOTING_PROPOSAL_LIST
-} from '../constants'
-import * as util from '../util'
+} from "../constants"
+import * as util from "../util"
 import {
   callContractMethod,
   encodeABIValueInMethod,
   web3Instance
-} from '../web3'
+} from "../web3"
 
 class ProposalForm extends React.Component {
   data = {
     formData: {},
-    selectedTopic: ''
+    selectedTopic: ""
   };
 
   state = {
-    selectedTopic: '',
+    selectedTopic: "",
     // Add Authority Member
     // Replace Authority Member
     newAddrErr: false,
@@ -60,7 +60,7 @@ class ProposalForm extends React.Component {
     stakingAddrErr: false,
     // Remove Authority Member
     oldLockAmountErr: false,
-    showLockAmount: '',
+    showLockAmount: "",
     // Voting Address
     newVotingAddrErr: false,
     // Reward Address
@@ -74,40 +74,40 @@ class ProposalForm extends React.Component {
   componentDidUpdate (props) {
     // changes due to the use of the same component
     if (
-      props.selectedMenu === 'menu-voting' &&
-      this.props.selectedMenu === 'menu-myinfo'
+      props.selectedMenu === "menu-voting" &&
+      this.props.selectedMenu === "menu-myinfo"
     ) {
       // setting select default value (Myinfo)
-      this.data.selectedTopic = ''
-      this.setState({ selectedTopic: '' })
+      this.data.selectedTopic = ""
+      this.setState({ selectedTopic: "" })
     }
   }
 
   getLockAmount = async (addr) => {
     if (!/^0x[a-fA-F0-9]{40}$/.test(addr)) {
       this.props.getErrModal(
-        'Staking Address is Invalid.',
-        'Proposal Submit Error'
+        "Staking Address is Invalid.",
+        "Proposal Submit Error"
       )
-      this.setState({ showLockAmount: '' })
+      this.setState({ showLockAmount: "" })
       return
     } else if (!web3Instance.web3.utils.checkAddressChecksum(addr)) {
       addr = web3Instance.web3.utils.toChecksumAddress(addr)
     }
-    if (!(await callContractMethod(web3Instance, 'GovImp', 'isMember', addr))) {
+    if (!(await callContractMethod(web3Instance, "GovImp", "isMember", addr))) {
       this.props.getErrModal(
-        'Non-existing Member Address.',
-        'Proposal Submit Error'
+        "Non-existing Member Address.",
+        "Proposal Submit Error"
       )
-      this.setState({ showLockAmount: '' })
+      this.setState({ showLockAmount: "" })
       return
     }
 
     try {
       let lockedBalance = await callContractMethod(
         web3Instance,
-        'Staking',
-        'lockedBalanceOf',
+        "Staking",
+        "lockedBalanceOf",
         addr
       )
       this.setState({
@@ -117,7 +117,7 @@ class ProposalForm extends React.Component {
       console.log(err)
       this.props.getErrModal(err.message, err.name)
       this.props.convertLoading(false)
-      this.setState({ showLockAmount: '' })
+      this.setState({ showLockAmount: "" })
     }
   };
 
@@ -126,12 +126,12 @@ class ProposalForm extends React.Component {
       const elements = window.document.forms[0].elements
       Object.keys(elements).forEach((key) => {
         switch (elements[key].name) {
-          case 'newLockAmount':
-          case 'oldLockAmount':
+          case "newLockAmount":
+          case "oldLockAmount":
             elements[key].value = this.props.stakingMin
             break
           default:
-            elements[key].value = ''
+            elements[key].value = ""
         }
       })
     }
@@ -161,7 +161,7 @@ class ProposalForm extends React.Component {
     this.resetForm()
 
     Object.keys(this.state)
-      .filter((key) => key.indexOf('Err') > 0)
+      .filter((key) => key.indexOf("Err") > 0)
       .forEach((key) => {
         this.setState({ [key]: false })
       })
@@ -169,13 +169,13 @@ class ProposalForm extends React.Component {
 
   // when the select option has changed
   handleSelectChange (e) {
-    let [name, value] = e.split('_')
+    let [name, value] = e.split("_")
     this.data.formData[name] = value
   }
 
   handleChange = (e) => {
     // if selected value is topic
-    if (typeof e === 'string') {
+    if (typeof e === "string") {
       this.handleSelectChange(e)
       return
     }
@@ -183,28 +183,28 @@ class ProposalForm extends React.Component {
     this.data.formData[e.target.name] = e.target.value
     switch (e.target.name) {
       // Add Authority Member
-      case 'newAddr':
+      case "newAddr":
         this.setState({ newAddrErr: !util.checkAddress(e.target.value) })
         break
-      case 'newName':
+      case "newName":
         this.setState({ newNameErr: !util.checkName(e.target.value) })
         break
-      case 'newLockAmount':
+      case "newLockAmount":
         if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
             newLockAmountErr: !this.checkLockAmount(e.target.value)
           })
         }
         break
-      case 'newNode':
+      case "newNode":
         this.setState({ newNodeErr: !util.checkNode(e.target.value) })
         break
       // Replace Authority Member
-      case 'stakingAddr':
+      case "stakingAddr":
         this.setState({ stakingAddrErr: !util.checkAddress(e.target.value) })
         break
       // Remove Authority Member
-      case 'oldLockAmount':
+      case "oldLockAmount":
         if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
             oldLockAmountErr: !this.checkLockAmount(e.target.value)
@@ -212,30 +212,30 @@ class ProposalForm extends React.Component {
         }
         break
       // Governance Contract Address
-      case 'newGovAddr':
+      case "newGovAddr":
         this.setState({ newGovAddrErr: !util.checkAddress(e.target.value) })
         break
       // Voting Duration Setting
-      case 'votDurationMin':
+      case "votDurationMin":
         if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           const { votDurationMin, votDurationMax } = this.data.formData
           this.setState({
             votDurationErr: util.checkNumberRange(
-              'min',
+              "min",
               votDurationMin,
               votDurationMax
             )
           })
         }
         break
-      case 'votDurationMax':
+      case "votDurationMax":
         if (!/^([0-9]*)$/.test(e.target.value)) {
           this.data.formData[e.target.name] = originStr
         } else {
           const { votDurationMin, votDurationMax } = this.data.formData
           this.setState({
             votDurationErr: util.checkNumberRange(
-              'max',
+              "max",
               votDurationMin,
               votDurationMax
             )
@@ -243,13 +243,13 @@ class ProposalForm extends React.Component {
         }
         break
       // Authority Member Staking Amount
-      case 'authMemSkAmountMin':
+      case "authMemSkAmountMin":
         if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           const { authMemSkAmountMin, authMemSkAmountMax } = this.data.formData
           this.setState({
             authMemSkAmountErr:
               util.checkNumberRange(
-                'min',
+                "min",
                 authMemSkAmountMin,
                 authMemSkAmountMax
               ) ||
@@ -260,13 +260,13 @@ class ProposalForm extends React.Component {
           })
         }
         break
-      case 'authMemSkAmountMax':
+      case "authMemSkAmountMax":
         if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           const { authMemSkAmountMin, authMemSkAmountMax } = this.data.formData
           this.setState({
             authMemSkAmountErr:
               util.checkNumberRange(
-                'max',
+                "max",
                 authMemSkAmountMin,
                 authMemSkAmountMax
               ) ||
@@ -278,7 +278,7 @@ class ProposalForm extends React.Component {
         }
         break
       // Block Creation Time
-      case 'blockCreation':
+      case "blockCreation":
         if (!/^([0-9.]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
             blockCreationErr: !util.checkBlockCreationTime(e.target.value)
@@ -286,10 +286,10 @@ class ProposalForm extends React.Component {
         }
         break
       // Block Reward Distribution Method
-      case 'blockRate1':
-      case 'blockRate2':
-      case 'blockRate3':
-      case 'blockRate4':
+      case "blockRate1":
+      case "blockRate2":
+      case "blockRate3":
+      case "blockRate4":
         if (!/^[0-9]*\.?([0-9]{1,2})?$/.test(e.target.value)) {
           this.data.formData[e.target.name] = originStr
         } else {
@@ -313,7 +313,7 @@ class ProposalForm extends React.Component {
         }
         break
       // Block Reward Amount
-      case 'blockRewardAmount':
+      case "blockRewardAmount":
         if (!/^([0-9.]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
             blockRewardAmountErr: !util.checkRewardAmount(e.target.value)
@@ -321,7 +321,7 @@ class ProposalForm extends React.Component {
         }
         break
       // maxPriorityFeePerGas
-      case 'maxPriorityFeePerGas':
+      case "maxPriorityFeePerGas":
         if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
             maxPriorityFeePerGasErr: !util.checkPrice(e.target.value)
@@ -329,24 +329,24 @@ class ProposalForm extends React.Component {
         }
         break
       // Gas Limit & baseFee
-      case 'gasLimit':
+      case "gasLimit":
         if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else this.setState({ gasLimitErr: !util.checkPrice(e.target.value) })
         break
-      case 'maxBaseFee':
+      case "maxBaseFee":
         if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
             maxBaseFeeErr: !util.checkPrice(e.target.value)
           })
         }
         break
-      case 'baseFeeMaxChangeRate':
+      case "baseFeeMaxChangeRate":
         if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
             baseFeeMaxChangeRateErr: !util.checkPrice(e.target.value)
           })
         }
         break
-      case 'gasTargetPercentage':
+      case "gasTargetPercentage":
         if (!/^([0-9]*)$/.test(e.target.value)) { this.data.formData[e.target.name] = originStr } else {
           this.setState({
             gasTargetPercentageErr: !util.checkPrice(e.target.value)
@@ -354,11 +354,11 @@ class ProposalForm extends React.Component {
         }
         break
       // Voting Address
-      case 'newVotingAddr':
+      case "newVotingAddr":
         this.setState({ newVotingAddrErr: !util.checkAddress(e.target.value) })
         break
       // Reward Address
-      case 'newRewardAddr':
+      case "newRewardAddr":
         this.setState({ newRewardAddrErr: !util.checkAddress(e.target.value) })
         break
       default:
@@ -378,42 +378,42 @@ class ProposalForm extends React.Component {
     if (
       !(await callContractMethod(
         web3Instance,
-        'GovImp',
-        'isMember',
+        "GovImp",
+        "isMember",
         this.props.defaultAccount
       )) &&
       !constants.debugMode
     ) {
       return this.props.getErrModal(
-        'You are not Governance Member.',
-        'Proposal Submit Error'
+        "You are not Governance Member.",
+        "Proposal Submit Error"
       )
     }
     const { selectedTopic } = this.state
     switch (selectedTopic) {
-      case 'AddAuthorityMember': {
+      case "AddAuthorityMember": {
         const { staker, lockAmount } = refineData
         const newLockedAmount = Number(lockAmount)
         // get the balance of staking address
         const balance = Number(
           await callContractMethod(
             web3Instance,
-            'Staking',
-            'availableBalanceOf',
+            "Staking",
+            "availableBalanceOf",
             staker
           )
         )
         // check if addresses already exist
         const isMember = await callContractMethod(
           web3Instance,
-          'GovImp',
-          'isMember',
+          "GovImp",
+          "isMember",
           staker
         )
         if (isMember) {
           return this.props.getErrModal(
-            'Existing Member Address.',
-            'Proposal Submit Error'
+            "Existing Member Address.",
+            "Proposal Submit Error"
           )
         }
         // check if addresses already voted
@@ -422,61 +422,61 @@ class ProposalForm extends React.Component {
         )
         if (inBallotMember) {
           return this.props.getErrModal(
-            'Address with Existing Ballot.',
-            'Proposal Submit Error'
+            "Address with Existing Ballot.",
+            "Proposal Submit Error"
           )
         }
         // check if staking address has META
         if (balance < newLockedAmount) {
           return this.props.getErrModal(
-            'Not Enough META to Stake.',
-            'Proposal Submit Error'
+            "Not Enough META to Stake.",
+            "Proposal Submit Error"
           )
         }
         return false
       }
-      case 'ReplaceAuthorityMember': {
+      case "ReplaceAuthorityMember": {
         const { oldStaker, staker, lockAmount } = refineData
         const newLockedAmount = Number(lockAmount)
         // get the balance of old, new addresses
         const oldMemberBalance = await callContractMethod(
           web3Instance,
-          'Staking',
-          'lockedBalanceOf',
+          "Staking",
+          "lockedBalanceOf",
           oldStaker
         )
         const newMemberBalance = Number(
           await callContractMethod(
             web3Instance,
-            'Staking',
-            'availableBalanceOf',
+            "Staking",
+            "availableBalanceOf",
             staker
           )
         )
         // check if old address does not exist
         const isMemberOldAddr = await callContractMethod(
           web3Instance,
-          'GovImp',
-          'isMember',
+          "GovImp",
+          "isMember",
           oldStaker
         )
         if (!isMemberOldAddr) {
           return this.props.getErrModal(
-            'Non-existing Member Address (Old).',
-            'Proposal Submit Error'
+            "Non-existing Member Address (Old).",
+            "Proposal Submit Error"
           )
         }
         // check if new addresses already exist
         const isMemberNewAddr = await callContractMethod(
           web3Instance,
-          'GovImp',
-          'isMember',
+          "GovImp",
+          "isMember",
           staker
         )
         if (isMemberNewAddr) {
           return this.props.getErrModal(
-            'Existing Member Address.',
-            'Proposal Submit Error'
+            "Existing Member Address.",
+            "Proposal Submit Error"
           )
         }
         // check if old address already voted
@@ -485,8 +485,8 @@ class ProposalForm extends React.Component {
         )
         if (inBallotOldMember) {
           return this.props.getErrModal(
-            'Address with Existing Ballot (Old).',
-            'Proposal Submit Error'
+            "Address with Existing Ballot (Old).",
+            "Proposal Submit Error"
           )
         }
         // check if new address already voted
@@ -495,39 +495,39 @@ class ProposalForm extends React.Component {
         )
         if (isBallotNewMember) {
           return this.props.getErrModal(
-            'Address with Existing Ballot (New).',
-            'Proposal Submit Error'
+            "Address with Existing Ballot (New).",
+            "Proposal Submit Error"
           )
         }
         // check the balance of the old address is not same as lockAmount
         if (Number(oldMemberBalance) !== newLockedAmount) {
           return this.props.getErrModal(
             [
-              'Invalid Replace META Amount',
+              "Invalid Replace META Amount",
               <br />,
               `(Old Address: ${util.convertWeiToEther(
                 oldMemberBalance,
-                'ether'
+                "ether"
               )} META Locked)`
             ],
-            'Proposal Submit Error'
+            "Proposal Submit Error"
           )
         }
         // check if staking address has META
         if (newMemberBalance < newLockedAmount) {
           return this.props.getErrModal(
-            'Not Enough META Stake (New)',
-            'Proposal Submit Error'
+            "Not Enough META Stake (New)",
+            "Proposal Submit Error"
           )
         }
         return false
       }
-      case 'RemoveAuthorityMember': {
+      case "RemoveAuthorityMember": {
         const { staker, lockAmount } = refineData
         const balance = await callContractMethod(
           web3Instance,
-          'Staking',
-          'lockedBalanceOf',
+          "Staking",
+          "lockedBalanceOf",
           staker
         )
         const lockedAmount = Number(lockAmount)
@@ -535,14 +535,14 @@ class ProposalForm extends React.Component {
         // check if addresses already exist
         const isMember = await callContractMethod(
           web3Instance,
-          'GovImp',
-          'isMember',
+          "GovImp",
+          "isMember",
           staker
         )
         if (!isMember) {
           return this.props.getErrModal(
-            'Non-existing Member Address.',
-            'Proposal Submit Error'
+            "Non-existing Member Address.",
+            "Proposal Submit Error"
           )
         }
         // check if new address already voted
@@ -551,27 +551,27 @@ class ProposalForm extends React.Component {
         )
         if (isBallotMember) {
           return this.props.getErrModal(
-            'Address with Existing Ballot.',
-            'Proposal Submit Error'
+            "Address with Existing Ballot.",
+            "Proposal Submit Error"
           )
         }
         // check if the balance is small
         if (balance < lockedAmount) {
           return this.props.getErrModal(
-            'Locked Amount must be less than or equal to Unlocked Amount.',
-            'Proposal Submit Error'
+            "Locked Amount must be less than or equal to Unlocked Amount.",
+            "Proposal Submit Error"
           )
         }
         return false
       }
-      case 'GovernanceContractAddress': {
+      case "GovernanceContractAddress": {
         const { newGovAddr } = refineData
         // check if address is contract code
         const code = await web3Instance.web3.eth.getCode(newGovAddr)
-        if (code === '0x') {
+        if (code === "0x") {
           return this.props.getErrModal(
-            'Address is not a Contract Address.',
-            'Proposal Submit Error'
+            "Address is not a Contract Address.",
+            "Proposal Submit Error"
           )
         }
         return false
@@ -589,7 +589,7 @@ class ProposalForm extends React.Component {
 
     try {
       switch (selectedTopic) {
-        case 'AddAuthorityMember': {
+        case "AddAuthorityMember": {
           const { newAddr, newName, newNode, newLockAmount } = data
           // check undefined
           if (util.checkUndefined(newAddr)) {
@@ -612,8 +612,8 @@ class ProposalForm extends React.Component {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToAddMember',
+              "GovImp",
+              "addProposalToAddMember",
               trx
             )
           checkData = {
@@ -630,7 +630,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'ReplaceAuthorityMember': {
+        case "ReplaceAuthorityMember": {
           const { stakingAddr, newAddr, newName, newNode, newLockAmount } =
             data
           // check undefined
@@ -659,8 +659,8 @@ class ProposalForm extends React.Component {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeMember',
+              "GovImp",
+              "addProposalToChangeMember",
               trx
             )
           checkData = {
@@ -678,7 +678,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'RemoveAuthorityMember': {
+        case "RemoveAuthorityMember": {
           const { stakingAddr, oldLockAmount } = data
           // check undefined
           if (util.checkUndefined(stakingAddr)) {
@@ -689,8 +689,8 @@ class ProposalForm extends React.Component {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToRemoveMember',
+              "GovImp",
+              "addProposalToRemoveMember",
               trx
             )
           checkData = {
@@ -701,7 +701,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'GovernanceContractAddress': {
+        case "GovernanceContractAddress": {
           const { newGovAddr } = data
           // check undefined
           if (util.checkUndefined(newGovAddr)) {
@@ -712,8 +712,8 @@ class ProposalForm extends React.Component {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeGov',
+              "GovImp",
+              "addProposalToChangeGov",
               trx
             )
           checkData = {
@@ -723,7 +723,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'VotingDurationSetting': {
+        case "VotingDurationSetting": {
           const { votDurationMin, votDurationMax } = data
           // check undefined
           if (util.checkUndefined(votDurationMin)) {
@@ -736,7 +736,7 @@ class ProposalForm extends React.Component {
             ENV_NAMES.ENV_BALLOT_DURATION_MIN_MAX
           )
           const envVal = util.encodeParameters(
-            ['uint256', 'uint256'],
+            ["uint256", "uint256"],
             [
               util.convertDayToSeconds(votDurationMin),
               util.convertDayToSeconds(votDurationMax)
@@ -745,8 +745,8 @@ class ProposalForm extends React.Component {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeEnv',
+              "GovImp",
+              "addProposalToChangeEnv",
               trx
             )
           checkData = {
@@ -758,7 +758,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'AuthorityMemberStakingAmount': {
+        case "AuthorityMemberStakingAmount": {
           const { authMemSkAmountMin, authMemSkAmountMax } = data
           // check undefined
           if (util.checkUndefined(authMemSkAmountMin)) {
@@ -773,7 +773,7 @@ class ProposalForm extends React.Component {
             ENV_NAMES.ENV_STAKING_MIN_MAX
           )
           const envVal = util.encodeParameters(
-            ['uint256', 'uint256'],
+            ["uint256", "uint256"],
             [
               util.convertEtherToWei(authMemSkAmountMin),
               util.convertEtherToWei(authMemSkAmountMax)
@@ -782,8 +782,8 @@ class ProposalForm extends React.Component {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeEnv',
+              "GovImp",
+              "addProposalToChangeEnv",
               trx
             )
           checkData = {
@@ -795,7 +795,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'BlockCreationTime': {
+        case "BlockCreationTime": {
           const { blockCreation } = data
           // check undefined
           if (util.checkUndefined(blockCreation) || !Number(blockCreation)) {
@@ -811,14 +811,14 @@ class ProposalForm extends React.Component {
           )
           // convert ms
           const envVal = util.encodeParameters(
-            ['uint256'],
+            ["uint256"],
             [(blockCreation * 1000).toFixed(0)]
           )
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeEnv',
+              "GovImp",
+              "addProposalToChangeEnv",
               trx
             )
           checkData = {
@@ -830,7 +830,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'BlockRewardAmount': {
+        case "BlockRewardAmount": {
           const { blockRewardAmount } = data
           // check undefined
           if (util.checkUndefined(blockRewardAmount)) {
@@ -845,14 +845,14 @@ class ProposalForm extends React.Component {
             ENV_NAMES.ENV_BLOCK_REWARD_AMOUNT
           )
           const envVal = util.encodeParameters(
-            ['uint256'],
+            ["uint256"],
             [util.convertEtherToWei(blockRewardAmount)]
           )
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeEnv',
+              "GovImp",
+              "addProposalToChangeEnv",
               trx
             )
           checkData = {
@@ -864,7 +864,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'BlockRewardDistributionMethod': {
+        case "BlockRewardDistributionMethod": {
           const {
             blockRate1 = 0,
             blockRate2 = 0,
@@ -888,7 +888,7 @@ class ProposalForm extends React.Component {
           )
           // remove decimals
           const envVal = util.encodeParameters(
-            ['uint256', 'uint256', 'uint256', 'uint256'],
+            ["uint256", "uint256", "uint256", "uint256"],
             [
               (Number(blockRate1) * 100).toFixed(0),
               (Number(blockRate2) * 100).toFixed(0),
@@ -899,8 +899,8 @@ class ProposalForm extends React.Component {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeEnv',
+              "GovImp",
+              "addProposalToChangeEnv",
               trx
             )
           checkData = {
@@ -912,7 +912,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'MaxPriorityFeePerGas': {
+        case "MaxPriorityFeePerGas": {
           const { maxPriorityFeePerGas } = data
           // check undefined
           if (
@@ -930,14 +930,14 @@ class ProposalForm extends React.Component {
             ENV_NAMES.ENV_MAX_PRIORITY_FEE_PER_GAS
           )
           const envVal = util.encodeParameters(
-            ['uint256'],
+            ["uint256"],
             [util.convertGWeiToWei(maxPriorityFeePerGas)]
           )
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeEnv',
+              "GovImp",
+              "addProposalToChangeEnv",
               trx
             )
           checkData = {
@@ -949,7 +949,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'GasLimitBaseFee': {
+        case "GasLimitBaseFee": {
           const {
             gasLimit,
             maxBaseFee,
@@ -990,7 +990,7 @@ class ProposalForm extends React.Component {
             ENV_NAMES.ENV_GASLIMIT_AND_BASE_FEE
           )
           const envVal = util.encodeParameters(
-            ['uint256', 'uint256', 'uint256', 'uint256'],
+            ["uint256", "uint256", "uint256", "uint256"],
             [
               util.convertGWeiToWei(gasLimit),
               maxBaseFee,
@@ -1001,8 +1001,8 @@ class ProposalForm extends React.Component {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeEnv',
+              "GovImp",
+              "addProposalToChangeEnv",
               trx
             )
           checkData = {
@@ -1014,7 +1014,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'VotingAddress': {
+        case "VotingAddress": {
           const { staker, name, lockAmount, enode, ip, port, newVotingAddr } =
             data
           const { oldVotingAddr, oldRewardAddr } = this.props
@@ -1036,8 +1036,8 @@ class ProposalForm extends React.Component {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeMember',
+              "GovImp",
+              "addProposalToChangeMember",
               trx
             )
           checkData = {
@@ -1054,7 +1054,7 @@ class ProposalForm extends React.Component {
           }
           break
         }
-        case 'RewardAddress': {
+        case "RewardAddress": {
           const { staker, name, lockAmount, enode, ip, port, newRewardAddr } =
             data
           const { oldVotingAddr, oldRewardAddr } = this.props
@@ -1076,8 +1076,8 @@ class ProposalForm extends React.Component {
           trxFunction = (trx) =>
             encodeABIValueInMethod(
               web3Instance,
-              'GovImp',
-              'addProposalToChangeMember',
+              "GovImp",
+              "addProposalToChangeMember",
               trx
             )
           checkData = {
@@ -1100,14 +1100,14 @@ class ProposalForm extends React.Component {
       // sets the default value of memo, votDuration
       checkData = {
         ...checkData,
-        memo: checkData.memo || '',
+        memo: checkData.memo || "",
         duration:
           util.convertDayToSeconds(checkData.duration) ||
           this.props.votingDurationMin
       }
       // override data for formatting
       refineData = util.refineSubmitData(checkData)
-      if (typeof (await this.handleProposalError(refineData)) === 'undefined') {
+      if (typeof (await this.handleProposalError(refineData)) === "undefined") {
         this.props.convertLoading(false)
         return
       }
@@ -1150,23 +1150,23 @@ class ProposalForm extends React.Component {
         },
         (err, hash) => {
           if (err) {
-            this.props.getErrModal(err.message, 'Proposal Submit Error')
+            this.props.getErrModal(err.message, "Proposal Submit Error")
             this.props.convertLoading(false)
           } else {
             // console.log('hash:', hash)
             this.props.waitForReceipt(hash, async (receipt) => {
               // console.log("Updated :", receipt);
               if (receipt.status) {
-                if (this.props.selectedMenu === 'menu-myinfo') {
+                if (this.props.selectedMenu === "menu-myinfo") {
                   window.location.reload()
                 } else {
-                  await this.props.convertComponent('voting')
+                  await this.props.convertComponent("voting")
                   this.props.convertLoading(false)
                 }
               } else {
                 this.props.getErrModal(
-                  'The transaction could not be sent normally.',
-                  'Proposal Submit Error',
+                  "The transaction could not be sent normally.",
+                  "Proposal Submit Error",
                   receipt.transactionHash
                 )
                 this.props.convertLoading(false)
@@ -1188,14 +1188,14 @@ class ProposalForm extends React.Component {
       const { defaultAccount, memberIdx } = this.props
       const { name, enode, ip, port } = await callContractMethod(
         web3Instance,
-        'GovImp',
-        'getNode',
+        "GovImp",
+        "getNode",
         memberIdx
       )
       const lockAmount = await callContractMethod(
         web3Instance,
-        'Staking',
-        'lockedBalanceOf',
+        "Staking",
+        "lockedBalanceOf",
         defaultAccount
       )
       this.data.formData = {
@@ -1219,7 +1219,7 @@ class ProposalForm extends React.Component {
     const { selectedTopic } = this.state
     const TopicComponent = (topic) => {
       switch (topic) {
-        case 'AddAuthorityMember':
+        case "AddAuthorityMember":
           return (
             <PComponent.AddProposalForm
               newAddrErr={this.state.newAddrErr}
@@ -1229,7 +1229,7 @@ class ProposalForm extends React.Component {
               newNameErr={this.state.newNameErr}
             />
           )
-        case 'ReplaceAuthorityMember':
+        case "ReplaceAuthorityMember":
           return (
             <PComponent.ReplaceProposalForm
               stakingAddrErr={this.state.stakingAddrErr}
@@ -1241,7 +1241,7 @@ class ProposalForm extends React.Component {
               newNodeErr={this.state.newNodeErr}
             />
           )
-        case 'RemoveAuthorityMember':
+        case "RemoveAuthorityMember":
           return (
             <PComponent.RemoveProposalForm
               stakingAddrErr={this.state.stakingAddrErr}
@@ -1252,13 +1252,13 @@ class ProposalForm extends React.Component {
               getLockAmount={this.getLockAmount}
             />
           )
-        case 'GovernanceContractAddress':
+        case "GovernanceContractAddress":
           return (
             <PComponent.GovernanceContractAddressForm
               newGovAddrErr={this.state.newGovAddrErr}
             />
           )
-        case 'VotingDurationSetting':
+        case "VotingDurationSetting":
           return (
             <PComponent.VotingDurationSettingForm
               votDurationErr={this.state.votDurationErr}
@@ -1266,7 +1266,7 @@ class ProposalForm extends React.Component {
               votDurationMax={this.data.formData.votDurationMax}
             />
           )
-        case 'AuthorityMemberStakingAmount':
+        case "AuthorityMemberStakingAmount":
           return (
             <PComponent.AuthorityMemberStakingAmountForm
               authMemSkAmountErr={this.state.authMemSkAmountErr}
@@ -1274,21 +1274,21 @@ class ProposalForm extends React.Component {
               authMemSkAmountMax={this.data.formData.authMemSkAmountMax}
             />
           )
-        case 'BlockCreationTime':
+        case "BlockCreationTime":
           return (
             <PComponent.BlockCreationTime
               blockCreation={this.data.formData.blockCreation}
               blockCreationErr={this.state.blockCreationErr}
             />
           )
-        case 'BlockRewardAmount':
+        case "BlockRewardAmount":
           return (
             <PComponent.BlockRewardAmount
               blockRewardAmount={this.data.formData.blockRewardAmount}
               blockRewardAmountErr={this.state.blockRewardAmountErr}
             />
           )
-        case 'BlockRewardDistributionMethod':
+        case "BlockRewardDistributionMethod":
           return (
             <PComponent.BlockRewardDistributionMethod
               blockRate1={this.data.formData.blockRate1}
@@ -1299,14 +1299,14 @@ class ProposalForm extends React.Component {
               blockRewardDisMthErr={this.state.blockRewardDisMthErr}
             />
           )
-        case 'MaxPriorityFeePerGas':
+        case "MaxPriorityFeePerGas":
           return (
             <PComponent.MaxPriorityFeePerGasForm
               maxPriorityFeePerGas={this.data.formData.maxPriorityFeePerGas}
               maxPriorityFeePerGasErr={this.state.maxPriorityFeePerGasErr}
             />
           )
-        case 'GasLimitBaseFee':
+        case "GasLimitBaseFee":
           return (
             <PComponent.GasLimitBaseFeeForm
               gasLimit={this.data.formData.gasLimit}
@@ -1319,14 +1319,14 @@ class ProposalForm extends React.Component {
               gasTargetPercentageErr={this.state.gasTargetPercentageErr}
             />
           )
-        case 'VotingAddress':
+        case "VotingAddress":
           return (
             <MComponent.VotingAddress
               oldVotingAddr={this.props.oldVotingAddr}
               newVotingAddrErr={this.state.newVotingAddrErr}
             />
           )
-        case 'RewardAddress':
+        case "RewardAddress":
           return (
             <MComponent.RewardAddress
               oldRewardAddr={this.props.oldRewardAddr}
@@ -1357,20 +1357,20 @@ class ProposalForm extends React.Component {
     const { convertComponent, buttonLoading, selectedMenu } = this.props
     const { selectedTopic } = this.state
     const options =
-      selectedMenu === 'menu-myinfo'
+      selectedMenu === "menu-myinfo"
         ? ENV_MY_INFO_PROPOSAL_LIST
         : ENV_VOTING_PROPOSAL_LIST
     return (
       <div>
         <div className='contentDiv container'>
           <div className='backBtnDiv'>
-            {selectedMenu === 'menu-myinfo' ? null : (
+            {selectedMenu === "menu-myinfo" ? null : (
               <Button
                 className={
-                  'btn-fill-white flex flex-center-horizontal text-large ' +
+                  "btn-fill-white flex flex-center-horizontal text-large " +
                   web3Instance.netName
                 }
-                onClick={() => convertComponent('voting')}
+                onClick={() => convertComponent("voting")}
                 loading={buttonLoading}
               >
                 <span>
@@ -1384,11 +1384,11 @@ class ProposalForm extends React.Component {
             <div className='proposalHead'>
               <div className='title flex'>
                 <p className='flex-full text-heavy'>
-                  {selectedMenu === 'menu-myinfo' ? 'MyInfo' : 'New Proposal'}
+                  {selectedMenu === "menu-myinfo" ? "MyInfo" : "New Proposal"}
                 </p>
                 <p>* Mandatory</p>
               </div>
-              {selectedMenu === 'menu-myinfo' && (
+              {selectedMenu === "menu-myinfo" && (
                 <>
                   <div className='flex-full flex-column text-container'>
                     <span>Voting Address: {this.props.oldVotingAddr}</span>
@@ -1397,8 +1397,8 @@ class ProposalForm extends React.Component {
                 </>
               )}
               <p className='subtitle'>
-                {selectedMenu === 'menu-myinfo' ? (
-                  'Replace List'
+                {selectedMenu === "menu-myinfo" ? (
+                  "Replace List"
                 ) : (
                   <>
                     Topic for voting <span className='required'>*</span>
@@ -1419,10 +1419,10 @@ class ProposalForm extends React.Component {
                 ))}
               </Select>
             </div>
-            {selectedTopic !== '' && <div>{this.showProposalForm()}</div>}
+            {selectedTopic !== "" && <div>{this.showProposalForm()}</div>}
           </div>
           {/* reference memo */}
-          {selectedMenu === 'menu-myinfo' ? null : (
+          {selectedMenu === "menu-myinfo" ? null : (
             <div className='contentRefDiv'>
               <p>[Reference]</p>
               <ol>

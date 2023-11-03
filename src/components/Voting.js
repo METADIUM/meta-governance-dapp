@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 
 import {
   ProposalForm,
@@ -7,16 +7,16 @@ import {
   SubHeader,
   SubNav,
   ChangeModal
-} from './'
-import { constants, ENV_PARAMETER_COUNT } from '../constants'
-import Loading from '../Loading'
-import * as util from '../util'
+} from "./"
+import { constants, ENV_PARAMETER_COUNT } from "../constants"
+import Loading from "../Loading"
+import * as util from "../util"
 import {
   callContractMethod,
   encodeABIValueInMethod,
   onlyCallContractMethod,
   web3Instance
-} from '../web3'
+} from "../web3"
 
 // import "./style/style.css";
 
@@ -40,8 +40,8 @@ class Voting extends React.Component {
   state = {
     isBallotLoading: false,
     ballotUpdateDuration: 1,
-    ballotUpdateMemo: 'new memo',
-    position: 'active',
+    ballotUpdateMemo: "new memo",
+    position: "active",
     updateModal: false,
     proposalCount: 5,
     finalizedCount: 5
@@ -163,9 +163,9 @@ class Voting extends React.Component {
         creator === oldStakerAddr
       ) {
         if (oldStakerAddr !== newVotingAddr) {
-          return 'Voting Address'
+          return "Voting Address"
         } else if (oldStakerAddr !== newRewardAddr) {
-          return 'Reward Address'
+          return "Reward Address"
         }
       }
     }
@@ -178,9 +178,9 @@ class Voting extends React.Component {
   setDescription = (type, id) => {
     let { lockAmount } = this.props.ballotMemberOriginData[id]
     lockAmount =
-      typeof lockAmount === 'undefined'
+      typeof lockAmount === "undefined"
         ? 0
-        : util.convertWeiToEther(lockAmount, 'ether')
+        : util.convertWeiToEther(lockAmount, "ether")
     switch (type) {
       // Add Authority Member
       case constants.ballotTypes.AddAuthorityMember: {
@@ -253,32 +253,32 @@ class Voting extends React.Component {
         // number of parameters
         let paramsCnt = ENV_PARAMETER_COUNT[envVariableName]
         for (let i = 1; i <= paramsCnt; i++) {
-          paramsArr.push('uint256')
+          paramsArr.push("uint256")
         }
         const decodeValue = util.decodeParameters(paramsArr, envVariableValue)
         // set description
         let description = `${envVariableName}: `
-        if (envVariableName === 'Voting Duration Setting') {
+        if (envVariableName === "Voting Duration Setting") {
           description += `${util.convertSecondsToDay(
             decodeValue[0]
           )}-${util.convertSecondsToDay(decodeValue[1])} day`
-        } else if (envVariableName === 'Authority Member Staking Amount') {
+        } else if (envVariableName === "Authority Member Staking Amount") {
           description += `${util.convertWeiToEther(
             decodeValue[0]
           )}-${util.convertWeiToEther(decodeValue[1])} META`
-        } else if (envVariableName === 'Block Creation Time') {
+        } else if (envVariableName === "Block Creation Time") {
           description += `${decodeValue[0] / 1000} s`
-        } else if (envVariableName === 'Block Reward Amount') {
+        } else if (envVariableName === "Block Reward Amount") {
           description += `${util.convertWeiToEther(decodeValue[0])} META/Block`
-        } else if (envVariableName === 'Block Reward Distribution Method') {
+        } else if (envVariableName === "Block Reward Distribution Method") {
           description = `Distribution Rate: ${
             decodeValue[0] / 100
           }%, Staking Reward: ${decodeValue[1] / 100}%, Ecosystem: ${
             decodeValue[2] / 100
           }%, Maintenance: ${decodeValue[3] / 100}%`
-        } else if (envVariableName === 'MaxPriorityFeePerGas') {
+        } else if (envVariableName === "MaxPriorityFeePerGas") {
           description += `${util.convertWeiToGWei(decodeValue[0])} GWei`
-        } else if (envVariableName === 'Gas Limit & baseFee') {
+        } else if (envVariableName === "Gas Limit & baseFee") {
           description = `Gas Limit: ${util.convertWeiToGWei(
             decodeValue[0]
           )} GWei\nMax baseFee: ${
@@ -287,11 +287,11 @@ class Voting extends React.Component {
             decodeValue[2]
           }\nGas Target Percentage: ${decodeValue[3]}`
         } else {
-          return 'Wrong Proposal (This label is only test)'
+          return "Wrong Proposal (This label is only test)"
         }
         return (
           <p className='description flex-full'>
-            {description.split('\n').map((line, i) => {
+            {description.split("\n").map((line, i) => {
               return (
                 <span key={i}>
                   {line}
@@ -315,7 +315,7 @@ class Voting extends React.Component {
     // console.log('Start waitForReceipt: ', hash)
     web3Instance.web3.eth.getTransactionReceipt(hash, (err, receipt) => {
       // console.log('getTransactionReceipt: ', receipt)
-      if (err) console.log('err: ', err)
+      if (err) console.log("err: ", err)
 
       if (util.checkUndefined(receipt) || receipt === null) {
         // Try again in 1 second
@@ -331,12 +331,12 @@ class Voting extends React.Component {
 
   onClickDetail = (e, id) => {
     const element = this.ballotDetails.get(id)
-    if (element.style.height === 'auto') {
-      e.target.style.transform = 'rotate(0deg)'
+    if (element.style.height === "auto") {
+      e.target.style.transform = "rotate(0deg)"
       element.style.height = constants.ballotDetailHeightToPixel
     } else {
-      e.target.style.transform = 'rotate(180deg)'
-      element.style.height = 'auto'
+      e.target.style.transform = "rotate(180deg)"
+      element.style.height = "auto"
     }
   };
 
@@ -344,43 +344,43 @@ class Voting extends React.Component {
     const { id, endTime, state } = item
     // check web3
     if (!web3Instance.web3) {
-      this.props.getErrModal('web3 is not exist', 'Voting Error')
+      this.props.getErrModal("web3 is not exist", "Voting Error")
       return
     }
     // check if you've logged in
     if (!this.props.isLogin) {
-      this.props.getErrModal('Please connect your wallet.', 'Voting Error')
+      this.props.getErrModal("Please connect your wallet.", "Voting Error")
       return
     }
     // check if member
     if (!this.props.isMember) {
-      this.props.getErrModal('You are not member.', 'Voting Error')
+      this.props.getErrModal("You are not member.", "Voting Error")
       return
     }
     // check if you've already voted
     const isVoted = await callContractMethod(
       web3Instance,
-      'ballotStorage',
-      'hasAlreadyVoted',
+      "ballotStorage",
+      "hasAlreadyVoted",
       {
         id,
         voter: this.props.defaultAccount
       }
     )
     if (isVoted) {
-      this.props.getErrModal("You've already voted.", 'Voting Error')
+      this.props.getErrModal("You've already voted.", "Voting Error")
       return
     }
     // check if there are items already being voted on
     const isInVoting = await onlyCallContractMethod(
       web3Instance,
-      'GovImp',
-      'getBallotInVoting'
+      "GovImp",
+      "getBallotInVoting"
     )
-    if (!(isInVoting === '0' || isInVoting === item.id.toString())) {
+    if (!(isInVoting === "0" || isInVoting === item.id.toString())) {
       this.props.getErrModal(
-        'Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed.',
-        'Voting Error'
+        "Active has an offer. Proposals in Active must be completed before voting in Proposals can proceed.",
+        "Voting Error"
       )
       return
     }
@@ -389,7 +389,7 @@ class Voting extends React.Component {
       state === constants.ballotState.InProgress &&
       new Date(endTime * 1000) < Date.now()
     ) {
-      this.props.getErrModal('This Ballot is timeouted', 'Voting Error')
+      this.props.getErrModal("This Ballot is timeouted", "Voting Error")
       this.reloadVoting(false)
       return
     }
@@ -397,35 +397,35 @@ class Voting extends React.Component {
     this.props.convertLoading(true)
     let trx = encodeABIValueInMethod(
       web3Instance,
-      'GovImp',
-      'vote',
+      "GovImp",
+      "vote",
       id,
-      value === 'Y'
+      value === "Y"
     )
-    this.sendTransaction(trx, 'Voting')
+    this.sendTransaction(trx, "Voting")
   };
 
   onClickUpdateProposal = (topic, item) => {
     const { id, duration, creator } = item
     // check if you've logged in
     if (!this.props.isLogin) {
-      this.props.getErrModal('Please connect your wallet.', 'Voting Error')
+      this.props.getErrModal("Please connect your wallet.", "Voting Error")
       return
     }
     // check if member
     if (!this.props.isMember) {
-      this.props.getErrModal('You are not member.', 'Voting Error')
+      this.props.getErrModal("You are not member.", "Voting Error")
       return
     }
     // only those who voted are allowed
     if (creator !== this.props.defaultAccount) {
       this.props.getErrModal(
         "You don't have permission to Change or Revoke.",
-        'Voting Error'
+        "Voting Error"
       )
       return
     }
-    if (topic === 'change') {
+    if (topic === "change") {
       this.data.curBallotIdx = id
       this.setState({
         ballotUpdateDuration: duration === 0 ? 1 : duration,
@@ -437,23 +437,23 @@ class Voting extends React.Component {
     this.props.convertLoading(true)
     let trx = encodeABIValueInMethod(
       web3Instance,
-      'BallotStorage',
-      'cancelBallot',
+      "BallotStorage",
+      "cancelBallot",
       id
     )
-    this.sendTransaction(trx, 'Revoke', true)
+    this.sendTransaction(trx, "Revoke", true)
   };
 
   completeModal = async (e) => {
     this.props.convertLoading(true)
     let trx = await encodeABIValueInMethod(
       web3Instance,
-      'BallotStorage',
-      'updateBallotDuration',
+      "BallotStorage",
+      "updateBallotDuration",
       this.data.curBallotIdx,
       util.convertDayToSeconds(this.state.ballotUpdateDuration)
     )
-    this.sendTransaction(trx, 'Change', true)
+    this.sendTransaction(trx, "Change", true)
     this.setState({ updateModal: false })
   };
 
@@ -476,8 +476,8 @@ class Voting extends React.Component {
             if (receipt.status) this.reloadVoting(false, init)
             else {
               this.props.getErrModal(
-                'Transaction has been reverted.',
-                type + ' Error',
+                "Transaction has been reverted.",
+                type + " Error",
                 receipt.transactionHash
               )
             }
@@ -493,13 +493,13 @@ class Voting extends React.Component {
 
   onClickSubMenu = (e) => {
     switch (e.key) {
-      case 'active':
+      case "active":
         if (this.titles.activeTitle) { window.scrollTo(0, this.titles.activeTitle.offsetTop - 70) }
         break
-      case 'proposal':
+      case "proposal":
         if (this.titles.proposalTitle) { window.scrollTo(0, this.titles.proposalTitle.offsetTop - 70) }
         break
-      case 'finalized':
+      case "finalized":
         if (this.titles.finalizedTitle) { window.scrollTo(0, this.titles.finalizedTitle.offsetTop - 70) }
         break
       default:
@@ -510,10 +510,10 @@ class Voting extends React.Component {
 
   onClickReadMore = (state) => {
     switch (state) {
-      case 'proposal':
+      case "proposal":
         this.setState({ proposalCount: this.state.proposalCount + 5 })
         break
-      case 'finalized':
+      case "finalized":
         this.setState({ finalizedCount: this.state.finalizedCount + 5 })
         break
       default:
@@ -568,7 +568,7 @@ class Voting extends React.Component {
   }
 
   convertVotingComponentOveride = () => {
-    this.props.convertVotingComponent('proposal')
+    this.props.convertVotingComponent("proposal")
   };
 
   render () {

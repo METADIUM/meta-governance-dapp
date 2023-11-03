@@ -1,20 +1,20 @@
-import { Select } from 'antd'
-import cn from 'classnames/bind'
-import React from 'react'
+import { Select } from "antd"
+import cn from "classnames/bind"
+import React from "react"
 
-import { ReactComponent as IconArrowDown } from '../../assets/images/ic-select-arrow.svg'
+import { ReactComponent as IconArrowDown } from "../../assets/images/ic-select-arrow.svg"
 
 export default function VotingSelect ({
   filterData,
   className,
-  dropdownClassName = 'voting',
+  dropdownClassName = "voting",
   handleSelect
 }) {
   const Option = Select.Option
   return (
     <Select
       defaultValue={filterData[0]}
-      className={cn('voting-filter', className)}
+      className={cn("voting-filter", className)}
       dropdownClassName={dropdownClassName}
       suffixIcon={<IconArrowDown />}
       onChange={(e) => handleSelect(e)}

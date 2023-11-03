@@ -1,12 +1,12 @@
-import cn from 'classnames/bind'
-import React, { useState, useEffect, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import cn from "classnames/bind"
+import React, { useState, useEffect, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
 
-import VotingSelect from './VotingSelect'
-import VotingSearch from '../../components/voting/VotingSearch'
+import VotingSelect from "./VotingSelect"
+import VotingSearch from "../../components/voting/VotingSearch"
 
 const VotingTitle = ({
-  type = 'md',
+  type = "md",
   title,
   count,
   searchName,
@@ -24,7 +24,7 @@ const VotingTitle = ({
   const [isMobile, setIsMobile] = useState()
   // 필터 보이기 상태변수
   const [isViewFilter, setIsViewFilter] = useState(false)
-  const [checkedData, setCheckedData] = useState('All')
+  const [checkedData, setCheckedData] = useState("All")
   // console.log(checkedData);
   let isMobileType = true
   const navigate = useNavigate()
@@ -38,21 +38,21 @@ const VotingTitle = ({
 
   useEffect(() => {
     handleWindowSizeChange()
-    window.addEventListener('resize', handleWindowSizeChange)
+    window.addEventListener("resize", handleWindowSizeChange)
     return () => {
-      window.removeEventListener('resize', handleWindowSizeChange)
+      window.removeEventListener("resize", handleWindowSizeChange)
     }
   }, [handleWindowSizeChange])
 
   function newProposalBtnClickHandler (event) {
     event.preventDefault()
     btnFunction && btnFunction()
-    window.localStorage.removeItem('selectedTopic')
-    navigate('/voting/proposal')
+    window.localStorage.removeItem("selectedTopic")
+    navigate("/voting/proposal")
   }
 
   return (
-    <div className={cn('voting-title-wrap', type, { 'exp': exp })}>
+    <div className={cn("voting-title-wrap", type, { "exp": exp })}>
       {title && (
         <>
           <strong className='subject'>{title}</strong>
@@ -60,11 +60,11 @@ const VotingTitle = ({
         </>
       )}
       {searchName && ( // "search-type"
-        <div className={cn('voting-title-wrap', type)}>
+        <div className={cn("voting-title-wrap", type)}>
           <div
             className={cn(
-              'detail-search-area',
-              isFilter && isMobile ? 'active' : ''
+              "detail-search-area",
+              isFilter && isMobile ? "active" : ""
             )}
           >
             <VotingSelect

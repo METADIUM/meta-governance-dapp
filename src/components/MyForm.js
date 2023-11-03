@@ -1,10 +1,10 @@
-import { Form } from 'antd'
-import cn from 'classnames/bind'
-import React from 'react'
+import { Form } from "antd"
+import cn from "classnames/bind"
+import React from "react"
 
-import GovButton from './voting/GovButton'
-import VotingInputArea from './voting/VotingInputArea'
-import { shouldPass } from '../util'
+import GovButton from "./voting/GovButton"
+import VotingInputArea from "./voting/VotingInputArea"
+import { shouldPass } from "../util"
 
 // Voting Address
 export const VotingAddress = ({
@@ -16,19 +16,19 @@ export const VotingAddress = ({
   handleSubmit = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn("voting-input-wrap")}>
       <strong>
         Old Voting Address <span className='required'>*</span>
       </strong>
       <VotingInputArea
         myForm
-        inputType={'multiline'}
+        inputType={"multiline"}
         name='oldVotingAddr'
         value={oldVotingAddr}
         disabled
       />
     </div>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn("voting-input-wrap")}>
       <strong>
         New Voting Address <span className='required'>*</span>
       </strong>
@@ -41,7 +41,7 @@ export const VotingAddress = ({
       />
     </div>
     <GovButton
-      text={'Submit'}
+      text={"Submit"}
       disabled={loading || newVotingAddrErr}
       type='bg'
       loading={loading}
@@ -59,19 +59,19 @@ export const RewardAddress = ({
   handleSubmit = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn("voting-input-wrap")}>
       <strong>
         Old Reward Address <span className='required'>*</span>
       </strong>
       <VotingInputArea
         myForm
-        inputType={'multiline'}
+        inputType={"multiline"}
         name='oldRewardAddr'
         value={oldRewardAddr}
         disabled
       />
     </div>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn("voting-input-wrap")}>
       <strong>
         New Reward Address <span className='required'>*</span>
       </strong>
@@ -84,7 +84,7 @@ export const RewardAddress = ({
       />
     </div>
     <GovButton
-      text={'Submit'}
+      text={"Submit"}
       disabled={loading || newRewardAddrErr}
       type='bg'
       loading={loading}

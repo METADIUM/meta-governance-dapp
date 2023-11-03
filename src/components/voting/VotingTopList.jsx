@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react"
 
-import VotingTopDashBoard from './VotingTopDashBoard.jsx'
+import VotingTopDashBoard from "./VotingTopDashBoard.jsx"
 
 const VotingTopList = ({
   isMember,
