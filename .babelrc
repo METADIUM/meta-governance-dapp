@@ -1,0 +1,7 @@
+{
+  "presets": ["@babel/preset-react", "@babel/preset-env"],
+  "plugins": [
+    ["transform-remove-console"],
+    ["@babel/plugin-transform-private-methods", { "loose": true }]
+  ]
+}

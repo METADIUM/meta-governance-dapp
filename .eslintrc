@@ -4,6 +4,7 @@
   "rules": {
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
+    "no-console": "error", //console.log 에러 끄고 싶으면 off 넣으시면 됩니다.
     "import/order": [
       "error",
       {
