@@ -131,7 +131,6 @@ const GovInitProvider = ({ children }) => {
   // get a static list for network status from github repository
   const initAuthorityData = async () => {
     const authorityList = AuthorityList[process.env.REACT_APP_MODE] || [];
-    console.log(authorityList);
     data.authorityOriginData = await refineAuthority(authorityList);
     util.setAuthorityToLocal(data.authorityOriginData);
 
@@ -324,7 +323,8 @@ const GovInitProvider = ({ children }) => {
         isContractReady,
         data,
         accessFailMsg,
-      }}>
+      }}
+    >
       {children}
     </GovInitCtx.Provider>
   );

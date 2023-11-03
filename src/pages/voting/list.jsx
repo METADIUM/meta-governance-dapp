@@ -113,11 +113,11 @@ const VotingList = () => {
     setLoading(true);
     const trx = id.length
       ? await web3Instance.web3Contracts.WaitGovernance.methods
-        .finalizeEndedVote(id)
-        .encodeABI()
+          .finalizeEndedVote(id)
+          .encodeABI()
       : await web3Instance.web3Contracts.GovImp.methods
-        .finalizeEndedVote()
-        .encodeABI();
+          .finalizeEndedVote()
+          .encodeABI();
 
     // 각 네트워크에 맞는 GovImp address (또는 WaitGovernance address) 가져오기
     const network = process.env.REACT_APP_NETWORK_TYPE;
@@ -125,8 +125,8 @@ const VotingList = () => {
       network === "mainnet"
         ? MAINNET_CONTRACTS
         : network === "testnet"
-          ? TESTNET_CONTRACTS
-          : DEVMETANET_CONTRACTS;
+        ? TESTNET_CONTRACTS
+        : DEVMETANET_CONTRACTS;
     const to = contracts.filter(
       (item) => item.name === `${id.length ? "WaitGovernance" : "GovImp"}`
     )[0].address;
@@ -323,7 +323,9 @@ const VotingList = () => {
     //   }
     // }
     if (ballotType === constants.ballotTypes.ChangedEnv) return envVariableName;
-    else if (parseInt(ballotType) > 0) { return constants.ballotTypesArr[parseInt(ballotType)]; }
+    else if (parseInt(ballotType) > 0) {
+      return constants.ballotTypesArr[parseInt(ballotType)];
+    }
     // wait protocol 항목 검색 가능하도록 추가
     return companyName || "-";
   };
@@ -394,7 +396,7 @@ const VotingList = () => {
       return (
         <div className={cn("voting-list-section")} key={prop.title}>
           <VotingTitle
-            type='md'
+            type="md"
             title={prop.title}
             count={prop.count}
             isMember={isMember}
@@ -405,41 +407,41 @@ const VotingList = () => {
               {prop.title === "Finalized" &&
                 finalizedItems.length >= 1 &&
                 finalizedItems.length > visibleFinalizedItems.length && (
-                <MoreButton
-                  text={"More"}
-                  type={"more-btn"}
-                  onClick={() => {
-                    viewingFinalizedItems.current += viewingCount;
-                    setVisibleFinalizedItems([
-                      ...finalizedItems.slice(
-                        0,
-                        viewingFinalizedItems.current
-                      )
-                    ]);
-                  }}
-                />
-              )}
+                  <MoreButton
+                    text={"More"}
+                    type={"more-btn"}
+                    onClick={() => {
+                      viewingFinalizedItems.current += viewingCount;
+                      setVisibleFinalizedItems([
+                        ...finalizedItems.slice(
+                          0,
+                          viewingFinalizedItems.current
+                        )
+                      ]);
+                    }}
+                  />
+                )}
               {prop.title !== "Finalized" &&
                 activeItems.length + proposalItems.length >= 1 &&
                 activeItems.length + proposalItems.length >
                   visibleActiveItems.length && (
                   <MoreButton
-                  text={"More"}
-                  type={"more-btn"}
-                  onClick={() => {
-                    viewingActiveItems.current += viewingCount;
-                    setVisibleActiveItems([
-                      ...[...activeItems, ...proposalItems].slice(
-                        0,
-                        viewingActiveItems.current
-                      )
-                    ]);
-                  }}
-                />
-              )}
+                    text={"More"}
+                    type={"more-btn"}
+                    onClick={() => {
+                      viewingActiveItems.current += viewingCount;
+                      setVisibleActiveItems([
+                        ...[...activeItems, ...proposalItems].slice(
+                          0,
+                          viewingActiveItems.current
+                        )
+                      ]);
+                    }}
+                  />
+                )}
             </>
           ) : (
-            <div className='section-inner empty'>
+            <div className="section-inner empty">
               <div className={cn("empty-area")}>
                 <div className={cn("empty-notice")}>
                   {/* 23.04.11 수정: 아이콘 삭제 */}
@@ -465,14 +467,14 @@ const VotingList = () => {
         approvedCount={itemCount.approved}
         rejectedCount={itemCount.rejected}
       />
-      <div className='section-body'>
-        <div className='wrap'>
+      <div className="section-body">
+        <div className="wrap">
           <div className={cn("content-filter-wrap")}>
             <VotingTitle
-              type='sm'
-              title=''
+              type="sm"
+              title=""
               count={""}
-              searchName='search-type'
+              searchName="search-type"
               searchBallot={(e) => searchBallot(e)}
               filterData={filterData}
               handleSelect={(e) => handleSelect(e)}
@@ -486,9 +488,8 @@ const VotingList = () => {
           {/* voting time over - filter와 상관없이 고정 */}
           {revokeItems.length > 0 && (
             <div className={cn("voting-list-section", "revoke-item")}>
-              {console.log("revoke", revokeItems)}
               <VotingTitle
-                type='md'
+                type="md"
                 title={"Voting Time Over"}
                 count={revokeItems.length}
                 exp={
