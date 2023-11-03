@@ -60,6 +60,7 @@
   ],
   "devDependencies": {
     "babel-plugin-import": "^1.11.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "customize-cra": "^0.2.11",
     "dotenv-cli": "^5.1.0",
     "eslint-plugin-import": "^2.29.0",
