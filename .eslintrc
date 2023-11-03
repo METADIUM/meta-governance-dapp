@@ -3,6 +3,7 @@
   "plugins": ["unused-imports", "import"],
   "rules": {
     "quotes": ["error", "double"],
+    "semi": ["error", "always"],
     "import/order": [
       "error",
       {

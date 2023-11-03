@@ -1,5 +1,5 @@
-import cn from "classnames/bind"
-import React from "react"
+import cn from "classnames/bind";
+import React from "react";
 
 export default function VotingStickChart ({
   title,
@@ -27,5 +27,5 @@ export default function VotingStickChart ({
         <span style={{ width: `${percent}%` }} className={cn("rate")} />
       </div>
     </div>
-  )
+  );
 }

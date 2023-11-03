@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 const GovButton = ({ onClick, text, disabled, loading, type }) => {
   return (
@@ -7,12 +7,12 @@ const GovButton = ({ onClick, text, disabled, loading, type }) => {
       disabled={disabled || loading}
       onClick={() => {
         if (onClick) {
-          onClick()
+          onClick();
         }
       }}>
       {text}
     </button>
-  )
-}
+  );
+};
 
-export default GovButton
+export default GovButton;

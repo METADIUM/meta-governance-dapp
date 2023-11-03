@@ -1,24 +1,24 @@
-import cn from "classnames/bind"
-import { throttle } from "lodash"
-import React, { useState, useEffect, useCallback } from "react"
+import cn from "classnames/bind";
+import { throttle } from "lodash";
+import React, { useState, useEffect, useCallback } from "react";
 
-import { ReactComponent as IconFooterLogo } from "../assets/images/footer-logo-grey.svg"
-import { ReactComponent as IconDiscord } from "../assets/images/ic_discord.svg"
-import { ReactComponent as IconMedium } from "../assets/images/ic_medium.svg"
-import { ReactComponent as IconTelegram } from "../assets/images/ic_telegram.svg"
-import { ReactComponent as IconTwitter } from "../assets/images/ic_twitter.svg"
+import { ReactComponent as IconFooterLogo } from "../assets/images/footer-logo-grey.svg";
+import { ReactComponent as IconDiscord } from "../assets/images/ic_discord.svg";
+import { ReactComponent as IconMedium } from "../assets/images/ic_medium.svg";
+import { ReactComponent as IconTelegram } from "../assets/images/ic_telegram.svg";
+import { ReactComponent as IconTwitter } from "../assets/images/ic_twitter.svg";
 
 const Footer = () => {
   const [offset, setOffset] = useState({
     width: 0,
     height: 0
-  })
+  });
   const resize = useCallback(() => {
     setOffset({
       width: window.innerWidth,
       height: window.innerHeight
-    })
-  }, [])
+    });
+  }, []);
 
   const snsList = [
     {
@@ -41,15 +41,15 @@ const Footer = () => {
       link: "https://discord.com/invite/ZnaCfYbXw2",
       logo: <IconDiscord />
     }
-  ]
+  ];
 
   useEffect(() => {
-    resize()
-    window.addEventListener("resize", throttle(resize, 200))
+    resize();
+    window.addEventListener("resize", throttle(resize, 200));
     return () => {
-      window.removeEventListener("resize", resize)
-    }
-  }, [resize])
+      window.removeEventListener("resize", resize);
+    };
+  }, [resize]);
 
   return (
     <footer className={cn("footer-wrap")}>
@@ -77,7 +77,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

@@ -1,6 +1,6 @@
-import React from "react"
+import React from "react";
 
-import VotingTopDashBoard from "./VotingTopDashBoard.jsx"
+import VotingTopDashBoard from "./VotingTopDashBoard.jsx";
 
 const VotingTopList = ({
   isMember,
@@ -45,7 +45,7 @@ const VotingTopList = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default VotingTopList
+export default VotingTopList;

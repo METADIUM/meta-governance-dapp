@@ -1,7 +1,7 @@
-import { Menu } from "antd"
-import cn from "classnames/bind"
-import React, { useRef } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { Menu } from "antd";
+import cn from "classnames/bind";
+import React, { useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 // TODO:  path는 상황에 맞게 넣어주세요. voting, myinfo 페이지에 layout 내용 넣을 때 props로 activate="menu-voting" or activate="menu-myinfo" 이런식으로 메뉴 키값에 맞게 넣어주세요.
 const menuList = [
   {
@@ -22,17 +22,17 @@ const menuList = [
     key: "menu-myinfo",
     onlyMember: true
   }
-]
+];
 const HeaderMenu = ({ isMember, isStaker, isConnect, setIsGnbOpen }) => {
-  const activeMenu = useRef("menu-authority")
-  const location = useLocation()
+  const activeMenu = useRef("menu-authority");
+  const location = useLocation();
 
   const onMenuClick = (key) => {
-    activeMenu.current = key
+    activeMenu.current = key;
     // console.log(activeMenu.current);
-    window.localStorage.removeItem("selectedTopic")
-    setIsGnbOpen(false)
-  }
+    window.localStorage.removeItem("selectedTopic");
+    setIsGnbOpen(false);
+  };
   const menuComponent = menuList.map((menu) => {
     return menu.onlyMember ? (
       isConnect && isMember && isStaker && (
@@ -63,8 +63,8 @@ const HeaderMenu = ({ isMember, isStaker, isConnect, setIsGnbOpen }) => {
           {menu.title}
         </Link>
       </Menu.Item>
-    )
-  })
+    );
+  });
 
   return (
     <Menu
@@ -72,7 +72,7 @@ const HeaderMenu = ({ isMember, isStaker, isConnect, setIsGnbOpen }) => {
     >
       {menuComponent}
     </Menu>
-  )
-}
+  );
+};
 
-export default HeaderMenu
+export default HeaderMenu;

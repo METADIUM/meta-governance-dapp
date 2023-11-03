@@ -1,5 +1,5 @@
-import cn from "classnames/bind"
-import React from "react"
+import cn from "classnames/bind";
+import React from "react";
 /**
  *
  * props data 형태
@@ -21,7 +21,7 @@ const VotingChartMini = ({ data, theme = "light" }) => {
         style={{ width: `${data.no}%` }}
       />
     </div>
-  )
-}
+  );
+};
 
-export default VotingChartMini
+export default VotingChartMini;

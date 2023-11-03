@@ -1,38 +1,38 @@
-import cn from "classnames/bind"
-import { throttle } from "lodash"
-import React, { useState, useEffect, useCallback, useContext } from "react"
-import { useNavigate } from "react-router-dom"
+import cn from "classnames/bind";
+import { throttle } from "lodash";
+import React, { useState, useEffect, useCallback, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
-import HeaderLogo from "./HeaderLogo"
-import HeaderMenu from "./HeaderMenu"
-import { StakingModal } from "./Modal"
-import { DisConnectWalletModal, ErrModal } from "./Modal"
-import Button from "./voting/Button"
-import { ReactComponent as IconClose } from "../assets/images/ico_close.svg"
-import { ReactComponent as IconMenu } from "../assets/images/ico_menu.svg"
-import { AuthCtx } from "../contexts/AuthContext"
-import { GovInitCtx } from "../contexts/GovernanceInitContext"
-import { ModalContext } from "../contexts/ModalContext"
-import { addCommasToNumber } from "../util"
-import { loginAcc } from "../util"
-import { web3Instance } from "../web3"
+import HeaderLogo from "./HeaderLogo";
+import HeaderMenu from "./HeaderMenu";
+import { StakingModal } from "./Modal";
+import { DisConnectWalletModal, ErrModal } from "./Modal";
+import Button from "./voting/Button";
+import { ReactComponent as IconClose } from "../assets/images/ico_close.svg";
+import { ReactComponent as IconMenu } from "../assets/images/ico_menu.svg";
+import { AuthCtx } from "../contexts/AuthContext";
+import { GovInitCtx } from "../contexts/GovernanceInitContext";
+import { ModalContext } from "../contexts/ModalContext";
+import { addCommasToNumber } from "../util";
+import { loginAcc } from "../util";
+import { web3Instance } from "../web3";
 
 const Header = () => {
-  const { isWeb3Loaded, isContractReady } = useContext(GovInitCtx)
+  const { isWeb3Loaded, isContractReady } = useContext(GovInitCtx);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [offset, setOffset] = useState({
     width: 0,
     height: 0
-  })
+  });
   const resize = useCallback(() => {
     setOffset({
       width: window.innerWidth,
       height: window.innerHeight
-    })
-  }, [])
+    });
+  }, []);
 
-  const { getErrModal } = useContext(ModalContext)
+  const { getErrModal } = useContext(ModalContext);
   const {
     address,
     isMember,
@@ -44,67 +44,67 @@ const Header = () => {
     onLogout,
     updateAccountData,
     setStakingEventsWatch
-  } = useContext(AuthCtx)
-  const [isShowStakingModal, setIsShowStakingModal] = useState(false)
+  } = useContext(AuthCtx);
+  const [isShowStakingModal, setIsShowStakingModal] = useState(false);
 
   // address, web3Instance가 있다면 ctx 업데이트
   useEffect(() => {
     if (address && web3Instance) {
-      updateAccountData(address)
+      updateAccountData(address);
     }
-  }, [address, updateAccountData])
+  }, [address, updateAccountData]);
   // ---------- wallet modal state start ----------
-  const [isGnbOpen, setIsGnbOpen] = useState(false)
-  const [disConnectView, setDisConnectView] = useState(false)
-  const [errVisible, setErrVisible] = useState(false)
-  const [errMsg, setErrMsg] = useState("")
+  const [isGnbOpen, setIsGnbOpen] = useState(false);
+  const [disConnectView, setDisConnectView] = useState(false);
+  const [errVisible, setErrVisible] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
   // ---------- wallet modal state end ----------
 
   function resizeVh () {
-    const vh = window.innerHeight * 0.01
-    document.documentElement.style.setProperty("--vh", `${vh}px`)
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
   }
 
   useEffect(() => {
-    resize()
-    window.addEventListener("resize", throttle(resize, 200))
+    resize();
+    window.addEventListener("resize", throttle(resize, 200));
     return () => {
-      window.removeEventListener("resize", resize)
-    }
-  }, [resize])
+      window.removeEventListener("resize", resize);
+    };
+  }, [resize]);
 
-  const onClickToggle = () => setIsGnbOpen((prev) => !prev)
+  const onClickToggle = () => setIsGnbOpen((prev) => !prev);
   // const onMenuClick = () => {};
   // ---------- wallet modal useEffect stsart ----------
 
   // check login data & auto login
   useEffect(() => {
-    resizeVh()
-    window.addEventListener("resize", resizeVh)
+    resizeVh();
+    window.addEventListener("resize", resizeVh);
     return () => {
-      window.removeEventListener("resize", resizeVh)
-    }
-  }, [])
+      window.removeEventListener("resize", resizeVh);
+    };
+  }, []);
 
   const onDisConnect = () => {
-    setDisConnectView(false)
-    onLogout()
-  }
+    setDisConnectView(false);
+    onLogout();
+  };
 
   const handleAccountsChanged = async (accounts) => {
-    navigate(0)
-    await updateAccountData(accounts[0], true)
-  }
+    navigate(0);
+    await updateAccountData(accounts[0], true);
+  };
 
   const openErrModal = (err) => {
-    setErrVisible(true)
-    setErrMsg(err)
-  }
+    setErrVisible(true);
+    setErrMsg(err);
+  };
 
   const closeErrModal = () => {
-    setErrVisible(false)
-    setErrMsg("")
-  }
+    setErrVisible(false);
+    setErrMsg("");
+  };
 
   // ---------- wallet modal method end ----------
 
@@ -141,7 +141,7 @@ const Header = () => {
                       type='outline'
                       size='sm'
                       onClick={() => {
-                        setIsShowStakingModal(true)
+                        setIsShowStakingModal(true);
                       }}
                     />
                     <Button
@@ -204,7 +204,7 @@ const Header = () => {
                           type='outline'
                           size='sm'
                           onClick={() => {
-                            setIsShowStakingModal(true)
+                            setIsShowStakingModal(true);
                           }}
                         />
 
@@ -265,7 +265,7 @@ const Header = () => {
         </>
       )}
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

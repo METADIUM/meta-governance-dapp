@@ -1,6 +1,6 @@
-import Web3 from "web3"
+import Web3 from "web3";
 
-import * as abis from "./abis/index"
+import * as abis from "./abis/index";
 import {
   MAINNET_CHAIN_INFO,
   TESTNET_CHAIN_INFO,
@@ -9,10 +9,10 @@ import {
   TESTNET_CONTRACTS,
   walletTypes,
   DEVMETANET_CONTRACTS
-} from "./constants"
+} from "./constants";
 
-const type = process.env.REACT_APP_MODE
-const network = process.env.REACT_APP_NETWORK_TYPE
+const type = process.env.REACT_APP_MODE;
+const network = process.env.REACT_APP_NETWORK_TYPE;
 
 // get network deploy informations
 export const chainInfo =
@@ -20,37 +20,37 @@ export const chainInfo =
     ? MAINNET_CHAIN_INFO
     : type === "testnet"
       ? TESTNET_CHAIN_INFO
-      : DEVNET_CHAIN_INFO
+      : DEVNET_CHAIN_INFO;
 const contracts =
   network === "mainnet"
     ? MAINNET_CONTRACTS
     : network === "testnet"
       ? TESTNET_CONTRACTS
-      : DEVMETANET_CONTRACTS
+      : DEVMETANET_CONTRACTS;
 
 // set contracts
 const initContracts = async (web3) => {
-  let contractInstance = {}
+  let contractInstance = {};
 
   // take contract addresses and abi files, set each contract object
   contracts.map(async (item) => {
     contractInstance = {
       ...contractInstance,
       [item.name]: new web3.eth.Contract(abis[item.name].abi, item.address)
-    }
-  })
-  return contractInstance
-}
+    };
+  });
+  return contractInstance;
+};
 
-let web3Instance
+let web3Instance;
 const getWeb3Instance = () => {
   return new Promise(async (resolve, reject) => {
     // set default web3 instance
-    const { rpcUrls } = chainInfo
-    const web3 = new Web3(rpcUrls)
+    const { rpcUrls } = chainInfo;
+    const web3 = new Web3(rpcUrls);
 
     if (web3) {
-      const web3Contracts = await initContracts(web3)
+      const web3Contracts = await initContracts(web3);
       web3Instance = {
         web3,
         web3Contracts,
@@ -62,63 +62,63 @@ const getWeb3Instance = () => {
               : network === "devnet"
                 ? "DEVNET"
                 : "DEVMETANET"
-      }
-      resolve(web3Instance)
+      };
+      resolve(web3Instance);
     } else {
       // web3 is not found
-      reject(new Error("No web3 instance injected."))
+      reject(new Error("No web3 instance injected."));
     }
-  })
-}
+  });
+};
 
 // batch method (only call)
 export const onlyCallBatchMethod = (web3, contract, method) => {
-  const data = web3.web3Contracts[contract].methods[method]().call.request({})
-  return data
-}
+  const data = web3.web3Contracts[contract].methods[method]().call.request({});
+  return data;
+};
 
 // batch method (with value)
 export const callBatchMethod = (web3, contract, method, ...value) => {
-  let data
+  let data;
   if (method === "hasAlreadyVoted") {
-    const { id, voter } = value[0]
+    const { id, voter } = value[0];
     data = web3.web3Contracts.BallotStorage.methods
       .hasAlreadyVoted(id, voter)
-      .call.request({})
+      .call.request({});
   } else {
     data = web3.web3Contracts[contract].methods[method](value[0]).call.request(
       {}
-    )
+    );
   }
-  return data
-}
+  return data;
+};
 
 // call contract method (no value)
 export const onlyCallContractMethod = async (web3, contract, method) => {
-  const data = await web3.web3Contracts[contract].methods[method]().call()
-  return data
-}
+  const data = await web3.web3Contracts[contract].methods[method]().call();
+  return data;
+};
 
 // call contract method (with value)
 export const callContractMethod = async (web3, contract, method, ...value) => {
-  let data
+  let data;
   if (method === "hasAlreadyVoted") {
-    const { id, voter } = value[0]
+    const { id, voter } = value[0];
     data = await web3.web3Contracts.BallotStorage.methods
       .hasAlreadyVoted(id, voter)
-      .call()
+      .call();
   } else {
-    data = await web3.web3Contracts[contract].methods[method](value[0]).call()
+    data = await web3.web3Contracts[contract].methods[method](value[0]).call();
   }
-  return data
-}
+  return data;
+};
 
 // encodeABI (value in method)
 export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
   try {
     let trxData = {
       to: getContractAddr(contract)
-    }
+    };
     const {
       staker,
       voter,
@@ -142,7 +142,7 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
       link,
       id,
       txHashArr
-    } = value[0]
+    } = value[0];
     switch (method) {
       case "addProposalToAddMember":
         trxData.data = web3.web3Contracts.GovImp.methods
@@ -158,8 +158,8 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
             memo,
             duration
           ])
-          .encodeABI()
-        break
+          .encodeABI();
+        break;
       case "addProposalToChangeMember":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToChangeMember(
@@ -177,23 +177,23 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
             ],
             oldStaker
           )
-          .encodeABI()
-        break
+          .encodeABI();
+        break;
       case "addProposalToRemoveMember":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToRemoveMember(staker, lockAmount, memo, duration)
-          .encodeABI()
-        break
+          .encodeABI();
+        break;
       case "addProposalToChangeGov":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToChangeGov(newGovAddr, memo, duration)
-          .encodeABI()
-        break
+          .encodeABI();
+        break;
       case "addProposalToChangeEnv":
         trxData.data = web3.web3Contracts.GovImp.methods
           .addProposalToChangeEnv(envName, envType, envVal, memo, duration)
-          .encodeABI()
-        break
+          .encodeABI();
+        break;
       case "addProposal":
         trxData.data = web3.web3Contracts.WaitGovernance.methods
           .addProposal([
@@ -204,24 +204,24 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
             link,
             []
           ])
-          .encodeABI()
-        break
+          .encodeABI();
+        break;
       case "setTransactionHashes":
         trxData.data = web3.web3Contracts.WaitGovernance.methods
           .setTransactionHashes(id, txHashArr)
-          .encodeABI()
-        break
+          .encodeABI();
+        break;
       default:
         trxData.data = web3.web3Contracts[contract].methods[method](
           ...value
-        ).encodeABI()
-        break
+        ).encodeABI();
+        break;
     }
-    return trxData
+    return trxData;
   } catch (err) {
-    return err
+    return err;
   }
-}
+};
 
 // encodeABI (value in trxData)
 export const encodeABIValueInTrx = (web3, contract, method, value) => {
@@ -230,38 +230,38 @@ export const encodeABIValueInTrx = (web3, contract, method, value) => {
       to: getContractAddr(contract),
       value,
       data: web3.web3Contracts[contract].methods[method]().encodeABI()
-    }
+    };
 
-    return trxData
+    return trxData;
   } catch (err) {
-    return err
+    return err;
   }
-}
+};
 
 // get contract address
 const getContractAddr = (contract) => {
   const address = contracts.filter((item) => {
-    return item.name === contract
-  })[0].address
+    return item.name === contract;
+  })[0].address;
 
-  return address
-}
+  return address;
+};
 
 // get accounts
 export const getAccounts = async (walletType) => {
-  const { META_MASK, WALLET_CONNECT, COIN_BASE } = walletTypes
-  let account
+  const { META_MASK, WALLET_CONNECT, COIN_BASE } = walletTypes;
+  let account;
   switch (walletType) {
     case META_MASK:
-      account = await web3Instance.web3.eth.requestAccounts()
-      return account[0]
+      account = await web3Instance.web3.eth.requestAccounts();
+      return account[0];
     case WALLET_CONNECT:
     case COIN_BASE:
-      account = await web3Instance.web3.eth.getAccounts()
-      return account[0]
+      account = await web3Instance.web3.eth.getAccounts();
+      return account[0];
     default:
   }
-}
+};
 
-export { web3Instance }
-export default getWeb3Instance
+export { web3Instance };
+export default getWeb3Instance;

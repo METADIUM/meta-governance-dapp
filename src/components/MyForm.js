@@ -1,10 +1,10 @@
-import { Form } from "antd"
-import cn from "classnames/bind"
-import React from "react"
+import { Form } from "antd";
+import cn from "classnames/bind";
+import React from "react";
 
-import GovButton from "./voting/GovButton"
-import VotingInputArea from "./voting/VotingInputArea"
-import { shouldPass } from "../util"
+import GovButton from "./voting/GovButton";
+import VotingInputArea from "./voting/VotingInputArea";
+import { shouldPass } from "../util";
 
 // Voting Address
 export const VotingAddress = ({
@@ -47,7 +47,7 @@ export const VotingAddress = ({
       loading={loading}
     />
   </Form>
-)
+);
 
 // Reward Address
 export const RewardAddress = ({
@@ -90,4 +90,4 @@ export const RewardAddress = ({
       loading={loading}
     />
   </Form>
-)
+);

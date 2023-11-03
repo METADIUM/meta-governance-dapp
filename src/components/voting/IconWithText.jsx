@@ -1,8 +1,8 @@
-import cn from "classnames/bind"
-import React, { useCallback } from "react"
+import cn from "classnames/bind";
+import React, { useCallback } from "react";
 
-import { ReactComponent as IconTime } from "../../assets/images/ic-clock.svg"
-import { ReactComponent as IconPerson } from "../../assets/images/ic-member.svg"
+import { ReactComponent as IconTime } from "../../assets/images/ic-clock.svg";
+import { ReactComponent as IconPerson } from "../../assets/images/ic-member.svg";
 
 /**
  *
@@ -22,13 +22,13 @@ const IconWithText = ({ data }) => {
     // if (theme === "light") {
     switch (icon) {
       case "time":
-        return <IconTime />
+        return <IconTime />;
       case "person":
-        return <IconPerson />
+        return <IconPerson />;
       default:
-        return false
+        return false;
     }
-  }, [])
+  }, []);
   return (
     <div className={cn("icon-with-text-wrap")}>
       {data.map((el, index) => {
@@ -38,10 +38,10 @@ const IconWithText = ({ data }) => {
             <span>{el.text}</span>
             {el.children && el.children}
           </div>
-        )
+        );
       })}
     </div>
-  )
-}
+  );
+};
 
-export default IconWithText
+export default IconWithText;

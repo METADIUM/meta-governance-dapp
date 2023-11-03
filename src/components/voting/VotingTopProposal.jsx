@@ -1,10 +1,10 @@
-import { Select } from "antd"
-import cn from "classnames/bind"
-import React from "react"
-import { useNavigate } from "react-router-dom"
+import { Select } from "antd";
+import cn from "classnames/bind";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-import { ReactComponent as IconPrev } from "../../assets/images/ic-prev.svg"
-import { ReactComponent as IconArrowDown } from "../../assets/images/ic-select-arrow.svg"
+import { ReactComponent as IconPrev } from "../../assets/images/ic-prev.svg";
+import { ReactComponent as IconArrowDown } from "../../assets/images/ic-select-arrow.svg";
 
 const VotingTopProposal = ({
   loading,
@@ -13,7 +13,7 @@ const VotingTopProposal = ({
   selectedTopic,
   handleSelectTopicChange
 }) => {
-  const navitage = useNavigate()
+  const navitage = useNavigate();
 
   return (
     <div className={"proposal-top-wrap"}>
@@ -22,7 +22,7 @@ const VotingTopProposal = ({
           <button
             className={cn("btn-prev")}
             onClick={() => {
-              navitage("/voting/list")
+              navitage("/voting/list");
             }}
           >
             <IconPrev />
@@ -49,12 +49,12 @@ const VotingTopProposal = ({
               <Select.Option value={item.value} key={i}>
                 {item.id}
               </Select.Option>
-            )
+            );
           })}
         </Select>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default VotingTopProposal
+export default VotingTopProposal;

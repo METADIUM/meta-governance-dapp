@@ -1,48 +1,48 @@
-import { Layout } from "antd"
-import React, { useContext, useEffect } from "react"
-import { useLocation } from "react-router-dom"
+import { Layout } from "antd";
+import React, { useContext, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
-import { AccessFailedModal } from "./components"
-import { AuthCtx } from "./contexts/AuthContext"
-import { GovInitCtx } from "./contexts/GovernanceInitContext"
-import { ModalContext } from "./contexts/ModalContext"
-import { usePrevious } from "./hooks/usePrevious"
-import Loading from "./Loading"
-import { web3Instance } from "./web3"
+import { AccessFailedModal } from "./components";
+import { AuthCtx } from "./contexts/AuthContext";
+import { GovInitCtx } from "./contexts/GovernanceInitContext";
+import { ModalContext } from "./contexts/ModalContext";
+import { usePrevious } from "./hooks/usePrevious";
+import Loading from "./Loading";
+import { web3Instance } from "./web3";
 
-import "./App.css"
-import "./components/style/style.css"
-import "./assets/scss/common.scss"
+import "./App.css";
+import "./components/style/style.css";
+import "./assets/scss/common.scss";
 
-const { Content } = Layout
+const { Content } = Layout;
 
 export const withLocation = (Component) => {
-  return (props) => <Component {...props} location={useLocation()} />
-}
+  return (props) => <Component {...props} location={useLocation()} />;
+};
 
 const App = ({ children }) => {
-  const { getErrModal } = useContext(ModalContext)
+  const { getErrModal } = useContext(ModalContext);
   const { isWeb3Loaded, isContractReady, accessFailMsg } =
-    useContext(GovInitCtx)
-  const { address, chain, onLogout, updateAccountData } = useContext(AuthCtx)
-  const { pathname } = useLocation()
-  const prev = usePrevious(chain)
+    useContext(GovInitCtx);
+  const { address, chain, onLogout, updateAccountData } = useContext(AuthCtx);
+  const { pathname } = useLocation();
+  const prev = usePrevious(chain);
 
-  const _chainId = chain?.id
-  const _prevChainId = prev.current?.id
+  const _chainId = chain?.id;
+  const _prevChainId = prev.current?.id;
 
   useEffect(() => {
-    const isChanged = _chainId !== _prevChainId
+    const isChanged = _chainId !== _prevChainId;
     if (!!_chainId && !!_prevChainId && isChanged) {
-      onLogout()
+      onLogout();
     }
-  }, [_chainId, _prevChainId, onLogout])
+  }, [_chainId, _prevChainId, onLogout]);
 
   useEffect(() => {
     if (address && web3Instance) {
-      updateAccountData(address)
+      updateAccountData(address);
     }
-  }, [address, updateAccountData])
+  }, [address, updateAccountData]);
 
   const checkPath =
     pathname === "/wait" ||
@@ -51,7 +51,7 @@ const App = ({ children }) => {
     pathname === "/governance/" ||
     pathname === "/governance/detail" ||
     pathname === "/history" ||
-    pathname === "/history/"
+    pathname === "/history/";
 
   return (
     <>
@@ -89,7 +89,7 @@ const App = ({ children }) => {
           <Loading />
         )}
     </>
-  )
-}
+  );
+};
 
-export default withLocation(App)
+export default withLocation(App);

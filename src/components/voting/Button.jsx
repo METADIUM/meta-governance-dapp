@@ -1,7 +1,7 @@
-import cn from "classnames/bind"
-import React from "react"
+import cn from "classnames/bind";
+import React from "react";
 
-import { ReactComponent as IconWallet } from "../../assets/images/ico_wallet.svg"
+import { ReactComponent as IconWallet } from "../../assets/images/ico_wallet.svg";
 
 const Button = ({
   onClick,
@@ -32,7 +32,7 @@ const Button = ({
         </button>
       )}
     </>
-  )
-}
+  );
+};
 
-export default Button
+export default Button;

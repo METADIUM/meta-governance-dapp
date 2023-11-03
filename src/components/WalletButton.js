@@ -1,9 +1,9 @@
-import { Button } from "antd"
-import React from "react"
+import { Button } from "antd";
+import React from "react";
 
 // import { web3Modal } from "../web3Modal";
-import "./style/style.css"
-import { loginAcc } from "../util"
+import "./style/style.css";
+import { loginAcc } from "../util";
 export default ({
   isLogin,
   setWalletModal,
@@ -11,9 +11,9 @@ export default ({
   nowWalletType,
   setDisConnectView
 }) => {
-  const wallets = []
+  const wallets = [];
 
-  const getWallet = wallets.find((v) => v.id === nowWalletType)
+  const getWallet = wallets.find((v) => v.id === nowWalletType);
 
   return (
     <>
@@ -70,5 +70,5 @@ export default ({
         </>
       )}
     </>
-  )
-}
+  );
+};
