@@ -75,18 +75,17 @@ const Proposal = () => {
   const [showProposal, setShowProposal] = useState(false);
   const [selectedMenu, setIsSelectedMenu] = useState("menu-voting");
 
-  // 로그인 안 했을 경우 튕김 처리
   const navigate = useNavigate();
-  useEffect(() => {
-    if (address === undefined) {
-      message.destroy();
-      message.open({
-        type: "warning",
-        content: "Please log in first."
-      });
-      navigate("/voting/list");
-    }
-  }, []);
+
+  // 토스트 메시지 띄우기
+  const openToast = (content) => {
+    message.destroy();
+    message.open({
+      type: "warning",
+      content
+    });
+    navigate("/voting/list");
+  };
 
   useEffect(() => {
     if (pathname === "/my-info") {
@@ -113,6 +112,11 @@ const Proposal = () => {
           break;
         }
       }
+
+      // 멤버 아닐 경우 튕김
+      if (memberIdx > memberLength)
+        openToast("Only members can access this page.");
+
       // get member info
       const oldVotingAddr = await callContractMethod(
         web3Instance,
@@ -137,6 +141,11 @@ const Proposal = () => {
   };
 
   useEffect(() => {
+    // 로그인 안 했을 경우 튕김
+    if (address === undefined) {
+      openToast("Please log in first.");
+      return;
+    }
     getMyAddress(address, memberLength);
   }, [address, memberLength]);
 
