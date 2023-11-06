@@ -1,6 +1,6 @@
 import cn from "classnames/bind";
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSendTransaction } from "wagmi";
 
 import * as abis from "../../abis/index";
@@ -26,6 +26,7 @@ import {
   encodeABIValueInMethod,
   web3Instance
 } from "../../web3";
+import { message } from "antd";
 
 const Proposal = () => {
   const { getErrModal } = useContext(ModalContext);
@@ -73,6 +74,19 @@ const Proposal = () => {
   const [memberIdx, setMemberIdx] = useState();
   const [showProposal, setShowProposal] = useState(false);
   const [selectedMenu, setIsSelectedMenu] = useState("menu-voting");
+
+  // 로그인 안 했을 경우 튕김 처리
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (address === undefined) {
+      message.destroy();
+      message.open({
+        type: "warning",
+        content: "Please log in first."
+      });
+      navigate("/voting/list");
+    }
+  }, []);
 
   useEffect(() => {
     if (pathname === "/my-info") {
