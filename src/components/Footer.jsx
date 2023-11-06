@@ -60,16 +60,16 @@ const Footer = () => {
         <div className={cn("footer-link-wrap")}>
           <ul className={cn("footer-sns")}>
             {snsList.map((sns) => (
-              <li key={sns.name}>
+              <li key={sns.title}>
                 <a
                   href={sns.link}
-                  target='_blank'
-                  rel='noopener noreferrer'
+                  target="_blank"
+                  rel="noopener noreferrer"
                   title={"Open new window"}
-                  className={cn("sns-item", sns.name)}
+                  className={cn("sns-item", sns.title)}
                 >
                   {sns.logo}
-                  <span className={cn("a11y")}>{sns.name}</span>
+                  <span className={cn("a11y")}>{sns.title}</span>
                 </a>
               </li>
             ))}
