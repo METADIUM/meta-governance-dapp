@@ -478,7 +478,12 @@ const VotingTopDetail = ({
             {state && <Status status={state} />}
           </div>
           {/* title */}
-          <div className={cn("voting-title")}>{setTopic()}</div>
+          <div
+            className={`voting-title ${
+              state === "1" && creator === defaultAccount ? "creater" : ""
+            }`}>
+            {setTopic()}
+          </div>
           {state === "1" && creator === defaultAccount && (
             <div className={cn("btn-wrap")}>
               <button

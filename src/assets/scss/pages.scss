@@ -952,7 +952,10 @@ a {
 
       .voting-title {
         flex-grow: 1;
-        padding: 12px 0 20px 32px;
+        padding: 12px 0 0 32px;
+        &.creater {
+          padding: 12px 0 20px 32px;
+        }
       }
 
       .btn-wrap {
