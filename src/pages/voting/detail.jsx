@@ -381,8 +381,8 @@ const VotingDetail = () => {
     <Loading txLoading />
   ) : (
     <>
-      <div className='section-body'>
-        <div className='wrap'>
+      <div className="section-body">
+        <div className="wrap">
           <VotingTopDetail
             isWait={isWait}
             ballotMemberData={ballotMemberData}
@@ -400,15 +400,19 @@ const VotingDetail = () => {
             <div className={cn("detail-vote-cont")}>
               <div className={cn("status-content")}>{setVoteStatus()}</div>
               {/* cast content */}
-              <div className={cn("cast-content")}>
-                <VotingTitle type='sm' title='Cast your vote' />
+              <div
+                className={cn("cast-content", {
+                  "isVoted": state !== "1" && state !== "2",
+                })}
+              >
+                <VotingTitle type="sm" title="Cast your vote" />
                 <div className={cn("vote-btn-area")}>
                   <div className={cn("btn-wrap")}>
                     <div className={cn("voting-check-wrap")}>
                       <input
                         id={"voting-check-yes"}
                         name={"radio"}
-                        type='radio'
+                        type="radio"
                         onClick={() => setCurrentVote(isWait ? 1 : "Yes")}
                         disabled={state !== "1" && state !== "2"}
                       />
@@ -418,7 +422,7 @@ const VotingDetail = () => {
                       <input
                         id={"voting-check-no"}
                         name={"radio"}
-                        type='radio'
+                        type="radio"
                         onClick={() => setCurrentVote(isWait ? 2 : "No")}
                         disabled={state !== "1" && state !== "2"}
                       />
@@ -428,7 +432,8 @@ const VotingDetail = () => {
                   <button
                     className={cn("text-banner")}
                     onClick={() => vote()}
-                    disabled={state !== "1" && state !== "2"}>
+                    disabled={state !== "1" && state !== "2"}
+                  >
                     Vote
                   </button>
                 </div>
@@ -478,14 +483,15 @@ const VotingDetail = () => {
             isVotingModal={setErrModal}
             btn={{ btnName: "Okay", cancel: false }}
             scrollType={false}
-            title='Unknown Error'
+            title="Unknown Error"
             onOk={() => {
               setErrMessage("");
               setErrModal(false);
-            }}>
+            }}
+          >
             <div className={cn("error-wrap")}>
               <div className={cn("error-wrap-image")}></div>
-              <div className='modal-info-wrapper'>
+              <div className="modal-info-wrapper">
                 <div>{errMessage}</div>
               </div>
             </div>

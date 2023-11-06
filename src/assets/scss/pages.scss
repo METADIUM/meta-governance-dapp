@@ -1232,6 +1232,24 @@ a {
         color: $white;
       }
     }
+
+    &.isVoted {
+      position: relative;
+
+      &:before {
+        content: '';
+        display: block;
+        width: calc(100% - 2px);
+        height: calc(100% - 2px);
+        background-color: $white;
+        opacity: .8;
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        border-radius: 4px;
+        z-index: 10;
+      }
+    }
   }
 }
 
