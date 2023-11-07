@@ -83,7 +83,7 @@ const AuthProvider = ({ children }) => {
     const weiBalance = await callContractMethod(
       web3Instance,
       "Staking",
-      "balanceOf",
+      "availableBalanceOf",
       defaultAccount
     );
     const locked = await callContractMethod(
