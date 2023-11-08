@@ -51,7 +51,7 @@ const VotingTextfield = () => {
               <span className={cn("important")}>*</span>
             </strong>
             <VotingInputArea
-              disabled={true}
+              disabled
               inputType={"default"}
               placeholder={"Enter node name"}
               value={inputValueName}
@@ -103,7 +103,7 @@ const VotingTextfield = () => {
               value={inputValueDescription}
               onChange={setValueDescription}
               type={"default"}
-              disabled={true}
+              disabled
             />
           </div>
           <div className={cn("voting-input-wrap")}>
@@ -212,7 +212,7 @@ const VotingTextfield = () => {
                   placeholder={"0 %"}
                   value={inputValueMultiBlock5}
                   onChange={setInputValueMultiBlock5}
-                  disabled={true}
+                  disabled
                 />
               </div>
             </div>
@@ -254,11 +254,11 @@ const VotingTextfield = () => {
               </strong>
               <VotingSelect
                 filterData={filterData}
-                className="voting-duration-select"
+                className='voting-duration-select'
               />
             </div>
 
-            <Button type="bg" disabled text={"Submit"} />
+            <Button type='bg' disabled text={"Submit"} />
           </div>
         </div>
       </div>

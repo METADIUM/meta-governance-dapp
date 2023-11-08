@@ -38,27 +38,16 @@
     "web3": "1.7.3"
   },
   "scripts": {
-    "start:devnet": "NODE_ENV=development PORT=3005 react-app-rewired start",
     "start:devmeta": "NODE_ENV=devmeta PORT=3005 react-app-rewired start",
     "start:testnet": "NODE_ENV=testnet PORT=3005 react-app-rewired start",
     "start:mainnet": "NODE_ENV=production PORT=3005 react-app-rewired start",
-    "start:mainnet2": "NODE_ENV=mainnet2 PORT=3005 react-app-rewired start",
-    "pbuild:devmeta": "yarn run dotenv -e .env.devmeta generate-robotstxt public/robots.txt && yarn run dotenv -e .env.devmeta babel-node src/sitemapGenerator.js",
-    "pbuild:testnet": "yarn run dotenv -e .env.testnet generate-robotstxt public/robots.txt && yarn run dotenv -e .env.testnet babel-node src/sitemapGenerator.js",
-    "pbuild:mainnet": "yarn run dotenv -e .env.production generate-robotstxt public/robots.txt && yarn run dotenv -e .env.production babel-node src/sitemapGenerator.js",
-    "pbuild:mainnet2": "yarn run dotenv -e .env.mainnet2 generate-robotstxt public/robots.txt && yarn run dotenv -e .env.mainnet2 babel-node src/sitemapGenerator.js",
     "build": "echo \"Please use build:testnet or build:mainnet \" && exit 1",
-    "build:devnet": "dotenv -e .env.development react-app-rewired build",
     "build:devmeta": "CI=false && dotenv -e .env.devmeta react-app-rewired build",
     "build:testnet": "CI=false && dotenv -e .env.testnet react-app-rewired build",
-    "build:mainnet": "CI=false && yarn run pbuild:mainnet && dotenv -e .env.production react-app-rewired build && yarn postbuild",
-    "build:mainnet2": "CI=false && yarn run pbuild:mainnet2 && dotenv -e .env.mainnet2 react-app-rewired build && yarn postbuild",
-    "test": "standard --parser babel-eslint",
-    "fix": "standard --parser babel-eslint --fix",
-    "test:lint": "eslint './src/**/*.{js,jsx}'",
-    "fix:lint": "eslint './src/**/*.{js,jsx}' --fix",
-    "eject": "react-scripts eject",
-    "postbuild": "react-snap"
+    "build:mainnet": "CI=false && dotenv -e .env.production react-app-rewired build",
+    "test": "eslint './src/**/*.{js,jsx}'",
+    "fix": "eslint './src/**/*.{js,jsx}' --fix",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -71,6 +60,7 @@
   ],
   "devDependencies": {
     "babel-plugin-import": "^1.11.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "customize-cra": "^0.2.11",
     "dotenv-cli": "^5.1.0",
     "eslint-plugin-import": "^2.29.0",

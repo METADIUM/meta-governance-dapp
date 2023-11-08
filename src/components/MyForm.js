@@ -1,11 +1,10 @@
-import { Form } from 'antd';
-import cn from 'classnames/bind';
-import React from 'react';
+import { Form } from "antd";
+import cn from "classnames/bind";
+import React from "react";
 
-
-import GovButton from './voting/GovButton';
-import VotingInputArea from './voting/VotingInputArea';
-import { shouldPass } from '../util';
+import GovButton from "./voting/GovButton";
+import VotingInputArea from "./voting/VotingInputArea";
+import { shouldPass } from "../util";
 
 // Voting Address
 export const VotingAddress = ({
@@ -14,22 +13,22 @@ export const VotingAddress = ({
   oldVotingAddr,
   newVotingAddrErr,
   handleChange = shouldPass(),
-  handleSubmit = shouldPass(),
+  handleSubmit = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn("voting-input-wrap")}>
       <strong>
         Old Voting Address <span className='required'>*</span>
       </strong>
       <VotingInputArea
-        myForm={true}
-        inputType={'multiline'}
+        myForm
+        inputType={"multiline"}
         name='oldVotingAddr'
         value={oldVotingAddr}
         disabled
       />
     </div>
-    <div className={cn('voting-input-wrap')}>
+    <div className={cn("voting-input-wrap")}>
       <strong>
         New Voting Address <span className='required'>*</span>
       </strong>
@@ -42,7 +41,7 @@ export const VotingAddress = ({
       />
     </div>
     <GovButton
-      text={'Submit'}
+      text={"Submit"}
       disabled={loading || newVotingAddrErr}
       type='bg'
       loading={loading}
@@ -57,37 +56,37 @@ export const RewardAddress = ({
   oldRewardAddr,
   newRewardAddrErr,
   handleChange = shouldPass(),
-  handleSubmit = shouldPass(),
+  handleSubmit = shouldPass()
 }) => (
   <Form onSubmit={handleSubmit}>
     <div className={cn("voting-input-wrap")}>
       <strong>
-        Old Reward Address <span className="required">*</span>
+        Old Reward Address <span className='required'>*</span>
       </strong>
       <VotingInputArea
-        myForm={true}
+        myForm
         inputType={"multiline"}
-        name="oldRewardAddr"
+        name='oldRewardAddr'
         value={oldRewardAddr}
         disabled
       />
     </div>
     <div className={cn("voting-input-wrap")}>
       <strong>
-        New Reward Address <span className="required">*</span>
+        New Reward Address <span className='required'>*</span>
       </strong>
       <VotingInputArea
-        name="newRewardAddr"
+        name='newRewardAddr'
         disabled={loading}
         onChange={handleChange}
         errType={newRewardAddrErr}
-        errText="Invalid Address"
+        errText='Invalid Address'
       />
     </div>
     <GovButton
       text={"Submit"}
       disabled={loading || newRewardAddrErr}
-      type="bg"
+      type='bg'
       loading={loading}
     />
   </Form>

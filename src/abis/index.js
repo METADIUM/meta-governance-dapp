@@ -19,5 +19,5 @@ export {
   GovImp,
   Registry,
   Staking,
-  WaitGovernance,
+  WaitGovernance
 };

@@ -4,11 +4,11 @@ import React from "react";
 
 import { ReactComponent as IconArrowDown } from "../../assets/images/ic-select-arrow.svg";
 
-export default function VotingSelect({
+export default function VotingSelect ({
   filterData,
   className,
   dropdownClassName = "voting",
-  handleSelect,
+  handleSelect
 }) {
   const Option = Select.Option;
   return (

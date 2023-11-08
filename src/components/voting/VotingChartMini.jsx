@@ -1,7 +1,7 @@
 import cn from "classnames/bind";
 import React from "react";
 /**
- * 
+ *
  * props data 형태
     {
       yes: number
@@ -15,11 +15,11 @@ const VotingChartMini = ({ data, theme = "light" }) => {
       <span
         className={cn("graph-positive")}
         style={{ width: `${data.yes}%` }}
-      ></span>
+      />
       <span
         className={cn("graph-critical")}
         style={{ width: `${data.no}%` }}
-      ></span>
+      />
     </div>
   );
 };

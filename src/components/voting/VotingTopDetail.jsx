@@ -1,4 +1,3 @@
-import { Dropdown } from "antd";
 import cn from "classnames/bind";
 import { throttle } from "lodash";
 import React, { useState, useCallback, useEffect } from "react";
@@ -12,13 +11,7 @@ import { VotingModal, TxHashAddModal } from "../../components/Modal.js";
 import { constants, ENV_PARAMETER_COUNT } from "../../constants.js";
 import * as util from "../../util";
 import { encodeABIValueInMethod, web3Instance } from "../../web3.js";
-import {
-  DEVMETANET_WHITE_LIST,
-  MAINNET_WHITE_LIST,
-  TESTNET_WHITE_LIST,
-} from "../../whitelist.js";
 import VotingInputArea from "../voting/VotingInputArea";
-
 
 /* 23.04.20 수정: TxHashAddModal, VotingInputArea 추가 */
 
@@ -75,16 +68,6 @@ const VotingTopDetail = ({
     height: 0,
   });
   const navigate = useNavigate();
-
-  const network = process.env.REACT_APP_NETWORK_TYPE;
-  const whiteList =
-    network === "mainnet"
-      ? MAINNET_WHITE_LIST
-      : network === "testnet"
-      ? TESTNET_WHITE_LIST
-      : network === "devnet"
-      ? DEVMETANET_WHITE_LIST
-      : DEVMETANET_WHITE_LIST;
 
   // -------------------- useEffect
   useEffect(() => {
@@ -180,8 +163,9 @@ const VotingTopDetail = ({
     //   }
     // }
     if (ballotType === constants.ballotTypes.ChangedEnv) return envVariableName;
-    else if (parseInt(ballotType) > 0)
+    else if (parseInt(ballotType) > 0) {
       return constants.ballotTypesArr[parseInt(ballotType)];
+    }
     // wait protocol 항목 검색 가능하도록 추가
     return companyName || "-";
   };
@@ -377,15 +361,13 @@ const VotingTopDetail = ({
                     item.class
                       ? cn(item.class)
                       : cn("pocket-address", "new-type")
-                  }`}
-                >
+                  }`}>
                   {/* 링크일 경우 클릭 시 이동하도록 수정 */}
                   {item.title === "Link" ? (
                     <a
                       href={item.value}
                       target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                      rel="noopener noreferrer">
                       {item.originValue}
                     </a>
                   ) : (
@@ -489,42 +471,25 @@ const VotingTopDetail = ({
             className={cn("btn-prev")}
             onClick={() => {
               navigate("/voting/list");
-            }}
-          >
+            }}>
             <IconPrev />
           </button>
           <div className={cn("top-status-wrap")}>
             {state && <Status status={state} />}
-            {/* TO CHECK: wait에서만 사용되는 지 확인 */}
-            {/* {defaultAccount &&
-              whiteList.includes(defaultAccount) &&
-              offset.width > 1023 &&
-              isWait &&
-              state === "3" && ( // wait 안건이고 가결됐을 때만 tx 추가 가능
-                // 23.04.20 수정: Add Tx Hash 버튼 추가
-                <div className={cn("btn-wrap")}>
-                  <Button
-                    onClick={() => {
-                      setIsTxHashAddModal(true);
-                      setErrText("");
-                    }}
-                    type={"bg-white"}
-                    text={`${txHashes.length ? "Change" : "Add"} Tx Hash (${
-                      txHashes.length
-                    })`}
-                  />
-                </div>
-              )} */}
           </div>
           {/* title */}
-          <div className={cn("voting-title")}>{setTopic()}</div>
+          <div
+            className={`voting-title ${
+              state === "1" && creator === defaultAccount ? "creater" : ""
+            }`}>
+            {setTopic()}
+          </div>
           {state === "1" && creator === defaultAccount && (
             <div className={cn("btn-wrap")}>
               <button
                 onClick={() => {
                   setIsVotingDurationModal(true);
-                }}
-              >
+                }}>
                 Change
               </button>
               <button onClick={() => updateProposal("revoke")}>Revoke</button>
@@ -561,34 +526,6 @@ const VotingTopDetail = ({
             </Dropdown>
           </div>
         )} */}
-        {defaultAccount &&
-          whiteList.includes(defaultAccount) &&
-          isWait &&
-          state === "3" && (
-            <div className={cn("detail-top-menu")}>
-              <Dropdown
-                overlayClassName="familysite-list-wrap"
-                placement="bottomLeft"
-                overlay={
-                  <div className={cn("detail-menu-list")}>
-                    {/* 23.04.20 수정: Add Tx Hash 버튼 추가 */}
-                    <Button
-                      onClick={() => setIsTxHashAddModal(true)}
-                      text={`${txHashes.length ? "Change" : "Add"} Tx Hash (${
-                        txHashes.length
-                      })`}
-                    />
-                  </div>
-                }
-                trigger={["click"]}
-                getPopupContainer={(triggerNode) => triggerNode.parentNode}
-              >
-                <button type="button">
-                  <span className={cn("more-text")}>···</span>
-                </button>
-              </Dropdown>
-            </div>
-          )}
         {/* 설명 부분 */}
         <div className={cn("detail-top-content")}>
           <dl className={cn("detail-top-list")}>
@@ -613,13 +550,16 @@ const VotingTopDetail = ({
         isVotingModal={setIsVotingDurationModal}
         btn={{ btnName: "Ok", cancel: true }}
         onOk={() => updateProposal("duration")}
-        scrollType={true}
-        title="Voting Duration Change"
-      >
+        scrollType
+        title="Voting Duration Change">
         <div className={"day-select-wrap"}>
           <ul className={cn("label-list")}>
             {options.map((t, i) => (
-              <li className={cn("label-option")} key={`${t}-${i}`}>
+              <li
+                className={`label-option ${
+                  t.value === selectedDuration ? "active" : ""
+                }`}
+                key={`${t}-${i}`}>
                 <input
                   id={`dayCheck${i}`}
                   name={"radio"}
@@ -641,12 +581,12 @@ const VotingTopDetail = ({
         isVotingModal={setIsVotingUnknownModal}
         btn={{ btnName: "Okay", cancel: false }}
         scrollType={false}
-        title="Unknown Error"
-      >
-        <div className={cn("unknown-wrap")}>
-          <span className={cn("error-detail")}>
-            MetaMask Tx Signature: User denied transaction signature
-          </span>
+        title="Unknown Error">
+        <div className={cn("error-wrap")}>
+          <div className={cn("error-wrap-image")}></div>
+          <div className="modal-info-wrapper">
+            <div>MetaMask Tx Signature: User denied transaction signature</div>
+          </div>
         </div>
       </VotingModal>
 
@@ -656,14 +596,13 @@ const VotingTopDetail = ({
         isTxHashAddModal={setIsTxHashAddModal}
         onApply={() => handleTxHashApply()}
         disabled={!txHashArr.length} // 입력된 hash 값이 없으면 disabled 처리
-        scrollType={true}
+        scrollType
         onCancel={() => {
           setIsTxHashAddModal(false);
           setTxInputErr(true);
           setTxHash("");
           setTxHashArr(txHashes.length ? txHashes : []);
-        }}
-      >
+        }}>
         <div className={cn("tx-hash-add-content-wrap")}>
           <div className={"hash-add-wrap"}>
             <VotingInputArea

@@ -1,8 +1,9 @@
 import cn from "classnames/bind";
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSendTransaction } from "wagmi";
 
+import * as abis from "../../abis/index";
 import * as PComponent from "../../components/Forms";
 import * as MComponent from "../../components/MyForm";
 import VotingTopProposal from "../../components/voting/VotingTopProposal.jsx";
@@ -12,25 +13,20 @@ import {
   constants,
   ENV_MY_INFO_PROPOSAL_LIST,
   ENV_NAMES,
-  ENV_VOTING_PROPOSAL_LIST,
+  ENV_VOTING_PROPOSAL_LIST
 } from "../../constants";
 import { AuthCtx } from "../../contexts/AuthContext.js";
 import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx";
 import { ModalContext } from "../../contexts/ModalContext.jsx";
+import AuthorityList from "../../static/AuthorityList";
 import { removeCommasFromNumber, addCommasToNumber } from "../../util";
 import * as util from "../../util";
-import * as abis from "../../abis/index";
-
 import {
   callContractMethod,
   encodeABIValueInMethod,
-  web3Instance,
+  web3Instance
 } from "../../web3";
-import {
-  DEVMETANET_WHITE_LIST,
-  MAINNET_WHITE_LIST,
-  TESTNET_WHITE_LIST,
-} from "../../whitelist.js";
+import { message } from "antd";
 
 const Proposal = () => {
   const { getErrModal } = useContext(ModalContext);
@@ -44,7 +40,7 @@ const Proposal = () => {
     votingDurationMin,
     ballotMemberOriginData,
     ballotBasicOriginData,
-    memberLength,
+    memberLength
   } = data;
 
   const { sendTransactionAsync } = useSendTransaction();
@@ -59,7 +55,7 @@ const Proposal = () => {
     ip: "",
     port: "",
     lockAmount: 0,
-    oldStaker: "",
+    oldStaker: ""
   });
   const [errState, setErrState] = useState({});
 
@@ -78,6 +74,18 @@ const Proposal = () => {
   const [memberIdx, setMemberIdx] = useState();
   const [showProposal, setShowProposal] = useState(false);
   const [selectedMenu, setIsSelectedMenu] = useState("menu-voting");
+
+  const navigate = useNavigate();
+
+  // 토스트 메시지 띄우기
+  const openToast = (content) => {
+    message.destroy();
+    message.open({
+      type: "warning",
+      content
+    });
+    navigate("/voting/list");
+  };
 
   useEffect(() => {
     if (pathname === "/my-info") {
@@ -104,6 +112,11 @@ const Proposal = () => {
           break;
         }
       }
+
+      // 멤버 아닐 경우 튕김
+      if (memberIdx > memberLength)
+        openToast("Only members can access this page.");
+
       // get member info
       const oldVotingAddr = await callContractMethod(
         web3Instance,
@@ -128,6 +141,11 @@ const Proposal = () => {
   };
 
   useEffect(() => {
+    // 로그인 안 했을 경우 튕김
+    if (address === undefined) {
+      openToast("Please log in first.");
+      return;
+    }
     getMyAddress(address, memberLength);
   }, [address, memberLength]);
 
@@ -137,10 +155,10 @@ const Proposal = () => {
       blockRate1: 0,
       blockRate2: 0,
       blockRate3: 0,
-      blockRate4: 0,
+      blockRate4: 0
     },
     blockRateTotal: 0,
-    blockRewardDisMthErr: false,
+    blockRewardDisMthErr: false
   });
 
   // 새로고침 시 selecTedtopic 유지되도록 저장
@@ -194,7 +212,7 @@ const Proposal = () => {
       getErrModal("Staking Address is Invalids.", "Proposal Submit Error");
       setFormData({
         ...formData,
-        showLockAmount: "",
+        showLockAmount: ""
       });
       // setShowLockAmount("");
       return;
@@ -205,7 +223,7 @@ const Proposal = () => {
       getErrModal("Non-existing Member Address.", "Proposal Submit Error");
       setFormData({
         ...formData,
-        showLockAmount: "",
+        showLockAmount: ""
       });
       // setShowLockAmount("");
       return;
@@ -220,7 +238,7 @@ const Proposal = () => {
       );
       setFormData({
         ...formData,
-        showLockAmount: util.convertWeiToEther(lockedBalance),
+        showLockAmount: util.convertWeiToEther(lockedBalance)
       });
       // setShowLockAmount();
     } catch (err) {
@@ -229,14 +247,14 @@ const Proposal = () => {
       setOnLoading(false);
       setFormData({
         ...formData,
-        showLockAmount: "",
+        showLockAmount: ""
       });
       // setShowLockAmount("");
     }
 
     setErrState({
       ...errState,
-      showLockAmountErr: false,
+      showLockAmountErr: false
     });
   };
 
@@ -251,7 +269,7 @@ const Proposal = () => {
       ip: "",
       port: "",
       lockAmount: 0,
-      oldStaker: "",
+      oldStaker: ""
     });
     // setShowLockAmount("");
     // block distribution
@@ -260,10 +278,10 @@ const Proposal = () => {
         blockRate1: 0,
         blockRate2: 0,
         blockRate3: 0,
-        blockRate4: 0,
+        blockRate4: 0
       },
       blockRateTotal: 0,
-      blockRewardDisMthErr: false,
+      blockRewardDisMthErr: false
     });
     // clear errstate
     setErrState({});
@@ -296,7 +314,7 @@ const Proposal = () => {
     let [name, value] = e.split("_");
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: value
     });
   };
 
@@ -319,20 +337,20 @@ const Proposal = () => {
 
     setFormData({
       ...formData,
-      [e.target.name]: targetValue,
+      [e.target.name]: targetValue
     });
     switch (e.target.name) {
       // Add Authority Member
       case "newAddr":
         setErrState({
           ...errState,
-          newAddrErr: !util.checkAddress(targetValue),
+          newAddrErr: !util.checkAddress(targetValue)
         });
         break;
       case "newName":
         setErrState({
           ...errState,
-          newNameErr: !util.checkName(targetValue),
+          newNameErr: !util.checkName(targetValue)
         });
         break;
       case "newLockAmount":
@@ -340,20 +358,20 @@ const Proposal = () => {
         else {
           setErrState({
             ...errState,
-            newLockAmountErr: !checkLockAmount(targetValue),
+            newLockAmountErr: !checkLockAmount(targetValue)
           });
         }
         break;
       case "newNode":
         setErrState({
           ...errState,
-          newNodeErr: !util.checkNode(targetValue),
+          newNodeErr: !util.checkNode(targetValue)
         });
         break;
       case "stakingAddr":
         setErrState({
           ...errState,
-          stakingAddrErr: !util.checkAddress(targetValue),
+          stakingAddrErr: !util.checkAddress(targetValue)
         });
         break;
       case "oldLockAmount":
@@ -362,7 +380,7 @@ const Proposal = () => {
         else {
           setErrState({
             ...errState,
-            oldLockAmountErr: !checkLockAmount(targetValue),
+            oldLockAmountErr: !checkLockAmount(targetValue)
           });
         }
         break;
@@ -370,7 +388,7 @@ const Proposal = () => {
       case "newGovAddr":
         setErrState({
           ...errState,
-          newGovAddrErr: !util.checkAddress(targetValue),
+          newGovAddrErr: !util.checkAddress(targetValue)
         });
         break;
       // Voting Duration Setting
@@ -383,7 +401,7 @@ const Proposal = () => {
               "min",
               targetValue,
               formData.votDurationMax
-            ),
+            )
           });
         }
         break;
@@ -396,11 +414,11 @@ const Proposal = () => {
               "max",
               formData.votDurationMin,
               targetValue
-            ),
+            )
           });
         }
         break;
-      //Authority Member Staking Amount
+      // Authority Member Staking Amount
       case "authMemSkAmountMin":
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
@@ -415,7 +433,7 @@ const Proposal = () => {
               util.checkMemberStakingAmount(
                 targetValue,
                 formData.authMemSkAmountMax
-              ),
+              )
           });
         }
         break;
@@ -433,7 +451,7 @@ const Proposal = () => {
               util.checkMemberStakingAmount(
                 formData.authMemSkAmountMin,
                 targetValue
-              ),
+              )
           });
         }
         break;
@@ -443,7 +461,7 @@ const Proposal = () => {
         else {
           setErrState({
             ...errState,
-            blockCreationErr: !util.checkBlockCreationTime(targetValue),
+            blockCreationErr: !util.checkBlockCreationTime(targetValue)
           });
         }
         break;
@@ -462,16 +480,17 @@ const Proposal = () => {
           setTempRates((prevState) => {
             const updatedBlockRates = {
               ...prevState.blockRates,
-              [name]: parsedTargetValue,
+              [name]: parsedTargetValue
             };
             // get total
-            const newTotal = Object.values(updatedBlockRates).reduce(
-              (p, c) => p + c
-            );
+            const newTotal = Object.values(updatedBlockRates)
+              .reduce((p, c) => p + c)
+              .toFixed(2);
+
             return {
               blockRates: updatedBlockRates,
               blockRateTotal: newTotal,
-              blockRewardDisMthErr: newTotal !== 100,
+              blockRewardDisMthErr: Number(newTotal) !== 100
             };
           });
         }
@@ -482,7 +501,7 @@ const Proposal = () => {
         else {
           setErrState({
             ...errState,
-            blockRewardAmountErr: !util.checkRewardAmount(targetValue),
+            blockRewardAmountErr: !util.checkRewardAmount(targetValue)
           });
         }
         break;
@@ -492,7 +511,7 @@ const Proposal = () => {
         else {
           setErrState({
             ...errState,
-            maxPriorityFeePerGasErr: !util.checkPrice(targetValue),
+            maxPriorityFeePerGasErr: !util.checkPrice(targetValue)
           });
         }
         break;
@@ -502,7 +521,7 @@ const Proposal = () => {
         else {
           setErrState({
             ...errState,
-            gasLimitErr: !util.checkPrice(targetValue),
+            gasLimitErr: !util.checkPrice(targetValue)
           });
         }
         break;
@@ -511,7 +530,7 @@ const Proposal = () => {
         else {
           setErrState({
             ...errState,
-            maxBaseFeeErr: !util.checkPrice(targetValue),
+            maxBaseFeeErr: !util.checkPrice(targetValue)
           });
         }
         break;
@@ -520,7 +539,7 @@ const Proposal = () => {
         else {
           setErrState({
             ...errState,
-            baseFeeMaxChangeRateErr: !util.checkPrice(targetValue),
+            baseFeeMaxChangeRateErr: !util.checkPrice(targetValue)
           });
         }
         break;
@@ -529,7 +548,7 @@ const Proposal = () => {
         else {
           setErrState({
             ...errState,
-            gasTargetPercentageErr: !util.checkPrice(targetValue),
+            gasTargetPercentageErr: !util.checkPrice(targetValue)
           });
         }
         break;
@@ -537,26 +556,26 @@ const Proposal = () => {
       case "newVotingAddr":
         setErrState({
           ...errState,
-          newVotingAddrErr: !util.checkAddress(targetValue),
+          newVotingAddrErr: !util.checkAddress(targetValue)
         });
         break;
       // Reward Address
       case "newRewardAddr":
         setErrState({
           ...errState,
-          newRewardAddrErr: !util.checkAddress(targetValue),
+          newRewardAddrErr: !util.checkAddress(targetValue)
         });
         break;
       case "companyName":
         setErrState({
           ...errState,
-          companyNameErr: !util.checkCompanyName(targetValue),
+          companyNameErr: !util.checkCompanyName(targetValue)
         });
         break;
       case "companyAddress":
         setErrState({
           ...errState,
-          companyAddressErr: !util.checkAddress(targetValue),
+          companyAddressErr: !util.checkAddress(targetValue)
         });
         break;
       case "investmentAmount":
@@ -564,7 +583,7 @@ const Proposal = () => {
         else {
           setErrState({
             ...errState,
-            investmentAmountErr: !util.checkInvestmentAmount(targetValue),
+            investmentAmountErr: !util.checkInvestmentAmount(targetValue)
           });
         }
         break;
@@ -709,7 +728,7 @@ const Proposal = () => {
               `(Old Address: ${util.convertWeiToEther(
                 oldMemberBalance,
                 "ether"
-              )} META Locked)`,
+              )} META Locked)`
             ],
             "Proposal Submit Error"
           );
@@ -795,6 +814,55 @@ const Proposal = () => {
     }
   };
 
+  // min < authority list locked balance < max 체크
+  const checkStakingLockedBalance = async (
+    inputStakingMin,
+    inputStakingMax
+  ) => {
+    let stakingMin = 0;
+    let stakingMax = 0;
+    try {
+      // json 파일로 관리하는 authority 목록 가져오기
+      const authorityList = AuthorityList[process.env.REACT_APP_MODE] || [];
+      for await (const authority of authorityList) {
+        const { addr } = authority;
+        // 해당 authority의 locked balance를 가져옴
+        const lockedBalance = await callContractMethod(
+          web3Instance,
+          "Staking",
+          "lockedBalanceOf",
+          addr
+        );
+        // 입력한 min, max값과 비교
+        const convertLockedBalance = util.convertWeiToEther(lockedBalance);
+        if (!stakingMin || Number(convertLockedBalance) < stakingMin) {
+          stakingMin = Number(convertLockedBalance);
+        }
+        if (!stakingMax || Number(convertLockedBalance) > stakingMax) {
+          stakingMax = Number(convertLockedBalance);
+        }
+      }
+      // 최종적으로 확인
+      if (stakingMin < Number(inputStakingMin)) {
+        getErrModal(
+          `Currently, the minimum staking amount is ${stakingMin} META. Please input less than this quantity.`,
+          "Proposal Submit Error"
+        );
+        return false;
+      }
+      if (inputStakingMax < Number(stakingMax)) {
+        getErrModal(
+          `Currently, the maximum staking amount is ${stakingMax} META. Please input larger than this quantity.`,
+          "Proposal Submit Error"
+        );
+        return false;
+      }
+      return true;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   // check the data error handling
   const checkSubmitData = async (data) => {
     const { memo, votDuration } = data;
@@ -808,14 +876,14 @@ const Proposal = () => {
           if (util.checkUndefined(newAddr)) {
             setErrState({
               ...errState,
-              newAddrErr: !errState.newAddrErr,
+              newAddrErr: !errState.newAddrErr
             });
             setOnLoading(false);
             return;
           }
           if (util.checkUndefined(newName)) {
             setErrState({
-              newNameErr: !errState.newNameErr,
+              newNameErr: !errState.newNameErr
             });
             setOnLoading(false);
             return;
@@ -823,7 +891,7 @@ const Proposal = () => {
           if (util.checkUndefined(newLockAmount)) {
             setErrState({
               ...errState,
-              newLockAmountErr: !errState.newLockAmountErr,
+              newLockAmountErr: !errState.newLockAmountErr
             });
             setOnLoading(false);
             return;
@@ -831,7 +899,7 @@ const Proposal = () => {
           if (util.checkUndefined(newNode)) {
             setErrState({
               ...errState,
-              newNodeErr: !errState.newNodeErr,
+              newNodeErr: !errState.newNodeErr
             });
             setOnLoading(false);
             return;
@@ -855,7 +923,7 @@ const Proposal = () => {
             ip,
             port,
             memo,
-            duration: votDuration,
+            duration: votDuration
           };
           break;
         }
@@ -866,7 +934,7 @@ const Proposal = () => {
           if (util.checkUndefined(stakingAddr)) {
             setErrState({
               ...errState,
-              stakingAddrErr: !errState.stakingAddrErr,
+              stakingAddrErr: !errState.stakingAddrErr
             });
             setOnLoading(false);
             return;
@@ -874,7 +942,7 @@ const Proposal = () => {
           if (util.checkUndefined(newAddr)) {
             setErrState({
               ...errState,
-              newAddrErr: !errState.newAddrErr,
+              newAddrErr: !errState.newAddrErr
             });
             setOnLoading(false);
             return;
@@ -882,7 +950,7 @@ const Proposal = () => {
           if (util.checkUndefined(newName)) {
             setErrState({
               ...errState,
-              newNameErr: !errState.newNameErr,
+              newNameErr: !errState.newNameErr
             });
             setOnLoading(false);
             return;
@@ -890,7 +958,7 @@ const Proposal = () => {
           if (util.checkUndefined(newNode)) {
             setErrState({
               ...errState,
-              newNodeErr: !errState.newNodeErr,
+              newNodeErr: !errState.newNodeErr
             });
             setOnLoading(false);
             return;
@@ -898,7 +966,7 @@ const Proposal = () => {
           if (util.checkUndefined(newLockAmount) || newLockAmount === "") {
             setErrState({
               ...errState,
-              newLockAmountErr: !errState.newLockAmountErr,
+              newLockAmountErr: !errState.newLockAmountErr
             });
             setOnLoading(false);
             return;
@@ -923,7 +991,7 @@ const Proposal = () => {
             port,
             memo,
             duration: votDuration,
-            oldStaker: stakingAddr,
+            oldStaker: stakingAddr
           };
           break;
         }
@@ -934,7 +1002,7 @@ const Proposal = () => {
           if (util.checkUndefined(stakingAddr)) {
             setErrState({
               ...errState,
-              stakingAddrErr: !errState.stakingAddrErr,
+              stakingAddrErr: !errState.stakingAddrErr
             });
             setOnLoading(false);
             return;
@@ -942,7 +1010,7 @@ const Proposal = () => {
           if (util.checkUndefined(formData.showLockAmount)) {
             setErrState({
               ...errState,
-              showLockAmountErr: !errState.showLockAmountErr,
+              showLockAmountErr: !errState.showLockAmountErr
             });
             setOnLoading(false);
             return;
@@ -950,7 +1018,7 @@ const Proposal = () => {
           if (util.checkUndefined(oldLockAmount)) {
             setErrState({
               ...errState,
-              oldLockAmountErr: !errState.oldLockAmountErr,
+              oldLockAmountErr: !errState.oldLockAmountErr
             });
             setOnLoading(false);
             return;
@@ -966,7 +1034,7 @@ const Proposal = () => {
             staker: stakingAddr,
             lockAmount: oldLockAmount,
             memo,
-            duration: votDuration,
+            duration: votDuration
           };
           break;
         }
@@ -976,7 +1044,7 @@ const Proposal = () => {
           if (util.checkUndefined(newGovAddr)) {
             setErrState({
               ...errState,
-              newGovAddrErr: !errState.newGovAddrErr,
+              newGovAddrErr: !errState.newGovAddrErr
             });
             setOnLoading(false);
             return;
@@ -991,7 +1059,7 @@ const Proposal = () => {
           checkData = {
             newGovAddr,
             memo,
-            duration: votDuration,
+            duration: votDuration
           };
           break;
         }
@@ -1001,7 +1069,7 @@ const Proposal = () => {
           if (util.checkUndefined(votDurationMin) || votDurationMin === "") {
             setErrState({
               ...errState,
-              votDurationErr: !errState.votDurationErr,
+              votDurationErr: !errState.votDurationErr
             });
             setOnLoading(false);
             return;
@@ -1009,7 +1077,7 @@ const Proposal = () => {
           if (util.checkUndefined(votDurationMax) || votDurationMax === "") {
             setErrState({
               ...errState,
-              votDurationErr: !errState.votDurationErr,
+              votDurationErr: !errState.votDurationErr
             });
             setOnLoading(false);
             return;
@@ -1022,7 +1090,7 @@ const Proposal = () => {
             ["uint256", "uint256"],
             [
               util.convertDayToSeconds(votDurationMin),
-              util.convertDayToSeconds(votDurationMax),
+              util.convertDayToSeconds(votDurationMax)
             ]
           );
           trxFunction = (trx) =>
@@ -1037,7 +1105,7 @@ const Proposal = () => {
             envType: String(3),
             envVal,
             memo,
-            duration: votDuration,
+            duration: votDuration
           };
           break;
         }
@@ -1050,7 +1118,7 @@ const Proposal = () => {
           ) {
             setErrState({
               ...errState,
-              authMemSkAmountErr: !errState.authMemSkAmountErr,
+              authMemSkAmountErr: !errState.authMemSkAmountErr
             });
             setOnLoading(false);
             return;
@@ -1061,11 +1129,21 @@ const Proposal = () => {
           ) {
             setErrState({
               ...errState,
-              authMemSkAmountErr: !errState.authMemSkAmountErr,
+              authMemSkAmountErr: !errState.authMemSkAmountErr
             });
             setOnLoading(false);
             return;
           }
+          // authority locked balance를 가지고 입력한 min, max 범위에 있는지 체크
+          const checkLockedBalance = await checkStakingLockedBalance(
+            authMemSkAmountMin,
+            authMemSkAmountMax
+          );
+          if (!checkLockedBalance) {
+            setOnLoading(false);
+            return;
+          }
+
           // setting env variables
           const envName = util.encodeStringToSha3(
             ENV_NAMES.ENV_STAKING_MIN_MAX
@@ -1074,7 +1152,7 @@ const Proposal = () => {
             ["uint256", "uint256"],
             [
               util.convertEtherToWei(authMemSkAmountMin),
-              util.convertEtherToWei(authMemSkAmountMax),
+              util.convertEtherToWei(authMemSkAmountMax)
             ]
           );
           trxFunction = (trx) =>
@@ -1089,7 +1167,7 @@ const Proposal = () => {
             envType: String(3),
             envVal,
             memo,
-            duration: votDuration,
+            duration: votDuration
           };
           break;
         }
@@ -1099,7 +1177,7 @@ const Proposal = () => {
           if (util.checkUndefined(blockCreation) || blockCreation === "") {
             setErrState({
               ...errState,
-              blockCreationErr: !errState.blockCreationErr,
+              blockCreationErr: !errState.blockCreationErr
             });
             setOnLoading(false);
             return;
@@ -1125,7 +1203,7 @@ const Proposal = () => {
             envType: String(2),
             envVal,
             memo,
-            duration: votDuration,
+            duration: votDuration
           };
           break;
         }
@@ -1138,7 +1216,7 @@ const Proposal = () => {
           ) {
             setErrState({
               ...errState,
-              blockRewardAmountErr: !errState.blockRewardAmountErr,
+              blockRewardAmountErr: !errState.blockRewardAmountErr
             });
             setOnLoading(false);
             return;
@@ -1163,7 +1241,7 @@ const Proposal = () => {
             envType: String(2),
             envVal,
             memo,
-            duration: votDuration,
+            duration: votDuration
           };
           break;
         }
@@ -1172,12 +1250,12 @@ const Proposal = () => {
             tempRates.blockRates;
           // check undefined
           if (
-            tempRates.blockRateTotal !== 100 ||
+            Number(tempRates.blockRateTotal) !== 100 ||
             (!blockRate1 && !blockRate2 && !blockRate3 && !blockRate4)
           ) {
             setTempRates({
               ...tempRates,
-              blockRewardDisMthErr: !tempRates.blockRewardDisMthErr,
+              blockRewardDisMthErr: !tempRates.blockRewardDisMthErr
             });
             setOnLoading(false);
             return;
@@ -1193,7 +1271,7 @@ const Proposal = () => {
               (Number(blockRate1) * 100).toFixed(0),
               (Number(blockRate2) * 100).toFixed(0),
               (Number(blockRate3) * 100).toFixed(0),
-              (Number(blockRate4) * 100).toFixed(0),
+              (Number(blockRate4) * 100).toFixed(0)
             ]
           );
           trxFunction = (trx) =>
@@ -1208,7 +1286,7 @@ const Proposal = () => {
             envType: String(5),
             envVal,
             memo,
-            duration: votDuration,
+            duration: votDuration
           };
           break;
         }
@@ -1221,7 +1299,7 @@ const Proposal = () => {
           ) {
             setErrState({
               ...errState,
-              maxPriorityFeePerGasErr: !errState.maxPriorityFeePerGasErr,
+              maxPriorityFeePerGasErr: !errState.maxPriorityFeePerGasErr
             });
             setOnLoading(false);
             return;
@@ -1246,7 +1324,7 @@ const Proposal = () => {
             envType: String(2),
             envVal,
             memo,
-            duration: votDuration,
+            duration: votDuration
           };
           break;
         }
@@ -1255,13 +1333,13 @@ const Proposal = () => {
             gasLimit,
             maxBaseFee,
             baseFeeMaxChangeRate,
-            gasTargetPercentage,
+            gasTargetPercentage
           } = data;
           // check undefined
           if (util.checkUndefined(gasLimit) || gasLimit === "") {
             setErrState({
               ...errState,
-              gasLimitErr: !errState.gasLimitErr,
+              gasLimitErr: !errState.gasLimitErr
             });
             setOnLoading(false);
             return;
@@ -1269,7 +1347,7 @@ const Proposal = () => {
           if (util.checkUndefined(maxBaseFee) || maxBaseFee === "") {
             setErrState({
               ...errState,
-              maxBaseFeeErr: !errState.maxBaseFeeErr,
+              maxBaseFeeErr: !errState.maxBaseFeeErr
             });
             setOnLoading(false);
             return;
@@ -1280,7 +1358,7 @@ const Proposal = () => {
           ) {
             setErrState({
               ...errState,
-              baseFeeMaxChangeRateErr: !errState.baseFeeMaxChangeRateErr,
+              baseFeeMaxChangeRateErr: !errState.baseFeeMaxChangeRateErr
             });
             setOnLoading(false);
             return;
@@ -1291,7 +1369,7 @@ const Proposal = () => {
           ) {
             setErrState({
               ...errState,
-              gasTargetPercentageErr: !errState.gasTargetPercentageErr,
+              gasTargetPercentageErr: !errState.gasTargetPercentageErr
             });
             setOnLoading(false);
             return;
@@ -1306,7 +1384,7 @@ const Proposal = () => {
               util.convertGWeiToWei(gasLimit),
               maxBaseFee,
               baseFeeMaxChangeRate,
-              gasTargetPercentage,
+              gasTargetPercentage
             ]
           );
           trxFunction = (trx) =>
@@ -1321,7 +1399,7 @@ const Proposal = () => {
             envType: String(5),
             envVal,
             memo,
-            duration: votDuration,
+            duration: votDuration
           };
           break;
         }
@@ -1333,7 +1411,7 @@ const Proposal = () => {
           if (util.checkUndefined(newVotingAddr)) {
             setErrState({
               ...errState,
-              newVotingAddrErr: !errState.newVotingAddrErr,
+              newVotingAddrErr: !errState.newVotingAddrErr
             });
             setOnLoading(false);
             return;
@@ -1341,7 +1419,7 @@ const Proposal = () => {
           if (oldVotingAddr === newVotingAddr) {
             setErrState({
               ...errState,
-              newVotingAddrErr: !errState.newVotingAddrErr,
+              newVotingAddrErr: !errState.newVotingAddrErr
             });
             setOnLoading(false);
             return;
@@ -1363,7 +1441,7 @@ const Proposal = () => {
             ip,
             port,
             memo,
-            oldStaker: staker,
+            oldStaker: staker
           };
           break;
         }
@@ -1375,7 +1453,7 @@ const Proposal = () => {
           if (util.checkUndefined(newRewardAddr)) {
             setErrState({
               ...errState,
-              newRewardAddrErr: !errState.newRewardAddrErr,
+              newRewardAddrErr: !errState.newRewardAddrErr
             });
             setOnLoading(false);
             return;
@@ -1383,7 +1461,7 @@ const Proposal = () => {
           if (oldRewardAddr === newRewardAddr) {
             setErrState({
               ...errState,
-              newRewardAddrErr: !errState.newRewardAddrErr,
+              newRewardAddrErr: !errState.newRewardAddrErr
             });
             setOnLoading(false);
             return;
@@ -1405,7 +1483,7 @@ const Proposal = () => {
             ip,
             port,
             memo,
-            oldStaker: staker,
+            oldStaker: staker
           };
           break;
         }
@@ -1414,19 +1492,19 @@ const Proposal = () => {
             companyName,
             companyAddress,
             investmentAmount,
-            link = "",
+            link = ""
           } = data;
           if (util.checkUndefined(companyName)) {
             setErrState({
               ...errState,
-              companyNameErr: !errState.companyNameErr,
+              companyNameErr: !errState.companyNameErr
             });
             setOnLoading(false);
             return;
           }
           if (util.checkUndefined(companyAddress)) {
             setErrState({
-              companyAddress: !errState.companyAddress,
+              companyAddress: !errState.companyAddress
             });
             setOnLoading(false);
             return;
@@ -1437,7 +1515,7 @@ const Proposal = () => {
           ) {
             setErrState({
               ...errState,
-              investmentAmountErr: !errState.investmentAmountErr,
+              investmentAmountErr: !errState.investmentAmountErr
             });
             setOnLoading(false);
             return;
@@ -1457,7 +1535,7 @@ const Proposal = () => {
             companyAddress,
             investmentAmount,
             description: memo,
-            link,
+            link
           };
           break;
         }
@@ -1469,7 +1547,7 @@ const Proposal = () => {
         ...checkData,
         memo: checkData.memo || "",
         duration:
-          util.convertDayToSeconds(checkData.duration) || votingDurationMin,
+          util.convertDayToSeconds(checkData.duration) || votingDurationMin
       };
       // override data for formatting
       refineData = util.refineSubmitData(checkData);
@@ -1525,7 +1603,7 @@ const Proposal = () => {
         to: trx.to,
         data: trx.data,
         gasPrice: 110000000000,
-        value: "0x0",
+        value: "0x0"
         // maxFeePerGas: 101000000000,
         // maxPriorityFeePerGas: 100000000000,
       })
@@ -1608,7 +1686,7 @@ const Proposal = () => {
         ip,
         port,
         lockAmount: util.convertWeiToEther(lockAmount),
-        oldStaker: address,
+        oldStaker: address
       });
     } catch (err) {
       console.log(err);
@@ -1776,16 +1854,6 @@ const Proposal = () => {
       ? ENV_MY_INFO_PROPOSAL_LIST
       : ENV_VOTING_PROPOSAL_LIST;
 
-  const network = process.env.REACT_APP_NETWORK_TYPE;
-  const whiteList =
-    network === "mainnet"
-      ? MAINNET_WHITE_LIST
-      : network === "testnet"
-      ? TESTNET_WHITE_LIST
-      : network === "devnet"
-      ? DEVMETANET_WHITE_LIST
-      : DEVMETANET_WHITE_LIST;
-
   return (
     <>
       <div className="section-body">
@@ -1796,7 +1864,6 @@ const Proposal = () => {
             showProposal={showProposal}
             selectedTopic={selectedTopic}
             handleSelectTopicChange={handleSelectTopicChange}
-            isWhiteList={whiteList.includes(address)}
           />
           <main>
             <div className={"proposal-form"}>

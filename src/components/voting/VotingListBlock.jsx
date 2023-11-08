@@ -2,14 +2,11 @@ import cn from "classnames/bind";
 import React, { useCallback } from "react"; // 23.04.20 수정: useCallback 추가
 import { Link } from "react-router-dom";
 
-
 import RevokeButton from "./Button";
 import IconWithText from "./IconWithText.jsx";
 import Status from "./Status.jsx";
 import VotingChartMini from "./VotingChartMini.jsx";
 import { loginAcc, timeConverter } from "../../util.js";
-
-
 
 // case 확인을 위한 props
 const VotingListBlock = ({
@@ -19,7 +16,7 @@ const VotingListBlock = ({
   setTopic,
   onClick,
   isMember,
-  style,
+  style
 }) => {
   const {
     envVariableName,
@@ -30,7 +27,7 @@ const VotingListBlock = ({
     companyName, // wait protocol
     description, // wait protocol
     isWait, // wait protocol
-    txHashes, // wait protocol
+    txHashes // wait protocol
   } = ballotMemberOriginData;
 
   const {
@@ -46,7 +43,7 @@ const VotingListBlock = ({
     endTime,
     // endTimeConverted,
     memo,
-    powers, // 0: 투표 안한 사람, 1: 찬성 투표율, 2: 반대 투표율, 3: 기권율
+    powers // 0: 투표 안한 사람, 1: 찬성 투표율, 2: 반대 투표율, 3: 기권율
   } = item;
 
   const title = setTopic({
@@ -57,7 +54,7 @@ const VotingListBlock = ({
     newStakerAddress,
     newVoterAddress,
     newRewardAddress,
-    companyName,
+    companyName
   });
 
   // 투자 진행 상태 (state가 active거나 가결됐을 때 필요)
@@ -82,8 +79,8 @@ const VotingListBlock = ({
       ((isWait && powers[1] && powers[2]) || (powerOfAccepts && powerOfRejects))
         ? 100 - `${isWait ? powers[1] : powerOfAccepts}`
         : isWait
-        ? powers[2]
-        : powerOfRejects,
+          ? powers[2]
+          : powerOfRejects
   };
 
   /* 23.04.20 수정: wait protocol 케이스 추가 */
@@ -105,7 +102,7 @@ const VotingListBlock = ({
 
   return (
     <>
-      <div className="proposal-box" style={style}>
+      <div className='proposal-box' style={style}>
         <Link
           to={`/voting/detail?id=${id}${isWait ? "&wait=1" : ""}`}
           className={cn(
@@ -134,8 +131,8 @@ const VotingListBlock = ({
                 {
                   icon: "time",
                   // 완료된 케이스는 완료 날짜 표시 예시를 위한 코드
-                  text: exFinalizedCode(),
-                },
+                  text: exFinalizedCode()
+                }
               ]}
             />
             <div>
@@ -144,8 +141,8 @@ const VotingListBlock = ({
                   {
                     icon: "person",
                     // 투표 0건인 케이스 (썸네일 그래프 없음) 예시를 위한 코드
-                    text: `${totalVoters} Addresses`,
-                  },
+                    text: `${totalVoters} Addresses`
+                  }
                 ]}
               />
               <VotingChartMini data={chartData} />
@@ -161,8 +158,8 @@ const VotingListBlock = ({
         {isMember &&
           (state === "4" || (isWait && (state === "0" || state === "1"))) &&
           isFinalized === "" && (
-            <RevokeButton text="Revoke" onClick={() => onClick(id)} />
-          )}
+          <RevokeButton text='Revoke' onClick={() => onClick(id)} />
+        )}
       </div>
     </>
   );

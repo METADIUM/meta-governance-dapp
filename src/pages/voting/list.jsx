@@ -4,14 +4,12 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useRef,
+  useRef
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSendTransaction } from "wagmi";
 
-
 // import { ReactComponent as IconEmpty } from "../../assets/images/ico_empty.svg";
-
 
 import MoreButton from "../../components/voting/GovButton.jsx";
 import VotingListBlock from "../../components/voting/VotingListBlock.jsx";
@@ -20,9 +18,8 @@ import VotingTopList from "../../components/voting/VotingTopList.jsx";
 import {
   constants,
   DEVMETANET_CONTRACTS,
-  DEVNET_CONTRACTS,
   MAINNET_CONTRACTS,
-  TESTNET_CONTRACTS,
+  TESTNET_CONTRACTS
 } from "../../constants.js";
 import { AuthCtx } from "../../contexts/AuthContext.js";
 import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx";
@@ -42,7 +39,7 @@ const VotingList = () => {
     ballotMemberOriginData,
     ballotBasicOriginData,
     authorityNames,
-    waitBallotBasicOriginData,
+    waitBallotBasicOriginData
   } = data;
   const { sendTransactionAsync } = useSendTransaction();
   // -------------------- state
@@ -81,7 +78,7 @@ const VotingList = () => {
     waitBallotBasicOriginData,
     isMember,
     viewingFinalizedItems,
-    getBallotOriginItem,
+    getBallotOriginItem
   ]);
 
   useEffect(() => {
@@ -129,14 +126,12 @@ const VotingList = () => {
         ? MAINNET_CONTRACTS
         : network === "testnet"
         ? TESTNET_CONTRACTS
-        : network === "devnet"
-        ? DEVNET_CONTRACTS
         : DEVMETANET_CONTRACTS;
     const to = contracts.filter(
       (item) => item.name === `${id.length ? "WaitGovernance" : "GovImp"}`
     )[0].address;
     try {
-      /* 
+      /*
         from, to, data, gasPrice, value 중 어느값이 없으면 데이터를 화면에 그리지 못합니다.
       **/
       await sendTransactionAsync({
@@ -144,7 +139,7 @@ const VotingList = () => {
         to,
         data: trx,
         gasPrice: 110000000000,
-        value: "0x0",
+        value: "0x0"
       })
         .then(({ hash }) => {
           waitForReceipt(hash, async (receipt) => {
@@ -293,7 +288,7 @@ const VotingList = () => {
       active,
       proposal,
       approved,
-      rejected,
+      rejected
     });
   });
 
@@ -306,7 +301,7 @@ const VotingList = () => {
     newStakerAddress,
     newVoterAddress,
     newRewardAddress,
-    companyName,
+    companyName
   }) => {
     // MyInfo에서 변경한 항목의 타이틀 세팅
     // if (
@@ -328,8 +323,9 @@ const VotingList = () => {
     //   }
     // }
     if (ballotType === constants.ballotTypes.ChangedEnv) return envVariableName;
-    else if (parseInt(ballotType) > 0)
+    else if (parseInt(ballotType) > 0) {
       return constants.ballotTypesArr[parseInt(ballotType)];
+    }
     // wait protocol 항목 검색 가능하도록 추가
     return companyName || "-";
   };
@@ -345,7 +341,7 @@ const VotingList = () => {
           newStakerAddress,
           newVoterAddress,
           newRewardAddress,
-          companyName,
+          companyName
         } = value.props.ballotMemberOriginData;
         let topic = setTopic({
           creator,
@@ -355,7 +351,7 @@ const VotingList = () => {
           newStakerAddress,
           newVoterAddress,
           newRewardAddress,
-          companyName,
+          companyName
         });
         return [topic, value.props.item.creator].some((elem) => {
           return elem.toLowerCase().indexOf(str) !== -1;
@@ -372,7 +368,7 @@ const VotingList = () => {
 
     setVisibleActiveItems([
       ...filteringBallot(activeItems, str),
-      ...filteringBallot(proposalItems, str),
+      ...filteringBallot(proposalItems, str)
     ]);
     setVisibleFinalizedItems(filteringBallot(finalizedItems, str));
   };
@@ -385,14 +381,14 @@ const VotingList = () => {
       props.push({
         title: filterData[1],
         count: `${activeItems.length + proposalItems.length}`,
-        items: visibleActiveItems,
+        items: visibleActiveItems
       });
     }
     if (e === filterData[0] || e === filterData[2]) {
       props.push({
         title: filterData[2],
         count: `${finalizedItems.length}`,
-        items: visibleFinalizedItems,
+        items: visibleFinalizedItems
       });
     }
 
@@ -420,7 +416,7 @@ const VotingList = () => {
                         ...finalizedItems.slice(
                           0,
                           viewingFinalizedItems.current
-                        ),
+                        )
                       ]);
                     }}
                   />
@@ -438,7 +434,7 @@ const VotingList = () => {
                         ...[...activeItems, ...proposalItems].slice(
                           0,
                           viewingActiveItems.current
-                        ),
+                        )
                       ]);
                     }}
                   />
@@ -486,13 +482,12 @@ const VotingList = () => {
               isMember={isMember}
               isConnect={isLoggedIn}
             />
-            <div className={cn("filter-wrap")}></div>
+            <div className={cn("filter-wrap")} />
             {/* filter-wrap?? */}
           </div>
-          {/* voting time over - filter와 상관없이 고정*/}
+          {/* voting time over - filter와 상관없이 고정 */}
           {revokeItems.length > 0 && (
             <div className={cn("voting-list-section", "revoke-item")}>
-              {console.log("revoke", revokeItems)}
               <VotingTitle
                 type="md"
                 title={"Voting Time Over"}

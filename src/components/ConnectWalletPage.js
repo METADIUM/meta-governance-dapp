@@ -16,10 +16,10 @@ const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
     }
 
     return (
-      <div className="wallet-list" onClick={() => changeProvider(wallet.id)}>
+      <div className='wallet-list' onClick={() => changeProvider(wallet.id)}>
         <img
           src={wallet.logo}
-          alt="wallet img"
+          alt='wallet img'
           style={{ width: size, height: size, marginRight: "10px" }}
         />
         <p>{wallet.name}</p>
@@ -43,7 +43,7 @@ const ConnectWalletPage = ({ changeProvider, setWalletModal }) => {
         </p>
       </div>
       <Button
-        className="walletlist-cancel-btn"
+        className='walletlist-cancel-btn'
         onClick={() => setWalletModal()}
       >
         Cancel

@@ -1,11 +1,9 @@
-import cn from 'classnames/bind';
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import cn from "classnames/bind";
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
-import VotingSelect from './VotingSelect';
-import VotingSearch from '../../components/voting/VotingSearch';
-
-
+import VotingSelect from "./VotingSelect";
+import VotingSearch from "../../components/voting/VotingSearch";
 
 const VotingTitle = ({
   type = "md",
@@ -19,7 +17,7 @@ const VotingTitle = ({
   exp,
   isMember,
   btnFunction,
-  isConnect,
+  isConnect
 }) => {
   const [isFilter, setIsFilter] = useState(false);
   const [width, setWidth] = useState(window.innerWidth);
@@ -33,7 +31,7 @@ const VotingTitle = ({
 
   const handleWindowSizeChange = useCallback(() => {
     setWidth(window.innerWidth);
-    isMobileType = window.innerWidth < 1024 ? true : false;
+    isMobileType = window.innerWidth < 1024;
 
     isMobileType ? setIsMobile(true) : setIsMobile(false);
   }, []);
@@ -46,7 +44,7 @@ const VotingTitle = ({
     };
   }, [handleWindowSizeChange]);
 
-  function newProposalBtnClickHandler(event) {
+  function newProposalBtnClickHandler (event) {
     event.preventDefault();
     btnFunction && btnFunction();
     window.localStorage.removeItem("selectedTopic");
@@ -54,11 +52,11 @@ const VotingTitle = ({
   }
 
   return (
-    <div className={cn("voting-title-wrap", type)}>
+    <div className={cn("voting-title-wrap", type, { "exp": exp })}>
       {title && (
         <>
-          <strong className="subject">{title}</strong>
-          {count !== undefined && <span className="subject">{count}</span>}
+          <strong className='subject'>{title}</strong>
+          {count !== undefined && <span className='subject'>{count}</span>}
         </>
       )}
       {searchName && ( // "search-type"
@@ -85,7 +83,7 @@ const VotingTitle = ({
             />
             {isConnect && isMember && (
               <button
-                className="default-btn"
+                className='default-btn'
                 onClick={newProposalBtnClickHandler}
               >
                 + New Proposal
@@ -94,7 +92,7 @@ const VotingTitle = ({
           </div>
         </div>
       )}
-      {exp && <div className="voting-title-exp">{exp}</div>}
+      {exp && <div className='voting-title-exp'>{exp}</div>}
     </div>
   );
 };

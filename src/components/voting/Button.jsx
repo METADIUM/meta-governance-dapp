@@ -11,7 +11,7 @@ const Button = ({
   size = "md",
   disabled = false,
   prefix = false,
-  icon = false,
+  icon = false
 }) => {
   return (
     <>

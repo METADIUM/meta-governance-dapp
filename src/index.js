@@ -2,10 +2,8 @@ import React from "react";
 import { hydrate, render } from "react-dom";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-
 import App from "./App";
 import "./index.css";
-import "./i18n";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import WalletConnector from "./components/WalletConnector";
@@ -28,13 +26,13 @@ const renderApp = () => (
             <Header />
             <App>
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/voting/list" element={<VotingList />} />
-                <Route path="/voting/detail" element={<VotingDetail />} />
-                <Route path="/voting/proposal" element={<Proposal />} />
-                <Route path="/my-info" element={<Proposal />} />
-                <Route path="/loading" element={<Loading />} />
-                <Route path="/*" element={<Navigate replace to="/" />} />
+                <Route path='/' element={<Home />} />
+                <Route path='/voting/list' element={<VotingList />} />
+                <Route path='/voting/detail' element={<VotingDetail />} />
+                <Route path='/voting/proposal' element={<Proposal />} />
+                <Route path='/my-info' element={<Proposal />} />
+                <Route path='/loading' element={<Loading />} />
+                <Route path='/*' element={<Navigate replace to='/' />} />
               </Routes>
             </App>
             <Footer />

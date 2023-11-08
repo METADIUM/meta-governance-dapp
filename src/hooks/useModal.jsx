@@ -30,7 +30,7 @@ const useModal = () => {
     isModalOpened,
     title,
     content,
-    errLink,
+    errLink
   };
 };
 

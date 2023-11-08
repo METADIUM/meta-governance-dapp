@@ -9,26 +9,26 @@ export default ({
   setWalletModal,
   defaultAccount,
   nowWalletType,
-  setDisConnectView,
+  setDisConnectView
 }) => {
-  const wallets = []
+  const wallets = [];
 
   const getWallet = wallets.find((v) => v.id === nowWalletType);
 
   return (
     <>
       {!isLogin ? (
-        <Button type="primary" className="connect-btn" onClick={setWalletModal}>
+        <Button type='primary' className='connect-btn' onClick={setWalletModal}>
           Wallet Connect
         </Button>
       ) : (
         <>
           <Button
-            type="primary"
+            type='primary'
             style={{
               marginLeft: "12px",
               border: "#ffffff solid 2px",
-              background: "#000000",
+              background: "#000000"
             }}
             onClick={() => setDisConnectView(true)}
           >
@@ -37,7 +37,7 @@ export default ({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: "0",
+                padding: "0"
               }}
             >
               <div
@@ -50,17 +50,17 @@ export default ({
                   alignItems: "center",
                   justifyContent: "center",
                   marginRight: "8px",
-                  padding: "0 12px",
+                  padding: "0 12px"
                 }}
               >
                 <img
                   style={{
                     width: "20px",
                     height: "20px",
-                    left: "0",
+                    left: "0"
                   }}
                   src={getWallet.logo}
-                  alt="logo"
+                  alt='logo'
                 />
               </div>
 

@@ -18,13 +18,13 @@ const VotingBallots = ({
   onClickDetail = shouldPass(),
   onClickVote = shouldPass(),
   setDescription = shouldPass(),
-  onClickUpdateProposal = shouldPass(),
+  onClickUpdateProposal = shouldPass()
 }) => {
   const {
     newStakerAddress,
     oldStakerAddress,
     newVoterAddress,
-    newRewardAddress,
+    newRewardAddress
   } = ballotMemberOriginData;
   return (
     <div
@@ -38,9 +38,9 @@ const VotingBallots = ({
       id={item.id}
       ref={(ref) => ballotDetails.set(item.id, ref)}
     >
-      <div className="ballotInfoDiv flex">
-        <div className="infoLeft flex-full">
-          <p className="topic text-exlarge text-bold">
+      <div className='ballotInfoDiv flex'>
+        <div className='infoLeft flex-full'>
+          <p className='topic text-exlarge text-bold'>
             {setTopic(
               item.creator,
               item.ballotType,
@@ -48,82 +48,82 @@ const VotingBallots = ({
               newStakerAddress,
               oldStakerAddress,
               newVoterAddress,
-              newRewardAddress,
+              newRewardAddress
             )}
           </p>
-          <p className="company text-small">{authorityName}</p>
-          <p className="addr text-small">Proposal Address: {item.creator}</p>
+          <p className='company text-small'>{authorityName}</p>
+          <p className='addr text-small'>Proposal Address: {item.creator}</p>
         </div>
-        <div className="infoRight flex-column">
+        <div className='infoRight flex-column'>
           {bs.InProgress !== item.state && (
             <Button
-              className="btn-img text-exlarge"
-              type="primary"
-              id="ballotDetailBtn"
+              className='btn-img text-exlarge'
+              type='primary'
+              id='ballotDetailBtn'
               onClick={(e) => onClickDetail(e, item.id)}
-              icon="down"
+              icon='down'
             />
           )}
-          <p className="status text-small">
+          <p className='status text-small'>
             Status :
             {item.ballotType === "3" &&
             item.state === "3" &&
             oldStakerAddress === newStakerAddress ? (
-              "Changed"
-            ) : (
+                "Changed"
+              ) : (
               <>{btArr[parseInt(item.state)]} </>
-            )}
+              )}
           </p>
         </div>
       </div>
-      <div className="ballotContentDiv">
-        <div className="voteDiv">
+      <div className='ballotContentDiv'>
+        <div className='voteDiv'>
           {item.ballotType === "3" &&
           oldStakerAddress === newStakerAddress ? null : (
-            <div className="imageContent flex">
-              <Button
+            <div className='imageContent flex'>
+                <Button
                 disabled={![bs.Ready, bs.InProgress].includes(item.state)}
-                className="text-large"
-                id="yesVotingBtn"
+                className='text-large'
+                id='yesVotingBtn'
                 onClick={() => onClickVote("Y", item)}
-              >
+                >
                 Yes
               </Button>
-              <div className="chart flex-column flex-full">
-                <div className="number flex">
-                  <span className="text-bold">
+                <div className='chart flex-column flex-full'>
+                <div className='number flex'>
+                    <span className='text-bold'>
                     {item.powerOfAccepts === 0 ? "0" : item.powerOfAccepts}%
                   </span>
-                  <span className="text-bold">
+                    <span className='text-bold'>
                     {item.powerOfRejects === 0 ? "0" : item.powerOfRejects}%
                   </span>
-                </div>
+                  </div>
                 <Progress
-                  percent={item.powerOfAccepts}
-                  status="active"
-                  showInfo={false}
-                />
+                    percent={item.powerOfAccepts}
+                    status='active'
+                    showInfo={false}
+                  />
               </div>
-              <Button
+                <Button
                 disabled={![bs.Ready, bs.InProgress].includes(item.state)}
-                className="text-large"
-                id="noVotingBtn"
+                className='text-large'
+                id='noVotingBtn'
                 onClick={() => onClickVote("N", item)}
-              >
+                >
                 No
               </Button>
-            </div>
-          )}
-          <div className="textContent flex">
+              </div>
+            )}
+          <div className='textContent flex'>
             {setDescription(item.ballotType, item.id)}
-            <div className="duration">
+            <div className='duration'>
               {item.state !== bs.Ready && (
                 <div>
-                  <div className="flex">
+                  <div className='flex'>
                     <span>Start : </span>
                     <span>{item.startTimeConverted}</span>
                   </div>
-                  <div className="flex">
+                  <div className='flex'>
                     <span>End : </span>
                     <span>{item.endTimeConverted}</span>
                   </div>
@@ -131,15 +131,15 @@ const VotingBallots = ({
               )}
               {item.state === bs.Ready && (
                 <div>
-                  <div className="flex">
+                  <div className='flex'>
                     <span>duration</span>
-                    <span className="days">
+                    <span className='days'>
                       {item.duration === 0 ? 1 : item.duration} days
                     </span>
                   </div>
                   <Button
-                    className="btn-fill-gray"
-                    type="primary"
+                    className='btn-fill-gray'
+                    type='primary'
                     onClick={() => onClickUpdateProposal("change", item)}
                   >
                     Change
@@ -149,14 +149,14 @@ const VotingBallots = ({
             </div>
           </div>
         </div>
-        <div className="memoDiv">
-          <p className="text-bold">MEMO</p>
-          <p className="text-container">{item.memo}</p>
+        <div className='memoDiv'>
+          <p className='text-bold'>MEMO</p>
+          <p className='text-container'>{item.memo}</p>
         </div>
         {item.state === "1" && (
-          <div className="revokeDiv flex">
+          <div className='revokeDiv flex'>
             <Button
-              className="btn-fill-gray"
+              className='btn-fill-gray'
               onClick={() => onClickUpdateProposal("revoke", item)}
             >
               Revoke
@@ -176,11 +176,11 @@ const ShowBallots = ({
   visibleFinalizedItems,
   totalFinalizedItemLength,
   netName,
-  onClickReadMore = shouldPass(),
+  onClickReadMore = shouldPass()
 }) => (
-  <div className="contentDiv container">
+  <div className='contentDiv container'>
     <p
-      className="stateTitle text-heavy"
+      className='stateTitle text-heavy'
       ref={(ref) => {
         titles.activeTitle = ref;
       }}
@@ -188,9 +188,9 @@ const ShowBallots = ({
       Active
     </p>
     {visibleActiveItems}
-    <div className="vote-sectionline"></div>
+    <div className='vote-sectionline' />
     <p
-      className="stateTitle text-heavy"
+      className='stateTitle text-heavy'
       ref={(ref) => {
         titles.proposalTitle = ref;
       }}
@@ -200,19 +200,19 @@ const ShowBallots = ({
     {visibleProposalItems}
     {visibleProposalItems.length > 0 &&
       visibleProposalItems.length < totalProposalItemLength && (
-        <div className="moreDiv flex flex-center-vertical">
-          <Button
-            className={"btn-fill-white flex flex-center-horizontal " + netName}
-            onClick={(e) => onClickReadMore("proposal")}
-          >
-            <span>+</span>
-            <span className="text_btn">Read More</span>
-          </Button>
-        </div>
-      )}
-    <div className="vote-sectionline"></div>
+      <div className='moreDiv flex flex-center-vertical'>
+        <Button
+          className={"btn-fill-white flex flex-center-horizontal " + netName}
+          onClick={(e) => onClickReadMore("proposal")}
+        >
+          <span>+</span>
+          <span className='text_btn'>Read More</span>
+        </Button>
+      </div>
+    )}
+    <div className='vote-sectionline' />
     <p
-      className="stateTitle text-heavy"
+      className='stateTitle text-heavy'
       ref={(ref) => {
         titles.finalizedTitle = ref;
       }}
@@ -222,16 +222,16 @@ const ShowBallots = ({
     {visibleFinalizedItems}
     {visibleFinalizedItems.length > 0 &&
       visibleFinalizedItems.length < totalFinalizedItemLength && (
-        <div className="moreDiv flex flex-center-vertical">
-          <Button
-            className={"btn-fill-white flex flex-center-horizontal " + netName}
-            onClick={(e) => onClickReadMore("finalized")}
-          >
-            <span>+</span>
-            <span className="text_btn">Read More</span>
-          </Button>
-        </div>
-      )}
+      <div className='moreDiv flex flex-center-vertical'>
+        <Button
+          className={"btn-fill-white flex flex-center-horizontal " + netName}
+          onClick={(e) => onClickReadMore("finalized")}
+        >
+          <span>+</span>
+          <span className='text_btn'>Read More</span>
+        </Button>
+      </div>
+    )}
   </div>
 );
 

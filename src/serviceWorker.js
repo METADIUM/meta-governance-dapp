@@ -14,11 +14,11 @@ const isLocalhost = Boolean(
     window.location.hostname === "[::1]" ||
     // 127.0.0.1/8 is considered localhost for IPv4.
     window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/,
-    ),
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+    )
 );
 
-export function register(config) {
+export function register (config) {
   if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.REACT_APP_URL, window.location);
@@ -41,7 +41,7 @@ export function register(config) {
         navigator.serviceWorker.ready.then(() => {
           console.log(
             "This web app is being served cache-first by a service " +
-              "worker. To learn more, visit https://goo.gl/SC7cgQ",
+              "worker. To learn more, visit https://goo.gl/SC7cgQ"
           );
         });
       } else {
@@ -52,7 +52,7 @@ export function register(config) {
   }
 }
 
-function registerValidSW(swUrl, config) {
+function registerValidSW (swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
@@ -91,7 +91,7 @@ function registerValidSW(swUrl, config) {
     });
 }
 
-function checkValidServiceWorker(swUrl, config) {
+function checkValidServiceWorker (swUrl, config) {
   // Check if the service worker can be found. If it can't reload the page.
   window
     .fetch(swUrl)
@@ -114,12 +114,12 @@ function checkValidServiceWorker(swUrl, config) {
     })
     .catch(() => {
       console.log(
-        "No internet connection found. App is running in offline mode.",
+        "No internet connection found. App is running in offline mode."
       );
     });
 }
 
-export function unregister() {
+export function unregister () {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.ready.then((registration) => {
       registration.unregister();

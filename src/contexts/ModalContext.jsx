@@ -12,7 +12,7 @@ const ModalProvider = ({ children }) => {
     isModalOpened,
     title,
     content,
-    errLink,
+    errLink
   } = useModal();
   return (
     <ModalContext.Provider
@@ -22,7 +22,7 @@ const ModalProvider = ({ children }) => {
         isModalOpened,
         title,
         content,
-        errLink,
+        errLink
       }}
     >
       {children}

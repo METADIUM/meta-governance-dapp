@@ -328,7 +328,7 @@ a {
             display: block;
             height: 84px;
             overflow-y: auto;
-            padding-right: 5px;
+            padding-right: 10px;
 
             &::-webkit-scrollbar {
               width: 10px;
@@ -657,6 +657,17 @@ a {
     margin-bottom: 40px;
     gap: 0 8px;
 
+    &.exp {
+      flex-wrap: wrap;
+
+      .voting-title-exp {
+        @include R16;
+        color: $gray;
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+
     > span {
       color: $gray2;
     }
@@ -852,6 +863,20 @@ a {
           }
         }
       }
+
+      .button-wrap {
+        border: 1px solid $gray4;
+        border-radius: 4px;
+        padding: 0 16px;
+        @include B16;
+        height: 40px;
+        line-height: 40px;
+        margin-bottom: 24px;
+
+        &:hover {
+          border-color: $gray;
+        }
+      }
     }
   }
 }
@@ -879,6 +904,21 @@ a {
         background: rgba(78, 87, 255, 0.1);
         border-radius: 100px;
         color: $blue1;
+
+        &.active {
+          color: $blue1;
+          background: rgba(78, 87, 255, 0.1);
+        }
+
+        &.approved {
+          color: $mint;
+          background: rgba(0, 205, 176, 0.1);
+        }
+
+        &.rejected {
+          color: $red;
+          background: rgba(255, 0, 0, 0.06);
+        }
       }
     }
     .voting-title {
@@ -912,7 +952,10 @@ a {
 
       .voting-title {
         flex-grow: 1;
-        padding: 12px 0 20px 32px;
+        padding: 12px 0 0 32px;
+        &.creater {
+          padding: 12px 0 20px 32px;
+        }
       }
 
       .btn-wrap {
@@ -1187,6 +1230,24 @@ a {
         line-height: 40px;
         background: $blue1;
         color: $white;
+      }
+    }
+
+    &.isVoted {
+      position: relative;
+
+      &:before {
+        content: '';
+        display: block;
+        width: calc(100% - 2px);
+        height: calc(100% - 2px);
+        background-color: $white;
+        opacity: .8;
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        border-radius: 4px;
+        z-index: 10;
       }
     }
   }

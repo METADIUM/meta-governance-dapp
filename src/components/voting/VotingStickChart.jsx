@@ -1,14 +1,14 @@
 import cn from "classnames/bind";
 import React from "react";
 
-export default function VotingStickChart({
+export default function VotingStickChart ({
   title,
   count,
   percent,
   type = "yes-type",
   noUnit = false,
   /* 23.04.21 수정: 테마 추가 */
-  theme = "light",
+  theme = "light"
 }) {
   return (
     <div className={cn("stick-chart", `${theme}`)}>
@@ -24,7 +24,7 @@ export default function VotingStickChart({
       )}
 
       <div className={cn("voting-stick-chart", type)}>
-        <span style={{ width: `${percent}%` }} className={cn("rate")}></span>
+        <span style={{ width: `${percent}%` }} className={cn("rate")} />
       </div>
     </div>
   );

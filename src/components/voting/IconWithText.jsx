@@ -5,7 +5,7 @@ import { ReactComponent as IconTime } from "../../assets/images/ic-clock.svg";
 import { ReactComponent as IconPerson } from "../../assets/images/ic-member.svg";
 
 /**
- * 
+ *
  * props data 형태: 배열 받을 수 있게 작업 되어 있음
   [
     {
@@ -20,14 +20,14 @@ import { ReactComponent as IconPerson } from "../../assets/images/ic-member.svg"
 const IconWithText = ({ data }) => {
   const svgIcon = useCallback((icon) => {
     // if (theme === "light") {
-      switch (icon) {
-        case "time":
-          return <IconTime />;
-        case "person":
-          return <IconPerson />;
-        default:
-          return false;
-      }
+    switch (icon) {
+      case "time":
+        return <IconTime />;
+      case "person":
+        return <IconPerson />;
+      default:
+        return false;
+    }
   }, []);
   return (
     <div className={cn("icon-with-text-wrap")}>

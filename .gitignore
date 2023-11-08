@@ -6,6 +6,3 @@ package-lock.json
 build/
 # env files
 .env.*
-
-# static json files
-src/static/

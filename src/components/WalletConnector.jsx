@@ -2,7 +2,7 @@
 import {
   EthereumClient,
   w3mConnectors,
-  w3mProvider,
+  w3mProvider
 } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
 import React from "react";
@@ -13,7 +13,7 @@ import { CURRENT_SPEC, PROJECT_ID } from "../constants";
 // import { mainnet } from "wagmi/chains";
 
 export const META = {
-  ...CURRENT_SPEC,
+  ...CURRENT_SPEC
 };
 
 const chains = [META];
@@ -21,13 +21,13 @@ const projectId = PROJECT_ID;
 
 const { publicClient } = configureChains(chains, [
   w3mProvider({ projectId }),
-  publicProvider(),
+  publicProvider()
 ]);
 
 const wagmiConfig = createConfig({
   autoConnect: true,
   connectors: w3mConnectors({ projectId, version: 2, chains }),
-  publicClient,
+  publicClient
 });
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 

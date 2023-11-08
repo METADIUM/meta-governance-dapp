@@ -15,23 +15,22 @@ const SubHeader = ({
   searchFunction = (f) => f,
   btnFunction = (f) => f,
 }) => (
-  <div className="sub-header">
+  <div className='sub-header'>
     <div className={"functionDiv flex container " + netName}>
       <Input.Search
-        className="flex-full"
+        className='flex-full'
         placeholder={placeholder}
         onChange={searchFunction}
         enterButton
       />
       {selectedMenu !== "1" && (
         <Button
-          className="apply_proposal_Btn flex flex-center-horizontal"
+          className='apply_proposal_Btn flex flex-center-horizontal'
           disabled={!condition}
           onClick={(e) => btnFunction()}
-          loading={loading}
-        >
+          loading={loading}>
           <span>{btnIcon}</span>
-          <span className="text_btn">{btnText}</span>
+          <span className='text_btn'>{btnText}</span>
         </Button>
       )}
     </div>
@@ -40,15 +39,14 @@ const SubHeader = ({
 
 const SubNav = ({ position, onClickSubMenu = (f) => f }) => (
   <Affix>
-    <div className="sub-menu flex flex-center-vertical">
+    <div className='sub-menu flex flex-center-vertical'>
       <Menu
         onClick={onClickSubMenu}
         selectedKeys={[position]}
-        mode="horizontal"
-      >
-        <Menu.Item key="active">Active</Menu.Item>
-        <Menu.Item key="proposal">Proposal</Menu.Item>
-        <Menu.Item key="finalized">Finalized</Menu.Item>
+        mode='horizontal'>
+        <Menu.Item key='active'>Active</Menu.Item>
+        <Menu.Item key='proposal'>Proposal</Menu.Item>
+        <Menu.Item key='finalized'>Finalized</Menu.Item>
       </Menu>
     </div>
   </Affix>

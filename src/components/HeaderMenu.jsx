@@ -8,20 +8,20 @@ const menuList = [
     title: "Authority",
     path: "/",
     key: "menu-authority",
-    onlyMember: false,
+    onlyMember: false
   },
   {
     title: "Voting",
     path: "/voting/list",
     key: "menu-voting",
-    onlyMember: false,
+    onlyMember: false
   },
   {
     title: "My Info",
     path: "/my-info",
     key: "menu-myinfo",
-    onlyMember: true,
-  },
+    onlyMember: true
+  }
 ];
 const HeaderMenu = ({ isMember, isStaker, isConnect, setIsGnbOpen }) => {
   const activeMenu = useRef("menu-authority");
@@ -42,9 +42,9 @@ const HeaderMenu = ({ isMember, isStaker, isConnect, setIsGnbOpen }) => {
             // 일단 pathname에 voting 추가되어 있지 않으면
             !location.pathname.includes("voting")
               ? // path따라 active 클래스 추가
-                location.pathname === menu.path && "active"
+              location.pathname === menu.path && "active"
               : // voting이라면 menu.title이 Voting일때 active 클래스 추가
-                menu.title === "Voting" && "active"
+              menu.title === "Voting" && "active"
           }>
           <Link to={menu.path} onClick={() => onMenuClick(menu.key)}>
             {menu.title}

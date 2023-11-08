@@ -23,12 +23,12 @@ const Header = () => {
   const navigate = useNavigate();
   const [offset, setOffset] = useState({
     width: 0,
-    height: 0,
+    height: 0
   });
   const resize = useCallback(() => {
     setOffset({
       width: window.innerWidth,
-      height: window.innerHeight,
+      height: window.innerHeight
     });
   }, []);
 
@@ -43,7 +43,7 @@ const Header = () => {
     onLogin,
     onLogout,
     updateAccountData,
-    setStakingEventsWatch,
+    setStakingEventsWatch
   } = useContext(AuthCtx);
   const [isShowStakingModal, setIsShowStakingModal] = useState(false);
 
@@ -60,7 +60,7 @@ const Header = () => {
   const [errMsg, setErrMsg] = useState("");
   // ---------- wallet modal state end ----------
 
-  function resizeVh() {
+  function resizeVh () {
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty("--vh", `${vh}px`);
   }
@@ -110,9 +110,9 @@ const Header = () => {
 
   return (
     <header className={cn("header")}>
-      {offset.width > 1141 ? (
+      {offset.width > 1240 ? (
         <>
-          <div className="header-logo-wrap">
+          <div className='header-logo-wrap'>
             <HeaderLogo />
             <HeaderMenu
               isConnect={isConnect}
@@ -135,18 +135,18 @@ const Header = () => {
                       <dd>{addCommasToNumber(myBalance)} META </dd>
                     </div>
                   </dl>
-                  <div className="btns-wrap">
+                  <div className='btns-wrap'>
                     <Button
-                      text="META Staking"
-                      type="outline"
-                      size="sm"
+                      text='META Staking'
+                      type='outline'
+                      size='sm'
                       onClick={() => {
                         setIsShowStakingModal(true);
                       }}
                     />
                     <Button
-                      type="outline"
-                      size="sm"
+                      type='outline'
+                      size='sm'
                       text={address && loginAcc(address)}
                       onClick={() => setDisConnectView(true)}
                     />
@@ -154,9 +154,9 @@ const Header = () => {
                 </>
               ) : (
                 <Button
-                  type="outline"
-                  size="sm"
-                  text="Connect Wallet"
+                  type='outline'
+                  size='sm'
+                  text='Connect Wallet'
                   onClick={onLogin}
                 />
               )}
@@ -166,7 +166,7 @@ const Header = () => {
       ) : (
         // mobile toggle open
         <>
-          <div className="header-logo-wrap">
+          <div className='header-logo-wrap'>
             <HeaderLogo />
             <div className={cn("mobile-gnb", isGnbOpen && "show")}>
               <div className={cn("gnb-inner")}>
@@ -198,28 +198,28 @@ const Header = () => {
                       </dl>
                     )}
                     {isConnect ? (
-                      <div className="btns-wrap">
+                      <div className='btns-wrap'>
                         <Button
-                          text="META Staking"
-                          type="outline"
-                          size="sm"
+                          text='META Staking'
+                          type='outline'
+                          size='sm'
                           onClick={() => {
                             setIsShowStakingModal(true);
                           }}
                         />
 
                         <Button
-                          type="outline"
-                          size="sm"
+                          type='outline'
+                          size='sm'
                           text={address && loginAcc(address)}
                           onClick={() => setDisConnectView(true)}
                         />
                       </div>
                     ) : (
                       <Button
-                        type="outline"
-                        size="sm"
-                        text="Connect Wallet"
+                        type='outline'
+                        size='sm'
+                        text='Connect Wallet'
                         onClick={onLogin}
                       />
                     )}
@@ -228,7 +228,7 @@ const Header = () => {
               </div>
             </div>
           </div>
-          <div className="header-utils">
+          <div className='header-utils'>
             <button onClick={onClickToggle}>
               <IconMenu />
             </button>
@@ -244,7 +244,7 @@ const Header = () => {
           />
           <ErrModal
             netName={web3Instance.netName}
-            title="Error"
+            title='Error'
             err={errMsg}
             visible={errVisible}
             coloseErrModal={closeErrModal}
@@ -254,7 +254,7 @@ const Header = () => {
             isMember={isMember}
             accountBalance={{
               balance: myBalance,
-              lockedBalance: lockedBalance,
+              lockedBalance: lockedBalance
             }}
             stakingModalVisible={isShowStakingModal}
             scrollType={false}

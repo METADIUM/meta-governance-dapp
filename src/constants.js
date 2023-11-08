@@ -1,24 +1,3 @@
-// contract addresses (dev-staking 사이트)
-export const DEVNET_CONTRACTS = [
-  { name: "Registry", address: "0x15e8f4e6f169b3cccc8846f2b454d26ecf836c3a" },
-  {
-    name: "EnvStorageImp",
-    address: "0x1310a767d534a93Db338fed3D68963812F603F1d",
-  },
-  { name: "EnvStorage", address: "0x1310a767d534a93Db338fed3D68963812F603F1d" },
-  {
-    name: "BallotStorage",
-    address: "0x3ADb1c8E8A559DE7670c2eA7f2d175249baf2240",
-  },
-  { name: "Staking", address: "0xBF83258c72749F66B0F8778B7BAe32d3191092F0" },
-  { name: "GovImp", address: "0x669662C6fAD4f2D9688fdbEc0BF017381B35D252" },
-  { name: "Gov", address: "0x669662C6fAD4f2D9688fdbEc0BF017381B35D252" },
-  // WaitGovernance Contract가 Devnet에 배포되어 있지 않습니다.
-  {
-    name: "WaitGovernance",
-    address: "0x631FE9c57de28dDC2642ea70005fb61e14f0374D",
-  },
-];
 // for wmgov
 export const DEVMETANET_CONTRACTS = [
   { name: "Registry", address: "0x06c13fc771abc31a44d017368176e6b3cba5eed8" },
@@ -85,8 +64,8 @@ export const MAINNET_CONTRACTS = [
 // METADIUM chain info
 export const DEVNET_CHAIN_INFO = {
   chainId: "0xb",
-  chainName: "METADIUM Testnet",
-  rpcUrls: "http://3.38.235.244:6588",
+  chainName: "METADIUM Devnet",
+  rpcUrls: "https://devnet-meta.metadium.club",
   blockExplorerUrls: "",
   name: "META",
   decimals: 18,
@@ -159,7 +138,6 @@ export const ENV_VOTING_PROPOSAL_LIST = [
     sha3Name:
       "0x04f7b94450bbcad85f37ea47cd1062728f884bb2040e357738f8fd53056134bc",
   },
-  { id: "Add Wait Proposal", value: "AddWaitProposal" },
 ];
 export const ENV_MY_INFO_PROPOSAL_LIST = [
   { id: "Voting Address", value: "VotingAddress" },
@@ -242,14 +220,13 @@ const constants = {
 export { constants };
 
 const MODE = process.env.REACT_APP_MODE;
-const NETWORK = process.env.REACT_APP_NETWORK_TYPE;
 
 const CHAIN_INFO =
   MODE === "production"
     ? MAINNET_CHAIN_INFO
-    : NETWORK === "devnet"
-    ? DEVNET_CHAIN_INFO
-    : TESTNET_CHAIN_INFO;
+    : MODE === "testnet"
+    ? TESTNET_CHAIN_INFO
+    : DEVNET_CHAIN_INFO;
 
 const NETWORK_SPECIFICATION = {
   id: parseInt(CHAIN_INFO.chainId),

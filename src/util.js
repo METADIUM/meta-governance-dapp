@@ -8,7 +8,7 @@ export const timeConverter = (
   timestamp,
   isFullText = false,
   utc = false,
-  showSeconds = false,
+  showSeconds = false
 ) => {
   const a = new Date(timestamp * 1000);
   // set month, date, hours, minute
@@ -22,8 +22,8 @@ export const timeConverter = (
   return `${a.getFullYear()}-${month}-${date}${
     isFullText
       ? ` ${hours}:${minute}${showSeconds ? `:${seconds}` : ""} ${
-          utc ? "UTC+9" : "(KST)"
-        }`
+        utc ? "UTC+9" : "(KST)"
+      }`
       : ""
   }`;
 };
@@ -146,7 +146,7 @@ export const refineBallotBasic = (m) => {
 
     m = {
       ...m,
-      powers,
+      powers
     };
     return m;
   }
@@ -225,7 +225,7 @@ export const checkTxHash = (hash) => {
 // up to 128 character hexadecimal, @ after that, ip:port
 export const checkNode = (node) => {
   return /^([a-fA-F0-9]{128})+@(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+:([0-9]{2,5})$/.test(
-    node,
+    node
   );
 };
 
@@ -292,14 +292,14 @@ export const setAuthorityToLocal = (obj) => save("wmAuthority", obj);
 export const setUpdatedTimeToLocal = (obj) => save("wmUpdatedTime", obj);
 export const setModifiedToLocal = (obj) => save("wmModifiedBlock", obj);
 
-//-- 3자리마다 콤마 추가하기
-export function addCommasToNumber(number) {
+// -- 3자리마다 콤마 추가하기
+export function addCommasToNumber (number) {
   if (number) {
     const numValue = number.replaceAll(",", ""); // 잠시 콤마를 때주고
     return numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 }
-//-- 3자리마다 콤마 제거하기--
-export function removeCommasFromNumber(formattedNumber) {
+// -- 3자리마다 콤마 제거하기--
+export function removeCommasFromNumber (formattedNumber) {
   return formattedNumber.replace(/,/g, "");
 }

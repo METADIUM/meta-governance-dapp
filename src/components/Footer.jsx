@@ -11,12 +11,12 @@ import { ReactComponent as IconTwitter } from "../assets/images/ic_twitter.svg";
 const Footer = () => {
   const [offset, setOffset] = useState({
     width: 0,
-    height: 0,
+    height: 0
   });
   const resize = useCallback(() => {
     setOffset({
       width: window.innerWidth,
-      height: window.innerHeight,
+      height: window.innerHeight
     });
   }, []);
 
@@ -24,23 +24,23 @@ const Footer = () => {
     {
       title: "Twitter",
       link: "https://twitter.com/MetadiumK",
-      logo: <IconTwitter />,
+      logo: <IconTwitter />
     },
     {
       title: "Telegram",
       link: "https://t.me/Metadiumofficialkor",
-      logo: <IconTelegram />,
+      logo: <IconTelegram />
     },
     {
       title: "Medium",
       link: "https://medium.com/metadium",
-      logo: <IconMedium />,
+      logo: <IconMedium />
     },
     {
       title: "Discord",
       link: "https://discord.com/invite/ZnaCfYbXw2",
-      logo: <IconDiscord />,
-    },
+      logo: <IconDiscord />
+    }
   ];
 
   useEffect(() => {
@@ -60,16 +60,16 @@ const Footer = () => {
         <div className={cn("footer-link-wrap")}>
           <ul className={cn("footer-sns")}>
             {snsList.map((sns) => (
-              <li key={sns.name}>
+              <li key={sns.title}>
                 <a
                   href={sns.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   title={"Open new window"}
-                  className={cn("sns-item", sns.name)}
+                  className={cn("sns-item", sns.title)}
                 >
                   {sns.logo}
-                  <span className={cn("a11y")}>{sns.name}</span>
+                  <span className={cn("a11y")}>{sns.title}</span>
                 </a>
               </li>
             ))}

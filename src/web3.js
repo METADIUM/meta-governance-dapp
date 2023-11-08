@@ -7,9 +7,8 @@ import {
   DEVNET_CHAIN_INFO,
   MAINNET_CONTRACTS,
   TESTNET_CONTRACTS,
-  DEVNET_CONTRACTS,
   walletTypes,
-  DEVMETANET_CONTRACTS,
+  DEVMETANET_CONTRACTS
 } from "./constants";
 
 const type = process.env.REACT_APP_MODE;
@@ -19,17 +18,15 @@ const network = process.env.REACT_APP_NETWORK_TYPE;
 export const chainInfo =
   type === "production"
     ? MAINNET_CHAIN_INFO
-    : network === "devmeta"
-    ? DEVNET_CHAIN_INFO
-    : TESTNET_CHAIN_INFO;
+    : type === "testnet"
+      ? TESTNET_CHAIN_INFO
+      : DEVNET_CHAIN_INFO;
 const contracts =
   network === "mainnet"
     ? MAINNET_CONTRACTS
     : network === "testnet"
-    ? TESTNET_CONTRACTS
-    : network === "devmeta"
-    ? DEVNET_CONTRACTS
-    : DEVMETANET_CONTRACTS;
+      ? TESTNET_CONTRACTS
+      : DEVMETANET_CONTRACTS;
 
 // set contracts
 const initContracts = async (web3) => {
@@ -39,7 +36,7 @@ const initContracts = async (web3) => {
   contracts.map(async (item) => {
     contractInstance = {
       ...contractInstance,
-      [item.name]: new web3.eth.Contract(abis[item.name].abi, item.address),
+      [item.name]: new web3.eth.Contract(abis[item.name].abi, item.address)
     };
   });
   return contractInstance;
@@ -61,16 +58,15 @@ const getWeb3Instance = () => {
           network === "testnet"
             ? "TESTNET"
             : network === "mainnet"
-            ? "MAINNET"
-            : network === "devnet"
-            ? "DEVNET"
-            : "DEVMETANET",
+              ? "MAINNET"
+              : network === "devnet"
+                ? "DEVNET"
+                : "DEVMETANET"
       };
       resolve(web3Instance);
     } else {
       // web3 is not found
       reject(new Error("No web3 instance injected."));
-      return;
     }
   });
 };
@@ -121,7 +117,7 @@ export const callContractMethod = async (web3, contract, method, ...value) => {
 export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
   try {
     let trxData = {
-      to: getContractAddr(contract),
+      to: getContractAddr(contract)
     };
     const {
       staker,
@@ -145,7 +141,7 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
       description,
       link,
       id,
-      txHashArr,
+      txHashArr
     } = value[0];
     switch (method) {
       case "addProposalToAddMember":
@@ -160,7 +156,7 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
             port,
             lockAmount,
             memo,
-            duration,
+            duration
           ])
           .encodeABI();
         break;
@@ -177,7 +173,7 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
               port,
               lockAmount,
               memo,
-              duration,
+              duration
             ],
             oldStaker
           )
@@ -206,7 +202,7 @@ export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
             investmentAmount,
             description,
             link,
-            [],
+            []
           ])
           .encodeABI();
         break;
@@ -233,7 +229,7 @@ export const encodeABIValueInTrx = (web3, contract, method, value) => {
     let trxData = {
       to: getContractAddr(contract),
       value,
-      data: web3.web3Contracts[contract].methods[method]().encodeABI(),
+      data: web3.web3Contracts[contract].methods[method]().encodeABI()
     };
 
     return trxData;

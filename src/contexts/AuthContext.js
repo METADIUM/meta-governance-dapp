@@ -83,7 +83,7 @@ const AuthProvider = ({ children }) => {
     const weiBalance = await callContractMethod(
       web3Instance,
       "Staking",
-      "balanceOf",
+      "availableBalanceOf",
       defaultAccount
     );
     const locked = await callContractMethod(
@@ -111,7 +111,7 @@ const AuthProvider = ({ children }) => {
         "allEvents",
         {
           fromBlock: "latest",
-          topics: [null, filteraddress],
+          topics: [null, filteraddress]
         }
       );
 
@@ -136,7 +136,7 @@ const AuthProvider = ({ children }) => {
         updateAccountData,
         setStakingEventsWatch,
         onLogin,
-        onLogout,
+        onLogout
       }}
     >
       {children}
