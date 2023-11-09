@@ -649,12 +649,12 @@ const Proposal = () => {
           );
         }
         // check if staking address has META
-        if (balance < newLockedAmount) {
-          return getErrModal(
-            "Not Enough META to Stake.",
-            "Proposal Submit Error"
-          );
-        }
+        // if (balance < newLockedAmount) {
+        //   return getErrModal(
+        //     "Not Enough META to Stake.",
+        //     "Proposal Submit Error"
+        //   );
+        // }
         return false;
       }
       case "ReplaceAuthorityMember": {
@@ -734,12 +734,12 @@ const Proposal = () => {
           );
         }
         // check if staking address has META
-        if (newMemberBalance < newLockedAmount) {
-          return getErrModal(
-            "Not Enough META Stake (New)",
-            "Proposal Submit Error"
-          );
-        }
+        // if (newMemberBalance < newLockedAmount) {
+        //   return getErrModal(
+        //     "Not Enough META Stake (New)",
+        //     "Proposal Submit Error"
+        //   );
+        // }
         return false;
       }
       case "RemoveAuthorityMember": {
