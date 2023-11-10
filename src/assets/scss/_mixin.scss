@@ -1,0 +1,408 @@
+@import "./variables";
+
+// ~ 839
+@mixin xsm {
+  @media (max-width: #{$breakpointXsm - 1px}) {
+    @content;
+  }
+}
+
+// ~ 1140
+@mixin sm {
+  @media (max-width: #{$breakpointSm - 1px}) {
+    @content;
+  }
+}
+
+// 1141 ~ 1440
+@mixin md {
+  @media (min-width: #{$breakpointSm}) and (max-width: #{$breakpointMd - 1px}) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: #{$breakpointMd}) {
+    @content;
+  }
+}
+
+// ~ 1151
+@mixin templateSm {
+  @media (max-width: 1151px) {
+    @content;
+  }
+}
+
+@mixin content($display: block) {
+  display: $display;
+  content: "";
+  clear: both;
+}
+
+@mixin fontVwSize($size, $line-height) {
+  font-size: #{calc($size / 25.6)}vw;
+  line-height: #{calc($line-height / 25.6)}vw;
+}
+
+@mixin maxWidth {
+  width: 100%;
+  max-width: 1280px;
+  padding: 0 40px;
+  margin: 0 auto;
+  @include sm {
+    padding: 0 20px;
+  }
+}
+
+@mixin statusBg($statusColor) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 36px;
+  border-radius: 36px;
+  width: 104px;
+  color: $statusColor;
+  background-color: rgba($statusColor, 0.1);
+  text-transform: capitalize;
+
+  span {
+    font-weight: 700;
+    font-size: 14px;
+    padding-right: 4px;
+  }
+  svg {
+    fill: $statusColor;
+  }
+  @include sm {
+    order: 1;
+    height: 28px;
+    width: 100%;
+    border-radius: 0;
+    justify-content: flex-start;
+    padding-left: 7px;
+  }
+}
+@mixin statusBgDark($statusColor) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 30px;
+  border-radius: 36px;
+  padding: 0 14px 0 10px;
+  color: $statusColor;
+  border: 1px solid $statusColor;
+  text-transform: capitalize;
+  span {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  @include sm {
+    padding: 0 9px 0 7px;
+    height: 26px;
+    span {
+      font-weight: 500;
+      font-size: 12px;
+    }
+  }
+}
+
+@mixin errMsgState {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: $critical;
+  margin-top: 6px;
+  display: block;
+}
+
+// font
+// mobile 확인 후 추가
+@mixin fontCommon {
+  line-height: 1.5;
+}
+@mixin fontB {
+  font-weight: bold;
+}
+
+@mixin B32 {
+  font-size: 32px;
+  letter-spacing: -1px;
+  @include fontCommon;
+  @include fontB;
+}
+
+@mixin B28 {
+  font-size: 28px;
+  letter-spacing: -0.5px;
+  @include fontCommon;
+  @include fontB;
+}
+
+@mixin B24 {
+  font-size: 24px;
+  letter-spacing: -1px;
+  @include fontCommon;
+  @include fontB;
+}
+
+@mixin B20 {
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  @include fontCommon;
+  @include fontB;
+}
+
+@mixin B16 {
+  font-size: 16px;
+  letter-spacing: -0.3px;
+  @include fontCommon;
+  @include fontB;
+}
+
+@mixin B14 {
+  font-size: 14px;
+  letter-spacing: -0.3px;
+  @include fontCommon;
+  @include fontB;
+}
+
+@mixin B12 {
+  font-size: 12px;
+  letter-spacing: 0;
+  @include fontCommon;
+  @include fontB;
+}
+
+@mixin R20 {
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  @include fontCommon;
+}
+
+@mixin R16 {
+  font-size: 16px;
+  letter-spacing: -1px;
+  @include fontCommon;
+}
+
+@mixin R14 {
+  font-size: 14px;
+  letter-spacing: -0.3px;
+  @include fontCommon;
+}
+
+@mixin R12 {
+  font-size: 12px;
+  letter-spacing: -0.2px;
+  @include fontCommon;
+}
+
+// pc, tablet용 => 확인 후 삭제 예정
+@mixin h1 {
+  max-width: 39.453vw;
+  font-weight: 500;
+  white-space: pre-line;
+  @include fontVwSize(88, 106);
+
+  @include md {
+    font-size: 48px;
+    line-height: 58px;
+    max-width: none;
+  }
+  @include sm {
+    max-width: none;
+    font-size: 32px;
+    line-height: 39px;
+  }
+}
+
+@mixin h2 {
+  position: relative;
+  font-weight: 500;
+  margin: 0 auto;
+  @include fontVwSize(72, 86);
+
+  @include md {
+    font-size: 40px;
+    line-height: 48px;
+  }
+
+  sup {
+    position: relative;
+    top: -1.33vw;
+    @include fontVwSize(50, 98.8);
+    @include md {
+      top: -15px;
+      font-size: 30px;
+      line-height: 58px;
+    }
+    @include sm {
+      top: -15px;
+      font-size: 16px;
+      line-height: 42px;
+    }
+  }
+}
+@mixin h3 {
+  font-weight: 600;
+  margin: 0 auto;
+  @include fontVwSize(56, 67);
+
+  @include md {
+    font-size: 32px;
+    line-height: 38px;
+  }
+}
+
+@mixin h4 {
+  font-weight: 600;
+  margin: 0 auto;
+  @include fontVwSize(44, 62);
+
+  @include md {
+    font-size: 24px;
+    line-height: 34px;
+  }
+
+  sup {
+    position: relative;
+    top: -0.7em;
+    @include fontVwSize(30, 30);
+
+    @include md {
+      top: -0.5em;
+      font-size: 1;
+    }
+    @include sm {
+      top: -0.5em;
+      font-size: 16px;
+      line-height: 1;
+    }
+  }
+}
+
+@mixin body-1 {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.5;
+
+  @include md {
+    font-size: 16px;
+  }
+  @include sm {
+    font-size: 14px;
+  }
+}
+
+@mixin body-2 {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+
+  @include md {
+    font-size: 14px;
+  }
+  @include sm {
+    font-size: 14px;
+  }
+}
+
+@mixin h6 {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.2;
+  @include sm {
+    font-size: 16px;
+  }
+}
+
+// mobile 용
+@mixin h1-2 {
+  @include sm {
+    font-size: 32px;
+    line-height: 39px;
+    font-weight: 600;
+  }
+}
+
+@mixin h3-5 {
+  @include sm {
+    font-size: 24px;
+    line-height: 34px;
+  }
+}
+// => 확인 후 삭제 예정
+
+// 말줄임
+@mixin ellipsis($type: 0) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+
+  @if $type == 0 {
+    white-space: nowrap;
+    word-wrap: normal;
+    word-wrap: break-word;
+  } @else {
+    /* stylelint-disable-next-line value-no-vendor-prefix */
+    display: -webkit-box;
+    -webkit-line-clamp: $type;
+    /* stylelint-disable-next-line order/properties-order */
+    -webkit-box-orient: vertical;
+  }
+}
+
+@keyframes jump-arrow {
+  0%,
+  20%,
+  55%,
+  80%,
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  40% {
+    transform: translate3d(-50%, -10px, 0);
+  }
+
+  70% {
+    transform: translate3d(-50%, -5px, 0);
+  }
+
+  90% {
+    transform: translate3d(-50%, -3px, 0);
+  }
+}
+
+@mixin transition-default($properties...) {
+  $transition: ();
+  $will-change: ();
+
+  @each $property in $properties {
+    $transition: append(
+      $transition,
+      $property 0.3s ease-in-out,
+      $separator: comma
+    );
+    $will-change: append($will-change, $property, $separator: comma);
+  }
+
+  transition: $transition;
+  will-change: $will-change;
+}
+
+@mixin border-box {
+  border: 1px solid $gray4;
+  border-radius: 8px;
+  padding: 24px;
+  background: $white;
+  box-shadow: $shadow;
+
+  @include xsm {
+    padding: 24px 20px;
+  }
+}

@@ -1,25 +1,26 @@
-# Governance dApp for voting
+# METADIUM Governance dApp
 
+## Requirements
 
-## Preview
+| Name | Version  |
+| ---- | -------- |
+| node | v16.18.1 |
+
+## Installation / Preview
+
+- yarn 설치 시 코드에 포함된 yarn-lock.lock 파일을 yarn.lock 으로 변경한 후 설치해 주세요. (의존성 문제 발생)
 
 ```bash
-$ npm install
-$ npm start
+$ yarn
+$ yarn start:devmeta
 ```
 
-## Deploy
+## env
 
-```bash
-$ npm run build
-$ npm install -g serve
-$ serve -l 3005 -s build
-```
+사용하는 env 목록은 [confluence](https://coinplugin.atlassian.net/wiki/spaces/MD/pages/3112108069/Governance+dApp)에서 확인해 주세요.
 
 ## What more
 
-- [antd](http://github.com/ant-design/ant-design/)
-- [babel-plugin-import](http://github.com/ant-design/babel-plugin-import/)
 - [create-react-app](https://github.com/facebookincubator/create-react-app)
 - [react-app-rewired](https://github.com/timarney/react-app-rewired)
-- [less-loader](https://github.com/webpack/less-loader)
+- [antd](http://github.com/ant-design/ant-design/)

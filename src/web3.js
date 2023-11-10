@@ -1,106 +1,267 @@
 import Web3 from "web3";
-import { constants as metaWeb3Constants } from "meta-web3";
 
-var web3Instance;
+import * as abis from "./abis/index";
+import {
+  MAINNET_CHAIN_INFO,
+  TESTNET_CHAIN_INFO,
+  DEVNET_CHAIN_INFO,
+  MAINNET_CONTRACTS,
+  TESTNET_CONTRACTS,
+  walletTypes,
+  DEVMETANET_CONTRACTS
+} from "./constants";
 
-let getWeb3Instance = () => {
-  if (web3Instance) return web3Instance;
+const type = process.env.REACT_APP_MODE;
+const network = process.env.REACT_APP_NETWORK_TYPE;
 
-  return new Promise((resolve, reject) => {
-    // Wait for loading completion to avoid race conditions with web3 injection timing.
-    window.addEventListener("load", async () => {
-      // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-      let web3, netName, netId, branch, network, defaultAccount;
+// get network deploy informations
+export const chainInfo =
+  type === "production"
+    ? MAINNET_CHAIN_INFO
+    : type === "testnet"
+      ? TESTNET_CHAIN_INFO
+      : DEVNET_CHAIN_INFO;
+const contracts =
+  network === "mainnet"
+    ? MAINNET_CONTRACTS
+    : network === "testnet"
+      ? TESTNET_CONTRACTS
+      : DEVMETANET_CONTRACTS;
 
-      if (window.ethereum) {
-        web3 = new Web3(window.ethereum);
-        // * 220502 remove code
-        // 메타마스크에서 계정을 가져오는 부분이 중복으로 작성되어 있어 밑의 코드만 살리고 삭제
-        // try {
-        //   // * 220428 change for importing account from metamask
-        //   // window.ethereum.enable() 이 레거시 코드가 되어 변경
-        //   await window.ethereum.request({ method: "eth_requestAccounts" });
-        // } catch (e) {
-        //   reject(new Error("User denied account access"));
-        //   // * 220428 add return
-        //   // 사용자가 metamask 에서 권한을 허용하지 않은 경우 아래 코드를 불필요하게 실행시킬 필요가 없음
-        //   return;
-        // }
-      } else if (typeof window.web3 !== "undefined") {
-        web3 = new Web3(window.web3.currentProvider);
-      } else {
-        // * 220428 modify error message
-        // 해당 에러는 메타마스크가 없을 때 발생하는 에러이므로 기존의 에러 메시지(User denied account access)는 알맞은 문구가 아님
-        reject(new Error("MetaMask is not found"));
-        // * 220428 add return
-        // metamask 가 설치되어 있지 않은 경우 아래 코드를 불필요하게 실행시킬 필요가 없음
-        return;
-      }
+// set contracts
+const initContracts = async (web3) => {
+  let contractInstance = {};
 
-      if (web3) {
-        netId = await web3.eth.net.getId();
-        network = await web3.eth.net.getNetworkType();
-        const buildNetworkType = process.env.REACT_APP_NETWORK_TYPE;
-        let errMsg = `Unknown network. Please access to METADIUM ${buildNetworkType}`;
-        // * 220428 refactoring if statement
-        // 조건문 사용 시 참이 되는 값으로 비교해야 파악하기 쉬움
-        if (netId in metaWeb3Constants.NETWORK && network === "private") {
-          netName = metaWeb3Constants.NETWORK[netId].NAME;
-          branch = metaWeb3Constants.NETWORK[netId].BRANCH;
-          if (branch !== buildNetworkType) {
-            reject(new Error(errMsg));
-            // * 220428 add return
-            // web3 의 network 가 metadium mainnet 이 아닌 경우 아래 코드를 불필요하게 실행시킬 필요가 없음
-            return;
-          }
-          // * 220428 move code
-          // web3 의 network 가 metadium mainnet 이 아닌 경우 실행시킬 필요가 없는 코드이기 때문에 위치를 옮김
-          // * 220502 change for importing account from metamask
-          // 메타마스크에서 계정을 가져오는 부분이 중복으로 작성되어 있어 수정함
-          try {
-            const accounts = await web3.eth.requestAccounts();
-            defaultAccount = accounts[0];
-          } catch (e) {
-            // * 220502 modify error message
-            // metamask 쪽에서 에러를 넘겨주고 있어서 metamask 에러 메시지가 있다면 그 쪽 에러를 출력하고, metamask 에러 메시지가 없다면 default 에러 메시지 출력
-            reject(new Error(`${e.message || "User denied account access"}`));
-          }
-        } else {
-          netName = "ERROR";
-          branch = "ERROR";
-          reject(new Error(errMsg));
-          // * 220428 add return
-          // web3 의 network 가 metadium mainnet 이 아닌 경우 아래 코드를 불필요하게 실행시킬 필요가 없음
-          return;
-        }
+  // take contract addresses and abi files, set each contract object
+  contracts.map(async (item) => {
+    contractInstance = {
+      ...contractInstance,
+      [item.name]: new web3.eth.Contract(abis[item.name].abi, item.address)
+    };
+  });
+  return contractInstance;
+};
 
-        // * 220429 move code
-        // web3Instance 는 web3 가 있을 때만 만들어서 resolve 하면 됨
-        web3Instance = {
-          web3: web3,
-          netName: netName,
-          netId: netId,
-          branch: branch,
-          defaultAccount: defaultAccount,
-          names: [
-            "identity",
-            "ballotStorage",
-            "envStorage",
-            "governance",
-            "staking",
-          ],
-        };
+let web3Instance;
+const getWeb3Instance = () => {
+  return new Promise(async (resolve, reject) => {
+    // set default web3 instance
+    const { rpcUrls } = chainInfo;
+    const web3 = new Web3(rpcUrls);
 
-        resolve(web3Instance);
-      } else {
-        // Fallback to local if no web3 injection.
-        // * 220428 add return
-        // web3 가 없기 때문에 아래 코드를 불필요하게 실행시킬 필요가 없음
-        reject(new Error("No web3 instance injected, using Local web3."));
-        return;
-      }
-    });
+    if (web3) {
+      const web3Contracts = await initContracts(web3);
+      web3Instance = {
+        web3,
+        web3Contracts,
+        netName:
+          network === "testnet"
+            ? "TESTNET"
+            : network === "mainnet"
+              ? "MAINNET"
+              : network === "devnet"
+                ? "DEVNET"
+                : "DEVMETANET"
+      };
+      resolve(web3Instance);
+    } else {
+      // web3 is not found
+      reject(new Error("No web3 instance injected."));
+    }
   });
 };
-export default getWeb3Instance;
+
+// batch method (only call)
+export const onlyCallBatchMethod = (web3, contract, method) => {
+  const data = web3.web3Contracts[contract].methods[method]().call.request({});
+  return data;
+};
+
+// batch method (with value)
+export const callBatchMethod = (web3, contract, method, ...value) => {
+  let data;
+  if (method === "hasAlreadyVoted") {
+    const { id, voter } = value[0];
+    data = web3.web3Contracts.BallotStorage.methods
+      .hasAlreadyVoted(id, voter)
+      .call.request({});
+  } else {
+    data = web3.web3Contracts[contract].methods[method](value[0]).call.request(
+      {}
+    );
+  }
+  return data;
+};
+
+// call contract method (no value)
+export const onlyCallContractMethod = async (web3, contract, method) => {
+  const data = await web3.web3Contracts[contract].methods[method]().call();
+  return data;
+};
+
+// call contract method (with value)
+export const callContractMethod = async (web3, contract, method, ...value) => {
+  let data;
+  if (method === "hasAlreadyVoted") {
+    const { id, voter } = value[0];
+    data = await web3.web3Contracts.BallotStorage.methods
+      .hasAlreadyVoted(id, voter)
+      .call();
+  } else {
+    data = await web3.web3Contracts[contract].methods[method](value[0]).call();
+  }
+  return data;
+};
+
+// encodeABI (value in method)
+export const encodeABIValueInMethod = (web3, contract, method, ...value) => {
+  try {
+    let trxData = {
+      to: getContractAddr(contract)
+    };
+    const {
+      staker,
+      voter,
+      reward,
+      name,
+      enode,
+      ip,
+      port,
+      lockAmount,
+      memo,
+      duration,
+      oldStaker,
+      newGovAddr,
+      envName,
+      envType,
+      envVal,
+      companyName,
+      companyAddress,
+      investmentAmount,
+      description,
+      link,
+      id,
+      txHashArr
+    } = value[0];
+    switch (method) {
+      case "addProposalToAddMember":
+        trxData.data = web3.web3Contracts.GovImp.methods
+          .addProposalToAddMember([
+            staker,
+            voter,
+            reward,
+            name,
+            enode,
+            ip,
+            port,
+            lockAmount,
+            memo,
+            duration
+          ])
+          .encodeABI();
+        break;
+      case "addProposalToChangeMember":
+        trxData.data = web3.web3Contracts.GovImp.methods
+          .addProposalToChangeMember(
+            [
+              staker,
+              voter,
+              reward,
+              name,
+              enode,
+              ip,
+              port,
+              lockAmount,
+              memo,
+              duration
+            ],
+            oldStaker
+          )
+          .encodeABI();
+        break;
+      case "addProposalToRemoveMember":
+        trxData.data = web3.web3Contracts.GovImp.methods
+          .addProposalToRemoveMember(staker, lockAmount, memo, duration)
+          .encodeABI();
+        break;
+      case "addProposalToChangeGov":
+        trxData.data = web3.web3Contracts.GovImp.methods
+          .addProposalToChangeGov(newGovAddr, memo, duration)
+          .encodeABI();
+        break;
+      case "addProposalToChangeEnv":
+        trxData.data = web3.web3Contracts.GovImp.methods
+          .addProposalToChangeEnv(envName, envType, envVal, memo, duration)
+          .encodeABI();
+        break;
+      case "addProposal":
+        trxData.data = web3.web3Contracts.WaitGovernance.methods
+          .addProposal([
+            companyName,
+            companyAddress,
+            investmentAmount,
+            description,
+            link,
+            []
+          ])
+          .encodeABI();
+        break;
+      case "setTransactionHashes":
+        trxData.data = web3.web3Contracts.WaitGovernance.methods
+          .setTransactionHashes(id, txHashArr)
+          .encodeABI();
+        break;
+      default:
+        trxData.data = web3.web3Contracts[contract].methods[method](
+          ...value
+        ).encodeABI();
+        break;
+    }
+    return trxData;
+  } catch (err) {
+    return err;
+  }
+};
+
+// encodeABI (value in trxData)
+export const encodeABIValueInTrx = (web3, contract, method, value) => {
+  try {
+    let trxData = {
+      to: getContractAddr(contract),
+      value,
+      data: web3.web3Contracts[contract].methods[method]().encodeABI()
+    };
+
+    return trxData;
+  } catch (err) {
+    return err;
+  }
+};
+
+// get contract address
+const getContractAddr = (contract) => {
+  const address = contracts.filter((item) => {
+    return item.name === contract;
+  })[0].address;
+
+  return address;
+};
+
+// get accounts
+export const getAccounts = async (walletType) => {
+  const { META_MASK, WALLET_CONNECT, COIN_BASE } = walletTypes;
+  let account;
+  switch (walletType) {
+    case META_MASK:
+      account = await web3Instance.web3.eth.requestAccounts();
+      return account[0];
+    case WALLET_CONNECT:
+    case COIN_BASE:
+      account = await web3Instance.web3.eth.getAccounts();
+      return account[0];
+    default:
+  }
+};
+
 export { web3Instance };
+export default getWeb3Instance;

@@ -1,31 +1,39 @@
 /* header */
-
 .ant-layout-header {
   padding: 0;
   z-index: 100;
-} .ant-layout-header.MAINNET {
-  background: #FFFFFF;
-} .ant-layout-header.TESTNET {
+}
+.ant-layout-header.MAINNET {
+  background: #ffffff;
+}
+.ant-layout-header.TESTNET {
   background: #000000;
 }
 
 .ant-layout-header .header-logo {
   width: 240px;
-  padding: 0 16px;
+  padding: 0 22px;
 }
 
 .ant-layout-header .header-logo img {
   height: 32px;
+  cursor: pointer;
 }
 
 .ant-layout-header .header-menu {
-  width: 240px;
+  width: 360px;
   height: 40px;
   padding: 0 16px;
-} .ant-layout-header .header-menu.MAINNET {
+}
+.ant-layout-header .header-menu.MAINNET {
   border-left: #eeeef0 solid 2px;
-} .ant-layout-header .header-menu.TESTNET {
+}
+.ant-layout-header .header-menu.TESTNET {
   border-left: #595959 solid 2px;
+}
+
+.header-gnb.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: transparent;
 }
 
 .ant-layout-header .header-menu .ant-menu-horizontal {
@@ -34,21 +42,51 @@
   background-color: transparent;
 }
 
-.ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item  {
+.ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item {
   padding: 0 12px;
   border: none;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item.MAINNET {
+}
+.ant-layout-header
+  .ant-row
+  .header-menu
+  .ant-menu-horizontal
+  .ant-menu-item.MAINNET {
   color: rgba(0, 0, 0, 0.6);
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-selected.MAINNET {
-  color: #261BC9;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-active.MAINNET {
-  color: #261BC9;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item.TESTNET {
+}
+.ant-layout-header
+  .ant-row
+  .header-menu
+  .ant-menu-horizontal
+  .ant-menu-item-selected.MAINNET {
+  color: #261bc9;
+}
+.ant-layout-header
+  .ant-row
+  .header-menu
+  .ant-menu-horizontal
+  .ant-menu-item-active.MAINNET {
+  color: #261bc9;
+}
+.ant-layout-header
+  .ant-row
+  .header-menu
+  .ant-menu-horizontal
+  .ant-menu-item.TESTNET {
   color: #595959;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-selected.TESTNET {
-  color: #FFFFFF;
-} .ant-layout-header .ant-row .header-menu .ant-menu-horizontal .ant-menu-item-active.TESTNET {
-  color: #FFFFFF;
+}
+.ant-layout-header
+  .ant-row
+  .header-menu
+  .ant-menu-horizontal
+  .ant-menu-item-selected.TESTNET {
+  color: #ffffff;
+}
+.ant-layout-header
+  .ant-row
+  .header-menu
+  .ant-menu-horizontal
+  .ant-menu-item-active.TESTNET {
+  color: #ffffff;
 }
 
 .ant-layout-header .ant-row .header-staking {
@@ -64,15 +102,12 @@
 .ant-layout-header .ant-row .header-staking div p {
   line-height: 1.5;
   text-align: end;
-} .ant-layout-header .ant-row .header-staking div .staked.MAINNET {
+}
+.ant-layout-header .ant-row .header-staking div .staked.MAINNET {
   color: rgba(0, 0, 0, 0.87);
-} .ant-layout-header .ant-row .header-staking div .staked.TESTNET {
-  color: #FFFFFF;
-} .ant-layout-header .ant-row .header-staking div .meta.MAINNET {
-  font-size: 12px;
-} .ant-layout-header .ant-row .header-staking div .meta.TESTNET {
-  font-size: 12px;
-  color: #C2C4C4;
+}
+.ant-layout-header .ant-row .header-staking div .staked.TESTNET {
+  color: #ffffff;
 }
 
 .ant-layout-header .ant-row .header-staking button {
@@ -86,7 +121,7 @@
 }
 
 .stakingModal .text-container .staked {
-  color:rgba(0, 0, 0, 0.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .stakingModal .ant-modal-body .ant-select {
@@ -95,14 +130,14 @@
 }
 
 .ant-modal-footer .ant-btn-primary {
-  background: #261BC9 ;
+  background: #261bc9;
   border: 0;
 }
 
 /* error Modal */
 
 .errorModal .ant-modal-body > p {
-  color:rgba(0, 0, 0, 0.87);
+  color: rgba(0, 0, 0, 0.87);
   margin-bottom: 16px;
 }
 
@@ -128,7 +163,7 @@
 .accessFail .ant-modal-body i {
   font-size: 68px;
   font-weight: 100;
-  color: #FC0F1B;
+  color: #fc0f1b;
 }
 
 .accessFail .ant-modal-body p {
@@ -141,12 +176,13 @@
   background-color: #ffffff;
   position: relative;
   z-index: 90;
-  box-shadow: 0 1px 10px rgba(151,164,175,.1);
+  box-shadow: 0 1px 10px rgba(151, 164, 175, 0.1);
 }
 
 .sub-header .functionDiv.MAINNET {
-  padding: 8px 16px 16px 16px;
-} .sub-header .functionDiv.TESTNET {
+  padding: 16px 16px 16px 16px;
+}
+.sub-header .functionDiv.TESTNET {
   padding: 16px 16px 16px 16px;
 }
 
@@ -166,11 +202,14 @@
   font-size: 16px;
   border: none;
   color: #ffffff;
-} .sub-header .functionDiv button:disabled {
+}
+.sub-header .functionDiv button:disabled {
   color: #ffffff !important;
-} .sub-header .functionDiv.MAINNET button {
-  background-color: #261BC9;
-} .sub-header .functionDiv.TESTNET button {
+}
+.sub-header .functionDiv.MAINNET button {
+  background-color: #261bc9;
+}
+.sub-header .functionDiv.TESTNET button {
   background-color: #000000;
 }
 
@@ -183,27 +222,29 @@
 /* affix */
 
 .sub-menu {
-  background-color:#ffffff;
+  background-color: #ffffff;
   border-top: #eeeef0 2px solid;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 .sub-menu .ant-menu-item {
   font-size: 16px;
   line-height: 50px;
-} .sub-menu .ant-menu-item-selected {
-  color: #261BC9;
-  border-color: #261BC9;
-} .sub-menu .ant-menu-item-active {
-  color: #261BC9;
-  border-color: #261BC9;
+}
+.sub-menu .ant-menu-item-selected {
+  color: #261bc9;
+  border-color: #261bc9;
+}
+.sub-menu .ant-menu-item-active {
+  color: #261bc9;
+  border-color: #261bc9;
 }
 
 /* footer */
 
 .ant-layout-footer {
   padding: 0;
-  background-color: #ffffff;
+  background-color: #1a1a1a;
 }
 
 .ant-layout-footer .ant-row {
@@ -212,6 +253,10 @@
 
 .ant-layout-footer .ant-row div {
   justify-content: flex-end;
+}
+
+.ant-layout-footer .ant-row p {
+  color: #ffffff;
 }
 
 .ant-layout-footer .ant-row div .ant-btn {
@@ -232,7 +277,8 @@
 .authorityComp {
   margin-top: 16px;
   padding: 0 16px;
-} .authorityComp:first-child {
+}
+.authorityComp:first-child {
   margin-top: 24px;
 }
 
@@ -246,7 +292,7 @@
 .authorityComp .authorityComp_contnet .img_container {
   width: 192px;
   height: 192px;
-  margin-right: 16px;
+  margin: auto 16px auto auto;
   overflow: hidden;
 }
 
@@ -256,7 +302,7 @@
 
 .authorityComp .authorityComp_contnet .text_container {
   padding-left: 24px;
-  border-left: #EEEEF0 solid 2px;
+  border-left: #eeeef0 solid 2px;
 }
 
 .authorityComp .authorityComp_contnet .text_container .title {
@@ -284,7 +330,7 @@
 .authorityComp .authorityComp_contnet .text_container .more {
   line-height: 24px;
   cursor: pointer;
-  color: #261BC9;
+  color: #261bc9;
 }
 
 .authorityComp .authorityComp_contnet .text_container .SNSList {
@@ -295,22 +341,33 @@
 
 .authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup {
   margin: 0 0 0 8px;
-} 
+}
 
-.authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x {
+.authorityComp
+  .authorityComp_contnet
+  .text_container
+  .SNSList
+  .snsGroup
+  .fa-2x {
   font-size: 24px;
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.6);
   transition: color 0.3s;
-  color: rgba(0,0,0,0.6);
-} .authorityComp .authorityComp_contnet .text_container .SNSList .snsGroup .fa-2x:hover {
-  color: #261BC9;
+  color: rgba(0, 0, 0, 0.6);
+}
+.authorityComp
+  .authorityComp_contnet
+  .text_container
+  .SNSList
+  .snsGroup
+  .fa-2x:hover {
+  color: #261bc9;
 }
 
 /* vote */
 
 .ant-modal-body .changeDay {
   font-size: 46px;
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
   margin: 0;
 }
 
@@ -323,14 +380,16 @@
 }
 
 .ballotDiv {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   margin: 0 16px 16px 16px;
   height: 124px;
   border-radius: 4px;
   overflow-y: hidden;
-} .ballotDiv:hover {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-} .ballotDiv.InProgress {
+}
+.ballotDiv:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+.ballotDiv.InProgress {
   height: auto !important;
 }
 
@@ -340,12 +399,12 @@
 }
 
 .ballotDiv .ballotInfoDiv .infoLeft .topic {
-  color: #261BC9;
+  color: #261bc9;
   margin-bottom: 8px;
 }
 
 .ballotDiv .ballotInfoDiv .infoLeft .company {
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .ballotDiv .ballotInfoDiv .infoRight {
@@ -357,17 +416,20 @@
 .ballotDiv .ballotInfoDiv .infoRight button {
   height: 28px;
   width: 28px;
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .ballotDiv .ballotInfoDiv .infoRight .status {
-  color: #261BC9;
+  color: #261bc9;
+}
+.ballotDiv.Changed .ballotInfoDiv .infoRight .status {
+  color: green;
 }
 
 .ballotContentDiv .voteDiv {
-  padding: 24px 16px 24px 16px;
-  border-top: #EEEEF0 solid 2px;
-  border-bottom: #EEEEF0 solid 2px;
+  padding: 16px;
+  border-top: #eeeef0 solid 2px;
+  border-bottom: #eeeef0 solid 2px;
 }
 
 .ballotContentDiv .voteDiv .imageContent {
@@ -378,17 +440,20 @@
   height: 40px;
   width: 64px;
   border: none;
-} .ballotContentDiv .voteDiv .imageContent #yesVotingBtn {
-  background-color: #261BC9;
+}
+.ballotContentDiv .voteDiv .imageContent #yesVotingBtn {
+  background-color: #261bc9;
   color: white;
   margin-right: 16px;
-} .ballotContentDiv .voteDiv .imageContent #noVotingBtn {
-  color: rgba(0,0,0,0.6) !important;
-  background-color: #FEC3C2;
+}
+.ballotContentDiv .voteDiv .imageContent #noVotingBtn {
+  color: rgba(0, 0, 0, 0.6) !important;
+  background-color: #fec3c2;
   margin-left: 16px;
-} .ballotContentDiv .voteDiv .imageContent button:disabled {
-  background-color: #EEEEF0 !important;
-  color: rgba(0,0,0,0.6) !important;
+}
+.ballotContentDiv .voteDiv .imageContent button:disabled {
+  background-color: #eeeef0 !important;
+  color: rgba(0, 0, 0, 0.6) !important;
 }
 
 .ballotContentDiv .voteDiv .imageContent .chart {
@@ -401,7 +466,7 @@
 }
 
 .ballotContentDiv .voteDiv .imageContent .chart .number {
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .ant-progress {
@@ -409,20 +474,31 @@
   font-size: 8px !important;
 }
 
-.ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer .ant-progress-inner {
-  background-color: #FEC7E0;
+.ballotContentDiv
+  .voteDiv
+  .imageContent
+  .chart
+  .ant-progress-outer
+  .ant-progress-inner {
+  background-color: #fec7e0;
 }
 
-.ballotContentDiv .voteDiv .imageContent .chart .ant-progress-outer .ant-progress-inner .ant-progress-bg {
-  background-color: #261BC9;
+.ballotContentDiv
+  .voteDiv
+  .imageContent
+  .chart
+  .ant-progress-outer
+  .ant-progress-inner
+  .ant-progress-bg {
+  background-color: #261bc9;
 }
 
 .ballotContentDiv .voteDiv .textContent {
-  margin-top: 24px;
+  margin-top: 8px;
 }
 
 .ballotContentDiv .voteDiv .description {
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.6);
   min-height: 66px;
 }
 
@@ -436,7 +512,7 @@
 }
 
 .ballotContentDiv .voteDiv .duration > div > div span:first-child {
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .ballotContentDiv .voteDiv .duration > div button {
@@ -446,21 +522,23 @@
 }
 
 .ballotContentDiv .memoDiv {
-  padding: 24px 16px 24px 16px;
+  padding: 16px 16px 24px 16px;
 }
 
 .ballotContentDiv .memoDiv p:first-child {
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
   margin-bottom: 8px;
 }
 
 .ballotContentDiv .memoDiv p:last-child {
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.6);
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .ballotContentDiv .revokeDiv {
   padding: 24px 16px 24px 16px;
-  border-top: #EEEEF0 solid 2px;
+  border-top: #eeeef0 solid 2px;
   justify-content: flex-end;
 }
 
@@ -469,12 +547,16 @@
   width: 208px;
 }
 
+.moreDiv {
+  margin-bottom: 16px;
+}
+
 .moreDiv button {
   height: 40px;
   width: 208px;
   border-radius: 4px;
   padding: 0 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 /* proposal */
@@ -485,17 +567,35 @@
 .backBtnDiv button {
   height: 40px;
   width: 208px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
-.contentVotingDiv {
+.contentVotingDiv,
+.contentRefDiv {
   margin: 0 16px 24px 16px;
   border-radius: 4px;
+}
+.contentVotingDiv {
   background-color: #ffffff;
 }
-
+.contentRefDiv {
+  background-color: rgba(155, 174, 202, 0.2);
+}
+.contentRefDiv ol {
+  margin-bottom: 0;
+  padding-inline-start: 20px;
+}
+.contentRefDiv ol li,
+.contentRefDiv p {
+  color: #999999;
+}
+.contentRefDiv p {
+  margin-bottom: 15px;
+}
+.contentRefDiv,
 .contentVotingDiv .proposalHead {
   padding: 24px 16px;
+  word-wrap: break-word;
 }
 
 .contentVotingDiv .proposalHead .title {
@@ -505,21 +605,23 @@
 
 .contentVotingDiv .proposalHead .title p:first-child {
   font-size: 30px;
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
   line-height: 38px;
 }
 
 .contentVotingDiv .proposalHead .title p:last-child {
-  color:#FC0F1B;
+  color: #fc0f1b;
 }
 
 .contentVotingDiv .subtitle {
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.6);
   margin-top: 16px;
+  line-height: 1.5;
+  white-space: nowrap;
 }
 
 .contentVotingDiv .required {
-  color:#FC0F1B;
+  color: #fc0f1b;
 }
 
 .contentVotingDiv .proposalHead .ant-select {
@@ -528,7 +630,7 @@
 }
 
 .contentVotingDiv .proposalBody {
-  border-top: #EEEEF0 solid 2px;
+  border-top: #eeeef0 solid 2px;
   padding: 8px 16px 24px 16px;
 }
 
@@ -545,7 +647,7 @@
   display: flex;
   background-color: #eeeef0;
   padding: 16px;
-  margin-top: 4px;
+  margin-top: 12px;
 }
 
 .contentVotingDiv .proposalBody .helpDescription svg {
@@ -555,14 +657,14 @@
 }
 
 .contentVotingDiv .proposalBody .helpDescription svg path {
-  color: #261BC9;
+  color: #261bc9;
 }
 
 .contentVotingDiv .proposalBody .helpDescription p {
   margin: 1px 0 0 8px;
 }
 
-.contentVotingDiv .proposalBody button[type="submit"] {
+.contentVotingDiv .proposalBody button[type='submit'] {
   border-radius: 4px;
   width: 208px;
   height: 40px;
@@ -577,25 +679,43 @@
   margin-right: 32px;
 }
 
+.contentVotingDiv .proposalBody .divider .flex-column .ant-form-item-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.contentVotingDiv
+  .proposalBody
+  .divider
+  .flex-column
+  .ant-form-item-control
+  .ant-form-item-children {
+  display: flex;
+}
+
+.ant-form label {
+  white-space: nowrap;
+}
+
 .loading {
-	display: -ms-flexbox;
-	display: flex;
-	-ms-flex-pack: justify;
-	justify-content: space-between;
-	position: absolute;
-	width: 206px;
-	padding-top: 50px
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: absolute;
+  width: 214px;
+  padding-top: 70px;
 }
 
 .loading:before {
-	content: '';
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 206px;
-	height: 35px;
-	background-image: url("./loading.png");
-	background-position: 0 0
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 206px;
+  height: 60px;
+  background-image: url('./loading@2x.png');
+  background-position: 0 0;
 }
 
 .loading-container {
@@ -603,61 +723,61 @@
   display: flex;
   justify-content: center;
   align-items: center;
-	left: 0;
-	right: 0;
-	top: 0px;
-	bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0px;
+  bottom: 0;
   z-index: 80;
-	background-color: rgba(38,27,201,0.7)
+  background-color: rgba(38, 27, 201, 0.7);
 }
 
 .loading-i {
-	animation-duration: 2s;
-	animation-fill-mode: forwards;
-	animation-iteration-count: infinite;
-	animation-name: fadeOut;
-	animation-timing-function: linear;
-	opacity: .2;
-	width: 9px;
-	height: 9px;
-	border-radius: 50%;
-	background-color: #fff
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: fadeOut;
+  animation-timing-function: linear;
+  opacity: 0.2;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #fff;
 }
 
 .loading-i:nth-child(2) {
-	animation-delay: .1s
+  animation-delay: 0.1s;
 }
 
 .loading-i:nth-child(3) {
-	animation-delay: .2s
+  animation-delay: 0.2s;
 }
 
 .loading-i:nth-child(4) {
-	animation-delay: .3s
+  animation-delay: 0.3s;
 }
 
 .loading-i:nth-child(5) {
-	animation-delay: .4s
+  animation-delay: 0.4s;
 }
 
 .loading-i:nth-child(6) {
-	animation-delay: .5s
+  animation-delay: 0.5s;
 }
 .hidden {
-  display: none
+  display: none;
 }
 
 @keyframes fadeOut {
   0% {
-    opacity: .2
+    opacity: 0.2;
   }
   20% {
     opacity: 1;
-    transform: scale(1)
+    transform: scale(1);
   }
   100% {
-    opacity: .2;
-    transform: scale(0.3)
+    opacity: 0.2;
+    transform: scale(0.3);
   }
 }
 
@@ -678,9 +798,45 @@
 
 .accessFail .ant-modal-body i {
   font-size: 68px;
-  color: #FC0F1B;
+  color: #fc0f1b;
 }
 
 .accessFail .ant-modal-body p {
   margin-top: 24px;
+}
+.connect-btn.ant-btn-primary {
+  margin-left: 12px;
+  border: #ffffff solid 2px !important;
+  background: #000000;
+}
+.connect-btn.ant-btn-primary:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+.connect-btn.ant-btn-primary:focus {
+  background: none;
+  outline: none;
+}
+
+.wallet-list {
+  display: flex;
+  border: 1px solid #e8e8e8;
+  align-items: center;
+  justify-content: center;
+  padding: 34px 0 34px 0;
+  cursor: pointer;
+}
+
+.ant-btn.walletlist-cancel-btn {
+  width: 181px;
+  min-width: 180px;
+  height: 60px;
+  left: 0;
+  top: 0;
+  margin: auto;
+}
+
+.ant-btn.discon-ok-btn {
+  color: #ffffff;
+  background: rgb(45, 35, 249);
 }
