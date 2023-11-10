@@ -1,108 +1,493 @@
-import React from 'react'
-import { Button, Modal, Input, Select, Icon, Slider } from 'antd'
+import { Button, Modal, Select, Icon, Slider } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { useSendTransaction } from "wagmi";
 
-import './style/style.css'
+import VotingInputArea from "./voting/VotingInputArea";
+import { AuthCtx } from "../contexts/AuthContext";
+import { ModalContext } from "../contexts/ModalContext";
+import { removeCommasFromNumber } from "../util";
+import { convertSecondsToDay, addCommasToNumber } from "../util";
+import * as util from "../util";
+import {
+  encodeABIValueInMethod,
+  encodeABIValueInTrx,
+  web3Instance
+} from "../web3";
 
-const Option = Select.Option
+import "../assets/scss/modal.scss";
+import "../assets/scss/proposal.scss";
+import cn from "classnames/bind";
+import { GovInitCtx } from "../contexts/GovernanceInitContext";
+// import { ReactComponent as IconPopupClose } from '../assets/images/ico_popup_close.svg';
+
+// 2023.07.04 App.js의 Staking 관련 로직 Modal로 이동
+
+const Option = Select.Option;
 
 const StakingModal = ({
-  netName,
+  isMember,
+  defaultAccount,
   accountBalance,
+  setStakingModalVisible,
   stakingModalVisible,
-  loading,
-  stakingAmount,
-  errStakging,
-  stakingTopic,
-  hideStakingModal = f => f,
-  submitMetaStaking = f => f,
-  handleInputChange = f => f,
-  handleSelectChange = f => f
-}) =>
-  <Modal
-    className='stakingModal'
-    title='META Staking'
-    visible={stakingModalVisible}
-    onCancel={hideStakingModal}
-    footer={[
-      <Button key='cancle' onClick={hideStakingModal}>cancle</Button>,
-      <Button
-        key='submit'
-        className={'btn-fill-primary ' + netName}
-        type='primary'
-        onClick={submitMetaStaking}
-        loading={loading}
-      >
-        Submit
-      </Button>
-    ]}>
-    <Select value={stakingTopic} onChange={handleSelectChange} disabled={loading}>
-      <Option value='deposit'>Deposit Staking</Option>
-      <Option value='withdraw'>Withdraw Staking</Option>
-    </Select>
-    <Input
-      onChange={handleInputChange}
-      placeholder='META Amount'
-      addonAfter='META'
-      value={stakingAmount}
-      className={errStakging ? 'errInput' : ''}
-      disabled={loading}
-    />
-    <p className={errStakging ? 'errHint' : 'errHint-hide'}>Invalid Amount</p>
-    <div className='text-container'>
-      <p className='staked'>Staked { accountBalance.balance } META </p>
-      <p className='locked text-small'>(Locked { accountBalance.lockedBalance } META)</p>
-    </div>
-  </Modal>
+  setStakingEventsWatch,
+  scrollType,
+  getErrModal
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [stakingTopic, setStakingTopic] = useState("deposit");
+  const [stakingAmount, setStakingAmount] = useState("");
+  const [errStaking, setErrStaking] = useState(false);
 
-const ErrModal = ({ netName, title, err, link, visible, coloseErrModal = f => f }) =>
-  <Modal
-    className='errorModal'
-    title={title}
-    visible={visible}
-    onCancel={coloseErrModal}
-    footer={link
-      ? [<a key='link' href={link} rel='noopener noreferrer' target='_blank' className='ant-btn'>Checking on the Explore</a>,
-        <Button type='primary' key='ok' className={'btn-fill-primary ' + netName} onClick={coloseErrModal}>Okay</Button>]
-      : [<Button type='primary' key='ok' className={'btn-fill-primary ' + netName} onClick={coloseErrModal}>Okay</Button>]}>
-    <p className='text-bold'>Please revises the following information!</p>
-    <div className='text-container'>
-      <div className='flex error-icon'><Icon type='exclamation-circle' /><p>{err}</p></div>
-    </div>
-  </Modal>
+  const { sendTransactionAsync } = useSendTransaction();
+  const { lockedBalance, myBalance } = useContext(AuthCtx);
+  const { data } = useContext(GovInitCtx);
+  const { stakingMin } = data;
 
-const AccessFailedModal = ({
-  visible,
-  message
-}) =>
+  useEffect(() => {
+    if (!stakingModalVisible) {
+      setErrStaking(false);
+      handleSelectChange("deposit");
+    }
+  }, [stakingModalVisible]);
+
+  const submitMetaStaking = () => {
+    if (!/^[1-9]\d*$/.test(stakingAmount)) {
+      setErrStaking(true);
+      return;
+    }
+
+    const numLockedBalance = Number(lockedBalance);
+    const numStakingMin = Number(stakingMin);
+    const numStakingAmount = Number(stakingAmount);
+    const numMyBalance = Number(myBalance);
+
+    try {
+      if (stakingTopic === "withdraw") {
+        // locked에서 빠지는 경우
+        if (numLockedBalance > numStakingMin) {
+          const availableBalance = numLockedBalance - numStakingMin;
+          if (numStakingAmount > availableBalance)
+            throw new Error(
+              "The amount after withdrawal must not be less than the minimum staking quantity."
+            );
+        } else {
+          if (numStakingAmount > numMyBalance)
+            throw new Error(
+              "There are more quantities you want to withdraw than the current amount of staking."
+            );
+        }
+      }
+    } catch (e) {
+      setErrStaking(true);
+      getErrModal(e.message, "Withdraw Error");
+      return;
+    }
+
+    let trx = {};
+    const amount = util.convertEtherToWei(stakingAmount);
+
+    if (stakingTopic === "deposit") {
+      trx = encodeABIValueInTrx(web3Instance, "Staking", "deposit", amount);
+    } else {
+      trx = encodeABIValueInMethod(web3Instance, "Staking", "withdraw", amount);
+    }
+    setIsLoading(true);
+    sendStakingTransaction(trx);
+  };
+
+  const waitForReceipt = (hash, cb) => {
+    web3Instance.web3.eth.getTransactionReceipt(hash, (err, receipt) => {
+      if (err) console.log("err: ", err);
+      if (util.checkUndefined(receipt) || receipt === null) {
+        // Try again in 1 second
+        window.setTimeout(() => {
+          waitForReceipt(hash, cb);
+        }, 1000);
+      } else {
+        // Transaction went through
+        if (cb) cb(receipt);
+      }
+    });
+  };
+
+  const sendStakingTransaction = async (trx) => {
+    try {
+      trx.from = defaultAccount;
+      trx.gasPrice = 110000000000;
+      // trx.maxFeePerGas = 101000000000;
+      // trx.maxPriorityFeePerGas = 100000000000;
+      await sendTransactionAsync(trx).then(({ hash }) => {
+        waitForReceipt(hash, async (receipt) => {
+          if (receipt.status) {
+            await setStakingEventsWatch();
+            setIsLoading(false);
+            setStakingModalVisible(false);
+            setStakingAmount("");
+          } else {
+            getErrModal(
+              "The transaction could not be sent normally.",
+              "Proposal Submit Error",
+              receipt.transactionHash
+            );
+            setIsLoading(false);
+            setStakingModalVisible(false);
+            setStakingAmount("");
+          }
+        });
+      });
+    } catch (err) {
+      let message = err?.details || "Unknown Error";
+      // 어떠한 경우에 JSON-RPC error가 메세지에 들어있는지 확인 불가.
+      // Error 객체의 기본 형이 {code : any, message : any} 인데 sendTransactionAsync를 사용하면 기본 에러를 감싸서 details 에 내려줍니다.
+      if (err.message.includes("JSON-RPC error")) message = "RPC error";
+      setIsLoading(false);
+      getErrModal(message, "Staking Error");
+      setStakingAmount("");
+    }
+  };
+
+  const handleSelectChange = (topic) => {
+    console.log(topic);
+    setStakingTopic(topic);
+    setStakingAmount("");
+  };
+
+  const handleInputChange = (event) => {
+    const value = removeCommasFromNumber(event.target.value);
+    if (/^([0-9]*)$/.test(value)) {
+      setStakingAmount(value);
+      setErrStaking(false);
+    }
+  };
+
+  return (
+    <Modal
+      className={cn("staking-modal", scrollType && "scroll")}
+      title="META Staking"
+      visible={stakingModalVisible}
+      onCancel={() => {
+        setStakingAmount("");
+        if (!isLoading) {
+          setStakingModalVisible(false);
+        }
+      }}
+      footer={[
+        <Button
+          key="cancel"
+          onClick={() => {
+            if (!isLoading) {
+              setStakingModalVisible(false);
+            }
+          }}
+        >
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          className="gov_btn"
+          onClick={submitMetaStaking}
+          loading={isLoading}
+          disabled={errStaking}
+        >
+          Submit
+        </Button>
+      ]}
+    >
+      <div className={cn("staking-wrap")}>
+        <Select
+          defaultValue={stakingTopic}
+          onChange={handleSelectChange}
+          disabled={isLoading}
+          className={cn("voting-filter")}
+        >
+          <Option value="deposit">
+            {isMember ? "Additional" : "Deposit"} Staking
+          </Option>
+          <Option value="withdraw">Withdraw Staking</Option>
+        </Select>
+
+        <VotingInputArea
+          inputType="suffix"
+          suffixCoin="META"
+          fixText={"META"}
+          defaultValue={addCommasToNumber(stakingAmount)}
+          value={addCommasToNumber(stakingAmount) || ""}
+          superPrefix={"META Amount"}
+          onChange={handleInputChange}
+          className={errStaking ? "errInput" : ""}
+          disabled={isLoading}
+          errType={errStaking}
+          errText="Invalid Amount"
+        />
+      </div>
+      <div className="sub-info">
+        <div className="sub-info-detail">
+          <span>Staked</span>
+          <span>
+            <p>{addCommasToNumber(accountBalance.balance)}</p> META
+          </span>
+        </div>
+        <div className="sub-info-detail">
+          <span>Locked</span>
+          <span>
+            <p>{addCommasToNumber(accountBalance.lockedBalance)}</p>
+            META
+          </span>
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
+const ErrModal = () => {
+  const { setIsModalOpened, isModalOpened, title, content, errLink } =
+    useContext(ModalContext);
+  const RPCErrorMSG = () => (
+    <div>
+      <p>Ensure the network has been added correctly.</p>
+      <p>Ensure you have enough coins to pay for gas.</p>
+      <p>
+        Ensure you are using the latest version of the app or the extension.
+      </p>
+    </div>
+  );
+
+  return (
+    <Modal
+      className={cn("staking-modal")}
+      title={
+        <div className="staking-modal-wrapper">
+          <span className="staking-modal-title">{title}</span>
+        </div>
+      }
+      visible={isModalOpened}
+      onCancel={() => setIsModalOpened(false)}
+      // closeIcon={<IconPopupClose />}
+      footer={
+        errLink
+          ? [
+              <a
+                key="link"
+                href={errLink}
+                rel="noopener noreferrer"
+                target="_blank"
+                className="ant-btn"
+              >
+                Checking on the Explorer
+              </a>,
+              <Button key="ok" onClick={() => setIsModalOpened(false)}>
+                Okay
+              </Button>
+            ]
+          : [
+              <Button key="ok" onClick={() => setIsModalOpened(false)}>
+                Okay
+              </Button>
+            ]
+      }
+    >
+      <div className="error-wrap">
+        {/* <p className={cn('sub-title')} style={{ color: 'black' }}>
+          Please revises the following i
+        nformation!
+        </p> */}
+        <div className="error-wrap-image" />
+
+        <div className="modal-info-wrapper">
+          {/* <Icon type='exclamation-circle' /> */}
+          <div>{content === "RPC error" ? <RPCErrorMSG /> : content}</div>
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
+const AccessFailedModal = ({ visible, message }) => (
   <Modal
-    className='accessFail'
-    title='Access Failed'
+    className="accessFail"
+    title="Access Failed"
     visible={visible}
-    footer={null}>
-    <Icon type='close-circle' />
-    <p className='text-bold'>{message}</p>
+    footer={null}
+  >
+    <Icon type="close-circle" />
+    <p className="text-bold">{message}</p>
   </Modal>
+);
 
 const ChangeModal = ({
   updateModal,
   ballotUpdateDuration,
-  completeModal = f => f,
-  hideChangeModal = f => f,
-  sliderChange = f => f
-}) =>
-  <Modal
-    title='Voting Duration Change'
-    visible={updateModal}
-    onOk={completeModal}
-    onCancel={hideChangeModal} >
-    <p className='changeDay flex flex-center-vertical'>{ballotUpdateDuration}days</p>
-    <Slider
-      marks={{ 0: '0 days', 60: '3 days', 100: '5days' }}
-      step={20}
-      value={ballotUpdateDuration * 20}
-      tooltipVisible={false}
-      onChange={sliderChange}
-    />
-  </Modal>
+  votingDurationMin,
+  votingDurationMax,
+  completeModal = (f) => f,
+  hideChangeModal = (f) => f,
+  sliderChange = (f) => f
+}) => {
+  const min = convertSecondsToDay(votingDurationMin);
+  const max = convertSecondsToDay(votingDurationMax);
 
-export { StakingModal, ErrModal, AccessFailedModal, ChangeModal }
+  return (
+    <Modal
+      title="Voting Duration Change"
+      visible={updateModal}
+      onOk={completeModal}
+      onCancel={hideChangeModal}
+    >
+      <p className="changeDay flex flex-center-vertical">
+        {ballotUpdateDuration} days
+      </p>
+      <Slider
+        marks={{
+          [min]: min + " days",
+          [ballotUpdateDuration]: ballotUpdateDuration + " days",
+          [max]: max + " days"
+        }}
+        min={min}
+        max={max}
+        defaultValue={ballotUpdateDuration}
+        tooltipVisible={false}
+        onChange={sliderChange}
+      />
+    </Modal>
+  );
+};
+
+const ConnectWalletModal = ({ children, visible, setWalletModal }) => {
+  return (
+    <Modal
+      visible={visible}
+      title={"Wallet Connect"}
+      onCancel={setWalletModal}
+      footer={null}
+    >
+      {children}
+    </Modal>
+  );
+};
+
+const DisConnectWalletModal = ({
+  onDisConnect,
+  visible,
+  setDisConnectView
+}) => {
+  return (
+    <Modal
+      className="dis-connect-foot"
+      visible={visible}
+      title={"Disconnect"}
+      onCancel={() => setDisConnectView(false)}
+      onOk={onDisConnect}
+      footer={[
+        <Button key="cancel" onClick={() => setDisConnectView(false)}>
+          Cancel
+        </Button>,
+        <Button key="ok" className="gov_btn" onClick={onDisConnect}>
+          Okay
+        </Button>
+      ]}
+    >
+      <p className="modal-disconnect-title">Disconnect your Wallet?</p>
+    </Modal>
+  );
+};
+
+// 2023.02.24 수정 voting 페이지 팝업 추가 작업
+const VotingModal = ({
+  onOk,
+  visible,
+  isVotingModal,
+  btn,
+  children,
+  scrollType,
+  title,
+  subTitle
+}) => {
+  return (
+    <Modal
+      className={cn("staking-modal", scrollType && "scroll")}
+      visible={visible}
+      title={
+        <div>
+          {title}
+          {subTitle && <p className={cn("sub-title")}>{subTitle}</p>}
+        </div>
+      }
+      onCancel={() => isVotingModal(false)}
+      transitionName="voting"
+      // closeIcon={<IconPopupClose />}
+      footer={[
+        btn.cancel && (
+          <Button
+            key="cancel"
+            className="voting-cancel-btn"
+            onClick={() => isVotingModal(false)}
+          >
+            Cancel
+          </Button>
+        ),
+        <Button
+          key="ok"
+          className={`${title !== "Unknown Error" && "gov_btn"}`}
+          onClick={() => onOk()}
+        >
+          {btn.btnName}
+        </Button>
+      ]}
+    >
+      {children}
+    </Modal>
+  );
+};
+
+// 2023.04.20 수정: TxHashAddModal 팝업 추가
+const TxHashAddModal = ({
+  onApply,
+  visible,
+  children,
+  scrollType,
+  disabled,
+  onCancel
+}) => {
+  return (
+    <Modal
+      className={cn("tx-hash-add-modal", scrollType && "scroll")}
+      visible={visible}
+      title={<div>Update Tx Hash</div>}
+      onCancel={() => onCancel()}
+      transitionName="tx-hash-add"
+      // closeIcon={<IconPopupClose />}
+      footer={[
+        <Button
+          key="cancel"
+          className="tx-hash-add-cancel-btn"
+          onClick={() => onCancel()}
+        >
+          Cancel
+        </Button>,
+        <Button
+          key="apply"
+          className="tx-hash-add-apply-btn"
+          onClick={() => onApply()}
+          disabled={disabled}
+        >
+          Apply
+        </Button>
+      ]}
+    >
+      {children}
+    </Modal>
+  );
+};
+
+export {
+  StakingModal,
+  ErrModal,
+  AccessFailedModal,
+  ChangeModal,
+  ConnectWalletModal,
+  DisConnectWalletModal,
+  // 2023.02.24 수정 voting 페이지 팝업 추가 작업
+  VotingModal,
+  TxHashAddModal // 2023.04.20 수정 TxHashAddModal 팝업 추가
+};

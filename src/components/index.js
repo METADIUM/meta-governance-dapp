@@ -1,9 +1,8 @@
-export * from './Authority'
-export * from './AuthorityItem'
-export * from './BaseLoader'
-export * from './Forms'
-export * from './Modal'
-export * from './Nav'
-export * from './ProposalForm'
-export * from './Voting'
-export * from './VotingBallots'
+
+export * from "./Forms";
+export * from "./Modal";
+export * from "./Nav";
+// export * from "./ProposalForm";
+// export * from "./Voting";
+export * from "./VotingBallots";
+export * from "./MyForm";

@@ -1,3 +1,8 @@
-build/
+# npm package
 node_modules/
 package-lock.json
+
+# build variables
+build/
+# env files
+.env.*

@@ -1,0 +1,35 @@
+{
+  "extends": ["react-app", "eslint:recommended"],
+  "plugins": ["unused-imports", "import"],
+  "rules": {
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
+    "no-console": "error", //console.log 에러 끄고 싶으면 off 넣으시면 됩니다.
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal"],
+        "pathGroups": [
+          { "pattern": "react", "group": "builtin", "position": "after" },
+          { "pattern": "react-dom", "group": "builtin", "position": "after" }
+        ],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "newlines-between": "always"
+      }
+    ],
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ]
+  }
+}
