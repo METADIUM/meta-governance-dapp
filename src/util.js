@@ -32,6 +32,14 @@ export const timeConverter = (
 export const convertDayToSeconds = (day) => {
   return day * secondsInDay;
 };
+/**
+ * Convert UNIX timestamp to readable
+ * @param {*} timestamp UNIX
+ */
+function timeConverter (timestamp) {
+  var a = new Date(timestamp * 1000)
+  return a.getFullYear() + '/' + +0 + (a.getMonth() + 1) + '/' + a.getDate() + ' ' + a.getHours() + ':' + a.getMinutes() + '(KST)'
+}
 
 // convert seconds -> day
 export const convertSecondsToDay = (second) => {
