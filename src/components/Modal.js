@@ -201,8 +201,8 @@ const StakingModal = ({
     >
       <div className={cn("staking-wrap")}>
         <Select
-          defaultValue={stakingTopic}
-          onChange={handleSelectChange}
+          value={stakingTopic}
+          onChange={(topic) => handleSelectChange(topic)}
           disabled={isLoading}
           className={cn("voting-filter")}
         >
