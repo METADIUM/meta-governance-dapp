@@ -151,7 +151,7 @@ export const ENV_PARAMETER_COUNT = {
   "Block Creation Time": 1,
   "Block Reward Amount": 1,
   "Block Reward Distribution Method": 4,
-  MaxPriorityFeePerGas: 1,
+  "Max Priority Fee Per Gas": 1,
   "Gas Limit & baseFee": 4
 };
 

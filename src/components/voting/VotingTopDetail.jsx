@@ -26,7 +26,7 @@ const VotingTopDetail = ({
   defaultAccount,
   authorityName,
   setTrx,
-  waitBallotMemberOriginData,
+  waitBallotMemberOriginData
 }) => {
   const { id, creator, ballotType, state, memo, duration } = ballotBasicData;
   const {
@@ -46,7 +46,7 @@ const VotingTopDetail = ({
     companyAddress,
     description,
     link,
-    txHashes,
+    txHashes
   } = ballotMemberData;
   // -------------------- state
   const [options, setOptions] = useState([]);
@@ -65,7 +65,7 @@ const VotingTopDetail = ({
 
   const [offset, setOffset] = useState({
     width: 0,
-    height: 0,
+    height: 0
   });
   const navigate = useNavigate();
 
@@ -79,7 +79,7 @@ const VotingTopDetail = ({
   const resize = useCallback(() => {
     setOffset({
       width: window.innerWidth,
-      height: window.innerHeight,
+      height: window.innerHeight
     });
   }, []);
 
@@ -105,7 +105,7 @@ const VotingTopDetail = ({
     for (let i = min; i <= max; i++) {
       const duration = {
         label: `${i} day`,
-        value: i,
+        value: i
       };
       setOptions((prev) => [...prev, duration]);
     }
@@ -183,12 +183,12 @@ const VotingTopDetail = ({
         contents.push(
           {
             title: "New Authority Address",
-            value: newStakerAddress,
+            value: newStakerAddress
           },
           {
             title: "META to be locked",
             class: "text-bold",
-            value: `${util.addCommasToNumber(locked)} META`,
+            value: `${util.addCommasToNumber(locked)} META`
           }
         );
         break;
@@ -198,22 +198,22 @@ const VotingTopDetail = ({
           if (newStakerAddress !== newVoterAddress) {
             contents.push({
               title: "New Voting Address",
-              value: newVoterAddress,
+              value: newVoterAddress
             });
           } else if (newStakerAddress !== newRewardAddress) {
             contents.push({
               title: "New Reward Address",
-              value: newRewardAddress,
+              value: newRewardAddress
             });
           } else {
             contents.push(
               {
                 title: "Old Authority Address",
-                value: oldStakerAddress,
+                value: oldStakerAddress
               },
               {
                 title: "New Authority Address",
-                value: newStakerAddress,
+                value: newStakerAddress
               }
             );
           }
@@ -221,13 +221,13 @@ const VotingTopDetail = ({
           contents.push(
             {
               title: "Old Authority Address",
-              value: oldStakerAddress,
+              value: oldStakerAddress
             },
             { title: "New Authority Address", value: newStakerAddress },
             {
               title: "META to be locked",
               class: "text-bold",
-              value: `${util.addCommasToNumber(locked)} META`,
+              value: `${util.addCommasToNumber(locked)} META`
             }
           );
         }
@@ -236,12 +236,12 @@ const VotingTopDetail = ({
         contents.push(
           {
             title: "Remove Address",
-            value: oldStakerAddress,
+            value: oldStakerAddress
           },
           {
             title: "META to be locked",
             class: "text-bold",
-            value: `${util.addCommasToNumber(locked)} META`,
+            value: `${util.addCommasToNumber(locked)} META`
           }
         );
         break;
@@ -249,7 +249,7 @@ const VotingTopDetail = ({
       case constants.ballotTypes.GovernanceContractAddress:
         contents.push({
           title: "New Governance Address",
-          value: newGovernanceAddress,
+          value: newGovernanceAddress
         });
         break;
       // Env Variables
@@ -268,19 +268,19 @@ const VotingTopDetail = ({
           contents.push({
             value: `${util.convertSecondsToDay(
               decodeValue[0]
-            )}-${util.convertSecondsToDay(decodeValue[1])} day`,
+            )}-${util.convertSecondsToDay(decodeValue[1])} day`
           });
         } else if (envVariableName === "Authority Member Staking Amount") {
           contents.push({
             value: `${util.convertWeiToEther(
               decodeValue[0]
-            )}-${util.convertWeiToEther(decodeValue[1])} META`,
+            )}-${util.convertWeiToEther(decodeValue[1])} META`
           });
         } else if (envVariableName === "Block Creation Time") {
           contents.push({ value: `${decodeValue[0] / 1000} s` });
         } else if (envVariableName === "Block Reward Amount") {
           contents.push({
-            value: `${util.convertWeiToEther(decodeValue[0])} META/Block`,
+            value: `${util.convertWeiToEther(decodeValue[0])} META/Block`
           });
         } else if (envVariableName === "Block Reward Distribution Method") {
           contents.push({
@@ -288,11 +288,11 @@ const VotingTopDetail = ({
               decodeValue[0] / 100
             }%, Staking Reward: ${decodeValue[1] / 100}%, Ecosystem: ${
               decodeValue[2] / 100
-            }%, Maintenance: ${decodeValue[3] / 100}%`,
+            }%, Maintenance: ${decodeValue[3] / 100}%`
           });
-        } else if (envVariableName === "MaxPriorityFeePerGas") {
+        } else if (envVariableName === "Max Priority Fee Per Gas") {
           contents.push({
-            value: `${util.convertWeiToGWei(decodeValue[0])} GWei`,
+            value: `${util.convertWeiToGWei(decodeValue[0])} GWei`
           });
         } else if (envVariableName === "Gas Limit & baseFee") {
           contents.push({
@@ -302,7 +302,7 @@ const VotingTopDetail = ({
               decodeValue[1]
             } GWei\nBaseFee Max Change Rate: ${
               decodeValue[2]
-            }\nGas Target Percentage: ${decodeValue[3]}`,
+            }\nGas Target Percentage: ${decodeValue[3]}`
           });
         } else {
           contents.push({ value: "Wrong Proposal (This label is only test)" });
@@ -321,24 +321,24 @@ const VotingTopDetail = ({
           contents.push({
             title: "Company Name",
             class: "text-bold",
-            value: companyName,
+            value: companyName
           });
           contents.push({
             title: "Company Wallet Address",
             class: "text-bold",
-            value: companyAddress,
+            value: companyAddress
           });
           contents.push({
             title: "Link",
             class: "text-bold",
             value: modifiedLink,
-            originValue: link,
+            originValue: link
           });
         } else {
           contents.push({
             title: "META to be locked",
             class: "text-bold",
-            value: `${util.addCommasToNumber(locked)} META`,
+            value: `${util.addCommasToNumber(locked)} META`
           });
         }
         break;
@@ -361,13 +361,15 @@ const VotingTopDetail = ({
                     item.class
                       ? cn(item.class)
                       : cn("pocket-address", "new-type")
-                  }`}>
+                  }`}
+                >
                   {/* 링크일 경우 클릭 시 이동하도록 수정 */}
                   {item.title === "Link" ? (
                     <a
                       href={item.value}
                       target="_blank"
-                      rel="noopener noreferrer">
+                      rel="noopener noreferrer"
+                    >
                       {item.originValue}
                     </a>
                   ) : (
@@ -456,7 +458,7 @@ const VotingTopDetail = ({
       "setTransactionHashes",
       {
         id,
-        txHashArr,
+        txHashArr
       }
     );
     setTrx(trx);
@@ -471,7 +473,8 @@ const VotingTopDetail = ({
             className={cn("btn-prev")}
             onClick={() => {
               navigate("/voting/list");
-            }}>
+            }}
+          >
             <IconPrev />
           </button>
           <div className={cn("top-status-wrap")}>
@@ -481,7 +484,8 @@ const VotingTopDetail = ({
           <div
             className={`voting-title ${
               state === "1" && creator === defaultAccount ? "creater" : ""
-            }`}>
+            }`}
+          >
             {setTopic()}
           </div>
           {state === "1" && creator === defaultAccount && (
@@ -489,7 +493,8 @@ const VotingTopDetail = ({
               <button
                 onClick={() => {
                   setIsVotingDurationModal(true);
-                }}>
+                }}
+              >
                 Change
               </button>
               <button onClick={() => updateProposal("revoke")}>Revoke</button>
@@ -551,7 +556,8 @@ const VotingTopDetail = ({
         btn={{ btnName: "Ok", cancel: true }}
         onOk={() => updateProposal("duration")}
         scrollType
-        title="Voting Duration Change">
+        title="Voting Duration Change"
+      >
         <div className={"day-select-wrap"}>
           <ul className={cn("label-list")}>
             {options.map((t, i) => (
@@ -559,7 +565,8 @@ const VotingTopDetail = ({
                 className={`label-option ${
                   t.value === selectedDuration ? "active" : ""
                 }`}
-                key={`${t}-${i}`}>
+                key={`${t}-${i}`}
+              >
                 <input
                   id={`dayCheck${i}`}
                   name={"radio"}
@@ -581,7 +588,8 @@ const VotingTopDetail = ({
         isVotingModal={setIsVotingUnknownModal}
         btn={{ btnName: "Okay", cancel: false }}
         scrollType={false}
-        title="Unknown Error">
+        title="Unknown Error"
+      >
         <div className={cn("error-wrap")}>
           <div className={cn("error-wrap-image")}></div>
           <div className="modal-info-wrapper">
@@ -602,7 +610,8 @@ const VotingTopDetail = ({
           setTxInputErr(true);
           setTxHash("");
           setTxHashArr(txHashes.length ? txHashes : []);
-        }}>
+        }}
+      >
         <div className={cn("tx-hash-add-content-wrap")}>
           <div className={"hash-add-wrap"}>
             <VotingInputArea
