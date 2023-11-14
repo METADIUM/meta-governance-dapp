@@ -52,17 +52,22 @@ const StakingModal = ({
   }, [stakingModalVisible]);
 
   const submitMetaStaking = () => {
-    if (!/^[1-9]\d*$/.test(stakingAmount)) {
-      setErrStaking(true);
-      return;
-    }
-
-    const numLockedBalance = Number(lockedBalance);
-    const numStakingMin = Number(stakingMin);
-    const numStakingAmount = Number(stakingAmount);
-    const numMyBalance = Number(myBalance);
-
     try {
+      if (defaultAccount === undefined || !defaultAccount.length) {
+        setStakingModalVisible(false);
+        throw new Error("Please connect to the wallet and proceed.");
+      }
+
+      if (!/^[1-9]\d*$/.test(stakingAmount)) {
+        setErrStaking(true);
+        return;
+      }
+
+      const numLockedBalance = Number(lockedBalance);
+      const numStakingMin = Number(stakingMin);
+      const numStakingAmount = Number(stakingAmount);
+      const numMyBalance = Number(myBalance);
+
       if (stakingTopic === "withdraw") {
         // locked에서 빠지는 경우
         if (numLockedBalance > numStakingMin) {
