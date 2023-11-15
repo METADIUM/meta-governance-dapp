@@ -76,6 +76,10 @@ const VotingTopDetail = ({
     }
   }, [votingDurationMin, votingDurationMax, duration, setVotingDuration]);
 
+  useEffect(() => {
+    if (!isVotingDurationModal) setSelectedDuration(duration);
+  }, [isVotingDurationModal]);
+
   const resize = useCallback(() => {
     setOffset({
       width: window.innerWidth,
@@ -550,37 +554,39 @@ const VotingTopDetail = ({
       </div>
 
       {/* duration modal */}
-      <VotingModal
-        visible={isVotingDurationModal}
-        isVotingModal={setIsVotingDurationModal}
-        btn={{ btnName: "Ok", cancel: true }}
-        onOk={() => updateProposal("duration")}
-        scrollType
-        title="Voting Duration Change"
-      >
-        <div className={"day-select-wrap"}>
-          <ul className={cn("label-list")}>
-            {options.map((t, i) => (
-              <li
-                className={`label-option ${
-                  t.value === selectedDuration ? "active" : ""
-                }`}
-                key={`${t}-${i}`}
-              >
-                <input
-                  id={`dayCheck${i}`}
-                  name={"radio"}
-                  type="radio"
-                  value={t.value}
-                  checked={t.value === selectedDuration}
-                  onChange={() => setSelectedDuration(t.value)}
-                />
-                <label htmlFor={`dayCheck${i}`}>{t.label}</label>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </VotingModal>
+      {isVotingDurationModal && (
+        <VotingModal
+          visible={isVotingDurationModal}
+          isVotingModal={setIsVotingDurationModal}
+          btn={{ btnName: "Ok", cancel: true }}
+          onOk={() => updateProposal("duration")}
+          scrollType
+          title="Voting Duration Change"
+        >
+          <div className={"day-select-wrap"}>
+            <ul className={cn("label-list")}>
+              {options.map((t, i) => (
+                <li
+                  className={`label-option ${
+                    t.value === selectedDuration ? "active" : ""
+                  }`}
+                  key={`${t}-${i}`}
+                >
+                  <input
+                    id={`dayCheck${i}`}
+                    name={"radio"}
+                    type="radio"
+                    value={t.value}
+                    checked={t.value === selectedDuration}
+                    onChange={() => setSelectedDuration(t.value)}
+                  />
+                  <label htmlFor={`dayCheck${i}`}>{t.label}</label>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </VotingModal>
+      )}
 
       {/* error modal */}
       <VotingModal
