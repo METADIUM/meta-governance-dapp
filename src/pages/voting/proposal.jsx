@@ -804,10 +804,10 @@ const Proposal = () => {
           const checkAddr = await contract.methods.proxiableUUID().call();
           if (checkAddr) return false;
 
-          throw "Invalid Governance Contract Address";
+          throw new Error("New Governance Address is invalid.");
         } catch (e) {
           return getErrModal(
-            "Invalid Governance Contract Address.",
+            "New Governance Address is invalid.",
             "Proposal Submit Error"
           );
         }
