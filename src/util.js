@@ -295,8 +295,12 @@ export const setModifiedToLocal = (obj) => save("wmModifiedBlock", obj);
 // -- 3자리마다 콤마 추가하기
 export function addCommasToNumber(number) {
   if (number) {
-    const numValue = number.replaceAll(",", ""); // 잠시 콤마를 때주고
-    return numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return number
+      .toString()
+      .replace(
+        /(\..*)$|(\d)(?=(\d{3})+(?!\d))/g,
+        (digit, fract) => fract || digit + ","
+      );
   }
 }
 // -- 3자리마다 콤마 제거하기--
