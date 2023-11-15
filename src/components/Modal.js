@@ -260,6 +260,7 @@ const ErrModal = () => {
 
   return (
     <Modal
+      zIndex={1000}
       className={cn("staking-modal")}
       title={
         <div className="staking-modal-wrapper">
