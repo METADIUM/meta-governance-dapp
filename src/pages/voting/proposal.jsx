@@ -1560,8 +1560,18 @@ const Proposal = () => {
       }
       return trxFunction(refineData);
     } catch (err) {
-      console.log(err);
-      getErrModal(err.message, err.name);
+      const { code } = err;
+      let message = "";
+      switch (code) {
+        case "INVALID_ARGUMENT":
+          message = "You have entered an invalid value.";
+          break;
+        default:
+          message = "Invalid Error";
+          break;
+      }
+      console.log(err.code);
+      getErrModal(message, "Proposal Submit Error");
       setOnLoading(false);
     }
   };
@@ -1659,7 +1669,6 @@ const Proposal = () => {
       //   },
       // );
     } catch (err) {
-      console.log(err);
       getErrModal(err.message, err.name);
       setOnLoading(false);
     }
