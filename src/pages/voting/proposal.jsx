@@ -323,8 +323,8 @@ const Proposal = () => {
     if (typeof e === "string") {
       return handleSelectChange(e);
     }
-
-    const regex = /gas|Gas|Fee|fee|Amount|amount/;
+    const regex =
+      /gas|Gas|Fee|fee|Amount|amount|Min|min|Max|max|Creation|creation/;
     let targetValue = e.target.value;
     if (regex.test(e.target.name)) {
       // console.log(
@@ -1746,8 +1746,8 @@ const Proposal = () => {
           return (
             <PComponent.VotingDurationSettingForm
               votDurationErr={errState.votDurationErr}
-              votDurationMin={formData.votDurationMin}
-              votDurationMax={formData.votDurationMax}
+              votDurationMin={addCommasToNumber(formData.votDurationMin)}
+              votDurationMax={addCommasToNumber(formData.votDurationMax)}
             />
           );
         case "AuthorityMemberStakingAmount":
@@ -1765,7 +1765,7 @@ const Proposal = () => {
         case "BlockCreationTime":
           return (
             <PComponent.BlockCreationTime
-              blockCreation={formData.blockCreation}
+              blockCreation={addCommasToNumber(formData.blockCreation)}
               blockCreationErr={errState.blockCreationErr}
             />
           );
