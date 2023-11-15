@@ -508,6 +508,9 @@ export const VotingDurationSettingForm = ({
             <p className={"error-massage"}>Invalid Min Date Setting</p>
           )}
           <div>&nbsp;</div>
+          <div className={cn("description")}>
+            The maximum value for Voting Duration is 7 day.
+          </div>
           <VotingInputArea
             inputType={"suffix"}
             fixText="day"

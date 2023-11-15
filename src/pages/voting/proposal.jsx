@@ -408,14 +408,17 @@ const Proposal = () => {
       case "votDurationMax":
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
-          setErrState({
-            ...errState,
-            votDurationErr: util.checkNumberRange(
-              "max",
-              formData.votDurationMin,
-              targetValue
-            )
-          });
+          if (Number(targetValue) > 7)
+            setErrState({ ...errState, votDurationErr: true });
+          else
+            setErrState({
+              ...errState,
+              votDurationErr: util.checkNumberRange(
+                "max",
+                formData.votDurationMin,
+                targetValue
+              )
+            });
         }
         break;
       // Authority Member Staking Amount
