@@ -539,7 +539,7 @@ const Proposal = () => {
         break;
       case "baseFeeMaxChangeRate":
         if (
-          !/^[0-9]*\.?([0-9]{1,2})?$/.test(targetValue) ||
+          !/^[1-9][0-9]?$|^100$/.test(targetValue) ||
           Number(targetValue) > 100
         )
           setFormData(originStr);
@@ -552,7 +552,7 @@ const Proposal = () => {
         break;
       case "gasTargetPercentage":
         if (
-          !/^[0-9]*\.?([0-9]{1,2})?$/.test(targetValue) ||
+          !/^[1-9][0-9]?$|^100$/.test(targetValue) ||
           Number(targetValue) > 100
         )
           setFormData(originStr);
