@@ -209,7 +209,7 @@ const Proposal = () => {
 
   const getLockAmount = async (addr) => {
     if (!util.checkAddress(addr)) {
-      getErrModal("Staking Address is Invalids.", "Proposal Submit Error");
+      getErrModal("Voting Address is invalid.", "Proposal Submit Error");
       setFormData({
         ...formData,
         showLockAmount: ""
