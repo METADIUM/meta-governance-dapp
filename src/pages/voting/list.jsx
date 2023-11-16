@@ -461,11 +461,11 @@ const VotingList = () => {
     <>
       <VotingTopList
         isMember={isMember}
-        totalCount={itemCount.total}
-        activeCount={itemCount.active}
-        readyCount={itemCount.proposal}
-        approvedCount={itemCount.approved}
-        rejectedCount={itemCount.rejected}
+        totalCount={itemCount.total || 0}
+        activeCount={itemCount.active || 0}
+        readyCount={itemCount.proposal || 0}
+        approvedCount={itemCount.approved || 0}
+        rejectedCount={itemCount.rejected || 0}
       />
       <div className="section-body">
         <div className="wrap">
