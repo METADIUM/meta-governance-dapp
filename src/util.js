@@ -207,6 +207,11 @@ export const checkPrice = (price) => {
   return /^[0-9]{1,}$/.test(price);
 };
 
+// percent
+export const checkPercent = (percent) => {
+  return Number(percent) > 0 || Number(percent) < 100; // /^[0-9]{0,100}$/.test(percent);
+};
+
 // numbers + decimal 8
 export const checkInvestmentAmount = (amount) => {
   return /^\d{1,}.?\d{0,8}$/.test(amount);

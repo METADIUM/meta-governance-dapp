@@ -538,20 +538,28 @@ const Proposal = () => {
         }
         break;
       case "baseFeeMaxChangeRate":
-        if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
+        if (
+          !/^[0-9]*\.?([0-9]{1,2})?$/.test(targetValue) ||
+          Number(targetValue) > 100
+        )
+          setFormData(originStr);
         else {
           setErrState({
             ...errState,
-            baseFeeMaxChangeRateErr: !util.checkPrice(targetValue)
+            baseFeeMaxChangeRateErr: !util.checkPercent(targetValue)
           });
         }
         break;
       case "gasTargetPercentage":
-        if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
+        if (
+          !/^[0-9]*\.?([0-9]{1,2})?$/.test(targetValue) ||
+          Number(targetValue) > 100
+        )
+          setFormData(originStr);
         else {
           setErrState({
             ...errState,
-            gasTargetPercentageErr: !util.checkPrice(targetValue)
+            gasTargetPercentageErr: !util.checkPercent(targetValue)
           });
         }
         break;
