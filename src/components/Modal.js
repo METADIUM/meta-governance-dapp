@@ -67,20 +67,28 @@ const StakingModal = ({
       const numStakingMin = Number(stakingMin);
       const numStakingAmount = Number(stakingAmount);
       const numMyBalance = Number(myBalance);
+      // locked에서 뺄 수 있는 수량
+      const availableBalance = numLockedBalance - numStakingMin;
 
       if (stakingTopic === "withdraw") {
-        // locked에서 빠지는 경우
-        if (numLockedBalance > numStakingMin) {
-          const availableBalance = numLockedBalance - numStakingMin;
-          if (numStakingAmount > availableBalance)
-            throw new Error(
-              "The amount after withdrawal must not be less than the minimum staking quantity."
-            );
+        // available 비교
+        if (numMyBalance > 0) {
+          // 입력 값이 available 보다 큰 경우
+          if (numStakingAmount > numMyBalance) {
+            // 입력 값이 locked 보다 큰 경우
+            if (numStakingAmount > availableBalance) {
+              throw new Error(
+                "There are more quantities you want to withdraw than the current amount of staking."
+              );
+            }
+          }
         } else {
-          if (numStakingAmount > numMyBalance)
+          // 입력 값이 locked 보다 큰 경우
+          if (numStakingAmount > availableBalance) {
             throw new Error(
               "There are more quantities you want to withdraw than the current amount of staking."
             );
+          }
         }
       }
     } catch (e) {
