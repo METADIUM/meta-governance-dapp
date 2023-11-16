@@ -281,10 +281,14 @@ const VotingTopDetail = ({
             )}-${util.convertWeiToEther(decodeValue[1])} META`
           });
         } else if (envVariableName === "Block Creation Time") {
-          contents.push({ value: `${decodeValue[0] / 1000} s` });
+          contents.push({
+            value: `${util.addCommasToNumber(decodeValue[0] / 1000)} s`
+          });
         } else if (envVariableName === "Block Reward Amount") {
           contents.push({
-            value: `${util.convertWeiToEther(decodeValue[0])} META/Block`
+            value: `${util.addCommasToNumber(
+              util.convertWeiToEther(decodeValue[0])
+            )} META/Block`
           });
         } else if (envVariableName === "Block Reward Distribution Method") {
           contents.push({
@@ -296,17 +300,19 @@ const VotingTopDetail = ({
           });
         } else if (envVariableName === "Max Priority Fee Per Gas") {
           contents.push({
-            value: `${util.convertWeiToGWei(decodeValue[0])} GWei`
+            value: `${util.addCommasToNumber(
+              util.convertWeiToGWei(decodeValue[0])
+            )} GWei`
           });
         } else if (envVariableName === "Gas Limit & baseFee") {
           contents.push({
-            value: `Gas Limit: ${util.convertWeiToGWei(
-              decodeValue[0]
-            )} GWei\nMax baseFee: ${
+            value: `Gas Limit: ${util.addCommasToNumber(
+              util.convertWeiToGWei(decodeValue[0])
+            )} GWei\nMax baseFee: ${util.addCommasToNumber(
               decodeValue[1]
-            } GWei\nBaseFee Max Change Rate: ${
+            )} GWei\nBaseFee Max Change Rate: ${
               decodeValue[2]
-            }\nGas Target Percentage: ${decodeValue[3]}`
+            } %\nGas Target Percentage: ${decodeValue[3]} %`
           });
         } else {
           contents.push({ value: "Wrong Proposal (This label is only test)" });

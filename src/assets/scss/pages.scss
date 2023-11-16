@@ -1012,6 +1012,7 @@ a {
             flex-direction: row;
             padding: 20px 0;
             border-bottom: 1px solid $gray4;
+            white-space: pre-wrap;
 
             &:last-child {
               border-bottom: 0;
@@ -1237,12 +1238,12 @@ a {
       position: relative;
 
       &:before {
-        content: '';
+        content: "";
         display: block;
         width: calc(100% - 2px);
         height: calc(100% - 2px);
         background-color: $white;
-        opacity: .8;
+        opacity: 0.8;
         position: absolute;
         left: 1px;
         top: 1px;
