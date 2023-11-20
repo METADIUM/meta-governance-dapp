@@ -161,7 +161,6 @@ const StakingModal = ({
   };
 
   const handleSelectChange = (topic) => {
-    console.log(topic);
     setStakingTopic(topic);
     setStakingAmount("");
   };
@@ -204,7 +203,7 @@ const StakingModal = ({
           disabled={errStaking}
         >
           Submit
-        </Button>
+        </Button>,
       ]}
     >
       <div className={cn("staking-wrap")}>
@@ -214,10 +213,12 @@ const StakingModal = ({
           disabled={isLoading}
           className={cn("voting-filter")}
         >
-          <Option value="deposit">
+          <Option value="deposit" style={{ zIndex: 1200 }}>
             {isMember ? "Additional" : "Deposit"} Staking
           </Option>
-          <Option value="withdraw">Withdraw Staking</Option>
+          <Option value="withdraw" style={{ zIndex: 1200 }}>
+            Withdraw Staking
+          </Option>
         </Select>
 
         <VotingInputArea
