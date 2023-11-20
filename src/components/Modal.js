@@ -203,7 +203,7 @@ const StakingModal = ({
           disabled={errStaking}
         >
           Submit
-        </Button>,
+        </Button>
       ]}
     >
       <div className={cn("staking-wrap")}>
@@ -213,10 +213,10 @@ const StakingModal = ({
           disabled={isLoading}
           className={cn("voting-filter")}
         >
-          <Option value="deposit" style={{ zIndex: 1200 }}>
+          <Option value="deposit" style={{ zIndex: "1200" }}>
             {isMember ? "Additional" : "Deposit"} Staking
           </Option>
-          <Option value="withdraw" style={{ zIndex: 1200 }}>
+          <Option value="withdraw" style={{ zIndex: "1200" }}>
             Withdraw Staking
           </Option>
         </Select>
