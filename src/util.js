@@ -207,6 +207,11 @@ export const checkPrice = (price) => {
   return /^[0-9]{1,}$/.test(price);
 };
 
+// percent
+export const checkPercent = (percent) => {
+  return Number(percent) > 0 || Number(percent) < 100; // /^[0-9]{0,100}$/.test(percent);
+};
+
 // numbers + decimal 8
 export const checkInvestmentAmount = (amount) => {
   return /^\d{1,}.?\d{0,8}$/.test(amount);
@@ -237,7 +242,8 @@ export const checkBlockCreationTime = (time) => {
 
 // at least 1 and error with 18 decimal place or more
 export const checkRewardAmount = (amount) => {
-  return /^[1-9]\.?([0-9]{1,18})?$/.test(amount);
+  if (Number(amount) < 1) return false;
+  return /^(\d+)(,\d{1,2}|[1-9](?:\.[0-9]{1})?|0?\.[1-9]{1,18})?$/.test(amount);
 };
 
 // check if value is greater than or less than
@@ -295,8 +301,12 @@ export const setModifiedToLocal = (obj) => save("wmModifiedBlock", obj);
 // -- 3자리마다 콤마 추가하기
 export function addCommasToNumber(number) {
   if (number) {
-    const numValue = number.replaceAll(",", ""); // 잠시 콤마를 때주고
-    return numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return number
+      .toString()
+      .replace(
+        /(\..*)$|(\d)(?=(\d{3})+(?!\d))/g,
+        (digit, fract) => fract || digit + ","
+      );
   }
 }
 // -- 3자리마다 콤마 제거하기--

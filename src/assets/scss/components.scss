@@ -34,7 +34,7 @@ body {
   position: sticky;
   left: 0;
   top: 0;
-  z-index: 1060;
+  z-index: 1100;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -339,7 +339,7 @@ body {
       min-width: 280px;
       max-width: 320px;
       background-color: $white;
-      background-image: url('../images/mobile-gnb-logo.svg');
+      background-image: url("../images/mobile-gnb-logo.svg");
       background-repeat: no-repeat;
       background-position: left 20px top 14px;
       background-size: 189px 28px;
@@ -469,7 +469,7 @@ body {
   .loading-img {
     width: 415px;
     height: 52px;
-    background: url('../images/loader-logo.svg') no-repeat center center;
+    background: url("../images/loader-logo.svg") no-repeat center center;
     background-size: 415px 52px;
     margin-bottom: 50px;
   }
@@ -583,7 +583,7 @@ body {
   &.prefix {
     &::before {
       @include content;
-      content: '+';
+      content: "+";
       padding-right: 3px;
     }
   }

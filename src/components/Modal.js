@@ -52,30 +52,43 @@ const StakingModal = ({
   }, [stakingModalVisible]);
 
   const submitMetaStaking = () => {
-    if (!/^[1-9]\d*$/.test(stakingAmount)) {
-      setErrStaking(true);
-      return;
-    }
-
-    const numLockedBalance = Number(lockedBalance);
-    const numStakingMin = Number(stakingMin);
-    const numStakingAmount = Number(stakingAmount);
-    const numMyBalance = Number(myBalance);
-
     try {
+      if (defaultAccount === undefined || !defaultAccount.length) {
+        setStakingModalVisible(false);
+        throw new Error("Please connect to the wallet and proceed.");
+      }
+
+      if (!/^[1-9]\d*$/.test(stakingAmount)) {
+        setErrStaking(true);
+        return;
+      }
+
+      const numLockedBalance = Number(lockedBalance);
+      const numStakingMin = Number(stakingMin);
+      const numStakingAmount = Number(stakingAmount);
+      const numMyBalance = Number(myBalance);
+      // locked에서 뺄 수 있는 수량
+      const availableBalance = numLockedBalance - numStakingMin;
+
       if (stakingTopic === "withdraw") {
-        // locked에서 빠지는 경우
-        if (numLockedBalance > numStakingMin) {
-          const availableBalance = numLockedBalance - numStakingMin;
-          if (numStakingAmount > availableBalance)
-            throw new Error(
-              "The amount after withdrawal must not be less than the minimum staking quantity."
-            );
+        // available 비교
+        if (numMyBalance > 0) {
+          // 입력 값이 available 보다 큰 경우
+          if (numStakingAmount > numMyBalance) {
+            // 입력 값이 locked 보다 큰 경우
+            if (numStakingAmount > availableBalance) {
+              throw new Error(
+                "There are more quantities you want to withdraw than the current amount of staking."
+              );
+            }
+          }
         } else {
-          if (numStakingAmount > numMyBalance)
+          // 입력 값이 locked 보다 큰 경우
+          if (numStakingAmount > availableBalance) {
             throw new Error(
               "There are more quantities you want to withdraw than the current amount of staking."
             );
+          }
         }
       }
     } catch (e) {
@@ -148,7 +161,6 @@ const StakingModal = ({
   };
 
   const handleSelectChange = (topic) => {
-    console.log(topic);
     setStakingTopic(topic);
     setStakingAmount("");
   };
@@ -196,15 +208,17 @@ const StakingModal = ({
     >
       <div className={cn("staking-wrap")}>
         <Select
-          defaultValue={stakingTopic}
-          onChange={handleSelectChange}
+          value={stakingTopic}
+          onChange={(topic) => handleSelectChange(topic)}
           disabled={isLoading}
           className={cn("voting-filter")}
         >
-          <Option value="deposit">
+          <Option value="deposit" style={{ zIndex: "1200" }}>
             {isMember ? "Additional" : "Deposit"} Staking
           </Option>
-          <Option value="withdraw">Withdraw Staking</Option>
+          <Option value="withdraw" style={{ zIndex: "1200" }}>
+            Withdraw Staking
+          </Option>
         </Select>
 
         <VotingInputArea
@@ -255,6 +269,7 @@ const ErrModal = () => {
 
   return (
     <Modal
+      zIndex={1000}
       className={cn("staking-modal")}
       title={
         <div className="staking-modal-wrapper">

@@ -209,7 +209,7 @@ const Proposal = () => {
 
   const getLockAmount = async (addr) => {
     if (!util.checkAddress(addr)) {
-      getErrModal("Staking Address is Invalids.", "Proposal Submit Error");
+      getErrModal("Voting Address is invalid.", "Proposal Submit Error");
       setFormData({
         ...formData,
         showLockAmount: ""
@@ -323,8 +323,8 @@ const Proposal = () => {
     if (typeof e === "string") {
       return handleSelectChange(e);
     }
-
-    const regex = /gas|Gas|Fee|fee|Amount|amount/;
+    const regex =
+      /gas|Gas|Fee|fee|Amount|amount|Min|min|Max|max|Creation|creation/;
     let targetValue = e.target.value;
     if (regex.test(e.target.name)) {
       // console.log(
@@ -408,14 +408,17 @@ const Proposal = () => {
       case "votDurationMax":
         if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
         else {
-          setErrState({
-            ...errState,
-            votDurationErr: util.checkNumberRange(
-              "max",
-              formData.votDurationMin,
-              targetValue
-            )
-          });
+          if (Number(targetValue) > 7)
+            setErrState({ ...errState, votDurationErr: true });
+          else
+            setErrState({
+              ...errState,
+              votDurationErr: util.checkNumberRange(
+                "max",
+                formData.votDurationMin,
+                targetValue
+              )
+            });
         }
         break;
       // Authority Member Staking Amount
@@ -535,20 +538,28 @@ const Proposal = () => {
         }
         break;
       case "baseFeeMaxChangeRate":
-        if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
+        if (
+          !/^[1-9][0-9]?$|^100$/.test(targetValue) ||
+          Number(targetValue) > 100
+        )
+          setFormData(originStr);
         else {
           setErrState({
             ...errState,
-            baseFeeMaxChangeRateErr: !util.checkPrice(targetValue)
+            baseFeeMaxChangeRateErr: !util.checkPercent(targetValue)
           });
         }
         break;
       case "gasTargetPercentage":
-        if (!/^([0-9]*)$/.test(targetValue)) setFormData(originStr);
+        if (
+          !/^[1-9][0-9]?$|^100$/.test(targetValue) ||
+          Number(targetValue) > 100
+        )
+          setFormData(originStr);
         else {
           setErrState({
             ...errState,
-            gasTargetPercentageErr: !util.checkPrice(targetValue)
+            gasTargetPercentageErr: !util.checkPercent(targetValue)
           });
         }
         break;
@@ -801,10 +812,10 @@ const Proposal = () => {
           const checkAddr = await contract.methods.proxiableUUID().call();
           if (checkAddr) return false;
 
-          throw "Invalid Governance Contract Address";
+          throw new Error("New Governance Address is invalid.");
         } catch (e) {
           return getErrModal(
-            "Invalid Governance Contract Address.",
+            "New Governance Address is invalid.",
             "Proposal Submit Error"
           );
         }
@@ -1557,8 +1568,18 @@ const Proposal = () => {
       }
       return trxFunction(refineData);
     } catch (err) {
-      console.log(err);
-      getErrModal(err.message, err.name);
+      const { code } = err;
+      let message = "";
+      switch (code) {
+        case "INVALID_ARGUMENT":
+          message = "You have entered an invalid value.";
+          break;
+        default:
+          message = "Invalid Error";
+          break;
+      }
+      console.log(err.code);
+      getErrModal(message, "Proposal Submit Error");
       setOnLoading(false);
     }
   };
@@ -1656,7 +1677,6 @@ const Proposal = () => {
       //   },
       // );
     } catch (err) {
-      console.log(err);
       getErrModal(err.message, err.name);
       setOnLoading(false);
     }
@@ -1743,8 +1763,8 @@ const Proposal = () => {
           return (
             <PComponent.VotingDurationSettingForm
               votDurationErr={errState.votDurationErr}
-              votDurationMin={formData.votDurationMin}
-              votDurationMax={formData.votDurationMax}
+              votDurationMin={addCommasToNumber(formData.votDurationMin)}
+              votDurationMax={addCommasToNumber(formData.votDurationMax)}
             />
           );
         case "AuthorityMemberStakingAmount":
@@ -1762,7 +1782,7 @@ const Proposal = () => {
         case "BlockCreationTime":
           return (
             <PComponent.BlockCreationTime
-              blockCreation={formData.blockCreation}
+              blockCreation={addCommasToNumber(formData.blockCreation)}
               blockCreationErr={errState.blockCreationErr}
             />
           );
