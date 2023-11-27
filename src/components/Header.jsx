@@ -111,7 +111,7 @@ const Header = () => {
 
   return (
     <header className={cn("header")}>
-      {offset.width > 1240 ? (
+      {offset.width > 1140 ? (
         <>
           <div className="header-logo-wrap">
             <HeaderLogo />
@@ -182,40 +182,41 @@ const Header = () => {
                     setIsGnbOpen={setIsGnbOpen}
                   />
                   <div className={cn("header-my-info")}>
-                    {isConnect && (
-                      <dl>
-                        <div>
-                          <dt>Locked</dt>
-                          <dd>
-                            {addCommasToNumber(lockedBalance)} <span>META</span>
-                          </dd>
-                        </div>
-                        <div>
-                          <dt>Staked</dt>
-                          <dd>
-                            {addCommasToNumber(myBalance)} <span>META</span>
-                          </dd>
-                        </div>
-                      </dl>
-                    )}
                     {isConnect ? (
-                      <div className="btns-wrap">
-                        <Button
-                          text="META Staking"
-                          type="outline"
-                          size="sm"
-                          onClick={() => {
-                            setIsShowStakingModal(true);
-                          }}
-                        />
+                      <>
+                        <dl>
+                          <div>
+                            <dt>Locked</dt>
+                            <dd>
+                              {addCommasToNumber(lockedBalance)}{" "}
+                              <span>META</span>
+                            </dd>
+                          </div>
+                          <div>
+                            <dt>Staked</dt>
+                            <dd>
+                              {addCommasToNumber(myBalance)} <span>META</span>
+                            </dd>
+                          </div>
+                        </dl>
+                        <div className="btns-wrap">
+                          <Button
+                            text="META Staking"
+                            type="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsShowStakingModal(true);
+                            }}
+                          />
 
-                        <Button
-                          type="outline"
-                          size="sm"
-                          text={address && loginAcc(address)}
-                          onClick={() => setDisConnectView(true)}
-                        />
-                      </div>
+                          <Button
+                            type="outline"
+                            size="sm"
+                            text={address && loginAcc(address)}
+                            onClick={() => setDisConnectView(true)}
+                          />
+                        </div>
+                      </>
                     ) : (
                       <Button
                         type="outline"
@@ -255,7 +256,7 @@ const Header = () => {
             isMember={isMember}
             accountBalance={{
               balance: myBalance,
-              lockedBalance: lockedBalance
+              lockedBalance: lockedBalance,
             }}
             stakingModalVisible={isShowStakingModal}
             scrollType={false}
