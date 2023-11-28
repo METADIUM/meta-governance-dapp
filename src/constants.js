@@ -42,23 +42,23 @@ export const TESTNET_CONTRACTS = [
 ];
 
 export const MAINNET_CONTRACTS = [
-  { name: "Registry", address: "0x06c13fc771abc31a44d017368176e6b3cba5eed8" },
+  { name: "Registry", address: "0x7bE6AE06FB49B198a1ca64E4FBFaD8d57261eC29" },
   {
     name: "EnvStorageImp",
-    address: "0x3f7F9B356b9f5308d39684126De821751902338e"
+    address: "0x3dc5ccbD3f09463c356C404c3128F975A85cFAC2"
   },
-  { name: "EnvStorage", address: "0x3f7F9B356b9f5308d39684126De821751902338e" },
+  { name: "EnvStorage", address: "0x3dc5ccbD3f09463c356C404c3128F975A85cFAC2" },
   {
     name: "BallotStorage",
-    address: "0x83d7Bf709aDD8d0112434193B62901b2396555e3"
+    address: "0x9e4A3F297307096CD3Bd7D10cf189d2782e10e50"
   },
-  { name: "Staking", address: "0x4c9552b876acd6ee90567986150600c38416ed56" },
-  { name: "GovImp", address: "0x6c2604d8671f941bdcdb7d43b9cece5023008fca" },
-  { name: "Gov", address: "0x6c2604d8671f941bdcdb7d43b9cece5023008fca" },
-  {
-    name: "WaitGovernance",
-    address: "0x631FE9c57de28dDC2642ea70005fb61e14f0374D"
-  }
+  { name: "Staking", address: "0xf26A68ed9a306cC1800d975110E89651a3166253" },
+  { name: "GovImp", address: "0x0b22668208a516B92BBa272e75047D802066e058" },
+  { name: "Gov", address: "0x0b22668208a516B92BBa272e75047D802066e058" }
+  //   {
+  //     name: "WaitGovernance",
+  //     address: "0x631FE9c57de28dDC2642ea70005fb61e14f0374D"
+  //   }
 ];
 
 // METADIUM chain info
