@@ -366,6 +366,16 @@ a {
         }
       }
     }
+
+    // ! VERYWORDS 이미지 사이즈 조정
+    &:nth-child(2) {
+      > ul > li:nth-child(1) {
+        > img {
+          height: 48px;
+          width: auto;
+        }
+      }
+    }
   }
 
   @include xsm {
