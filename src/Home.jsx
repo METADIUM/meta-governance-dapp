@@ -133,7 +133,7 @@ const Home = () => {
                       {item.company}
                     </a>
                   </li>
-                  <li>Address: {item.addr}</li>
+                  <li>Address: {item.reward}</li>
                   <li>
                     <span className="desc">{item.desc}</span>
                     <span className="cover-bar" />
