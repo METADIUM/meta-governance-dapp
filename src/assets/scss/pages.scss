@@ -367,11 +367,12 @@ a {
       }
     }
 
-    // ! VERYWORDS 이미지 사이즈 조정
-    &:nth-child(2) {
+    // ! VERYWORDS, SuperSchool 이미지 사이즈 조정
+    &:nth-child(2),
+    &:nth-child(3) {
       > ul > li:nth-child(1) {
         > img {
-          height: 48px;
+          height: 60px;
           width: auto;
         }
       }
