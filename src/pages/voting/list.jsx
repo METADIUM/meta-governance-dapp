@@ -73,12 +73,13 @@ const VotingList = () => {
   // -------------------- useEffect
   useEffect(() => {
     getBallotOriginItem();
+    // getBallotOriginItem 은 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     ballotBasicOriginData,
     waitBallotBasicOriginData,
     isMember,
-    viewingFinalizedItems,
-    getBallotOriginItem
+    viewingFinalizedItems
   ]);
 
   useEffect(() => {
@@ -86,19 +87,25 @@ const VotingList = () => {
     if (ballotBasicOriginItems.length > 0) {
       getBallotDetailInfo();
     }
-  }, [ballotBasicOriginItems, getBallotDetailInfo]);
+    // getBallotDetailInfo 는 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ballotBasicOriginItems]);
 
   useEffect(() => {
     // 리스트를 가져온 후 화면에 뿌리기 위한 용도
     if (Object.keys(itemCount)) {
       handleSelect();
     }
-  }, [handleSelect, itemCount]);
+    // handleSelect 는 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemCount]);
 
   // 검색 후 리스트 업데이트
   useEffect(() => {
     handleSelect(currentSelect);
-  }, [visibleActiveItems, visibleFinalizedItems, handleSelect, currentSelect]);
+    // handleSelect 는 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleActiveItems, visibleFinalizedItems, currentSelect]);
 
   const openErrModal = (e) => {
     const _msg = e?.details || "Unknown Error";

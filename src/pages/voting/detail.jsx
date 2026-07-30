@@ -73,7 +73,9 @@ const VotingDetail = () => {
     window.scrollTo(0, 0);
 
     getVotingData(id, wait);
-  }, [getVotingData, navigate, search]);
+    // getVotingData 는 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, search]);
 
   // -------------------- function
   const openToast = (content) => {

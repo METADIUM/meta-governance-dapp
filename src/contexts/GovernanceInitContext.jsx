@@ -44,7 +44,10 @@ const GovInitProvider = ({ children }) => {
 
   useEffect(() => {
     init();
-  }, [init]);
+    // init 은 아래에서 const 로 선언되므로 의존성 배열에 넣으면
+    // 렌더 시점에 TDZ(Cannot access 'init' before initialization)로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const init = async () => {
     await getWeb3Instance().then(

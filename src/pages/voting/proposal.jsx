@@ -173,7 +173,9 @@ const Proposal = () => {
       } else setSelectedTopic("AddAuthorityMember");
     }
     getMemberList();
-  }, [currentTopic, getMemberList, showProposal]);
+    // getMemberList 는 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTopic, showProposal]);
 
   useEffect(() => {
     if (selectedMenu === "menu-myinfo") {
@@ -188,7 +190,9 @@ const Proposal = () => {
     if (memberIdx) {
       getMyInfo();
     }
-  }, [getMyInfo, memberIdx]);
+    // getMyInfo 는 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memberIdx]);
 
   // replace, remove authority member
   const getMemberList = () => {
