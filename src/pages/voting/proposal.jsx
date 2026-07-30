@@ -1,3 +1,4 @@
+import { message } from "antd";
 import cn from "classnames/bind";
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,7 +9,6 @@ import * as PComponent from "../../components/Forms";
 import * as MComponent from "../../components/MyForm";
 import VotingTopProposal from "../../components/voting/VotingTopProposal.jsx";
 import "../../assets/scss/proposal.scss";
-
 import {
   constants,
   ENV_MY_INFO_PROPOSAL_LIST,
@@ -26,7 +26,6 @@ import {
   encodeABIValueInMethod,
   web3Instance
 } from "../../web3";
-import { message } from "antd";
 
 const Proposal = () => {
   const { getErrModal } = useContext(ModalContext);
@@ -173,7 +172,9 @@ const Proposal = () => {
       } else setSelectedTopic("AddAuthorityMember");
     }
     getMemberList();
-  }, [currentTopic, getMemberList, showProposal]);
+    // getMemberList 는 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTopic, showProposal]);
 
   useEffect(() => {
     if (selectedMenu === "menu-myinfo") {
@@ -188,7 +189,9 @@ const Proposal = () => {
     if (memberIdx) {
       getMyInfo();
     }
-  }, [getMyInfo, memberIdx]);
+    // getMyInfo 는 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memberIdx]);
 
   // replace, remove authority member
   const getMemberList = () => {
@@ -1628,7 +1631,8 @@ const Proposal = () => {
         // maxFeePerGas: 101000000000,
         // maxPriorityFeePerGas: 100000000000,
       })
-        .then(({ hash }) => {
+        // wagmi 2 부터 sendTransactionAsync 는 { hash } 가 아니라 hash 문자열을 직접 resolve 한다.
+        .then((hash) => {
           waitForReceipt(hash, (receipt) => {
             if (receipt.status) {
               window.location.href = "/voting/list";

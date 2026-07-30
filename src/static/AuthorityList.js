@@ -5,9 +5,9 @@ import MblockLogo from "../assets/images/partners/ic-mblock-logo.svg";
 import MetadiumLogo from "../assets/images/partners/ic-metadium-logo.svg";
 import OntolgyLogo from "../assets/images/partners/ic-ontology-logo.png";
 import RockxLogo from "../assets/images/partners/ic-rockx-logo.svg";
-import VistalabsLogo from "../assets/images/partners/ic-vistalabs-logo.svg";
 import SuperSchoolLogo from "../assets/images/partners/ic-superschool-logo.png";
 import VeryWordsLogo from "../assets/images/partners/ic-verywords-logo.png";
+import VistalabsLogo from "../assets/images/partners/ic-vistalabs-logo.svg";
 export default {
   devmeta: [
     {

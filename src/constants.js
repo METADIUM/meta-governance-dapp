@@ -228,19 +228,23 @@ const CHAIN_INFO =
     ? TESTNET_CHAIN_INFO
     : DEVNET_CHAIN_INFO;
 
+// viem/@reown/appkit 의 AppKitNetwork(=viem Chain) 형태.
+// wagmi 1 + @web3modal 2 시절에는 이 리터럴을 그대로 chains 배열에 넣었지만,
+// wagmi 2 + AppKit 은 defineChain 으로 만든 체인을 요구한다(WalletConnector.jsx 에서 적용).
 const NETWORK_SPECIFICATION = {
   id: parseInt(CHAIN_INFO.chainId),
   name: CHAIN_INFO.chainName,
-  network: "homestead",
   nativeCurrency: {
     decimals: 18,
     name: CHAIN_INFO.name,
     symbol: CHAIN_INFO.symbol
   },
   rpcUrls: {
-    public: { http: [CHAIN_INFO.rpcUrls] },
     default: { http: [CHAIN_INFO.rpcUrls] }
-  }
+  },
+  blockExplorers: CHAIN_INFO.blockExplorerUrls
+    ? { default: { name: "Explorer", url: CHAIN_INFO.blockExplorerUrls } }
+    : undefined
 };
 
 const CURRENT_SPEC = NETWORK_SPECIFICATION;

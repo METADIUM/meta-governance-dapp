@@ -1,5 +1,5 @@
 import React from "react";
-import { hydrate, render } from "react-dom";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import App from "./App";
@@ -44,9 +44,10 @@ const renderApp = () => (
 );
 
 const rootElement = document.getElementById("root");
+// react-snap 이 프리렌더한 마크업이 있으면 hydrate, 없으면 새로 렌더한다.
 if (rootElement.hasChildNodes()) {
-  hydrate(renderApp(), rootElement);
+  hydrateRoot(rootElement, renderApp());
 } else {
-  render(renderApp(), rootElement);
+  createRoot(rootElement).render(renderApp());
 }
 serviceWorker.unregister();

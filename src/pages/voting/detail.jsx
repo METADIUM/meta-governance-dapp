@@ -73,7 +73,9 @@ const VotingDetail = () => {
     window.scrollTo(0, 0);
 
     getVotingData(id, wait);
-  }, [getVotingData, navigate, search]);
+    // getVotingData 는 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, search]);
 
   // -------------------- function
   const openToast = (content) => {
@@ -296,8 +298,9 @@ const VotingDetail = () => {
     trx.gasPrice = 110000000000;
     trx.value = "0x0";
     try {
+      // wagmi 2 부터 sendTransactionAsync 는 { hash } 가 아니라 hash 문자열을 직접 resolve 한다.
       await sendTransactionAsync(trx)
-        .then(({ hash }) => {
+        .then((hash) => {
           waitForReceipt(hash, (receipt) => {
             if (receipt.status) navigate(0);
             else {

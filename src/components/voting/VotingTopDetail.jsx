@@ -74,7 +74,9 @@ const VotingTopDetail = ({
     if (votingDurationMin && votingDurationMax && duration) {
       setVotingDuration();
     }
-  }, [votingDurationMin, votingDurationMax, duration, setVotingDuration]);
+    // setVotingDuration 은 아래에서 const 로 선언되므로 의존성 배열에 넣으면 TDZ 로 죽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [votingDurationMin, votingDurationMax, duration]);
 
   useEffect(() => {
     if (!isVotingDurationModal) setSelectedDuration(duration);

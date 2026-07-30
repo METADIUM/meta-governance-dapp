@@ -1,10 +1,13 @@
 {
   "extends": ["react-app", "eslint:recommended"],
-  "plugins": ["unused-imports", "import"],
+  // "import" 는 eslint-config-react-app(react-app) 이 이미 등록한다.
+  // 여기서 다시 선언하면 서로 다른 사본이 잡혀 eslint 8 이
+  // "Plugin import was conflicted" 로 실패한다.
+  "plugins": ["unused-imports"],
   "rules": {
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
-    "no-console": "error", //console.log 에러 끄고 싶으면 off 넣으시면 됩니다.
+    "no-console": "warn", //console.log 에러 끄고 싶으면 off 넣으시면 됩니다.
     "import/order": [
       "error",
       {
