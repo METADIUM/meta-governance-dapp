@@ -43,32 +43,30 @@ const initContracts = async (web3) => {
 };
 
 let web3Instance;
-const getWeb3Instance = () => {
-  return new Promise(async (resolve, reject) => {
-    // set default web3 instance
-    const { rpcUrls } = chainInfo;
-    const web3 = new Web3(rpcUrls);
+const getWeb3Instance = async () => {
+  // set default web3 instance
+  const { rpcUrls } = chainInfo;
+  const web3 = new Web3(rpcUrls);
 
-    if (web3) {
-      const web3Contracts = await initContracts(web3);
-      web3Instance = {
-        web3,
-        web3Contracts,
-        netName:
-          network === "testnet"
-            ? "TESTNET"
-            : network === "mainnet"
-              ? "MAINNET"
-              : network === "devnet"
-                ? "DEVNET"
-                : "DEVMETANET"
-      };
-      resolve(web3Instance);
-    } else {
-      // web3 is not found
-      reject(new Error("No web3 instance injected."));
-    }
-  });
+  if (!web3) {
+    // web3 is not found
+    throw new Error("No web3 instance injected.");
+  }
+
+  const web3Contracts = await initContracts(web3);
+  web3Instance = {
+    web3,
+    web3Contracts,
+    netName:
+      network === "testnet"
+        ? "TESTNET"
+        : network === "mainnet"
+          ? "MAINNET"
+          : network === "devnet"
+            ? "DEVNET"
+            : "DEVMETANET"
+  };
+  return web3Instance;
 };
 
 // batch method (only call)

@@ -2,9 +2,9 @@ import { Form } from "antd";
 import cn from "classnames/bind";
 import React from "react";
 
+import { shouldPass } from "../util";
 import GovButton from "./voting/GovButton";
 import VotingInputArea from "./voting/VotingInputArea";
-import { shouldPass } from "../util";
 
 // Voting Address
 export const VotingAddress = ({

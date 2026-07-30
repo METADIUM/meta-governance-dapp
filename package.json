@@ -17,13 +17,13 @@
     "web3": "1.10.4"
   },
   "scripts": {
-    "start:devmeta": "DISABLE_ESLINT_PLUGIN=true NODE_ENV=devmeta PORT=3005 react-app-rewired start",
-    "start:testnet": "DISABLE_ESLINT_PLUGIN=true NODE_ENV=testnet PORT=3005 react-app-rewired start",
-    "start:mainnet": "DISABLE_ESLINT_PLUGIN=true NODE_ENV=production PORT=3005 react-app-rewired start",
+    "start:devmeta": "NODE_ENV=devmeta PORT=3005 react-app-rewired start",
+    "start:testnet": "NODE_ENV=testnet PORT=3005 react-app-rewired start",
+    "start:mainnet": "NODE_ENV=production PORT=3005 react-app-rewired start",
     "build": "echo \"Please use build:testnet or build:mainnet \" && exit 1",
-    "build:devmeta": "CI=false DISABLE_ESLINT_PLUGIN=true dotenv -e .env.devmeta react-app-rewired build",
-    "build:testnet": "CI=false DISABLE_ESLINT_PLUGIN=true dotenv -e .env.testnet react-app-rewired build",
-    "build:mainnet": "CI=false DISABLE_ESLINT_PLUGIN=true dotenv -e .env.production react-app-rewired build",
+    "build:devmeta": "CI=false dotenv -e .env.devmeta react-app-rewired build",
+    "build:testnet": "CI=false dotenv -e .env.testnet react-app-rewired build",
+    "build:mainnet": "CI=false dotenv -e .env.production react-app-rewired build",
     "test": "eslint './src/**/*.{js,jsx}'",
     "fix": "eslint './src/**/*.{js,jsx}' --fix",
     "eject": "react-scripts eject"

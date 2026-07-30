@@ -1,9 +1,11 @@
 import { Button, Modal, Select, Icon, Slider } from "antd";
+import cn from "classnames/bind";
 import React, { useContext, useEffect, useState } from "react";
 import { useSendTransaction } from "wagmi";
 
 import VotingInputArea from "./voting/VotingInputArea";
 import { AuthCtx } from "../contexts/AuthContext";
+import { GovInitCtx } from "../contexts/GovernanceInitContext";
 import { ModalContext } from "../contexts/ModalContext";
 import { removeCommasFromNumber } from "../util";
 import { convertSecondsToDay, addCommasToNumber } from "../util";
@@ -16,8 +18,6 @@ import {
 
 import "../assets/scss/modal.scss";
 import "../assets/scss/proposal.scss";
-import cn from "classnames/bind";
-import { GovInitCtx } from "../contexts/GovernanceInitContext";
 // import { ReactComponent as IconPopupClose } from '../assets/images/ico_popup_close.svg';
 
 // 2023.07.04 App.js의 Staking 관련 로직 Modal로 이동

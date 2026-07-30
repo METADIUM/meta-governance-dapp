@@ -1,3 +1,4 @@
+import { message } from "antd";
 import cn from "classnames/bind";
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,7 +9,6 @@ import * as PComponent from "../../components/Forms";
 import * as MComponent from "../../components/MyForm";
 import VotingTopProposal from "../../components/voting/VotingTopProposal.jsx";
 import "../../assets/scss/proposal.scss";
-
 import {
   constants,
   ENV_MY_INFO_PROPOSAL_LIST,
@@ -26,7 +26,6 @@ import {
   encodeABIValueInMethod,
   web3Instance
 } from "../../web3";
-import { message } from "antd";
 
 const Proposal = () => {
   const { getErrModal } = useContext(ModalContext);
