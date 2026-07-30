@@ -1632,7 +1632,8 @@ const Proposal = () => {
         // maxFeePerGas: 101000000000,
         // maxPriorityFeePerGas: 100000000000,
       })
-        .then(({ hash }) => {
+        // wagmi 2 부터 sendTransactionAsync 는 { hash } 가 아니라 hash 문자열을 직접 resolve 한다.
+        .then((hash) => {
           waitForReceipt(hash, (receipt) => {
             if (receipt.status) {
               window.location.href = "/voting/list";

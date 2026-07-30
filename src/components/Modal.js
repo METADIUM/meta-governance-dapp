@@ -130,7 +130,8 @@ const StakingModal = ({
       trx.gasPrice = 110000000000;
       // trx.maxFeePerGas = 101000000000;
       // trx.maxPriorityFeePerGas = 100000000000;
-      await sendTransactionAsync(trx).then(({ hash }) => {
+      // wagmi 2 부터 sendTransactionAsync 는 { hash } 가 아니라 hash 문자열을 직접 resolve 한다.
+      await sendTransactionAsync(trx).then((hash) => {
         waitForReceipt(hash, async (receipt) => {
           if (receipt.status) {
             await setStakingEventsWatch();

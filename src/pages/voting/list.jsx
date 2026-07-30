@@ -148,7 +148,8 @@ const VotingList = () => {
         gasPrice: 110000000000,
         value: "0x0"
       })
-        .then(({ hash }) => {
+        // wagmi 2 부터 sendTransactionAsync 는 { hash } 가 아니라 hash 문자열을 직접 resolve 한다.
+        .then((hash) => {
           waitForReceipt(hash, async (receipt) => {
             if (receipt.status) navigate(0);
             else {

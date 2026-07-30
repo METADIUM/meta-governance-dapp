@@ -1,7 +1,7 @@
-import { useWeb3Modal } from "@web3modal/react";
+import { useAppKit } from "@reown/appkit/react";
 import React, { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAccount, useNetwork, useDisconnect } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 
 import * as util from "../util";
 import { web3Instance, callContractMethod } from "../web3";
@@ -10,9 +10,9 @@ const AuthCtx = createContext();
 
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-  const { open } = useWeb3Modal();
-  const { address, isConnected } = useAccount();
-  const { chain } = useNetwork();
+  const { open } = useAppKit();
+  // wagmi 2 는 useNetwork 를 없애고 chain 정보를 useAccount() 에 포함시켰다.
+  const { address, isConnected, chain } = useAccount();
   const { disconnect } = useDisconnect();
   const [myBalance, setMyBalance] = useState("");
   const [lockedBalance, setLockedBalance] = useState("");
