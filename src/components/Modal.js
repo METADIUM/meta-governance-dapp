@@ -3,6 +3,7 @@ import cn from "classnames/bind";
 import React, { useContext, useEffect, useState } from "react";
 import { useSendTransaction } from "wagmi";
 
+import { CURRENT_SPEC } from "../constants";
 import VotingInputArea from "./voting/VotingInputArea";
 import { AuthCtx } from "../contexts/AuthContext";
 import { GovInitCtx } from "../contexts/GovernanceInitContext";
@@ -130,6 +131,10 @@ const StakingModal = ({
       trx.gasPrice = 110000000000;
       // trx.maxFeePerGas = 101000000000;
       // trx.maxPriorityFeePerGas = 100000000000;
+      // chainId 를 명시해야 지갑이 다른 체인(특히 WalletConnect 에서 METADIUM 을
+      // 승인하지 않아 조용히 폴백되는 경우)에 있을 때 viem 이 ChainMismatchError 를
+      // 던진다. 안 넘기면 이 검증 자체가 스킵되어 엉뚱한 체인으로 조용히 전송된다.
+      trx.chainId = CURRENT_SPEC.id;
       // wagmi 2 부터 sendTransactionAsync 는 { hash } 가 아니라 hash 문자열을 직접 resolve 한다.
       await sendTransactionAsync(trx).then((hash) => {
         waitForReceipt(hash, async (receipt) => {

@@ -8,7 +8,7 @@ import { VotingModal } from "../../components/Modal.js";
 import VotingStickChart from "../../components/voting/VotingStickChart";
 import VotingTitle from "../../components/voting/VotingTitle.jsx";
 import VotingTopDetail from "../../components/voting/VotingTopDetail.jsx";
-import { constants } from "../../constants.js";
+import { constants, CURRENT_SPEC } from "../../constants.js";
 import { AuthCtx } from "../../contexts/AuthContext.js";
 import { GovInitCtx } from "../../contexts/GovernanceInitContext.jsx";
 import { useModal } from "../../hooks/useModal.jsx";
@@ -297,6 +297,10 @@ const VotingDetail = () => {
     trx.from = address;
     trx.gasPrice = 110000000000;
     trx.value = "0x0";
+    // chainId 를 명시해야 지갑이 다른 체인(특히 WalletConnect 에서 METADIUM 을
+    // 승인하지 않아 조용히 폴백되는 경우)에 있을 때 viem 이 ChainMismatchError 를
+    // 던진다. 안 넘기면 이 검증 자체가 스킵되어 엉뚱한 체인으로 조용히 전송된다.
+    trx.chainId = CURRENT_SPEC.id;
     try {
       // wagmi 2 부터 sendTransactionAsync 는 { hash } 가 아니라 hash 문자열을 직접 resolve 한다.
       await sendTransactionAsync(trx)

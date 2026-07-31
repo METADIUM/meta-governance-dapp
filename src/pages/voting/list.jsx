@@ -17,6 +17,7 @@ import VotingTitle from "../../components/voting/VotingTitle.jsx";
 import VotingTopList from "../../components/voting/VotingTopList.jsx";
 import {
   constants,
+  CURRENT_SPEC,
   DEVMETANET_CONTRACTS,
   MAINNET_CONTRACTS,
   TESTNET_CONTRACTS
@@ -141,12 +142,16 @@ const VotingList = () => {
       /*
         from, to, data, gasPrice, value 중 어느값이 없으면 데이터를 화면에 그리지 못합니다.
       **/
+      // chainId 를 명시해야 지갑이 다른 체인(특히 WalletConnect 에서 METADIUM 을
+      // 승인하지 않아 조용히 폴백되는 경우)에 있을 때 viem 이 ChainMismatchError 를
+      // 던진다. 안 넘기면 이 검증 자체가 스킵되어 엉뚱한 체인으로 조용히 전송된다.
       await sendTransactionAsync({
         from: address,
         to,
         data: trx,
         gasPrice: 110000000000,
-        value: "0x0"
+        value: "0x0",
+        chainId: CURRENT_SPEC.id
       })
         // wagmi 2 부터 sendTransactionAsync 는 { hash } 가 아니라 hash 문자열을 직접 resolve 한다.
         .then((hash) => {

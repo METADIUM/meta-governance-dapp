@@ -11,6 +11,7 @@ import VotingTopProposal from "../../components/voting/VotingTopProposal.jsx";
 import "../../assets/scss/proposal.scss";
 import {
   constants,
+  CURRENT_SPEC,
   ENV_MY_INFO_PROPOSAL_LIST,
   ENV_NAMES,
   ENV_VOTING_PROPOSAL_LIST
@@ -1622,12 +1623,16 @@ const Proposal = () => {
   // send transaction
   const sendTransaction = async (trx) => {
     try {
+      // chainId 를 명시해야 지갑이 다른 체인(특히 WalletConnect 에서 METADIUM 을
+      // 승인하지 않아 조용히 폴백되는 경우)에 있을 때 viem 이 ChainMismatchError 를
+      // 던진다. 안 넘기면 이 검증 자체가 스킵되어 엉뚱한 체인으로 조용히 전송된다.
       await sendTransactionAsync({
         from: address,
         to: trx.to,
         data: trx.data,
         gasPrice: 110000000000,
-        value: "0x0"
+        value: "0x0",
+        chainId: CURRENT_SPEC.id
         // maxFeePerGas: 101000000000,
         // maxPriorityFeePerGas: 100000000000,
       })
